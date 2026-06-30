@@ -309,6 +309,49 @@ def test_void_typedef_array_field_suffix_after_name(tmp_path):
     )
 
 
+SHAPE_SIMPLE_RECORD = """
+/* Plain complete record — exercises the record wrapper's allocate(count). */
+typedef struct {
+    int x;
+    int y;
+} point_t;
+"""
+
+
+def test_record_wrapper_emits_owning_allocate(tmp_path):
+    """Every complete record wrapper gains a Python-callable
+    ``allocate(count=1)`` static method that mallocs an owned,
+    zero-initialized ``count``-element array and frees it on dealloc.
+
+    Locks down the template addition that backs the two-call
+    caller-allocated record-buffer pattern (e.g.
+    ``amdsmi_get_gpu_process_list``).
+    """
+    gen = make_generator(SHAPE_SIMPLE_RECORD, module_name="mod_alloc")
+    pyx = write_module(gen, tmp_path)["mod_alloc.pyx"]
+
+    # Signature with the count=1 default.
+    assert re.search(r"def\s+allocate\(\s*Py_ssize_t\s+count\s*=\s*1\s*\)", pyx), (
+        f"record wrapper missing `def allocate(Py_ssize_t count=1)`; pyx:\n{pyx}"
+    )
+    # count < 1 (0 and negatives) is rejected — records have no empty-buffer concept.
+    assert re.search(
+        r"if\s+count\s*<\s*1\s*:\s*\n\s*raise\s+ValueError\(\s*\"'count' must be positive\"\s*\)",
+        pyx,
+    ), f"record allocate must raise for count < 1; pyx:\n{pyx}"
+    # Owned, zero-initialized count-element allocation. The record's C name
+    # is cprefixed in the emitted pyx (e.g. `cymod_alloc.point_t`).
+    assert re.search(r"stdlib\.malloc\(\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)", pyx), (
+        f"record allocate must malloc count*sizeof(record); pyx:\n{pyx}"
+    )
+    assert re.search(r"string\.memset\(\s*wrapper\._ptr\s*,\s*0\s*,\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)", pyx), (
+        f"record allocate must zero-initialize the buffer; pyx:\n{pyx}"
+    )
+    assert re.search(r"wrapper\._is_ptr_owner\s*=\s*True", pyx), (
+        f"record allocate must take ownership (free on dealloc); pyx:\n{pyx}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Anonymous typedef'd enum/struct/union — libclang behavior shift
 # ---------------------------------------------------------------------------

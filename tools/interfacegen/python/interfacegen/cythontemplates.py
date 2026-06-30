@@ -202,6 +202,26 @@ cdef class {{name}}({{util_types_prefix}}Pointer):
         {{name}}.__allocate(&ptr)
         return {{name}}.fromPtr(ptr, owner=True)
 
+    @staticmethod
+    def allocate(Py_ssize_t count=1):
+        \"""Allocate an owned, zero-initialized array of ``count`` ``{{cname}}`` elements.
+
+        ``count`` defaults to 1 (a single element). The returned ``{{name}}``
+        owns the buffer and frees it when the wrapper is deallocated
+        (``self._is_ptr_owner`` is set). Element ``i`` is read/written via the
+        generated ``get_*(i)``/``set_*(i)`` accessors; the caller tracks
+        ``count``.
+        \"""
+        if count < 1:
+            raise ValueError("'count' must be positive")
+        cdef {{name}} wrapper = {{name}}.__new__({{name}})
+        wrapper._ptr = stdlib.malloc(count*sizeof({{cname}}))
+        if wrapper._ptr is NULL:
+            raise MemoryError()
+        string.memset(wrapper._ptr, 0, count*sizeof({{cname}}))
+        wrapper._is_ptr_owner = True
+        return wrapper
+
 {{if not is_array}}
     @staticmethod
     cdef {{name}} fromValue({{cname}} other):
