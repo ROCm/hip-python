@@ -1392,6 +1392,12 @@ _AMDSMI_BUFFER_PARM_NAMES = frozenset({
     "name", "uuid", "bdf", "data",
     "processor_handles", "socket_handles", "sensor_inds", "sensor_types",
     "afids",
+    # @param[out] "user-provided buffer ... must contain at least
+    # max_processes entries ... Must be allocated by user" — a caller-sized
+    # record array driven by the in,out `max_processes` count, NOT a single
+    # callee-allocated record. Without this it would be a degree-1
+    # pointer-to-record => rank 0 => returned single struct.
+    "list",
 })
 
 
