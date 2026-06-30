@@ -37,9 +37,11 @@ Implemented surface:
 * ``nvmlDeviceGetCount``
 * ``nvmlDeviceGetHandleByIndex`` / ``nvmlDeviceGetHandleByUUID``
 * ``nvmlDeviceIsMigDeviceHandle`` / ``nvmlDeviceGetDeviceHandleFromMigDeviceHandle``
+* ``nvmlDeviceGetMigMode`` / ``nvmlDeviceGetMaxMigDeviceCount`` / ``nvmlDeviceGetMigDeviceHandleByIndex`` (MIG unsupported on ROCm)
 * ``nvmlDeviceGetMemoryInfo`` / ``nvmlDeviceGetName`` / ``nvmlDeviceGetUUID``
 * ``nvmlDeviceGetTemperature`` / ``nvmlDeviceGetPowerUsage``
 * ``nvmlDeviceGetUtilizationRates``
+* ``nvmlDeviceGetCpuAffinity`` (Linux-only, like NVML)
 * ``nvmlDeviceGetComputeRunningProcesses`` (best-effort, see note)
 * ``NVMLError`` and the per-code subclasses consumers commonly catch.
 
@@ -68,11 +70,17 @@ NVML_ERROR_INSUFFICIENT_SIZE = 7
 NVML_ERROR_DRIVER_NOT_LOADED = 9
 NVML_ERROR_TIMEOUT = 10
 NVML_ERROR_GPU_IS_LOST = 15
+NVML_ERROR_LIBRARY_NOT_FOUND = 12
 NVML_ERROR_FUNCTION_NOT_FOUND = 13
 NVML_ERROR_UNKNOWN = 999
 
 # Temperature sensor selectors (NVML nvmlTemperatureSensors_t).
 NVML_TEMPERATURE_GPU = 0
+
+# MIG (Multi-Instance GPU) modes (NVML nvmlDeviceMigMode). ROCm has no MIG, so
+# the device MIG mode always reports disabled.
+NVML_DEVICE_MIG_DISABLE = 0
+NVML_DEVICE_MIG_ENABLE = 1
 
 # Sentinel used by AMD SMI for unsupported scalar telemetry fields.
 _UINT32_MAX = 0xFFFFFFFF
@@ -142,6 +150,8 @@ NVMLError_Timeout = _make_error_subclass(
     "NVMLError_Timeout", NVML_ERROR_TIMEOUT)
 NVMLError_GpuIsLost = _make_error_subclass(
     "NVMLError_GpuIsLost", NVML_ERROR_GPU_IS_LOST)
+NVMLError_LibraryNotFound = _make_error_subclass(
+    "NVMLError_LibraryNotFound", NVML_ERROR_LIBRARY_NOT_FOUND)
 NVMLError_FunctionNotFound = _make_error_subclass(
     "NVMLError_FunctionNotFound", NVML_ERROR_FUNCTION_NOT_FOUND)
 NVMLError_Unknown = _make_error_subclass(
@@ -159,6 +169,7 @@ _NVML_ERROR_SUBCLASSES = {
         NVMLError_DriverNotLoaded,
         NVMLError_Timeout,
         NVMLError_GpuIsLost,
+        NVMLError_LibraryNotFound,
         NVMLError_FunctionNotFound,
         NVMLError_Unknown,
     )
@@ -395,6 +406,12 @@ def nvmlDeviceGetHandleByUUID(uuid):
     raise NVMLError(NVML_ERROR_NOT_FOUND, msg=f"no device with UUID {uuid!r}")
 
 
+def nvmlDeviceGetIndex(handle):
+    """NVML ordinal of the device handle."""
+    _ensure_initialized()
+    return handle.index
+
+
 def nvmlDeviceIsMigDeviceHandle(handle):
     """ROCm has no MIG; always reports ``False``."""
     _ensure_initialized()
@@ -405,6 +422,28 @@ def nvmlDeviceGetDeviceHandleFromMigDeviceHandle(handle):
     """No MIG on ROCm; the handle already refers to a full device."""
     _ensure_initialized()
     return handle
+
+
+def nvmlDeviceGetMigMode(handle):
+    """MIG mode pair ``(current, pending)``.
+
+    ROCm has no MIG, so MIG is always disabled. Returns a 2-tuple to match
+    NVML, whose callers typically read ``[0]`` for the current mode.
+    """
+    _ensure_initialized()
+    return (NVML_DEVICE_MIG_DISABLE, NVML_DEVICE_MIG_DISABLE)
+
+
+def nvmlDeviceGetMaxMigDeviceCount(handle):
+    """Maximum number of MIG devices; always ``0`` on ROCm (no MIG)."""
+    _ensure_initialized()
+    return 0
+
+
+def nvmlDeviceGetMigDeviceHandleByIndex(device, index):
+    """ROCm has no MIG instances; always unsupported."""
+    _ensure_initialized()
+    raise NVMLError(NVML_ERROR_NOT_SUPPORTED, msg="MIG is not supported on ROCm")
 
 
 # ---------------------------------------------------------------------------
@@ -523,6 +562,40 @@ def nvmlDeviceGetUtilizationRates(handle):
     )
 
 
+def nvmlDeviceGetCpuAffinity(handle, cpuSetSize):
+    """CPU affinity bitmask for the device's NUMA node.
+
+    Mirrors NVML's ``nvmlDeviceGetCpuAffinity``: returns a list of
+    ``cpuSetSize`` 64-bit words whose bits mark the CPUs local to the GPU.
+    Backed by ``amdsmi_get_cpu_affinity_with_scope`` at NUMA-node scope.
+
+    Like NVML, this is a Linux-only capability; on platforms (e.g. Windows) or
+    builds where AMD SMI cannot provide it, ``NVMLError_NotSupported`` is
+    raised so callers can fall back to a default affinity.
+    """
+    _ensure_initialized()
+    cpu_set_size = int(cpuSetSize)
+    if cpu_set_size < 1:
+        raise NVMLError(NVML_ERROR_INVALID_ARGUMENT, msg="'cpuSetSize' must be positive")
+    get_affinity = getattr(amdsmi, "amdsmi_get_cpu_affinity_with_scope", None)
+    if get_affinity is None:
+        raise NVMLError(
+            NVML_ERROR_NOT_SUPPORTED,
+            msg="amdsmi_get_cpu_affinity_with_scope is unavailable in this build",
+        )
+    cpu_set = (ctypes.c_uint64 * cpu_set_size)()
+    _check(
+        get_affinity(
+            handle._handle,
+            cpu_set_size,
+            cpu_set,
+            amdsmi.amdsmi_affinity_scope_t.AMDSMI_AFFINITY_SCOPE_NODE,
+        ),
+        "amdsmi_get_cpu_affinity_with_scope",
+    )
+    return [int(cpu_set[i]) for i in range(cpu_set_size)]
+
+
 def nvmlDeviceGetComputeRunningProcesses(handle):
     """Compute processes running on the device.
 
@@ -580,6 +653,7 @@ __all__ = [
     "NVMLError_DriverNotLoaded",
     "NVMLError_Timeout",
     "NVMLError_GpuIsLost",
+    "NVMLError_LibraryNotFound",
     "NVMLError_FunctionNotFound",
     "NVMLError_Unknown",
     "NVML_SUCCESS",
@@ -587,8 +661,12 @@ __all__ = [
     "NVML_ERROR_INVALID_ARGUMENT",
     "NVML_ERROR_NOT_SUPPORTED",
     "NVML_ERROR_NOT_FOUND",
+    "NVML_ERROR_LIBRARY_NOT_FOUND",
+    "NVML_ERROR_FUNCTION_NOT_FOUND",
     "NVML_ERROR_UNKNOWN",
     "NVML_TEMPERATURE_GPU",
+    "NVML_DEVICE_MIG_DISABLE",
+    "NVML_DEVICE_MIG_ENABLE",
     "c_nvmlMemory_t",
     "c_nvmlUtilization_t",
     "c_nvmlProcessInfo_t",
@@ -598,13 +676,18 @@ __all__ = [
     "nvmlDeviceGetCount",
     "nvmlDeviceGetHandleByIndex",
     "nvmlDeviceGetHandleByUUID",
+    "nvmlDeviceGetIndex",
     "nvmlDeviceIsMigDeviceHandle",
     "nvmlDeviceGetDeviceHandleFromMigDeviceHandle",
+    "nvmlDeviceGetMigMode",
+    "nvmlDeviceGetMaxMigDeviceCount",
+    "nvmlDeviceGetMigDeviceHandleByIndex",
     "nvmlDeviceGetMemoryInfo",
     "nvmlDeviceGetName",
     "nvmlDeviceGetUUID",
     "nvmlDeviceGetTemperature",
     "nvmlDeviceGetPowerUsage",
     "nvmlDeviceGetUtilizationRates",
+    "nvmlDeviceGetCpuAffinity",
     "nvmlDeviceGetComputeRunningProcesses",
 ]

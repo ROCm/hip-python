@@ -56,6 +56,12 @@ pip install "${wheels[@]}"
 export HIP_PYTHON_cudaError_t_HALLUCINATE=1
 pytest -v ${examples_build_dir}/examples
 
+# Mocked unit tests for the hip-python-interop pynvml/NVML shim. These live
+# OUTSIDE the importable package (tests/hip-python-interop, not under src/) and
+# stub rocm.bindings.amdsmi, so they exercise the *installed* hip_python_interop
+# wheel without requiring a GPU.
+pytest -v ${src_dir}/tests/hip-python-interop
+
 deactivate
 rm -rf ${examples_venv} ${examples_build_dir}
 
