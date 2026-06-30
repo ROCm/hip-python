@@ -524,36 +524,49 @@ def nvmlDeviceGetUtilizationRates(handle):
 
 
 def nvmlDeviceGetComputeRunningProcesses(handle):
-    """Compute processes on the device (best-effort).
+    """Compute processes running on the device.
 
-    NOTE: the high-level ``amdsmi_get_gpu_process_list`` wrapper allocates a
-    single ``amdsmi_proc_info_t`` buffer, so at most one process can be reported
-    safely. This covers the common "is anything running" check; full per-process
-    enumeration requires a richer AMD SMI binding. Returns an empty list when no
-    compute process is present or when the platform does not support the query.
+    Drives AMD SMI's two-call (count -> allocate -> fill) process query:
+    ``amdsmi_get_gpu_process_list`` reports the running-process count when
+    ``max_processes`` is 0 and ``list`` is ``None``; a caller-sized
+    ``amdsmi_proc_info_t`` record array (used as a sequence adapter via its
+    indexed ``get_*(i)`` accessors) is then filled on the second call.
+    Returns an empty list when nothing is running or the platform does not
+    support the query.
     """
     _ensure_initialized()
-    max_processes = (ctypes.c_uint * 1)()
-    # Match the single struct the binding allocates to avoid a buffer overflow.
-    max_processes[0] = 1
-    result = amdsmi.amdsmi_get_gpu_process_list(handle._handle, max_processes)
-    status = _status_int(result)
+    count = (ctypes.c_uint * 1)()
+    # First call: NULL list with a zero size asks AMD SMI for the count.
+    count[0] = 0
+    status = _status_int(
+        amdsmi.amdsmi_get_gpu_process_list(handle._handle, count, None)
+    )
     if status == int(_S.AMDSMI_STATUS_NOT_SUPPORTED):
         return []
-    _check(result, "amdsmi_get_gpu_process_list")
-    if max_processes[0] == 0:
+    _check(status, "amdsmi_get_gpu_process_list")
+    n = int(count[0])
+    if n == 0:
         return []
-    proc = result[1]
-    pid = int(getattr(proc, "pid", 0))
-    if pid == 0:
-        return []
-    used = int(getattr(proc, "mem", 0))
-    if used == 0:
-        # Fall back to the per-engine VRAM accounting when ``mem`` is unset.
-        mem_usage = getattr(proc, "memory_usage", None)
-        if mem_usage is not None:
-            used = int(getattr(mem_usage, "vram_mem", 0))
-    return [c_nvmlProcessInfo_t(pid=pid, usedGpuMemory=used)]
+    # Second call: caller-allocated array of n amdsmi_proc_info_t records.
+    proc_list = amdsmi.amdsmi_proc_info_t.allocate(n)
+    count[0] = n
+    _check(
+        amdsmi.amdsmi_get_gpu_process_list(handle._handle, count, proc_list),
+        "amdsmi_get_gpu_process_list",
+    )
+    processes = []
+    for i in range(int(count[0])):
+        pid = int(proc_list.get_pid(i))
+        if pid == 0:
+            continue
+        used = int(proc_list.get_mem(i))
+        if used == 0:
+            # Fall back to the per-engine VRAM accounting when ``mem`` is unset.
+            mem_usage = proc_list.get_memory_usage(i)
+            if mem_usage is not None:
+                used = int(getattr(mem_usage, "vram_mem", 0))
+        processes.append(c_nvmlProcessInfo_t(pid=pid, usedGpuMemory=used))
+    return processes
 
 
 __all__ = [
