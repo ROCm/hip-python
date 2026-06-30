@@ -308,12 +308,11 @@ def _enumerate_gpus():
         )
         for p in range(n_procs):
             proc_handle = ctypes.c_void_p(proc_arr[p])
-            ptype = (ctypes.c_int * 1)()
-            _check(
-                amdsmi.amdsmi_get_processor_type(proc_handle, ptype),
+            _, ptype = _check(
+                amdsmi.amdsmi_get_processor_type(proc_handle),
                 "amdsmi_get_processor_type",
             )
-            if ptype[0] == gpu_type:
+            if int(ptype) == gpu_type:
                 handles.append(proc_arr[p])
     return handles
 
