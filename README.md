@@ -135,7 +135,7 @@ It produces six wheels:
 - `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
 - `rocm-bindings-libraries` — math libraries: `hipblas`, `hipblaslt`*,
   `hipsolver`, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`*,
-  `hiptensor`*, `hipdnn`* (* = experimental, see [Known Limitations](#known-limitations))
+  `hiptensor`*, `hipdnn_backend`* (* = experimental, see [Known Limitations](#known-limitations))
 - `rocm-bindings-systems` — system-level libraries: `rccl`
   (collective communication), `roctx` (profiling/tracing),
   `hipfile`*, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
@@ -445,7 +445,7 @@ See [share/design/CODEGEN.md](share/design/CODEGEN.md) and
 ### Experimental libraries
 
 The newly added bindings — `hipfile`, `hipblaslt`, `hipsparselt`,
-`hiptensor`, `hipdnn`, and `hsa` — are marked **experimental** for
+`hiptensor`, `hipdnn_backend`, and `hsa` — are marked **experimental** for
 one release cycle. What this means in practice:
 
 - The Python-level API surface is generated automatically from the
@@ -462,13 +462,13 @@ one release cycle. What this means in practice:
 
 > [!IMPORTANT]
 > The shared libraries backing `hipfile`, `hipblaslt`, `hipsparselt`,
-> `hiptensor`, and `hipdnn` may **not be part of a standard ROCm
+> `hiptensor`, and `hipdnn_backend` may **not be part of a standard ROCm
 > installation**. If `dlopen` of `libhipfile.so`, `libhipblaslt.so`,
 > `libhipsparselt.so`, `libhiptensor.so`, or `libhipDNN.so` fails on
 > your system, you have to build the corresponding library manually
 > by following the build instructions in its source package:
 >
-> - `hipblaslt`, `hipsparselt`, `hiptensor`, `hipdnn` — see the
+> - `hipblaslt`, `hipsparselt`, `hiptensor`, `hipdnn_backend` — see the
 >   per-library README under
 >   <https://github.com/ROCm/rocm-libraries>.
 > - `hipfile` — see the per-library README under

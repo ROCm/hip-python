@@ -47,7 +47,7 @@ TypeCategory = TypeHandler.TypeCategory
 # ---------------------------------------------------------------------------
 # Useless-macro filters (Category A: visibility/deprecation attribute
 # macros; Category B: header guards). The strict-prefix node_filters used
-# by the prefix-admit recipes (hsa, amdsmi, hipdnn, hipblaslt,
+# by the prefix-admit recipes (hsa, amdsmi, hipdnn_backend, hipblaslt,
 # hipsparselt, hiptensor) would otherwise drag these into the public
 # Python namespace as nonsense `int` constants.
 #
@@ -1268,7 +1268,7 @@ class hiptensor:
         return hipblas.ptr_rank.__wrapped__(node)
 
 
-class hipdnn:
+class hipdnn_backend:
     """Controls for hipDNN backend — graph-style DNN primitives.
 
     The header `hipdnn_backend.h` is a clean C ABI: depends only on
@@ -1291,7 +1291,7 @@ class hipdnn:
     def node_filter(node: Node):
         if _is_useless_macro(node):
             return False
-        if node.name in hipdnn._CODEGEN_BLOCKLIST:
+        if node.name in hipdnn_backend._CODEGEN_BLOCKLIST:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPDNN_")

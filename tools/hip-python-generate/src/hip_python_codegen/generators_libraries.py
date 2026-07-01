@@ -478,7 +478,7 @@ def generate_hiptensor(
     return generator
 
 
-def generate_hipdnn(
+def generate_hipdnn_backend(
     *,
     include_dir: str,
     header_relpath: str = "hipdnn/backend/hipdnn_backend.h",
@@ -500,7 +500,7 @@ def generate_hipdnn(
     # share/design/UPSTREAM_BUGS).
     hipdnn_cflags = list(generator_args) + ["-Dconstexpr=const"]
     generator = CythonModuleGenerator(
-        "rocm.bindings.hipdnn",
+        "rocm.bindings.hipdnn_backend",
         include_dir,
         _make_header_arg(header_relpath, header_content),
         runtime_linking=runtime_linking,
@@ -512,9 +512,9 @@ def generate_hipdnn(
         node_init=_make_status_node_init(
             "hipdnn", "hipdnnStatus_t", "HIPDNN_STATUS_SUCCESS"
         ),
-        node_filter=controls.hipdnn.node_filter,
-        ptr_parm_intent=controls.hipdnn.ptr_parm_intent,
-        ptr_rank=controls.hipdnn.ptr_rank,
+        node_filter=controls.hipdnn_backend.node_filter,
+        ptr_parm_intent=controls.hipdnn_backend.ptr_parm_intent,
+        ptr_rank=controls.hipdnn_backend.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
         cflags=hipdnn_cflags,
     )

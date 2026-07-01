@@ -776,7 +776,7 @@ AVAILABLE_GENERATORS = {
     # Reading from the install dir keeps the export header next to
     # the umbrella header where the relative `#include "..."` finds
     # it.
-    "hipdnn":      (generators_libraries.generate_hipdnn,      "libraries", "hipdnn/backend/hipdnn_backend.h"),
+    "hipdnn_backend": (generators_libraries.generate_hipdnn_backend, "libraries", "hipdnn/backend/hipdnn_backend.h"),
     # rocm-bindings-compiler — both formerly their own recipes; now
     # libraries inside the hip recipe. amd_comgr is single-header;
     # llvm is multi-module (header_relpath=None signals the orchestrator

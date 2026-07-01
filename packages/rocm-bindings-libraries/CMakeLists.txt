@@ -30,7 +30,7 @@ option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm librari
 # rocm-bindings-systems wheel.
 #
 # NOTE: the experimental bindings (hipblaslt, hipsparselt, hiptensor,
-# hipdnn) are produced by the codegen but have a known typedef-vs-tag
+# hipdnn_backend) are produced by the codegen but have a known typedef-vs-tag
 # resolution issue in their cython output (struct tag like
 # `_hipblasLtMatmulAlgo_t` is referenced without a matching
 # `cdef struct` declaration). They are intentionally omitted from the

@@ -6,7 +6,7 @@ that wire it in.
 
 Two categories of macro should be dropped at codegen time when they
 appear inside a header that the prefix-admit recipes (hsa, amdsmi,
-hipdnn, hipblaslt, hipsparselt, hiptensor) consume:
+hipdnn_backend, hipblaslt, hipsparselt, hiptensor) consume:
 
 A. **Visibility / linkage / deprecation attribute macros** — bodies
    expand to ``__attribute__(...)`` decorators with no Python value
@@ -26,7 +26,7 @@ from interfacegen.support.recipes.rocm import (
     _is_header_guard_macro,
     _is_useless_macro,
     hipblaslt,
-    hipdnn,
+    hipdnn_backend,
     hipsparselt,
     hiptensor,
 )
@@ -158,7 +158,7 @@ def test_normal_size_macro_is_not_useless():
 @pytest.mark.parametrize("recipe,prefix", [
     (hipblaslt, "HIPBLASLT"),
     (hiptensor, "HIPTENSOR"),
-    (hipdnn, "HIPDNN"),
+    (hipdnn_backend, "HIPDNN"),
     (hipsparselt, "HIPSPARSELT"),
 ])
 def test_recipe_node_filter_drops_useless_macros(recipe, prefix):

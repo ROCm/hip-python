@@ -32,7 +32,7 @@ are now generator-managed instead of recipe-managed.
 ### New library bindings emitted
 
 The generator now produces wheels for **hipblaslt**,
-**hipsparselt**, **hiptensor**, **hipdnn**, **hsa**, and
+**hipsparselt**, **hiptensor**, **hipdnn_backend**, **hsa**, and
 **amdsmi** (including the ESMI CPU-monitoring block — 75
 functions). Each binding came with its own pile of fixes:
 prefix/case overrides, header-include workarounds (e.g.
@@ -41,7 +41,7 @@ prefix/case overrides, header-include workarounds (e.g.
 INOUT-mistag overrides for caller-allocated buffers (`rccl`,
 `hsa`, `hiptensor`, plus pointer-intent fixes for HIP and
 amdsmi doxygen mistags). The amdsmi recipe enables the ESMI
-block. The hipdnn recipe was repaired to use the install-dir
+block. The hipdnn_backend recipe was repaired to use the install-dir
 layout and map `constexpr`.
 
 ### Cython generator features

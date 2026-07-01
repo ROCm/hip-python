@@ -54,7 +54,7 @@ or `--rocm-llvm-project-dir` must be provided.
 |---|---|
 | `hip` | `hip`, `hiprtc` |
 | `systems` | `rccl`, `roctx`, `hipfile`, `amdsmi`, `hsa`† |
-| `libraries` | `hipblas`, `hipblaslt`*†, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`†, `hipsolver`, `hiptensor`*†, `hipdnn`*† |
+| `libraries` | `hipblas`, `hipblaslt`*†, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`†, `hipsolver`, `hiptensor`*†, `hipdnn_backend`*† |
 | `compiler` | `amd_comgr`, `llvm` (multi-module — every llvm-c/* header is emitted) |
 
 > **\*hipblaslt:** the upstream `hipblaslt/hipblaslt.h` (as of ROCm
@@ -69,7 +69,7 @@ or `--rocm-llvm-project-dir` must be provided.
 > extension as C++ until the upstream header is fixed.
 >
 > **†experimental** — `hipblaslt`, `hipsparselt`, `hiptensor`,
-> `hipdnn`, and `hsa` are newly added and marked experimental for
+> `hipdnn_backend`, and `hsa` are newly added and marked experimental for
 > one release cycle. Pointer parameter classification (OUT vs INOUT)
 > is heuristic and subject to re-tuning based on user feedback;
 > other interface aspects (return values, opaque handles, scalar
@@ -84,9 +84,9 @@ or `--rocm-llvm-project-dir` must be provided.
 > variant. The `hsa` binding is unaffected — `libhsa-runtime64.so.1`
 > is present.
 >
-> **\*hiptensor / hipdnn**: only available via the `rocm-libraries`
+> **\*hiptensor / hipdnn_backend**: only available via the `rocm-libraries`
 > source repository (no shipped header in `/opt/rocm/include` for
-> hipdnn's backend; hiptensor is install-target-only). Pass
+> hipdnn_backend's backend; hiptensor is install-target-only). Pass
 > `--rocm-libraries-dir` to `hip-python-generate` so the headers can
 > be located.
 

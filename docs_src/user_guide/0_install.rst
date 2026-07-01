@@ -210,7 +210,7 @@ deployments) install only the binding wheels you actually need:
      - You call into the math/FFT/random/sparse libraries
        (``hipblas``, ``hipsolver``, ``hiprand``, ``hipfft``,
        ``hipsparse``, plus the experimental ``hipblaslt``,
-       ``hipsparselt``, ``hiptensor``, ``hipdnn``).
+       ``hipsparselt``, ``hiptensor``, ``hipdnn_backend``).
    * - ``rocm-bindings-systems``
      - You call the system-level libraries: ``rccl`` (collective
        communication), ``roctx`` (profiling/tracing),
@@ -239,7 +239,7 @@ you want and let pip figure out the dependencies.
 .. note::
 
    Some bindings (``hipfile``, ``hipblaslt``, ``hipsparselt``,
-   ``hiptensor``, ``hipdnn``) require shared libraries that may
+   ``hiptensor``, ``hipdnn_backend``) require shared libraries that may
    not be part of a standard ROCm installation. See the project
    README for build-from-source instructions if ``dlopen`` of the
    corresponding ``.so`` fails on your system.

@@ -54,7 +54,7 @@ they need.
    * - ``rocm-bindings-libraries``
      - Math/FFT/random/sparse libraries: ``hipblas``, ``hipblaslt``,
        ``hipsolver``, ``hiprand``, ``hipfft``, ``hipsparse``,
-       ``hipsparselt``, ``hiptensor``, ``hipdnn``. Module list is
+       ``hipsparselt``, ``hiptensor``, ``hipdnn_backend``. Module list is
        generator-managed.
 
    * - ``rocm-bindings-systems``

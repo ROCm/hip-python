@@ -58,7 +58,7 @@ which also absorbs `rccl` and `roctx` from the old layout. The
 `hipfile.python` and lives at `rocm.hipfile`. Library bindings
 were sorted into stable / experimental / deferred tiers — the
 experimental ones (`hipblaslt`, `hipsparselt`, `hiptensor`,
-`hipdnn`) ship behind explicit READMEs; `hsakmt` is deferred.
+`hipdnn_backend`) ship behind explicit READMEs; `hsakmt` is deferred.
 The `comgr` high-level package migrated to `CStr`, gained
 cross-linked docstrings, accepts full enum names, and exposes
 `valid_*()` introspection helpers.
