@@ -368,9 +368,16 @@ class AMDGPUTargetMachine:
                 context, mod, mod_len
             )
 
-        # As LLVMRunPasses aborts the process, we need to run it in a separate process
-        # stderr_post = sys.stderr
-        process = mp.Process(
+        # As LLVMRunPasses aborts the process, we need to run it in a separate
+        # process. The child must SHARE the parent's address space: the args
+        # (the LLVM module / target-machine / pass-builder-option handles) are
+        # live pointers into the parent's heap and are neither picklable (they
+        # are Cython extension types with a non-trivial __cinit__ and no
+        # __reduce__) nor meaningful in a fresh interpreter. Force the "fork"
+        # start method explicitly: CPython 3.14 changed the POSIX default from
+        # "fork" to "forkserver", which pickles the target + args and fails with
+        # "TypeError: no default __reduce__ due to non-trivial __cinit__".
+        process = mp.get_context("fork").Process(
             target=_RUN_PASSES,
             args=(
                 optimized,
