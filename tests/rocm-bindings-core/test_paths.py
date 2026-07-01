@@ -39,14 +39,23 @@ def _make_llvm_lib(root):
     return llvm_lib
 
 
+# These tests target the ROCM_PATH / ROCM_HOME (tier 3) resolution, so they
+# must be isolated from tier-1 bundled auto-detection: get_library_path()
+# otherwise rglobs the installed rocm package and, in a wheel install, finds
+# the bundled libLLVM.so, shadowing the env-var tier. Passing an explicit
+# bundled_location that does not contain the library disables the rglob.
+def _no_bundled(tmp_path):
+    return tmp_path / "no_bundled"
+
+
 def test_get_library_path_clang_rocm_home(tmp_path, monkeypatch, block_rocm_sdk):
     llvm_lib = _make_llvm_lib(tmp_path)
     (llvm_lib / "libclang.so").touch()
     monkeypatch.setenv("ROCM_HOME", str(tmp_path))
 
-    assert paths.get_library_path("clang") == str(
-        llvm_lib / "libclang.so"
-    ).encode("utf-8")
+    assert paths.get_library_path(
+        "clang", bundled_location=_no_bundled(tmp_path)
+    ) == str(llvm_lib / "libclang.so").encode("utf-8")
 
 
 def test_get_library_path_clang_versioned_soname(tmp_path, monkeypatch, block_rocm_sdk):
@@ -56,9 +65,9 @@ def test_get_library_path_clang_versioned_soname(tmp_path, monkeypatch, block_ro
     (llvm_lib / "libclang.so.23.0git").touch()
     monkeypatch.setenv("ROCM_HOME", str(tmp_path))
 
-    assert paths.get_library_path("clang").decode("utf-8") == str(
-        llvm_lib / "libclang.so.23.0git"
-    )
+    assert paths.get_library_path(
+        "clang", bundled_location=_no_bundled(tmp_path)
+    ).decode("utf-8") == str(llvm_lib / "libclang.so.23.0git")
 
 
 def test_get_library_path_llvm_rocm_path(tmp_path, monkeypatch, block_rocm_sdk):
@@ -66,9 +75,9 @@ def test_get_library_path_llvm_rocm_path(tmp_path, monkeypatch, block_rocm_sdk):
     (llvm_lib / "libLLVM.so.23.0git").touch()
     monkeypatch.setenv("ROCM_PATH", str(tmp_path))
 
-    assert paths.get_library_path("LLVM").decode("utf-8") == str(
-        llvm_lib / "libLLVM.so.23.0git"
-    )
+    assert paths.get_library_path(
+        "LLVM", bundled_location=_no_bundled(tmp_path)
+    ).decode("utf-8") == str(llvm_lib / "libLLVM.so.23.0git")
 
 
 def test_get_library_path_rocm_path_wins_over_rocm_home(
@@ -84,9 +93,9 @@ def test_get_library_path_rocm_path_wins_over_rocm_home(
     monkeypatch.setenv("ROCM_PATH", str(path_tree))
     monkeypatch.setenv("ROCM_HOME", str(home_tree))
 
-    assert paths.get_library_path("clang") == str(
-        llvm_lib / "libclang.so"
-    ).encode("utf-8")
+    assert paths.get_library_path(
+        "clang", bundled_location=_no_bundled(tmp_path)
+    ) == str(llvm_lib / "libclang.so").encode("utf-8")
 
 
 def test_get_library_path_rocm_sdk_returns_pathlib(tmp_path, monkeypatch):
