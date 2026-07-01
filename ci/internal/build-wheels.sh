@@ -54,12 +54,14 @@ set -xeu
 #                             core + hip + compiler (skips libraries,
 #                             systems, interop).
 #   USE_SABI                  default "no". When set to a CPython version
-#                             (e.g. "3.9"), build limited-API (abi3) wheels
+#                             (e.g. "3.11"), build limited-API (abi3) wheels
 #                             against the CPython stable ABI using that value
 #                             as the abi3 floor (forwarded as
 #                             -DHIP_PYTHON_ABI3_FLOOR). Independent of the
 #                             active build interpreter, but the floor must be
-#                             <= the active Python. "no" disables it.
+#                             <= the active Python and >= 3.11 (the bindings
+#                             use the buffer protocol, which is only in the
+#                             stable ABI since CPython 3.11). "no" disables it.
 
 project_dir=hip_python
 
@@ -101,11 +103,15 @@ else
 fi
 
 # Stable-ABI (abi3) floor. USE_SABI carries the abi3 floor version (e.g.
-# "3.9") or "no" to disable. When a version is given, forward it to CMake as
+# "3.11") or "no" to disable. When a version is given, forward it to CMake as
 # HIP_PYTHON_ABI3_FLOOR so the compiled extensions are built against the
 # CPython stable ABI and the wheels are tagged cp<floor>-abi3.
 abi3_floor=""
 if [[ "${USE_SABI:-no}" != "no" ]]; then
+  if [[ ! "${USE_SABI}" =~ ^3\.[0-9]{2}$ ]]; then
+    echo "ERROR: USE_SABI must be \"no\" or a CPython floor version matching 3.[0-9][0-9] (e.g. \"3.11\"); got \"${USE_SABI}\"." >&2
+    exit 1
+  fi
   abi3_floor=${USE_SABI}
 fi
 

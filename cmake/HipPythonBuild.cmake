@@ -3,7 +3,16 @@ include_guard(GLOBAL)
 include(CMakeParseArguments)
 
 set(Python_FIND_VIRTUALENV FIRST)
-find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
+# Building stable-ABI (abi3) modules via `Python_add_library(... USE_SABI ...)`
+# requires the Development.SABIModule component so FindPython defines the
+# Python::SABIModule target. Request it in addition to Development.Module when
+# an abi3 floor was passed (-DHIP_PYTHON_ABI3_FLOOR=<major.minor>); cache -D
+# defines are available before this find_package runs.
+set(_hip_python_python_components Interpreter Development.Module)
+if(DEFINED HIP_PYTHON_ABI3_FLOOR AND NOT "${HIP_PYTHON_ABI3_FLOOR}" STREQUAL "")
+  list(APPEND _hip_python_python_components Development.SABIModule)
+endif()
+find_package(Python REQUIRED COMPONENTS ${_hip_python_python_components})
 
 function(hip_python_get_rocm_path_default out_var)
   if(DEFINED ENV{ROCM_PATH} AND NOT "$ENV{ROCM_PATH}" STREQUAL "")
