@@ -124,6 +124,40 @@ cd ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/
   sed -s -i "s,clang\.enumerations,rocm.bindings.clang.enumerations," \
     ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py
 
+  # 1b) append the libclang resolver fallback to the copied cindex.py.
+  #     Upstream Config.get_filename() returns a bare soname (e.g.
+  #     "libclang.so") when neither Config.set_library_file/set_library_path
+  #     nor the LIBCLANG_* env vars are set; that fails in a pip-only ROCm
+  #     install. Wrap it so the unconfigured, non-absolute (bare-soname) case
+  #     resolves libclang through the shared rocm-bindings resolver (ROCM_PATH,
+  #     the rocm_sdk wheel anchor, versioned soname). Explicit Config/LIBCLANG_*
+  #     overrides already yield an absolute path and pass straight through, so
+  #     their priority is preserved. Appending (rather than editing the
+  #     get_filename body) keeps this robust to upstream LLVM changes.
+  echo "append libclang resolver fallback to rocm.bindings.clang.cindex"
+  cat >> ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py <<'PYEOF'
+
+# === hip-python: libclang resolution fallback (appended at codegen time) ===
+def _hip_python_get_filename(self, _orig=Config.get_filename):
+    import os as _os
+
+    result = _orig(self)
+    if _os.path.isabs(result):
+        return result
+    try:
+        from rocm.bindings.util.paths import get_library_path
+
+        resolved = get_library_path("clang").decode("utf-8")
+        if _os.path.isabs(resolved) and _os.path.exists(resolved):
+            return resolved
+    except Exception:
+        pass
+    return result
+
+
+Config.get_filename = _hip_python_get_filename
+PYEOF
+
   # 2) copy LLVM LICENSE.TXT next to the clang bindings.
   echo "copy LLVM LICENSE.TXT into rocm.bindings.clang package"
   rm -f LICENSE.TXT
