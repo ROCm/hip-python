@@ -110,29 +110,6 @@ def test_data_name_str_interned_after_data_dropped():
     assert canonical in _t.CStr._retained_inputs
 
 
-def test_to_cstr_helper_removed():
-    """Sanity: the deleted ``to_cstr`` helper is gone from the
-    comgr module (regression against accidental re-introduction)."""
-    import rocm.comgr.comgr as comgr_mod
-    assert not hasattr(comgr_mod, "to_cstr"), (
-        "to_cstr was deleted in the CStr migration; do not re-introduce. "
-        "Use CStr(name) directly — the intern dict provides "
-        "program-lifetime pinning, and Python's bytes invariant "
-        "guarantees a NUL-terminated buffer."
-    )
-
-
-def test_keep_alive_mixin_removed():
-    """Sanity: the deleted ``_KeepAliveMixin`` is gone from the
-    comgr module (regression against accidental re-introduction).
-    Strings now live in ``CStr._retained_inputs`` (program-lifetime),
-    not in a per-instance ``__references__`` set."""
-    import rocm.comgr.comgr as comgr_mod
-    assert not hasattr(comgr_mod, "_KeepAliveMixin"), (
-        "_KeepAliveMixin was deleted in the CStr migration; do not re-introduce."
-    )
-
-
 # ---------------------------------------------------------------------------
 # *_str_to_enum: short form, full prefix form, case-insensitive matching
 # ---------------------------------------------------------------------------

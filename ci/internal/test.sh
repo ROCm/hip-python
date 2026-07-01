@@ -87,7 +87,20 @@ pytest -v ${examples_build_dir}/examples
 pytest -v ${src_dir}/tests/hip-python-interop
 
 ### -------------------------------------------------------------------
-### Suite 3 — numba-hip
+### Suite 3 — rocm-bindings unit tests (core + compiler)
+### -------------------------------------------------------------------
+#
+# GPU-free unit tests for the rocm-bindings-core and rocm-bindings-compiler
+# wheels (path resolution, CStr lifetime pinning, comgr enum lookups, the
+# libclang loader fallback). Like the suites above they live OUTSIDE the
+# importable packages (tests/, not under src/) and exercise the *installed*
+# wheels, so they only run once the bindings have been materialized/built.
+
+pytest -v ${src_dir}/tests/rocm-bindings-core
+pytest -v ${src_dir}/tests/rocm-bindings-compiler
+
+### -------------------------------------------------------------------
+### Suite 4 — numba-hip
 ### -------------------------------------------------------------------
 #
 # The tests live OUTSIDE the importable package (tests/numba-hip, not
