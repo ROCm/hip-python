@@ -18,6 +18,7 @@ verified separately against real venvs) do not shadow the env-var tier.
 """
 
 import sys
+import types
 
 import pytest
 
@@ -86,3 +87,46 @@ def test_get_library_path_rocm_path_wins_over_rocm_home(
     assert paths.get_library_path("clang") == str(
         llvm_lib / "libclang.so"
     ).encode("utf-8")
+
+
+def test_get_library_path_rocm_sdk_returns_pathlib(tmp_path, monkeypatch):
+    """Regression: ``rocm_sdk.find_libraries`` returns ``pathlib.Path`` objects.
+
+    The tier-2 general branch used to call ``.encode()`` directly on the Path,
+    raising ``AttributeError`` that was silently swallowed, so every rocm_sdk
+    runtime lib fell through to ``/opt/rocm`` (masking) or a bare soname (which
+    fails in a pip-only install). ``get_library_path`` must return the resolved
+    absolute path as bytes regardless of whether ``find_libraries`` yields a
+    ``Path`` or a ``str``.
+    """
+    lib_file = tmp_path / "libamdhip64.so"
+    lib_file.touch()
+
+    fake_rocm_sdk = types.ModuleType("rocm_sdk")
+    fake_rocm_sdk.find_libraries = lambda shortname: [lib_file]  # PosixPath
+    monkeypatch.setitem(sys.modules, "rocm_sdk", fake_rocm_sdk)
+    monkeypatch.delenv("ROCM_PATH", raising=False)
+    monkeypatch.delenv("ROCM_HOME", raising=False)
+
+    # bundled_location points at an empty dir so the tier-1 auto-detect rglob
+    # (which would scan the installed rocm package) is skipped and the rocm_sdk
+    # tier is exercised deterministically.
+    result = paths.get_library_path("amdhip64", bundled_location=tmp_path / "empty")
+
+    assert result == str(lib_file).encode("utf-8")
+
+
+def test_get_library_path_rocm_sdk_returns_str(tmp_path, monkeypatch):
+    """The rocm_sdk tier also accepts plain ``str`` paths (forward-compat)."""
+    lib_file = tmp_path / "libamdhip64.so"
+    lib_file.touch()
+
+    fake_rocm_sdk = types.ModuleType("rocm_sdk")
+    fake_rocm_sdk.find_libraries = lambda shortname: [str(lib_file)]
+    monkeypatch.setitem(sys.modules, "rocm_sdk", fake_rocm_sdk)
+    monkeypatch.delenv("ROCM_PATH", raising=False)
+    monkeypatch.delenv("ROCM_HOME", raising=False)
+
+    result = paths.get_library_path("amdhip64", bundled_location=tmp_path / "empty")
+
+    assert result == str(lib_file).encode("utf-8")

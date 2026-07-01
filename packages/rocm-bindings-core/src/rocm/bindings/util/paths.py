@@ -110,11 +110,19 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
 
     lib_name = f'{lib_prefix}{shortname}.{lib_ext}'
 
+    # Every tier below resolves into this single result. The conversion to the
+    # bytes contract required by the Cython consumer (posixloader.open_library,
+    # which takes a const char*) happens exactly once, at the end, via
+    # os.fsencode - which accepts both str and Path. Centralizing the encode
+    # removes the class of bug where an individual tier forgets the str()/Path
+    # bridge (e.g. calling .encode() directly on a PosixPath from rocm_sdk).
+    resolved = None
+
     # 1. Try bundled location first (for wheel-packaged libraries)
     if bundled_location is not None:
         bundled_path = bundled_location / lib_name
         if bundled_path.exists():
-            return str(bundled_path).encode('utf-8')
+            resolved = bundled_path
     else:
         # Auto-detect: recursively search from rocm package root
         # paths.py is at rocm/bindings/util/paths.py
@@ -124,21 +132,22 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
         # Recursively search for library file in rocm package
         for lib_file in package_root.rglob(lib_name):
             if lib_file.is_file():
-                return str(lib_file).encode('utf-8')
+                resolved = lib_file
+                break
 
     # 2b. LLVM toolchain libs (clang, LLVM) are NOT registered in
     #     rocm_sdk.ALL_LIBRARIES, so find_libraries(shortname) cannot find them
     #     (see ROCM_SDK_PACKAGING_BUG_REPORT.md). For TheRock/rocm_sdk wheel
     #     installs, anchor on a library that IS registered and shipped by
     #     rocm-sdk-core, then walk to the sibling llvm/lib directory.
-    if shortname in ('LLVM', 'clang'):
+    if resolved is None and shortname in ('LLVM', 'clang'):
         try:
             from rocm_sdk import find_libraries
             # Forward-compat: prefer a direct hit if these ever get registered.
             try:
                 direct = find_libraries(shortname)
                 if direct:
-                    return str(direct[0]).encode('utf-8')
+                    resolved = direct[0]
             except Exception:
                 pass
             # Cheap tier first: anchor on core (today's toolchain home). This
@@ -157,55 +166,60 @@ def get_library_path(shortname: str, bundled_location: Optional[Path] = None) ->
         #     lazy _devel.tar expansion on first use, so it runs only after the
         #     cheap core anchor above misses. numba-hip needs the toolchain
         #     anyway, so requiring rocm[devel] in that future is acceptable.
-        try:
-            from rocm_sdk._devel import get_devel_root
-            llvm_lib = Path(get_devel_root()) / 'lib' / 'llvm' / 'lib'
-            matches = sorted(llvm_lib.glob(f'{lib_name}*'))
-            if matches:
-                return str(matches[0]).encode('utf-8')
-        except Exception:
-            pass  # devel not installed; fall through
+        if resolved is None:
+            try:
+                from rocm_sdk._devel import get_devel_root
+                llvm_lib = Path(get_devel_root()) / 'lib' / 'llvm' / 'lib'
+                matches = sorted(llvm_lib.glob(f'{lib_name}*'))
+                if matches:
+                    resolved = matches[0]
+            except ImportError:
+                pass  # devel not installed; fall through
 
     # 2. Try rocm_sdk API (TheRock installation)
     #    This is the official recommended approach for ROCm 7.9+
-    try:
-        from rocm_sdk import find_libraries
-        paths = find_libraries(shortname)
-        if paths and len(paths) > 0:
-            return paths[0].encode('utf-8')
-    except (ImportError, Exception):
-        # rocm_sdk not installed or find_libraries failed
-        # Continue with fallback options
-        pass
+    if resolved is None:
+        try:
+            from rocm_sdk import find_libraries
+            paths = find_libraries(shortname)
+            if paths and len(paths) > 0:
+                resolved = paths[0]
+        except ImportError:
+            # rocm_sdk not installed; continue with fallback options
+            pass
 
     # 3. Try ROCM_PATH / ROCM_HOME environment variables (Unix traditional install)
     #    On Windows, traditional HIP SDK installs DLLs to System32, not a ROCm directory
-    if sys.platform not in ('win32', 'cygwin'):
+    if resolved is None and sys.platform not in ('win32', 'cygwin'):
         rocm_path = (
             os.environ.get('ROCM_PATH')
             or os.environ.get('ROCM_HOME')
             or '/opt/rocm'
         )
-        lib_name = f'{lib_prefix}{shortname}.{lib_ext}'
 
         # LLVM toolchain libs (LLVM, clang) live under llvm/lib.
         if shortname in ('LLVM', 'clang'):
             llvm_lib = Path(rocm_path) / 'llvm' / 'lib'
             lib_file = llvm_lib / lib_name
             if lib_file.exists():
-                return str(lib_file).encode('utf-8')
-            # ROCm often ships only a versioned soname (e.g. libclang.so.23.0git).
-            matches = sorted(llvm_lib.glob(f'{lib_name}*'))
-            if matches:
-                return str(matches[0]).encode('utf-8')
+                resolved = lib_file
+            else:
+                # ROCm often ships only a versioned soname (e.g. libclang.so.23.0git).
+                matches = sorted(llvm_lib.glob(f'{lib_name}*'))
+                if matches:
+                    resolved = matches[0]
 
         # Standard location: lib subdirectory
-        lib_file = Path(rocm_path) / 'lib' / lib_name
-        if lib_file.exists():
-            return str(lib_file).encode('utf-8')
+        if resolved is None:
+            lib_file = Path(rocm_path) / 'lib' / lib_name
+            if lib_file.exists():
+                resolved = lib_file
 
     # 4. Fall back to basename (rely on system loader)
     #    Windows: DLLs found via PATH (typically System32 for GPU drivers)
     #    macOS: Libraries found via DYLD_LIBRARY_PATH or standard paths
     #    Linux: Libraries found via LD_LIBRARY_PATH or standard paths
-    return f'{lib_prefix}{shortname}.{lib_ext}'.encode('utf-8')
+    if resolved is None:
+        resolved = lib_name
+
+    return os.fsencode(resolved)
