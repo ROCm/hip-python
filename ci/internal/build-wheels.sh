@@ -53,6 +53,13 @@ set -xeu
 #   LIGHT_MODE                default false. If "true", build only
 #                             core + hip + compiler (skips libraries,
 #                             systems, interop).
+#   USE_SABI                  default "no". When set to a CPython version
+#                             (e.g. "3.9"), build limited-API (abi3) wheels
+#                             against the CPython stable ABI using that value
+#                             as the abi3 floor (forwarded as
+#                             -DHIP_PYTHON_ABI3_FLOOR). Independent of the
+#                             active build interpreter, but the floor must be
+#                             <= the active Python. "no" disables it.
 
 project_dir=hip_python
 
@@ -91,6 +98,15 @@ else
   build_libraries=ON
   build_systems=ON
   build_interop=ON
+fi
+
+# Stable-ABI (abi3) floor. USE_SABI carries the abi3 floor version (e.g.
+# "3.9") or "no" to disable. When a version is given, forward it to CMake as
+# HIP_PYTHON_ABI3_FLOOR so the compiled extensions are built against the
+# CPython stable ABI and the wheels are tagged cp<floor>-abi3.
+abi3_floor=""
+if [[ "${USE_SABI:-no}" != "no" ]]; then
+  abi3_floor=${USE_SABI}
 fi
 
 ### prepare working copy
@@ -188,6 +204,11 @@ cmake_args=(
   -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
   -DHIP_PYTHON_WHEEL_OUTPUT_DIR=${BUILD_ARTIFACTS_DIR}
 )
+
+# Forward the abi3 floor when stable-ABI builds are requested.
+if [[ -n "${abi3_floor}" ]]; then
+  cmake_args+=(-DHIP_PYTHON_ABI3_FLOOR=${abi3_floor})
+fi
 
 # Add compiler launcher if sccache is enabled
 if [[ "${SCCACHE_ENABLE:-false}" == "true" ]]; then

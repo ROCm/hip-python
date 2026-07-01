@@ -92,19 +92,28 @@ def read_wheel_package_dirs(pyproject: dict) -> list[str]:
     return ["src/rocm"]
 
 
-def compute_platform_tag() -> str:
+def compute_platform_tag(abi3_floor: str | None = None) -> str:
     """Pre-repair interpreter/abi/platform tag, e.g. cp312-cp312-linux_x86_64.
 
     The platform component is the generic (non-manylinux) tag, matching
     what scikit-build-core emits before ``auditwheel repair`` retags the
     wheel to its ``manylinux_*`` aliases.
+
+    When ``abi3_floor`` is given (e.g. ``"3.9"``), the modules were built
+    against the CPython stable ABI, so the tag becomes
+    ``cp<floor>-abi3-<platform>`` (a single wheel that loads on every
+    CPython >= the floor) instead of the full interpreter-specific tag.
     """
+    platform = sysconfig.get_platform().replace("-", "_").replace(".", "_")
+    if abi3_floor:
+        major, minor = abi3_floor.split(".")[:2]
+        interp = f"cp{major}{minor}"
+        return f"{interp}-abi3-{platform}"
     interp = f"cp{sys.version_info.major}{sys.version_info.minor}"
     # Standard CPython extension modules use the full interpreter ABI
     # (the EXT_SUFFIX SOABI starts with "cpython-<ver>"), so the abi tag
-    # equals the interpreter tag. We never build abi3 modules here.
+    # equals the interpreter tag.
     abi = interp
-    platform = sysconfig.get_platform().replace("-", "_").replace(".", "_")
     return f"{interp}-{abi}-{platform}"
 
 
@@ -271,12 +280,13 @@ def assemble(
     config: str,
     version_override: str | None,
     tag_override: str | None,
+    abi3_floor: str | None,
 ) -> Path:
     pyproject = tomllib.loads((package_dir / "pyproject.toml").read_text("utf-8"))
     project_name = pyproject["project"]["name"]
     dist_name = canonicalize_name(project_name).replace("-", "_")
     version = read_version(package_dir, version_override)
-    tag = tag_override or compute_platform_tag()
+    tag = tag_override or compute_platform_tag(abi3_floor)
     wheel_pkg_dirs = read_wheel_package_dirs(pyproject)
 
     with tempfile.TemporaryDirectory(prefix=f"{dist_name}-wheel-") as tmp:
@@ -320,6 +330,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--tag", default=None, help="override wheel tag (default: computed)"
     )
+    parser.add_argument(
+        "--abi3-floor",
+        default=None,
+        help=(
+            "CPython stable-ABI floor (e.g. 3.9); tags the wheel "
+            "cp<floor>-abi3. Ignored when --tag is given."
+        ),
+    )
     args = parser.parse_args(argv)
 
     assemble(
@@ -331,6 +349,7 @@ def main(argv: list[str] | None = None) -> int:
         config=args.config,
         version_override=args.version,
         tag_override=args.tag,
+        abi3_floor=args.abi3_floor,
     )
     return 0
 

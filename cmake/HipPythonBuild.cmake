@@ -99,6 +99,29 @@ function(hip_python_initialize)
       "__half=uint16_t"
       CACHE INTERNAL "Common compile definitions for hip-python extensions" FORCE)
   set(HIP_PYTHON_ROCM_INCLUDE_DIR "${ROCM_PATH}/include" CACHE PATH "ROCm include directory")
+
+  # abi3 (CPython stable-ABI / limited-API) floor. When set to a version
+  # (e.g. "3.9"), the compiled Cython extensions are built against the
+  # CPython stable ABI with that version as the floor, and the assembled
+  # wheels are tagged cp<floor>-abi3 so a single wheel works on every
+  # CPython >= the floor. Empty (the default) disables stable-ABI builds.
+  # The floor is independent of the active build interpreter but must not
+  # exceed it (you cannot target a newer stable ABI than the interpreter
+  # you build with).
+  set(HIP_PYTHON_ABI3_FLOOR "" CACHE STRING
+      "abi3 (CPython stable-ABI) floor version, e.g. 3.9. Empty disables stable-ABI builds.")
+  if(NOT "${HIP_PYTHON_ABI3_FLOOR}" STREQUAL "")
+    if(NOT "${HIP_PYTHON_ABI3_FLOOR}" MATCHES "^[0-9]+\\.[0-9]+$")
+      message(FATAL_ERROR
+        "HIP_PYTHON_ABI3_FLOOR must be a 'major.minor' Python version "
+        "(e.g. 3.9); got '${HIP_PYTHON_ABI3_FLOOR}'.")
+    endif()
+    if("${HIP_PYTHON_ABI3_FLOOR}" VERSION_GREATER "${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}")
+      message(FATAL_ERROR
+        "HIP_PYTHON_ABI3_FLOOR (${HIP_PYTHON_ABI3_FLOOR}) must be <= the "
+        "active Python (${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}).")
+    endif()
+  endif()
 endfunction()
 
 function(hip_python_select_modules out_var selection)
@@ -276,7 +299,16 @@ function(hip_python_add_cython_module)
     VERBATIM
   )
 
-  Python_add_library(${ARG_TARGET} MODULE WITH_SOABI "${_generated_c}")
+  # When an abi3 floor is set, build against the CPython stable ABI:
+  # USE_SABI makes FindPython define Py_LIMITED_API at the floor version
+  # (so Cython 3.1's generated C compiles against the limited API) and
+  # apply the ".abi3" SOABI suffix to the produced module.
+  if(NOT "${HIP_PYTHON_ABI3_FLOOR}" STREQUAL "")
+    Python_add_library(${ARG_TARGET} MODULE WITH_SOABI
+      USE_SABI "${HIP_PYTHON_ABI3_FLOOR}" "${_generated_c}")
+  else()
+    Python_add_library(${ARG_TARGET} MODULE WITH_SOABI "${_generated_c}")
+  endif()
   target_compile_definitions(
     ${ARG_TARGET}
     PRIVATE
@@ -368,6 +400,12 @@ function(hip_python_add_wheel_target)
         "It must live in the repo-root cmake/ directory next to "
         "HipPythonBuild.cmake.")
     endif()
+    # When building against the stable ABI, tell the assembler the abi3
+    # floor so the wheel is tagged cp<floor>-abi3 instead of cp<ver>-cp<ver>.
+    set(_assemble_abi3_args)
+    if(NOT "${HIP_PYTHON_ABI3_FLOOR}" STREQUAL "")
+      list(APPEND _assemble_abi3_args --abi3-floor "${HIP_PYTHON_ABI3_FLOOR}")
+    endif()
     set(WHEEL_COMMANDS
       COMMAND ${CMAKE_COMMAND} -E make_directory "${TEMP_WHEEL_DIR}"
       COMMAND ${Python_EXECUTABLE} "${_assemble_script}"
@@ -377,6 +415,7 @@ function(hip_python_add_wheel_target)
               --package-dir "${ARG_PACKAGE_DIR}"
               --output-dir "${TEMP_WHEEL_DIR}"
               --config $<CONFIG>
+              ${_assemble_abi3_args}
     )
   else()
     # ----------------------------------------------------------------
