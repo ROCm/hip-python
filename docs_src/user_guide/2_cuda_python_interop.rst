@@ -191,6 +191,10 @@ The implemented surface covers the entry points HIP ports rely on:
    :name: pynvml_query_devices
    :caption: Querying AMD GPUs through the NVML (pynvml) API
 
+.. seealso::
+
+   The full API reference for the shim is at :doc:`/python_api/pynvml/index`.
+
 .. _sec_cuda_core_shim:
 
 ``cuda.core`` compatibility shim
@@ -225,6 +229,10 @@ CUDA Python consumers: a ``Device`` class exposing ``device_id`` and
    ``Device.uuid`` are implemented today; higher-level abstractions
    (``Stream``, ``Buffer``, ``Program``, ...) are intentionally out of
    scope and can be added on demand.
+
+.. seealso::
+
+   The full API reference for the shim is at :doc:`/python_api/cuda/core/index`.
 
 Enum Constant Hallucination
 ---------------------------
