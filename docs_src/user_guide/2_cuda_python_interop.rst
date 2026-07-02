@@ -91,9 +91,12 @@ modules that you need as shown below:
 
 .. note::
 
-   ``hip-python-interop`` ships exactly the three modules above —
-   matching the surface CUDA Python itself exposes under
-   ``cuda.bindings``. There are no additional CUDA-library wrappers.
+   The ``cuda.bindings`` modules above mirror the surface CUDA Python
+   itself exposes under ``cuda.bindings``. In addition, the
+   ``hip-python-interop`` wheel ships two small convenience
+   compatibility shims for common CUDA-ecosystem entry points:
+   :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim) and
+   :ref:`sec_cuda_core_shim` (a minimal ``cuda.core.Device`` shim).
 
 Python Example
 --------------
@@ -129,6 +132,99 @@ objects.
 
    See :ref:`sec_hip_streams` for an explanation of a similar HIP program's
    steps.
+
+.. _sec_pynvml_shim:
+
+NVML compatibility shim (``pynvml``)
+------------------------------------
+
+.. admonition:: What will I learn?
+
+   * That ``import pynvml`` keeps working unchanged on AMD GPUs.
+   * Which part of the NVML surface the shim implements and how it
+     behaves for concepts that do not exist on ROCm\ |trade|.
+
+The ``hip-python-interop`` wheel installs a top-level ``pynvml``
+module: a compatibility shim for the NVML Python API backed by AMD
+SMI via the high-level :py:obj:`rocm.bindings.amdsmi` bindings. Code
+that already speaks NVML --- for example HIP ports of RAPIDS-style
+projects --- can keep calling ``pynvml`` unmodified on AMD hardware.
+
+.. note::
+
+   This shim is a fresh, MIT-licensed re-implementation of the subset
+   of the NVML Python surface that HIP consumers commonly use. It is
+   **not** a fork of the upstream ``pynvml`` / ``nvidia-ml-py``
+   package. Because it is backed by AMD SMI, the interop wheel pulls in
+   ``rocm-bindings-systems`` (which provides ``rocm.bindings.amdsmi``)
+   in addition to ``rocm-bindings-hip``.
+
+The implemented surface covers the entry points HIP ports rely on:
+
+* Lifecycle: ``nvmlInit`` / ``nvmlInitWithFlags`` / ``nvmlShutdown``
+  (reference-counted, mapping to ``amdsmi_init`` / ``amdsmi_shut_down``).
+* Device enumeration and handles: ``nvmlDeviceGetCount``,
+  ``nvmlDeviceGetHandleByIndex``, ``nvmlDeviceGetHandleByUUID``,
+  ``nvmlDeviceGetIndex``.
+* Device queries: ``nvmlDeviceGetMemoryInfo``, ``nvmlDeviceGetName``,
+  ``nvmlDeviceGetUUID``, ``nvmlDeviceGetTemperature``,
+  ``nvmlDeviceGetPowerUsage``, ``nvmlDeviceGetUtilizationRates``,
+  ``nvmlDeviceGetComputeRunningProcesses``.
+* ``nvmlDeviceGetCpuAffinity`` --- like NVML, a Linux-only capability;
+  it raises ``NVMLError_NotSupported`` where AMD SMI cannot provide it.
+* ``NVMLError`` and the per-code subclasses consumers commonly catch
+  (e.g. ``NVMLError_NotSupported``), plus the ``NVML_*`` status and
+  selector constants.
+
+.. note::
+
+   ROCm has no Multi-Instance GPU (MIG) concept. The MIG-related
+   entry points (``nvmlDeviceIsMigDeviceHandle``,
+   ``nvmlDeviceGetMigMode``, ``nvmlDeviceGetMaxMigDeviceCount``, ...)
+   are present and degrade gracefully: MIG always reports disabled and
+   requests for MIG device handles raise ``NVMLError_NotSupported``.
+
+.. literalinclude:: ../../examples/1_CUDA_Interop/pynvml_query_devices.py
+   :language: python
+   :start-after: [literalinclude-begin]
+   :linenos:
+   :name: pynvml_query_devices
+   :caption: Querying AMD GPUs through the NVML (pynvml) API
+
+.. _sec_cuda_core_shim:
+
+``cuda.core`` compatibility shim
+--------------------------------
+
+.. admonition:: What will I learn?
+
+   * That a minimal ``cuda.core.Device`` is available on AMD GPUs and
+     what part of its surface is implemented.
+
+The wheel also provides a minimal ``cuda.core`` shim, backed by the
+high-level :py:obj:`rocm.bindings.hip` HIP runtime API. It implements
+just enough of the high-level ``cuda.core`` surface for HIP ports of
+CUDA Python consumers: a ``Device`` class exposing ``device_id`` and
+``uuid``.
+
+.. code-block:: python
+   :linenos:
+   :caption: Using the cuda.core.Device shim
+   :name: cuda_core_device
+
+   from cuda.core import Device
+
+   dev = Device()          # current device; or Device(device_id)
+   print(dev.device_id)    # HIP device ordinal
+   print(dev.uuid)         # "GPU-<uuid>" string (via hipDeviceGetUuid)
+
+.. caution::
+
+   This is **not** a full port of NVIDIA's ``cuda.core`` /
+   ``cuda.core.experimental`` package. Only ``Device.device_id`` and
+   ``Device.uuid`` are implemented today; higher-level abstractions
+   (``Stream``, ``Buffer``, ``Program``, ...) are intentionally out of
+   scope and can be added on demand.
 
 Enum Constant Hallucination
 ---------------------------

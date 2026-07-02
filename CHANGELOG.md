@@ -61,7 +61,11 @@ experimental ones (`hipblaslt`, `hipsparselt`, `hiptensor`,
 `hipdnn_backend`) ship behind explicit READMEs; `hsakmt` is deferred.
 The `comgr` high-level package migrated to `CStr`, gained
 cross-linked docstrings, accepts full enum names, and exposes
-`valid_*()` introspection helpers.
+`valid_*()` introspection helpers. The `hip-python-interop` wheel
+gained two compatibility shims alongside its
+`cuda.bindings.{driver,runtime,nvrtc}` modules: a `pynvml` (NVML)
+shim backed by `rocm.bindings.amdsmi` and a minimal
+`cuda.core.Device` shim backed by `rocm.bindings.hip`.
 
 ### Cython runtime polish
 

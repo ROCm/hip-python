@@ -140,7 +140,9 @@ It produces six wheels:
   (collective communication), `roctx` (profiling/tracing),
   `hipfile`*, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
 - `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
-- `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer
+- `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer,
+  plus `pynvml` (NVML, AMD SMI-backed) and minimal `cuda.core.Device` (HIP-backed)
+  compatibility shims
 
 Plus a `hip-python` package that exposes the `hip.*` namespace as an
 alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
@@ -152,6 +154,10 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
 > supported. The CUDA interop side has **no such alias package**: only
 > `from cuda.bindings import driver, runtime, nvrtc` works (`cuda.bindings`
 > is the package, `driver` / `runtime` / `nvrtc` are the modules).
+> The interop wheel additionally ships a top-level `pynvml` (NVML) shim
+> backed by AMD SMI and a minimal `cuda.core.Device` shim backed by HIP,
+> so `import pynvml` and `from cuda.core import Device` keep working on
+> AMD GPUs.
 >
 > **New code should prefer** `from rocm.bindings import hip, hiprtc` and
 > `from cuda.bindings import driver, runtime, nvrtc` directly — these
