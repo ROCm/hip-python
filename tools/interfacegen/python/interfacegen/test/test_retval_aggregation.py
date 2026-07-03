@@ -40,8 +40,8 @@ def test_retval_entries_aggregate_into_return_value():
     # are rendered as cross-reference roles, not dropped.
     assert "MY_STATUS_OK" in returns_block
     assert "MY_STATUS_BAD" in returns_block
-    assert ":py:obj:`.MY_STATUS_OK`" in returns_block
-    assert ":py:obj:`.MY_STATUS_BAD`" in returns_block
+    assert ":py:obj:`~.MY_STATUS_OK`" in returns_block
+    assert ":py:obj:`~.MY_STATUS_BAD`" in returns_block
     # Their descriptions are aggregated alongside the names.
     assert "When everything is fine." in returns_block
     assert "When something is wrong." in returns_block

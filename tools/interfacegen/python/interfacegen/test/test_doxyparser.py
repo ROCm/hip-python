@@ -279,7 +279,7 @@ def test_see_reference_drops_trailing_parens():
     out = _doxygen.DOXYGEN_CONV.see_reference.transform_string(
         "hipdnnBackendCreateDescriptor()"
     )
-    assert out == ":py:obj:`.hipdnnBackendCreateDescriptor`"
+    assert out == ":py:obj:`~.hipdnnBackendCreateDescriptor`"
     assert "`(" not in out
 
 
@@ -309,7 +309,7 @@ def test_see_reference_no_double_wrap():
         transform_references=False,
     )
     out = g.see_reference.transform_string(body)
-    assert out == ":py:obj:`.llvm_shutdown`"
+    assert out == ":py:obj:`~.llvm_shutdown`"
     assert out.count(":py:obj:") == 1
 
 

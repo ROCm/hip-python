@@ -129,11 +129,25 @@ class DoxygenMixin:
         render verbatim in the Sphinx output as `@retval ...` text.
         """
 
+        def _norm_ref(ref):
+            # Normalise a raw doxygen ref the way the structured path does
+            # (see ``_doxygen.reference_``): strip backticks, rewrite
+            # ``#``/``::`` separators to ``.``, drop the leading dot, then
+            # wrap via the shared role template so leaked refs fuzzy-resolve
+            # with a short display name (``~.NAME``) instead of dangling as a
+            # bare (non-fuzzy) role.
+            ref = ref.strip("`").replace("#", ".").replace("::", ".")
+            # Drop any leading role modifiers so a ref that was already
+            # rewritten to ``~.NAME`` / ``.NAME`` by an earlier pass is not
+            # double-prefixed when re-wrapped through the template.
+            return python_interface_pyobj_role_template.format(
+                name=ref.lstrip("~.")
+            )
+
         def _retval_sub(m):
             indent = m.group("indent")
-            ref = m.group("ref").strip("`")
             desc = m.group("desc").strip()
-            return f"{indent}* :py:obj:`{ref}`: {desc}"
+            return f"{indent}* {_norm_ref(m.group('ref'))}: {desc}"
 
         def _word_tag_sub(m):
             tag = m.group("tag")
@@ -152,8 +166,7 @@ class DoxygenMixin:
             return f"{indent}.. {tag}::\n\n{inner}"
 
         def _see_sub(m):
-            ref = m.group("ref").strip("`")
-            return f":py:obj:`{ref}`"
+            return _norm_ref(m.group("ref"))
 
         text = DoxygenMixin._LEAK_BLOCK_TAG_RE.sub(_block_tag_sub, text)
         text = DoxygenMixin._LEAK_RETVAL_RE.sub(_retval_sub, text)

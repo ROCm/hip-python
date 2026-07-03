@@ -110,7 +110,7 @@ python_interface_int_enum_base_class_name_template = "_{name}__Base"
 
 python_interface_record_properties_name = "PROPERTIES"
 
-python_interface_pyobj_role_template = r":py:obj:`.{name}`"
+python_interface_pyobj_role_template = r":py:obj:`~.{name}`"
 
 
 def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):

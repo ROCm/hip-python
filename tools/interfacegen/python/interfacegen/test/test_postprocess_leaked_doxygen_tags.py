@@ -46,7 +46,7 @@ def test_retval_with_plain_ident_becomes_rst_list_item():
     src = "    @retval AMD_COMGR_STATUS_SUCCESS desc text"
     out = postprocess(src)
     assert "@retval" not in out
-    assert "* :py:obj:`AMD_COMGR_STATUS_SUCCESS`: desc text" in out
+    assert "* :py:obj:`~.AMD_COMGR_STATUS_SUCCESS`: desc text" in out
 
 
 def test_brief_marker_is_stripped():
