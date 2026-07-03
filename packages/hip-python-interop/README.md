@@ -25,3 +25,4 @@ For native HIP bindings use `rocm-bindings-hip` instead.
 ## Dependencies
 
 - `rocm-bindings-hip`
+- `rocm-bindings-systems` (backs the bundled `pynvml` shim)

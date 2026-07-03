@@ -41,8 +41,12 @@ Installation
 ------------
 
 HIP Python's CUDA interoperability layer comes in a separate Python 3
-package with the name ``hip-python-interop``. Its sole dependency is the
-``rocm-bindings-hip`` package with the exact same version number.
+package with the name ``hip-python-interop``. Its dependencies are the
+``rocm-bindings-hip`` and ``rocm-bindings-systems`` packages, each pinned
+to the exact same version number. The interop layer forwards CUDA calls
+into ``rocm-bindings-hip``; the bundled ``pynvml`` shim (see
+:ref:`sec_pynvml_shim`) is backed by ``rocm.bindings.amdsmi`` from
+``rocm-bindings-systems``.
 
 After having identified the correct package for your ROCm\ |trade|
 installation, type:
@@ -106,7 +110,8 @@ Python Example
    How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.
 
 After installing ``hip-python-interop`` (and its ``rocm-bindings-hip``
-dependency), you can run the :ref:`example below <cuda_stream>` directly
+and ``rocm-bindings-systems`` dependencies), you can run the
+:ref:`example below <cuda_stream>` directly
 on AMD GPUs. There is nothing else to do. This works because all CUDA
 Python functions, types and even enum constants are aliases of HIP
 objects.
