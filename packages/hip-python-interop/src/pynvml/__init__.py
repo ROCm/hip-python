@@ -212,7 +212,20 @@ def _check(call_result, what=""):
 
 
 class c_nvmlMemory_t:
-    """Mirror of ``nvmlMemory_t`` (bytes)."""
+    """NVML ``c_nvmlMemory_t`` return object (VRAM totals, in bytes).
+
+    The class name intentionally matches upstream ``pynvml`` (nvidia-ml-py),
+    whose ctypes wrapper for the C ``nvmlMemory_t`` struct is likewise named
+    ``c_nvmlMemory_t`` -- so ported code that inspects the type keeps working.
+    Returned by :py:obj:`nvmlDeviceGetMemoryInfo`.
+    """
+
+    total: int
+    """Total installed VRAM, in bytes."""
+    free: int
+    """Free VRAM currently available, in bytes."""
+    used: int
+    """VRAM currently in use, in bytes."""
 
     __slots__ = ("total", "free", "used")
 
@@ -226,7 +239,18 @@ class c_nvmlMemory_t:
 
 
 class c_nvmlUtilization_t:
-    """Mirror of ``nvmlUtilization_t`` (percentages)."""
+    """NVML ``c_nvmlUtilization_t`` return object (engine utilization, percent).
+
+    The class name intentionally matches upstream ``pynvml`` (nvidia-ml-py),
+    whose ctypes wrapper for the C ``nvmlUtilization_t`` struct is likewise
+    named ``c_nvmlUtilization_t`` -- so ported code that inspects the type keeps
+    working. Returned by :py:obj:`nvmlDeviceGetUtilizationRates`.
+    """
+
+    gpu: int
+    """Percent of the last sampling period the GPU/compute engine was busy."""
+    memory: int
+    """Percent of the last sampling period the memory controller was busy."""
 
     __slots__ = ("gpu", "memory")
 
@@ -239,7 +263,19 @@ class c_nvmlUtilization_t:
 
 
 class c_nvmlProcessInfo_t:
-    """Mirror of ``nvmlProcessInfo_t`` (subset used by consumers)."""
+    """NVML ``c_nvmlProcessInfo_t`` return object (subset used by consumers).
+
+    The class name intentionally matches upstream ``pynvml`` (nvidia-ml-py),
+    whose ctypes wrapper for the C ``nvmlProcessInfo_t`` struct is likewise
+    named ``c_nvmlProcessInfo_t`` -- so ported code that inspects the type keeps
+    working. Returned by :py:obj:`nvmlDeviceGetComputeRunningProcesses`.
+    """
+
+    pid: int
+    """Operating-system process identifier."""
+    usedGpuMemory: int
+    """GPU memory used by the process, in bytes. (Upstream NVML may report
+    ``None`` under the Windows WDDM driver; not applicable on ROCm.)"""
 
     __slots__ = ("pid", "usedGpuMemory")
 
@@ -334,12 +370,26 @@ def _enumerate_gpus():
 
 
 def nvmlInit():
-    """Initialize NVML (maps to ``amdsmi_init`` for AMD GPUs)."""
+    """Initialize NVML (maps to ``amdsmi_init`` for AMD GPUs).
+
+    Returns:
+        None.
+
+    Raises:
+        NVMLError: if AMD SMI initialization or GPU enumeration fails.
+    """
     return nvmlInitWithFlags(0)
 
 
 def nvmlInitWithFlags(flags):
-    """Initialize NVML; ``flags`` is accepted for compatibility and ignored."""
+    """Initialize NVML; ``flags`` is accepted for compatibility and ignored.
+
+    Returns:
+        None.
+
+    Raises:
+        NVMLError: if AMD SMI initialization or GPU enumeration fails.
+    """
     global _init_count
     if _init_count > 0:
         _init_count += 1
@@ -358,7 +408,14 @@ def nvmlInitWithFlags(flags):
 
 
 def nvmlShutdown():
-    """Shut down NVML (refcounted, maps to ``amdsmi_shut_down``)."""
+    """Shut down NVML (refcounted, maps to ``amdsmi_shut_down``).
+
+    Returns:
+        None.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     global _init_count
     _ensure_initialized()
     _init_count -= 1
@@ -373,13 +430,28 @@ def nvmlShutdown():
 
 
 def nvmlDeviceGetCount():
-    """Number of AMD GPUs visible to AMD SMI."""
+    """Number of AMD GPUs visible to AMD SMI.
+
+    Returns:
+        int: the count of AMD GPU devices.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     _ensure_initialized()
     return len(_devices)
 
 
 def nvmlDeviceGetHandleByIndex(index):
-    """Return the device handle for the given ordinal."""
+    """Return the device handle for the given ordinal.
+
+    Returns:
+        An opaque NVML device handle (pass to the ``nvmlDeviceGet*`` queries).
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError_InvalidArgument: if ``index`` is out of range.
+    """
     _ensure_initialized()
     index = int(index)
     if index < 0 or index >= len(_devices):
@@ -388,7 +460,15 @@ def nvmlDeviceGetHandleByIndex(index):
 
 
 def nvmlDeviceGetHandleByUUID(uuid):
-    """Return the device whose UUID matches ``uuid`` (``str`` or ``bytes``)."""
+    """Return the device whose UUID matches ``uuid`` (``str`` or ``bytes``).
+
+    Returns:
+        An opaque NVML device handle for the matching device.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError_NotFound: if no device has the requested UUID.
+    """
     _ensure_initialized()
     if isinstance(uuid, bytes):
         uuid = uuid.decode("ascii", "replace")
@@ -407,19 +487,40 @@ def nvmlDeviceGetHandleByUUID(uuid):
 
 
 def nvmlDeviceGetIndex(handle):
-    """NVML ordinal of the device handle."""
+    """NVML ordinal of the device handle.
+
+    Returns:
+        int: the zero-based device ordinal.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     _ensure_initialized()
     return handle.index
 
 
 def nvmlDeviceIsMigDeviceHandle(handle):
-    """ROCm has no MIG; always reports ``False``."""
+    """ROCm has no MIG; always reports ``False``.
+
+    Returns:
+        bool: always ``False`` on ROCm.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     _ensure_initialized()
     return False
 
 
 def nvmlDeviceGetDeviceHandleFromMigDeviceHandle(handle):
-    """No MIG on ROCm; the handle already refers to a full device."""
+    """No MIG on ROCm; the handle already refers to a full device.
+
+    Returns:
+        The same device handle that was passed in.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     _ensure_initialized()
     return handle
 
@@ -429,19 +530,38 @@ def nvmlDeviceGetMigMode(handle):
 
     ROCm has no MIG, so MIG is always disabled. Returns a 2-tuple to match
     NVML, whose callers typically read ``[0]`` for the current mode.
+
+    Returns:
+        tuple[int, int]: ``(current, pending)`` MIG mode, both always
+        :py:obj:`NVML_DEVICE_MIG_DISABLE` on ROCm.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
     """
     _ensure_initialized()
     return (NVML_DEVICE_MIG_DISABLE, NVML_DEVICE_MIG_DISABLE)
 
 
 def nvmlDeviceGetMaxMigDeviceCount(handle):
-    """Maximum number of MIG devices; always ``0`` on ROCm (no MIG)."""
+    """Maximum number of MIG devices; always ``0`` on ROCm (no MIG).
+
+    Returns:
+        int: always ``0`` on ROCm.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+    """
     _ensure_initialized()
     return 0
 
 
 def nvmlDeviceGetMigDeviceHandleByIndex(device, index):
-    """ROCm has no MIG instances; always unsupported."""
+    """ROCm has no MIG instances; always unsupported.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError_NotSupported: always, since ROCm has no MIG.
+    """
     _ensure_initialized()
     raise NVMLError(NVML_ERROR_NOT_SUPPORTED, msg="MIG is not supported on ROCm")
 
@@ -459,7 +579,15 @@ def _decode_cstr(value):
 
 
 def nvmlDeviceGetMemoryInfo(handle):
-    """VRAM totals as an ``nvmlMemory_t``-like object (bytes)."""
+    """VRAM totals as an ``nvmlMemory_t``-like object (bytes).
+
+    Returns:
+        c_nvmlMemory_t: total/free/used VRAM, in bytes.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if the AMD SMI VRAM-usage query fails.
+    """
     _ensure_initialized()
     info = _check(
         amdsmi.amdsmi_get_gpu_vram_usage(handle._handle),
@@ -474,7 +602,15 @@ def nvmlDeviceGetMemoryInfo(handle):
 
 
 def nvmlDeviceGetName(handle):
-    """Marketing/product name as a ``str`` (NVML returns ``str`` on py3)."""
+    """Marketing/product name as a ``str`` (NVML returns ``str`` on py3).
+
+    Returns:
+        str: the device market name, falling back to the board product name.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if the AMD SMI ASIC/board queries fail.
+    """
     _ensure_initialized()
     info = _check(
         amdsmi.amdsmi_get_gpu_asic_info(handle._handle),
@@ -491,7 +627,15 @@ def nvmlDeviceGetName(handle):
 
 
 def nvmlDeviceGetUUID(handle):
-    """Device UUID rendered as the conventional ``GPU-<uuid>`` string."""
+    """Device UUID rendered as the conventional ``GPU-<uuid>`` string.
+
+    Returns:
+        str: the device UUID, prefixed with ``GPU-``.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if the AMD SMI UUID query fails.
+    """
     _ensure_initialized()
     size = int(amdsmi.AMDSMI_GPU_UUID_SIZE)
     length = (ctypes.c_uint * 1)()
@@ -506,7 +650,16 @@ def nvmlDeviceGetUUID(handle):
 
 
 def nvmlDeviceGetTemperature(handle, sensorType):
-    """Current temperature in Celsius for the requested sensor."""
+    """Current temperature in Celsius for the requested sensor.
+
+    Returns:
+        int: temperature in degrees Celsius (edge sensor, falling back to the
+        hotspot/junction sensor).
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if no supported temperature sensor could be read.
+    """
     _ensure_initialized()
     # NVML only defines NVML_TEMPERATURE_GPU; map it to the edge sensor and fall
     # back to the hotspot/junction sensor where edge is unavailable.
@@ -530,7 +683,15 @@ def nvmlDeviceGetTemperature(handle, sensorType):
 
 
 def nvmlDeviceGetPowerUsage(handle):
-    """Current board power draw in milliwatts."""
+    """Current board power draw in milliwatts.
+
+    Returns:
+        int: board power draw in milliwatts.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError_NotSupported: if power telemetry is unavailable on this device.
+    """
     _ensure_initialized()
     info = _check(
         amdsmi.amdsmi_get_power_info(handle._handle),
@@ -545,7 +706,16 @@ def nvmlDeviceGetPowerUsage(handle):
 
 
 def nvmlDeviceGetUtilizationRates(handle):
-    """GPU/memory engine utilization percentages."""
+    """GPU/memory engine utilization percentages.
+
+    Returns:
+        c_nvmlUtilization_t: ``gpu`` and ``memory`` busy percentages
+        (unsupported fields normalized to ``0``).
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if the AMD SMI activity query fails.
+    """
     _ensure_initialized()
     info = _check(
         amdsmi.amdsmi_get_gpu_activity(handle._handle),
@@ -572,6 +742,15 @@ def nvmlDeviceGetCpuAffinity(handle, cpuSetSize):
     Like NVML, this is a Linux-only capability; on platforms (e.g. Windows) or
     builds where AMD SMI cannot provide it, ``NVMLError_NotSupported`` is
     raised so callers can fall back to a default affinity.
+
+    Returns:
+        list[int]: ``cpuSetSize`` 64-bit words forming the CPU affinity bitmask.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError_InvalidArgument: if ``cpuSetSize`` is not positive.
+        NVMLError_NotSupported: on non-Linux platforms or builds where AMD SMI
+            cannot provide CPU affinity.
     """
     _ensure_initialized()
     cpu_set_size = int(cpuSetSize)
@@ -606,6 +785,15 @@ def nvmlDeviceGetComputeRunningProcesses(handle):
     indexed ``get_*(i)`` accessors) is then filled on the second call.
     Returns an empty list when nothing is running or the platform does not
     support the query.
+
+    Returns:
+        list[c_nvmlProcessInfo_t]: one entry per running compute process
+        (``pid`` and ``usedGpuMemory`` in bytes); empty if none or unsupported.
+
+    Raises:
+        NVMLError_Uninitialized: if NVML was not successfully initialized.
+        NVMLError: if the AMD SMI process-list query fails for a reason other
+            than being unsupported.
     """
     _ensure_initialized()
     count = (ctypes.c_uint * 1)()
