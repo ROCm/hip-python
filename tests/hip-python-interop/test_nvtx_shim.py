@@ -229,3 +229,148 @@ def test_disabled_shim_is_noop(monkeypatch):
     assert nvtx.start_range("z") == (0, 0)
     assert nvtx.get_domain("d") is nvtx.dummy_domain
     assert recorder.calls == []
+
+
+# ---------------------------------------------------------------------------
+# Compatibility mode
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def compat_mode():
+    """Save/restore the compat mode and clear the domain cache around a test."""
+    previous = nvtx.get_compat_mode()
+    nvtx._get_domain_cached.cache_clear()
+    try:
+        yield nvtx.set_compat_mode
+    finally:
+        nvtx.set_compat_mode(previous)
+        nvtx._get_domain_cached.cache_clear()
+
+
+def test_default_compat_mode_is_silent():
+    assert nvtx.get_compat_mode() == "silent"
+
+
+def test_silent_mode_never_warns_or_raises(rec, compat_mode, recwarn):
+    compat_mode("silent")
+    nvtx.mark("m", color="red", domain="d", category="c", payload=1)
+    nvtx.push_range("r", color="blue")
+    nvtx.annotate("x", payload=5)
+    nvtx.get_domain("named").get_category_id("cat")
+    nvtx.get_domain("named2").get_counter("bytes", int)
+    assert not any(
+        isinstance(w.message, nvtx.NvtxCompatWarning) for w in recwarn.list
+    )
+
+
+@pytest.mark.parametrize(
+    "action",
+    [
+        lambda: nvtx.mark("m", color="red"),
+        lambda: nvtx.push_range("r", domain="d"),
+        lambda: nvtx.pop_range(domain="d"),
+        lambda: nvtx.start_range("s", category="c"),
+        lambda: nvtx.annotate("x", payload=5),
+        lambda: nvtx.get_domain("named"),
+        lambda: nvtx.get_domain("named").get_category_id("cat"),
+        lambda: nvtx.get_domain("named").get_counter("bytes", int),
+    ],
+)
+def test_warn_mode_emits_warning(rec, compat_mode, action):
+    compat_mode("warn")
+    with pytest.warns(nvtx.NvtxCompatWarning):
+        action()
+
+
+@pytest.mark.parametrize(
+    "action",
+    [
+        lambda: nvtx.mark("m", color="red"),
+        lambda: nvtx.push_range("r", domain="d"),
+        lambda: nvtx.pop_range(domain="d"),
+        lambda: nvtx.start_range("s", category="c"),
+        lambda: nvtx.annotate("x", payload=5),
+        lambda: nvtx.get_domain("named"),
+        lambda: nvtx.get_domain("named").get_category_id("cat"),
+        lambda: nvtx.get_domain("named").get_counter("bytes", int),
+    ],
+)
+def test_error_mode_raises(rec, compat_mode, action):
+    compat_mode("error")
+    with pytest.raises(nvtx.NvtxCompatError):
+        action()
+
+
+def test_domain_event_attributes_trigger_compat(rec, compat_mode):
+    compat_mode("error")
+    d = nvtx.get_domain()  # default (unnamed) domain: no compat on creation
+    attrs = nvtx.EventAttributes(message="m", color="red")
+    with pytest.raises(nvtx.NvtxCompatError):
+        d.push_range(attrs)
+
+
+def test_numpy_dtype_triggers_compat(compat_mode):
+    pytest.importorskip("numpy")
+    compat_mode("error")
+    with pytest.raises(nvtx.NvtxCompatError):
+        nvtx.numpy_dtype("int64")
+
+
+def test_supported_calls_never_trigger_in_error_mode(rec, compat_mode):
+    compat_mode("error")
+    # None of these use an unsupported feature/argument.
+    nvtx.mark("m")
+    nvtx.push_range("r")
+    nvtx.pop_range()
+    rid = nvtx.start_range("s")
+    nvtx.end_range(rid)
+    with nvtx.annotate("ctx"):
+        pass
+
+    @nvtx.annotate()
+    def fn():
+        return 1
+
+    assert fn() == 1
+    pr = nvtx.Profile(linenos=False)
+    pr.enable()
+    pr.disable()
+    d = nvtx.get_domain()  # default domain
+    d.push_range(message="only-message")
+    d.pop_range()
+    # Explicit None for a dropped arg counts as "not supplied".
+    nvtx.mark("m", color=None, domain=None)
+
+
+def test_compat_fires_even_when_disabled(monkeypatch, compat_mode):
+    monkeypatch.setattr(nvtx, "_ENABLED", False, raising=False)
+    compat_mode("error")
+    with pytest.raises(nvtx.NvtxCompatError):
+        nvtx.mark("m", color="red")
+
+
+def test_set_compat_mode_rejects_invalid():
+    previous = nvtx.get_compat_mode()
+    try:
+        with pytest.raises(ValueError):
+            nvtx.set_compat_mode("bogus")
+    finally:
+        nvtx.set_compat_mode(previous)
+
+
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("silent", "silent"),
+        ("warn", "warn"),
+        ("error", "error"),
+        ("WARN", "warn"),
+        ("  Error  ", "error"),
+        ("bogus", "silent"),
+        (None, "silent"),
+        ("", "silent"),
+    ],
+)
+def test_parse_compat_mode(value, expected):
+    assert nvtx._parse_compat_mode(value) == expected
