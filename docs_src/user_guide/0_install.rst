@@ -174,10 +174,11 @@ CUDA interoperability layer (``hip-python-interop``)
 The ``hip-python-interop`` wheel ships the
 ``cuda.bindings.{driver,runtime,nvrtc}`` modules — drop-in
 replacements for the corresponding ``cuda-python`` modules,
-implemented on top of HIP. It additionally provides two small
-compatibility shims: a ``pynvml`` (NVML) shim backed by AMD SMI and
-a minimal ``cuda.core.Device`` shim backed by HIP. Use this to port
-CUDA Python code to AMD GPUs with minimal source changes (see
+implemented on top of HIP. It additionally provides three small
+compatibility shims: a ``pynvml`` (NVML) shim backed by AMD SMI, an
+``nvtx`` (NVTX) shim backed by ROCTX, and a minimal
+``cuda.core.Device`` shim backed by HIP. Use this to port CUDA Python
+code to AMD GPUs with minimal source changes (see
 :ref:`/user_guide/2_cuda_python_interop` for the porting guide):
 
 .. code-block:: shell
@@ -187,7 +188,8 @@ CUDA Python code to AMD GPUs with minimal source changes (see
 
 The interop wheel depends on ``rocm-bindings-hip`` (it forwards
 calls into it) and on ``rocm-bindings-systems`` (whose
-``rocm.bindings.amdsmi`` backs the ``pynvml`` shim), so pip will
+``rocm.bindings.amdsmi`` backs the ``pynvml`` shim and whose
+``rocm.bindings.roctx`` backs the ``nvtx`` shim), so pip will
 install both automatically.
 
 .. _subsec_install_individual_bindings:

@@ -62,10 +62,15 @@ experimental ones (`hipblaslt`, `hipsparselt`, `hiptensor`,
 The `comgr` high-level package migrated to `CStr`, gained
 cross-linked docstrings, accepts full enum names, and exposes
 `valid_*()` introspection helpers. The `hip-python-interop` wheel
-gained two compatibility shims alongside its
+gained three compatibility shims alongside its
 `cuda.bindings.{driver,runtime,nvrtc}` modules: a `pynvml` (NVML)
-shim backed by `rocm.bindings.amdsmi` and a minimal
-`cuda.core.Device` shim backed by `rocm.bindings.hip`.
+shim backed by `rocm.bindings.amdsmi`, an `nvtx` (NVTX) shim backed
+by `rocm.bindings.roctx`, and a minimal `cuda.core.Device` shim
+backed by `rocm.bindings.hip`. The `nvtx` shim faithfully backs
+markers, ranges, `annotate` and `Profile` on ROCTX; NVTX features
+ROCTX cannot express (domains, colors, categories, payloads,
+counters) are accepted for source compatibility but degrade to
+no-op/dropped.
 
 ### Cython runtime polish
 

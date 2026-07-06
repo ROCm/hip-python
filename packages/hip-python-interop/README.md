@@ -25,4 +25,5 @@ For native HIP bindings use `rocm-bindings-hip` instead.
 ## Dependencies
 
 - `rocm-bindings-hip`
-- `rocm-bindings-systems` (backs the bundled `pynvml` shim)
+- `rocm-bindings-systems` (backs the bundled `pynvml` shim via
+  `rocm.bindings.amdsmi` and the `nvtx` shim via `rocm.bindings.roctx`)

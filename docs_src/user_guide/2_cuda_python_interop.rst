@@ -45,8 +45,9 @@ package with the name ``hip-python-interop``. Its dependencies are the
 ``rocm-bindings-hip`` and ``rocm-bindings-systems`` packages, each pinned
 to the exact same version number. The interop layer forwards CUDA calls
 into ``rocm-bindings-hip``; the bundled ``pynvml`` shim (see
-:ref:`sec_pynvml_shim`) is backed by ``rocm.bindings.amdsmi`` from
-``rocm-bindings-systems``.
+:ref:`sec_pynvml_shim`) is backed by ``rocm.bindings.amdsmi`` and the
+``nvtx`` shim (see :ref:`sec_nvtx_shim`) by ``rocm.bindings.roctx``,
+both from ``rocm-bindings-systems``.
 
 After having identified the correct package for your ROCm\ |trade|
 installation, type:
@@ -97,9 +98,10 @@ modules that you need as shown below:
 
    The ``cuda.bindings`` modules above mirror the surface CUDA Python
    itself exposes under ``cuda.bindings``. In addition, the
-   ``hip-python-interop`` wheel ships two small convenience
+   ``hip-python-interop`` wheel ships three small convenience
    compatibility shims for common CUDA-ecosystem entry points:
-   :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim) and
+   :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim),
+   :ref:`sec_nvtx_shim` (an NVTX / ``nvtx`` shim) and
    :ref:`sec_cuda_core_shim` (a minimal ``cuda.core.Device`` shim).
 
 Python Example
@@ -199,6 +201,90 @@ The implemented surface covers the entry points HIP ports rely on:
 .. seealso::
 
    The full API reference for the shim is at :doc:`/python_api/pynvml/index`.
+
+.. _sec_nvtx_shim:
+
+NVTX compatibility shim (``nvtx``)
+----------------------------------
+
+.. admonition:: What will I learn?
+
+   * That ``import nvtx`` keeps working unchanged on AMD GPUs.
+   * Which part of the NVTX surface is faithfully backed by ROCTX and
+     which parts degrade because ROCTX cannot express them.
+
+The ``hip-python-interop`` wheel installs a top-level ``nvtx`` module:
+a compatibility shim for the NVTX Python API backed by ROCTX via the
+high-level :py:obj:`rocm.bindings.roctx` bindings. Code that already
+annotates ranges and markers with ``nvtx`` --- for example HIP ports
+of RAPIDS-style projects --- can keep calling ``nvtx`` unmodified on
+AMD hardware. Profile the annotated program with a ROCm-aware tool
+(``rocprofv3``/``rocprof`` or Omnitrace) instead of Nsight Systems.
+
+.. note::
+
+   This shim is a fresh, MIT-licensed re-implementation of the ``nvtx``
+   Python surface. It is **not** a fork of the upstream (Apache-2.0)
+   ``nvtx`` package. Because it is backed by ROCTX, the interop wheel
+   pulls in ``rocm-bindings-systems`` (which provides
+   ``rocm.bindings.roctx``) in addition to ``rocm-bindings-hip``.
+
+The following surface is faithfully backed by ROCTX:
+
+* Instantaneous markers: ``nvtx.mark`` (``roctxMarkA``).
+* Nested, per-thread ranges: ``nvtx.push_range`` / ``nvtx.pop_range``
+  (``roctxRangePushA`` / ``roctxRangePop``).
+* Process ranges that may cross threads: ``nvtx.start_range`` /
+  ``nvtx.end_range`` (``roctxRangeStartA`` / ``roctxRangeStop``).
+* ``nvtx.annotate`` as both a decorator and a context manager.
+* ``nvtx.Profile`` automatic function annotation (via
+  ``sys.setprofile`` / ``threading.setprofile``).
+* ``nvtx.enabled`` and the ``NVTX_DISABLE`` environment variable.
+
+.. important::
+
+   **Limitations.** ROCTX is a message-only tracing API: it has no
+   concept of domains, colors, categories, payloads, registered strings
+   or counters. The corresponding parts of the ``nvtx`` API are accepted
+   for source compatibility but do **not** behave as they would on
+   NVIDIA hardware.
+
+   Accepted but silently *dropped* (only the message reaches ROCTX):
+
+   * ``domain`` / ``nvtx.get_domain`` / ``nvtx.Domain`` --- ROCTX has no
+     domains, so every domain routes to the same global ROCTX calls;
+     the domain name has no effect and cross-domain isolation is lost.
+   * ``color`` (and ``nvtx.colors.color_to_hex``) --- no color channel.
+   * ``category`` / ``Domain.get_category_id`` --- no category channel.
+   * ``payload`` --- no payload channel.
+   * ``nvtx.RegisteredString`` / ``nvtx.EventAttributes`` and the
+     ``Domain.get_registered_string`` / ``get_event_attributes`` /
+     ``set_event_attributes`` helpers --- lightweight holders only.
+
+   Accepted but complete *no-ops* (record nothing):
+
+   * Counters: ``nvtx.Counter``, ``nvtx.Int64Counter``,
+     ``nvtx.Float64Counter``, ``nvtx.ExtCounter``,
+     ``Domain.get_counter``, ``sample`` / ``sample_no_value`` /
+     ``batch_submit``, and ``Domain.get_timestamp``.
+   * ``nvtx.CounterSemantics`` and the enums ``nvtx.CounterValueType``,
+     ``nvtx.CounterInterpolation``, ``nvtx.CounterNoValueReason`` and
+     ``nvtx.TimestampType``.
+   * ``nvtx.numpy_dtype``.
+
+   The counter/semantics surface additionally postdates NVTX
+   release-v3 and is provided only as forward-compatible stubs.
+
+.. literalinclude:: ../../examples/1_CUDA_Interop/nvtx_annotate_ranges.py
+   :language: python
+   :start-after: [literalinclude-begin]
+   :linenos:
+   :name: nvtx_annotate_ranges
+   :caption: Annotating code ranges through the NVTX (nvtx) API
+
+.. seealso::
+
+   The full API reference for the shim is at :doc:`/python_api/nvtx/index`.
 
 .. _sec_cuda_core_shim:
 
