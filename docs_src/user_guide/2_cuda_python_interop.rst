@@ -219,7 +219,7 @@ high-level :py:obj:`rocm.bindings.roctx` bindings. Code that already
 annotates ranges and markers with ``nvtx`` --- for example HIP ports
 of RAPIDS-style projects --- can keep calling ``nvtx`` unmodified on
 AMD hardware. Profile the annotated program with a ROCm-aware tool
-(``rocprofv3``/``rocprof`` or Omnitrace) instead of Nsight Systems.
+(``rocprof-compute``) instead of Nsight Systems.
 
 .. note::
 
@@ -274,6 +274,24 @@ The following surface is faithfully backed by ROCTX:
 
    The counter/semantics surface additionally postdates NVTX
    release-v3 and is provided only as forward-compatible stubs.
+
+To audit whether your code relies on any of the dropped/no-op features
+above, enable the shim's *compatibility mode*. By default it stays
+``silent`` (drop-in behavior); it can instead emit a warning
+(``nvtx.NvtxCompatWarning``) or raise (``nvtx.NvtxCompatError``) whenever an
+unsupported feature or dropped argument is used. Select it with the
+``HIP_PYTHON_NVTX_COMPAT`` environment variable (``silent`` / ``warn`` /
+``error``) or at runtime:
+
+.. code-block:: python
+
+   import nvtx
+
+   nvtx.set_compat_mode("error")   # or "warn"; or set HIP_PYTHON_NVTX_COMPAT=error
+   nvtx.mark("checkpoint", color="red")   # raises NvtxCompatError (color is dropped)
+
+The checks fire regardless of whether tracing is enabled, so they also flag
+non-portable usage in CI that runs without a ROCTX runtime.
 
 .. literalinclude:: ../../examples/1_CUDA_Interop/nvtx_annotate_ranges.py
    :language: python

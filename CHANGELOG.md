@@ -70,7 +70,10 @@ backed by `rocm.bindings.hip`. The `nvtx` shim faithfully backs
 markers, ranges, `annotate` and `Profile` on ROCTX; NVTX features
 ROCTX cannot express (domains, colors, categories, payloads,
 counters) are accepted for source compatibility but degrade to
-no-op/dropped.
+no-op/dropped. An opt-in compatibility mode
+(`HIP_PYTHON_NVTX_COMPAT` env var or `nvtx.set_compat_mode`) can
+warn (`NvtxCompatWarning`) or raise (`NvtxCompatError`) when such
+unsupported features are used, to help audit portability.
 
 ### Cython runtime polish
 
