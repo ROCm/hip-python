@@ -133,6 +133,7 @@ autoapi_dirs = [
     os.path.join(_PACKAGES_ROOT, "rocm-bindings-compiler", "src", "rocm"),
     os.path.join(_PACKAGES_ROOT, "hip-python-interop", "src", "cuda"),
     os.path.join(_PACKAGES_ROOT, "hip-python-interop", "src", "pynvml"),
+    os.path.join(_PACKAGES_ROOT, "hip-python-interop", "src", "nvtx"),
     os.path.join(_PACKAGES_ROOT, "hip-python", "src", "hip"),
 ]
 autoapi_root = "python_api"

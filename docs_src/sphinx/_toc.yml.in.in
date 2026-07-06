@@ -53,6 +53,7 @@ subtrees:
 @TOC_ENTRIES_HIP_PYTHON_INTEROP@
       - file: python_api/cuda/core/index
       - file: python_api/pynvml/index
+      - file: python_api/nvtx/index
   - caption: "hip-python (hip.* alias package)"
     entries:
       - file: python_api/hip/index
