@@ -79,6 +79,13 @@ try:
 except ImportError:
     have_amdsmi = False
 
+try:
+    from rocm.bindings import roctx as _roctx  # noqa: F401
+    del _roctx
+    have_roctx = True
+except ImportError:
+    have_roctx = False
+
 if have_amdsmi:
     python_examples += [
         "0_Basic_Usage/amdsmi_enumerate_sockets.py",
@@ -101,6 +108,12 @@ if have_hip_python_interop:
 if have_hip_python_interop and have_amdsmi:
     python_examples += [
         "1_CUDA_Interop/pynvml_query_devices.py",
+    ]
+
+# The nvtx shim ships with hip-python-interop but is backed by ROCTX.
+if have_hip_python_interop and have_roctx:
+    python_examples += [
+        "1_CUDA_Interop/nvtx_annotate_ranges.py",
     ]
 
 python_examples += [
