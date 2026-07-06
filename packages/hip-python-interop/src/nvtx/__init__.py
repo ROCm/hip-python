@@ -28,7 +28,7 @@ entirely by ROCTX via the high-level :py:obj:`rocm.bindings.roctx` bindings.
 
 Goal: code that does ``import nvtx`` and uses annotations, ranges and markers
 keeps working on AMD GPUs without modification. Profile with a ROCm-aware tool
-(e.g. ``rocprofv3``/``rocprof`` or Omnitrace) instead of Nsight Systems.
+(e.g. ``rocprof-compute``) instead of Nsight Systems.
 
 Implemented surface (faithfully backed by ROCTX):
 
@@ -76,6 +76,24 @@ Implemented surface (faithfully backed by ROCTX):
 
    The counter/semantics surface additionally postdates NVTX release-v3 and is
    provided here only as forward-compatible stubs.
+
+Compatibility mode
+------------------
+
+To help audit whether code is portable to ROCTX, the shim can report when an
+unsupported feature is used or an unsupported (dropped) argument is supplied.
+The mode is one of:
+
+* ``"silent"`` (default) - accept and drop/no-op silently, preserving drop-in
+  behavior.
+* ``"warn"`` - emit an :class:`NvtxCompatWarning` and then drop/no-op.
+* ``"error"`` - raise an :class:`NvtxCompatError`.
+
+Select it via the ``HIP_PYTHON_NVTX_COMPAT`` environment variable
+(``silent`` / ``warn`` / ``error``) or at runtime with
+:func:`set_compat_mode` / :func:`get_compat_mode`. The checks fire regardless
+of whether tracing is enabled (see :func:`enabled`), so they also flag
+non-portable usage in CI that runs without a ROCTX runtime.
 """
 
 import enum
@@ -83,6 +101,7 @@ import os
 import sys
 import threading
 import time
+import warnings
 from functools import lru_cache, wraps
 
 from . import colors
@@ -115,6 +134,10 @@ __all__ = [
     "TimestampType",
     "numpy_dtype",
     "colors",
+    "get_compat_mode",
+    "set_compat_mode",
+    "NvtxCompatWarning",
+    "NvtxCompatError",
 ]
 
 # ---------------------------------------------------------------------------
@@ -143,7 +166,139 @@ def _roctx_runtime_available():
 _ENABLED = (not os.getenv("NVTX_DISABLE", False)) and _roctx_runtime_available()
 
 
-_DONT_SET = object()
+class _Unset:
+    """Sentinel for "argument not supplied" (distinct from ``None``)."""
+
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __repr__(self):
+        return "<unset>"
+
+
+_UNSET = _Unset()
+
+# Backwards-compatible alias used by ``Domain.set_event_attributes``.
+_DONT_SET = _UNSET
+
+
+# ---------------------------------------------------------------------------
+# Compatibility mode (report use of features/args ROCTX cannot express)
+# ---------------------------------------------------------------------------
+
+_COMPAT_MODES = ("silent", "warn", "error")
+
+
+class NvtxCompatWarning(UserWarning):
+    """Warning emitted when an unsupported NVTX feature/argument is used.
+
+    Only emitted when the compatibility mode is ``"warn"`` (see
+    :func:`set_compat_mode`).
+    """
+
+
+class NvtxCompatError(RuntimeError):
+    """Error raised when an unsupported NVTX feature/argument is used.
+
+    Only raised when the compatibility mode is ``"error"`` (see
+    :func:`set_compat_mode`).
+    """
+
+
+def _parse_compat_mode(value):
+    """Normalize a compatibility-mode value; unknown/None maps to ``silent``."""
+    if value is None:
+        return "silent"
+    normalized = str(value).strip().lower()
+    return normalized if normalized in _COMPAT_MODES else "silent"
+
+
+_COMPAT_MODE = _parse_compat_mode(os.getenv("HIP_PYTHON_NVTX_COMPAT", "silent"))
+
+
+def get_compat_mode():
+    """Return the current compatibility mode (``silent``/``warn``/``error``)."""
+    return _COMPAT_MODE
+
+
+def set_compat_mode(mode):
+    """Set the compatibility mode.
+
+    Args:
+        mode: One of ``"silent"``, ``"warn"`` or ``"error"``.
+
+    Raises:
+        ValueError: If ``mode`` is not a recognized compatibility mode.
+    """
+    global _COMPAT_MODE
+    if mode not in _COMPAT_MODES:
+        raise ValueError(
+            f"invalid nvtx compatibility mode {mode!r}; "
+            f"expected one of {_COMPAT_MODES}"
+        )
+    _COMPAT_MODE = mode
+
+
+def _compat(feature, stacklevel=3):
+    """Report use of a feature/argument that ROCTX cannot express.
+
+    Honors the current compatibility mode: no-op when ``silent``, emits an
+    :class:`NvtxCompatWarning` when ``warn``, raises :class:`NvtxCompatError`
+    when ``error``. ``stacklevel`` is forwarded to :func:`warnings.warn` so the
+    warning points at the user's call site.
+    """
+    if _COMPAT_MODE == "silent":
+        return
+    msg = (
+        f"nvtx: {feature} is not supported by the ROCTX-backed "
+        f"hip-python-interop shim and is ignored."
+    )
+    if _COMPAT_MODE == "error":
+        raise NvtxCompatError(msg)
+    warnings.warn(msg, NvtxCompatWarning, stacklevel=stacklevel)
+
+
+def _check_dropped_kwargs(color=_UNSET, domain=_UNSET, category=_UNSET,
+                          payload=_UNSET, _stacklevel=4):
+    """Run compat checks for the droppable event kwargs that were supplied.
+
+    A value counts as "supplied" only when it is neither the ``_UNSET``
+    sentinel nor ``None`` (an explicit ``None`` is treated as a default).
+    """
+    if color is not _UNSET and color is not None:
+        _compat("the 'color' argument", stacklevel=_stacklevel)
+    if domain is not _UNSET and domain is not None:
+        _compat("the 'domain' argument", stacklevel=_stacklevel)
+    if category is not _UNSET and category is not None:
+        _compat("the 'category' argument", stacklevel=_stacklevel)
+    if payload is not _UNSET and payload is not None:
+        _compat("the 'payload' argument", stacklevel=_stacklevel)
+
+
+def _check_dropped_attributes(attributes, kwargs, _stacklevel=5):
+    """Run compat checks for droppable fields on a :class:`Domain` call.
+
+    Considers both a passed ``EventAttributes`` object (its ``color`` /
+    ``category`` / ``payload``) and any droppable keyword arguments. A field
+    counts as supplied only when it is not ``None``.
+    """
+    color = kwargs.get("color", _UNSET)
+    category = kwargs.get("category", _UNSET)
+    payload = kwargs.get("payload", _UNSET)
+    if attributes is not None:
+        if color is _UNSET:
+            color = getattr(attributes, "color", _UNSET)
+        if category is _UNSET:
+            category = getattr(attributes, "category", _UNSET)
+        if payload is _UNSET:
+            payload = getattr(attributes, "payload", _UNSET)
+    _check_dropped_kwargs(
+        color=color, category=category, payload=payload, _stacklevel=_stacklevel
+    )
 
 
 def _to_message(message):
@@ -222,11 +377,18 @@ class annotate:
     def __init__(
         self,
         message=None,
-        color=None,
-        domain=None,
-        category=None,
-        payload=None,
+        color=_UNSET,
+        domain=_UNSET,
+        category=_UNSET,
+        payload=_UNSET,
     ):
+        _check_dropped_kwargs(color, domain, category, payload)
+        # Normalize the (dropped) sentinels to ``None`` so ``init_args`` stays
+        # picklable and reproduces the documented defaults.
+        color = None if color is _UNSET else color
+        domain = None if domain is _UNSET else domain
+        category = None if category is _UNSET else category
+        payload = None if payload is _UNSET else payload
         self.init_args = (message, color, domain, category, payload)
         self.message = message
 
@@ -256,62 +418,68 @@ class annotate:
         return inner
 
 
-def mark(message=None, color="blue", domain=None, category=None, payload=None):
+def mark(
+    message=None, color=_UNSET, domain=_UNSET, category=_UNSET, payload=_UNSET
+):
     """Mark an instantaneous event.
 
     Args:
         message: A message associated with the event.
-        color: Accepted for compatibility; **dropped** (ROCTX has no color).
-        domain: Accepted for compatibility; **dropped** (ROCTX has no domains).
-        category: Accepted for compatibility; **dropped**.
-        payload: Accepted for compatibility; **dropped**.
+        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
     """
+    _check_dropped_kwargs(color, domain, category, payload)
     _mark(message)
 
 
 def push_range(
-    message=None, color="blue", domain=None, category=None, payload=None
+    message=None, color=_UNSET, domain=_UNSET, category=_UNSET, payload=_UNSET
 ):
     """Mark the beginning of a (nested, per-thread) code range.
 
     Args:
         message: A message associated with the annotated code range.
-        color: Accepted for compatibility; **dropped** (ROCTX has no color).
-        domain: Accepted for compatibility; **dropped** (ROCTX has no domains).
-        category: Accepted for compatibility; **dropped**.
-        payload: Accepted for compatibility; **dropped**.
+        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
 
     Note:
         When applicable, prefer :class:`annotate`.
     """
+    _check_dropped_kwargs(color, domain, category, payload)
     _push(message)
 
 
-def pop_range(domain=None):
+def pop_range(domain=_UNSET):
     """Mark the end of a code range started with :func:`push_range`.
 
     Args:
-        domain: Accepted for compatibility; **dropped** (ROCTX has no domains).
+        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
     """
+    _check_dropped_kwargs(domain=domain)
     _pop()
 
 
 def start_range(
-    message=None, color=None, domain=None, category=None, payload=None
+    message=None, color=_UNSET, domain=_UNSET, category=_UNSET, payload=_UNSET
 ):
     """Mark the beginning of a process range.
 
     Args:
         message: A message associated with the range.
-        color: Accepted for compatibility; **dropped** (ROCTX has no color).
-        domain: Accepted for compatibility; **dropped** (ROCTX has no domains).
-        category: Accepted for compatibility; **dropped**.
-        payload: Accepted for compatibility; **dropped**.
+        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
 
     Returns:
         A ``(range_id, domain_handle)`` tuple that must be passed to
         :func:`end_range`. ``domain_handle`` is always ``0`` in this shim.
     """
+    _check_dropped_kwargs(color, domain, category, payload)
     return (_start(message), 0)
 
 
@@ -448,6 +616,8 @@ class Domain:
     """
 
     def __init__(self, name=None):
+        if name is not None:
+            _compat("named domains (domain isolation)")
         self.name = name
         # ROCTX has no domain handle; kept for API compatibility only.
         self.handle = 0
@@ -455,6 +625,7 @@ class Domain:
 
     def push_range(self, attributes=None, **kwargs):
         """Mark the beginning of a code range (see :func:`push_range`)."""
+        _check_dropped_attributes(attributes, kwargs)
         _push(_message_text(attributes, kwargs))
 
     def pop_range(self):
@@ -463,10 +634,12 @@ class Domain:
 
     def mark(self, attributes=None, **kwargs):
         """Mark an instantaneous event (see :func:`mark`)."""
+        _check_dropped_attributes(attributes, kwargs)
         _mark(_message_text(attributes, kwargs))
 
     def start_range(self, attributes=None, **kwargs):
         """Mark the beginning of a process range (see :func:`start_range`)."""
+        _check_dropped_attributes(attributes, kwargs)
         return _start(_message_text(attributes, kwargs))
 
     def end_range(self, range_id):
@@ -475,6 +648,7 @@ class Domain:
 
     def get_category_id(self, name):
         """Return a synthetic category id (not honored by ROCTX)."""
+        _compat("categories")
         return self._categories.setdefault(name, len(self._categories) + 1)
 
     def get_registered_string(self, string):
@@ -521,6 +695,7 @@ class Domain:
         time_domain=None,
     ):
         """Return a no-op counter (ROCTX has no counter API)."""
+        _compat("counters")
         if dtype is int:
             return Int64Counter(self, name)
         if dtype is float:
@@ -715,6 +890,7 @@ def numpy_dtype(*args, counter_semantics=None, **kwargs):
     Raises:
         RuntimeError: If NumPy is not installed.
     """
+    _compat("numpy_dtype (no runtime effect)")
     try:
         import numpy as np
     except ImportError as e:
