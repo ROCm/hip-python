@@ -86,3 +86,11 @@ class Device:
 
     def __repr__(self):
         return f"<cuda.core.Device id={self._id} (HIP)>"
+
+    def set_current(self):
+        err = hip.hipSetDevice(self._id)[0]
+        _check(err)
+
+    def sync(self):
+        err = hip.hipDeviceSynchronize()[0]
+        _check(err)
