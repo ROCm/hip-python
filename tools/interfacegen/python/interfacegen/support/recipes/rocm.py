@@ -1814,9 +1814,15 @@ class hipfile:
     """Code generation controls for hipFILE (Accelerated I/O Storage).
 
     The hipFILE C API uses the `hipFile` prefix for all functions/types and
-    `HIPFILE_` for macros. Identifiers outside those prefixes are external
-    types pulled in via `#include` (hipError_t, off_t, sockaddr, ...) and
-    must not be re-emitted by the bindings.
+    `HIPFILE_` for macros. This recipe admits only that `hipFile*` / `HIPFILE_*`
+    library surface. Identifiers outside those prefixes are external types
+    pulled in via `#include` (hipError_t, off_t, sockaddr, timespec, ...):
+    HIP types are cimported, and the plain POSIX structs hipFILE references by
+    pointer (`sockaddr`, `timespec`) are hand-declared as opaque, pointer-only
+    structs by the systems-wheel generator itself — see
+    `generators_systems.generate_hipfile`, which keeps that platform-dependent
+    provisioning localized so a future Windows build variant can diverge
+    without touching this shared recipe.
     """
 
     @staticmethod

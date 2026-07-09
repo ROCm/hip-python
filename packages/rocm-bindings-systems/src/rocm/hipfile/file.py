@@ -31,12 +31,14 @@
 #      object whose `handle` union (`fd` for POSIX, `hFile` for Win32) is
 #      not yet exposed by the codegen — work around by laying out a ctypes
 #      Structure that matches hipFileDescr_t and passing its address.
-#   2. The auto-generated hipFileRead / hipFileWrite return a single
-#      ssize_t (no errno / hip_drv_err side-channel that upstream's Cython
-#      glue packed in). Negative values are interpreted the same way as
-#      upstream (-1 → POSIX errno; <-1 → -hipFileOpError); however the
-#      errno value is no longer recoverable through the wrapper, so the
-#      raised OSError carries no errno detail.
+#   2. hipFileRead / hipFileWrite return (retval, errno, hip_drv_err): the
+#      robust hip-python bindings snapshot POSIX errno and
+#      hipPeekAtLastError() inside the same with-nogil block as the C call
+#      (see the overrides in generators_systems.generate_hipfile), matching
+#      upstream's Cython glue. Negative retval is interpreted as upstream
+#      (-1 → POSIX errno; <-1 → -hipFileOpError, with the HIP driver error in
+#      hip_drv_err), and both side-channels are recoverable, so the raised
+#      OSError / HipFileException carry the real error detail.
 
 __author__ = (
     "Riley Dixon <riley.dixon@amd.com> (original); "
@@ -61,12 +63,11 @@ from .error import HipFileException
 
 # ---------------------------------------------------------------------------
 # Local hipFileDescr_t shim. The auto-generated `hipFileDescr` wrapper class
-# in rocm.bindings.hipfile has a `.type` setter but no setter for the
-# `handle` union (`hipFileDescr_union_0` is referenced but not emitted by
-# the codegen — a tracked codegen gap on unions). We need to set
-# `handle.fd` to the POSIX file descriptor before calling
-# hipFileHandleRegister, so we lay out the struct in pure ctypes and pass
-# its address.
+# in rocm.bindings.hipfile has a `.type` setter, and the nested union type
+# `hipFileDescr_union_0` is now emitted by the codegen, but the generated
+# wrapper still exposes no ergonomic way to set the `handle.fd` union member
+# before calling hipFileHandleRegister. Laying the struct out in pure ctypes
+# and passing its address stays the simplest, allocation-explicit approach.
 #
 # Layout from include/hipfile.h:
 #
@@ -228,16 +229,16 @@ class FileHandle:
 
         Returns the number of bytes read on success. Raises
         :py:class:`HipFileException` (with the parsed
-        :py:class:`OpError`) on a hipFile-level error, or
-        :py:class:`OSError` on a POSIX-level error (no errno detail —
-        see module-level comment).
+        :py:class:`OpError` and HIP driver error) on a hipFile-level
+        error, or :py:class:`OSError` (with the real ``errno``) on a
+        POSIX-level error.
         """
         if self._handle is None:
             raise RuntimeError("The FileHandle is not open.")
-        bytes_read = _read(
+        n, err, drv = _read(
             self._handle, buffer.ptr, size, file_offset, buffer_offset
         )
-        return self._check_io_result(bytes_read)
+        return self._check_io_result(n, err, drv)
 
     def write(self, buffer, size, file_offset, buffer_offset):
         """Synchronous write from a registered :py:class:`Buffer`.
@@ -247,24 +248,21 @@ class FileHandle:
         """
         if self._handle is None:
             raise RuntimeError("The FileHandle is not open.")
-        bytes_written = _write(
+        n, err, drv = _write(
             self._handle, buffer.ptr, size, file_offset, buffer_offset
         )
-        return self._check_io_result(bytes_written)
+        return self._check_io_result(n, err, drv)
 
     @staticmethod
-    def _check_io_result(n):
+    def _check_io_result(n, err, drv):
+        # hipFileRead/hipFileWrite return (retval, errno, hip_drv_err); the
+        # robust bindings snapshot errno / hipPeekAtLastError() in the same
+        # with-nogil block as the C call, so both are recoverable here.
         if n == -1:
-            # Upstream's Cython wrapper packs errno in the second
-            # tuple slot; the auto-generated hip-python wrapper
-            # doesn't, so we surface a generic OSError here.
-            raise OSError(
-                "hipFile read/write failed at the POSIX layer "
-                "(errno not surfaced through the auto-generated wrapper)"
-            )
+            # POSIX-level failure — surface the real errno.
+            raise OSError(err, os.strerror(err))
         if n < -1:
-            # `-n` is the hipFileOpError code; hip_drv_err is also not
-            # surfaced through this wrapper, so pass 0 as the second
-            # arg to HipFileException.
-            raise HipFileException(OpError(-n), 0)
+            # `-n` is the hipFileOpError code; when it is hipFileHipDriverError
+            # the HIP driver error is carried in `drv`.
+            raise HipFileException(OpError(-n), drv)
         return n

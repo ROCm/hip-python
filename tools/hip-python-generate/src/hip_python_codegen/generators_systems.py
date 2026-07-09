@@ -172,6 +172,193 @@ def generate_roctx(
     return generator
 
 
+# Plain POSIX structs that hipFILE references BY POINTER ONLY:
+#   * ``struct sockaddr`` (<sys/socket.h>) — userspace-RDMA fs-op callbacks
+#     ``getRDMADeviceList`` / ``getRDMADevicePriority``.
+#   * ``struct timespec`` (<time.h>)       — batch-I/O poll timeout
+#     (``hipFileIOEvents`` query).
+# Both carry no ``hipFile`` prefix, so the shared recipe node_filter rejects
+# them (correctly — they are not part of the library surface). Rather than
+# admit them and emit their full platform-specific field layout from the AST,
+# we hand-declare them as OPAQUE structs (``cdef struct X: pass``) in the
+# module prolog below. hipFILE only ever passes them by pointer, so no layout
+# is needed; an opaque struct is the standard Cython idiom for a pointer-only
+# type (same shape as the ``ihipStream_t`` / ``hipArray`` opaque handles in
+# cyhip.pxd). This keeps the platform-dependent provisioning in one place a
+# future Windows hipFILE build would edit, bakes no Linux ABI (``sa_family``
+# widths, ``time_t`` size) into the bindings, and avoids Cython's Linux-only
+# ``posix.time`` cimport. The real definitions come from hipfile.h's
+# transitive system includes at C-compile time.
+_HIPFILE_OPAQUE_PTR_TYPES_DECL = """\
+cdef extern from "hipfile.h":
+    # Pointer-only POSIX structs (see generators_systems.py). Opaque: hipFILE
+    # never dereferences them, so no field layout is bound.
+    cdef struct sockaddr:
+        pass
+    cdef struct timespec:
+        pass
+"""
+
+
+# ---------------------------------------------------------------------------
+# Robust hipFileRead / hipFileWrite overrides.
+#
+# These two sync I/O calls return an ``ssize_t`` whose negative values point at
+# a *transient thread-local* side-channel: ``-1`` means "see POSIX ``errno``"
+# and ``-hipFileHipDriverError`` means "see ``hipPeekAtLastError()``". Both are
+# clobbered by the GIL re-acquire + tuple allocation the mechanical wrapper
+# performs on the way out, so the auto-generated 1-tuple wrapper drops them
+# irrecoverably (see share/design/HIPFILE.md section 6).
+#
+# We override the rendered Python body (via ``_hipfile_node_init`` below, which
+# inlines each verbatim ``def`` onto the Function node through the
+# ``python_interface_impl_override`` / ``python_docstring_override`` hooks) so
+# the C call and BOTH side-channel reads happen
+# in the SAME ``with nogil`` block, before the GIL is re-acquired, and are
+# returned as ``(retval, errno, hip_drv_err)``. The high-level
+# ``rocm.hipfile.file`` consumer raises ``OSError`` / ``HipFileException`` from
+# that richer tuple. Scope is the two SYNC functions only; the async variants
+# already return ``hipFileError`` by value.
+# ---------------------------------------------------------------------------
+def _hipfile_node_init(node):
+    """Install robust body/docstring overrides on the ``hipFileRead`` /
+    ``hipFileWrite`` Function nodes (see the module comment above).
+
+    Each function's docstring and body are written out inline here (rather than
+    via a shared parametrized helper): the C call and the ``errno`` /
+    ``hipPeekAtLastError()`` snapshots run in one ``with nogil`` block and the
+    result is returned as ``(retval, errno, hip_drv_err)``. ``textwrap.indent``
+    lays the verbatim docstring + body into the ``def`` scope.
+    """
+    if not isinstance(node, interfacegen.tree.Function):
+        return
+    ind = "    "
+    if node.name == "hipFileRead":
+        docstring = textwrap.dedent(
+            '''\
+            r"""Synchronously read data from a file into a GPU buffer.
+
+            Args:
+                fh (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`) -- *IN*:
+                    hipFile handle for the target file.
+
+                buffer_base (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`) -- *IN*:
+                    Base pointer of the registered GPU buffer.
+
+                size (:py:obj:`~.int`) -- *IN*:
+                    Number of bytes to read.
+
+                file_offset (:py:obj:`~.int`) -- *IN*:
+                    Offset into the file.
+
+                buffer_offset (:py:obj:`~.int`) -- *IN*:
+                    Offset into the GPU buffer.
+
+            Returns:
+                A :py:obj:`~.tuple` of size 3 that contains (in that order):
+
+                * :py:obj:`~.int`: The raw ``ssize_t`` result. One of:
+                        - if >= 0: Number of bytes transferred
+                        - if -1:   POSIX system error (see the ``errno`` element)
+                        - else:    Negated :py:obj:`~.hipFileOpError_t`; when it equals
+                                   ``-hipFileHipDriverError`` the HIP driver error is
+                                   carried in the ``hip_drv_err`` element
+
+                * :py:obj:`~.int`: ``errno``, snapshotted inside the ``with nogil`` block
+                        right after the call (meaningful only when the result is -1).
+
+                * :py:obj:`~.int`: the :py:obj:`~.hipError_t` value from
+                        ``hipPeekAtLastError()``, snapshotted inside the same
+                        ``with nogil`` block (meaningful only when the result is
+                        ``-hipFileHipDriverError``).
+            """'''
+        )
+        body = textwrap.dedent(
+            '''\
+            cdef rocm.bindings.util.types.Pointer _cy_hipFileRead__arg_0_obj = rocm.bindings.util.types.Pointer.fromPyobj(fh)
+            cdef void * _cy_hipFileRead__arg_0 = <void *>_cy_hipFileRead__arg_0_obj.getPtr()
+            cdef rocm.bindings.util.types.Pointer _cy_hipFileRead__arg_1_obj = rocm.bindings.util.types.Pointer.fromPyobj(buffer_base)
+            cdef void * _cy_hipFileRead__arg_1 = <void *>_cy_hipFileRead__arg_1_obj.getPtr()
+            cdef long _cy_hipFileRead__retval
+            cdef int _cy_hipFileRead__err
+            cdef int _cy_hipFileRead__hip_drv_err
+            with nogil:
+                _cy_hipFileRead__retval = cyhipfile.hipFileRead(_cy_hipFileRead__arg_0,_cy_hipFileRead__arg_1,size,file_offset,buffer_offset)
+                _cy_hipFileRead__err = errno
+                _cy_hipFileRead__hip_drv_err = <int>hipPeekAtLastError()
+            return (_cy_hipFileRead__retval,_cy_hipFileRead__err,_cy_hipFileRead__hip_drv_err)'''
+        )
+        node.python_docstring_override = docstring
+        node.python_interface_impl_override = (
+            "@cython.embedsignature(True)\n"
+            "def hipFileRead(object fh, object buffer_base, unsigned long size, long file_offset, long buffer_offset):\n"
+            + textwrap.indent(docstring, ind).rstrip() + "\n"
+            + textwrap.indent(body, ind).rstrip() + "\n"
+        )
+    elif node.name == "hipFileWrite":
+        docstring = textwrap.dedent(
+            '''\
+            r"""Synchronously write data from a GPU buffer to a file.
+
+            Args:
+                fh (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`) -- *IN*:
+                    hipFile handle for the target file.
+
+                buffer_base (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`) -- *IN*:
+                    Base pointer of the registered GPU buffer.
+
+                size (:py:obj:`~.int`) -- *IN*:
+                    Number of bytes to write.
+
+                file_offset (:py:obj:`~.int`) -- *IN*:
+                    Offset into the file.
+
+                buffer_offset (:py:obj:`~.int`) -- *IN*:
+                    Offset into the GPU buffer.
+
+            Returns:
+                A :py:obj:`~.tuple` of size 3 that contains (in that order):
+
+                * :py:obj:`~.int`: The raw ``ssize_t`` result. One of:
+                        - if >= 0: Number of bytes transferred
+                        - if -1:   POSIX system error (see the ``errno`` element)
+                        - else:    Negated :py:obj:`~.hipFileOpError_t`; when it equals
+                                   ``-hipFileHipDriverError`` the HIP driver error is
+                                   carried in the ``hip_drv_err`` element
+
+                * :py:obj:`~.int`: ``errno``, snapshotted inside the ``with nogil`` block
+                        right after the call (meaningful only when the result is -1).
+
+                * :py:obj:`~.int`: the :py:obj:`~.hipError_t` value from
+                        ``hipPeekAtLastError()``, snapshotted inside the same
+                        ``with nogil`` block (meaningful only when the result is
+                        ``-hipFileHipDriverError``).
+            """'''
+        )
+        body = textwrap.dedent(
+            '''\
+            cdef rocm.bindings.util.types.Pointer _cy_hipFileWrite__arg_0_obj = rocm.bindings.util.types.Pointer.fromPyobj(fh)
+            cdef void * _cy_hipFileWrite__arg_0 = <void *>_cy_hipFileWrite__arg_0_obj.getPtr()
+            cdef rocm.bindings.util.types.Pointer _cy_hipFileWrite__arg_1_obj = rocm.bindings.util.types.Pointer.fromPyobj(buffer_base)
+            cdef const void * _cy_hipFileWrite__arg_1 = <const void *>_cy_hipFileWrite__arg_1_obj.getPtr()
+            cdef long _cy_hipFileWrite__retval
+            cdef int _cy_hipFileWrite__err
+            cdef int _cy_hipFileWrite__hip_drv_err
+            with nogil:
+                _cy_hipFileWrite__retval = cyhipfile.hipFileWrite(_cy_hipFileWrite__arg_0,_cy_hipFileWrite__arg_1,size,file_offset,buffer_offset)
+                _cy_hipFileWrite__err = errno
+                _cy_hipFileWrite__hip_drv_err = <int>hipPeekAtLastError()
+            return (_cy_hipFileWrite__retval,_cy_hipFileWrite__err,_cy_hipFileWrite__hip_drv_err)'''
+        )
+        node.python_docstring_override = docstring
+        node.python_interface_impl_override = (
+            "@cython.embedsignature(True)\n"
+            "def hipFileWrite(object fh, object buffer_base, unsigned long size, long file_offset, long buffer_offset):\n"
+            + textwrap.indent(docstring, ind).rstrip() + "\n"
+            + textwrap.indent(body, ind).rstrip() + "\n"
+        )
+
+
 def generate_hipfile(
     *,
     include_dir: str,
@@ -197,11 +384,44 @@ def generate_hipfile(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" noexcept nogil",
         node_filter=controls.hipfile.node_filter,
+        node_init=_hipfile_node_init,
         macro_type=controls.hipfile.macro_type,
         ptr_parm_intent=controls.hipfile.ptr_parm_intent,
         ptr_rank=controls.hipfile.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
         cflags=generator_args,
+    )
+    # hipfile.h uses ``hipStream_t`` / ``hipError_t`` from the HIP runtime
+    # (async I/O APIs + the ``hip_drv_err`` field of ``hipFileError``), which
+    # are not defined in hipfile.h itself, so the generated cy-module cimports
+    # them from cyhip (mirrors the ``hipStream_t`` handling in generate_rccl).
+    # ``struct sockaddr`` / ``struct timespec`` are hand-declared here as
+    # opaque, pointer-only structs (see ``_HIPFILE_OPAQUE_PTR_TYPES_DECL``).
+    generator.c_interface_decl_prolog += (
+        textwrap.dedent(
+            """\
+    from rocm.bindings.cyhip cimport hipStream_t, hipError_t
+    """
+        )
+        + _HIPFILE_OPAQUE_PTR_TYPES_DECL
+    )
+    # The high-level module constructs the ``hipError_t`` Python enum to wrap
+    # ``hipFileError.hip_drv_err`` (and type-checks against it), so hipfile.pyx
+    # needs the Python-level enum via a runtime ``import`` (impl prolog → .pyx),
+    # NOT a ``cimport`` of the C typedef (which would shadow the enum and make
+    # ``hipError_t(...)`` a non-callable C type). ``hipStream_t`` is only ever
+    # referenced C-qualified (``cyhipfile.hipStream_t``) in the high-level
+    # module, so no extra Python-side import is required for it.
+    #
+    # ``errno`` (ISO C ``<errno.h>``, nogil-safe, cross-platform) and
+    # ``hipPeekAtLastError`` are cimported for the robust hipFileRead/hipFileWrite
+    # overrides (see _hipfile_node_init), which snapshot both in-nogil.
+    generator.python_interface_impl_prolog += textwrap.dedent(
+        """\
+    from libc.errno cimport errno
+    from rocm.bindings.cyhip cimport hipPeekAtLastError
+    from rocm.bindings.hip import hipError_t
+    """
     )
     return generator
 
