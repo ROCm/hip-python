@@ -37,6 +37,7 @@ import textwrap
 import interfacegen.tree
 from interfacegen.cython import CythonModuleGenerator
 from interfacegen.support.recipes import rocm as controls
+from interfacegen.support.recipes.control import ParmIntent
 
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
@@ -200,6 +201,47 @@ cdef extern from "hipfile.h":
 """
 
 
+# hipfile.h omits the ``@param[out]`` direction tag on several config getters,
+# so the doxygen intent classifier leaves their output pointers at the INOUT
+# fallback (caller-allocated ``ListOf*`` buffer). We force
+# ``OUT_CALLEE_ALLOCATED`` so the codegen returns the value instead:
+#
+#   * ``_HIPFILE_CSTR_OUT_BUFFERS`` — ``char*`` OUT buffers the binding
+#     allocates (``CStr.malloc``) and RETURNS as a decoded ``CStr``, sized by a
+#     by-value length input. This is the same mechanism ``generators_hip``
+#     uses for ``hipDeviceGetName`` et al. (``_CSTR_OUT_BUFFERS``): pair the
+#     ``OUT_CALLEE_ALLOCATED`` intent with a ``desc_str.malloc(len)`` prepend
+#     (see ``_hipfile_node_init``) and the CStr return + docstring fall out of
+#     the mechanical codegen — no verbatim body/docstring override needed.
+#     Maps ``(func, buffer_parm) -> size_parm``.
+#   * ``_HIPFILE_SCALAR_OUT_PARMS`` — scalar ``value`` out-pointers on the
+#     numeric/bool getters; paired with ``hipfile.ptr_rank`` rank 0 they come
+#     back as a plain Python number.
+_HIPFILE_CSTR_OUT_BUFFERS = {
+    ("hipFileGetParameterString", "desc_str"): "len",
+}
+
+_HIPFILE_SCALAR_OUT_PARMS = frozenset(
+    (
+        ("hipFileGetParameterSizeT", "value"),
+        ("hipFileGetParameterBool", "value"),
+    )
+)
+
+
+def _hipfile_ptr_parm_intent(parm):
+    """Force ``OUT_CALLEE_ALLOCATED`` on the untagged hipFILE getter outputs
+    (see ``_HIPFILE_CSTR_OUT_BUFFERS`` / ``_HIPFILE_SCALAR_OUT_PARMS``);
+    everything else defers to the shared ``controls.hipfile`` chain.
+    """
+    parent = parm.parent
+    if parent is not None:
+        key = (parent.name, parm.name)
+        if key in _HIPFILE_CSTR_OUT_BUFFERS or key in _HIPFILE_SCALAR_OUT_PARMS:
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+    return controls.hipfile.ptr_parm_intent(parm)
+
+
 # ---------------------------------------------------------------------------
 # Robust hipFileRead / hipFileWrite overrides.
 #
@@ -229,7 +271,24 @@ def _hipfile_node_init(node):
     ``hipPeekAtLastError()`` snapshots run in one ``with nogil`` block and the
     result is returned as ``(retval, errno, hip_drv_err)``. ``textwrap.indent``
     lays the verbatim docstring + body into the ``def`` scope.
+
+    The ``char*`` OUT buffer of ``hipFileGetParameterString`` is handled here
+    too: its ``OUT_CALLEE_ALLOCATED`` intent (from ``_hipfile_ptr_parm_intent``)
+    makes the codegen emit a returned ``CStr``, and this hook injects the
+    ``desc_str.malloc(len)`` call the binding needs before the C call so the
+    CStr owns a ``len``-byte scratch buffer — the same mechanism
+    ``generators_hip`` uses for ``hipDeviceGetName`` (see
+    ``_HIPFILE_CSTR_OUT_BUFFERS``). No verbatim body/docstring override is
+    needed for it.
     """
+    if isinstance(node, interfacegen.tree.Parm):
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in _HIPFILE_CSTR_OUT_BUFFERS:
+            size_name = _HIPFILE_CSTR_OUT_BUFFERS[(parent.name, node.name)]
+            parent.python_body_prepend_before_c_interface_call(
+                f"{node.name}.malloc({size_name})"
+            )
+        return
     if not isinstance(node, interfacegen.tree.Function):
         return
     ind = "    "
@@ -386,7 +445,7 @@ def generate_hipfile(
         node_filter=controls.hipfile.node_filter,
         node_init=_hipfile_node_init,
         macro_type=controls.hipfile.macro_type,
-        ptr_parm_intent=controls.hipfile.ptr_parm_intent,
+        ptr_parm_intent=_hipfile_ptr_parm_intent,
         ptr_rank=controls.hipfile.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
         cflags=generator_args,
