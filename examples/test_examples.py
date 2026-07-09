@@ -86,10 +86,42 @@ try:
 except ImportError:
     have_roctx = False
 
+try:
+    from rocm import hipfile as _hipfile
+
+    # Importing the sub-package only pulls in compile-time version macros;
+    # the driver/sync entry points are runtime-linked, so force an actual
+    # dlopen + dlsym of libhipfile by calling into a native symbol
+    # (hipFileGetVersion). This fails (RuntimeError/OSError) when the systems
+    # wheel was built without the hipFILE bindings or libhipfile.so is not
+    # loadable at runtime, so `have_hipfile` reflects real symbol availability
+    # rather than a mere successful import.
+    _hipfile.get_version()
+    del _hipfile
+    have_hipfile = True
+except Exception:
+    have_hipfile = False
+
 if have_amdsmi:
     python_examples += [
         "0_Basic_Usage/amdsmi_enumerate_sockets.py",
     ]
+
+# The hipfile_copy examples create their own scratch fixture at runtime, so they
+# only need the hipFILE bindings with a loadable libhipfile.so (plus an
+# O_DIRECT-capable temp dir, overridable via HIPFILE_TMPDIR).
+_hipfile_skipif = pytest.mark.skipif(
+    not have_hipfile,
+    reason=(
+        "requires the hipFILE bindings with a loadable libhipfile.so "
+        "(the example creates its own scratch files under an "
+        "O_DIRECT-capable HIPFILE_TMPDIR)"
+    ),
+)
+python_examples += [
+    pytest.param("0_Basic_Usage/hipfile_copy.py", marks=_hipfile_skipif),
+    pytest.param("0_Basic_Usage/hipfile_copy_lowlevel.py", marks=_hipfile_skipif),
+]
 
 if device_printf_works:
     python_examples += [
