@@ -70,6 +70,13 @@ class Function(tree.Function, CythonMixin, Typed):
         self.modifiers_lazy_loader = ""
         self.error_return_value_lazy_loader = None
         self._python_return_values_to_prepend = []
+        # Full hand-written overrides for the high-level Python interface.
+        # When set (typically by a recipe ``node_init``), they let the
+        # generator emit a verbatim ``def`` body / docstring for this one
+        # function instead of the mechanical emitter output. 
+        # Both default to ``None`` (no override).
+        self.python_interface_impl_override = None
+        self.python_docstring_override = None
 
     def prepend_python_return_value(
         self, value: str, typename: str, description: str
@@ -205,6 +212,10 @@ cdef void* {funptr_name} = NULL
         the main render pass (.pyi stub generation, standalone docstring
         rendering), pass None and the new default (False) applies.
         """
+        # Verbatim override (set by a recipe node_init) wins: keeps the
+        # .pyx body and the .pyi stub docstring in lockstep.
+        if self.python_docstring_override is not None:
+            return self.python_docstring_override
         _module_opts = module_opts if module_opts is not None else {}
         # TODO handle groups; issue detecting addgroup; detecting ingroup is easier
 
@@ -1356,6 +1367,13 @@ cdef void* {funptr_name} = NULL
 
     def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
         """Public API for generating the full Python interface."""
+        # Verbatim body override (set by a recipe node_init): emit the
+        # hand-written ``def`` as-is, but still register the symbol in
+        # ``__all__`` so the module surface is unchanged.
+        if self.python_interface_impl_override is not None:
+            module_opts["all"].append(self.cython_global_name)
+            return self.python_interface_impl_override
+        
         (
             fully_specified,
             sig_args,
