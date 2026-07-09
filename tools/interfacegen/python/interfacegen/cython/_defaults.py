@@ -200,6 +200,7 @@ def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
         return "float"
     elif tokens in [
         ["bint"],
+        ["_Bool"],  # C's `bool`; Cython aliases it to `bint`
     ]:
         return "bool"
     elif len(tokens) == 2 and tokens[0] in ("union", "struct", "enum"):
