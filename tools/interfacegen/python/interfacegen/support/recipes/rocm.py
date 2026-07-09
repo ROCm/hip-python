@@ -1856,7 +1856,50 @@ class hipfile:
     @staticmethod
     @fallback(*_RUNTIME_RANK_CHAIN)
     def ptr_rank(node: Node):
-        """All pointers in hipFILE are single-level (handles, buffers, paths)."""
+        """Classify single-slot scalar pointers as rank 0 for hipFILE.
+
+        A non-``char`` ``pointer-to-basic-type`` (degree 1) is a single
+        value passed by reference. Rank 0 marks it as a single slot rather
+        than a rank-1 ``ListOf*`` buffer; combined with an ``OUT`` /
+        ``OUT_CALLEE_ALLOCATED`` intent this lets the codegen synthesize a
+        scalar return value (see ``Parm.is_out_callee_allocated_ptr``, whose
+        scalar-slot fallback keys on ``ptr_rank == 0``). This fixes
+        ``hipFileGetVersion``'s ``unsigned int * major/minor/patch``
+        (``@param[out]``), and pairs with the ``OUT_CALLEE_ALLOCATED``
+        overrides on ``hipFileGetParameterSizeT`` / ``hipFileGetParameterBool``
+        ``value`` (see ``generators_systems._hipfile_node_init``).
+
+        The rule is intentionally shape-based (not gated on intent):
+        ``ptr_rank`` must not consult ``is_out_ptr`` / the intent chain,
+        because several intent rules themselves query rank
+        (``is_indirection`` -> ``ptr_rank``), which would recurse. Direction
+        (OUT vs INOUT) is applied downstream, so ``@param[in,out]`` slots
+        such as ``hipFileBatchIOGetStatus``'s ``nr`` stay caller-allocated
+        (rendered as a generic ``Pointer``) rather than becoming scalar
+        returns.
+
+        ``char *`` is excluded so string params stay rank-1 sequences
+        (``generic.string_z``); void buffers, handles, and
+        pointer-to-record (including the ``hipFileIOEvents_t *`` event
+        arrays) are not basic types and keep the chain default.
+
+        The async APIs ``hipFileReadAsync`` / ``hipFileWriteAsync`` are
+        excluded even though ``bytes_read_p`` / ``bytes_written_p`` are
+        ``@param[out]``: those slots must outlive the call (the stream
+        writes them after return), so they stay caller-allocated rank-1
+        rather than becoming stack-temporary scalar returns.
+        """
+        if isinstance(node, Parm):
+            parent = node.parent
+            if parent is not None and parent.name in (
+                "hipFileReadAsync",
+                "hipFileWriteAsync",
+            ):
+                return None  # defer to chain (rank 1); async slots persist
+            if node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(
+                degree=1
+            ):
+                return 0
         return None  # defer to chain
 
     @staticmethod
