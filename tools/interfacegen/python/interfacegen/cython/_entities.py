@@ -456,12 +456,19 @@ class Field(tree.Field, CythonMixin, Typed):
         )
         return rendered.field_decl(name)
 
-    def render_python_property(self, record_cname: str):
+    def render_python_property(self, record_cname: str, cprefix: str = ""):
 
         attr = self.renamer(self.name)
         template = tempita.Template(
             cythontemplates.wrapper_class_record_property_template
         )
+
+        is_pointer_to_record = self.is_pointer_to_record(degree=1)
+        # Any pointer field not caught by an earlier, more specific
+        # branch (void/basic-type pointers, record values, degree-1
+        # pointer-to-record) falls back to a generic ``Pointer``
+        # accessor. Incomplete arrays are treated as pointers here.
+        is_pointer = self.get_pointer_degree(incomplete_array=True) > 0
 
         return template.substitute(
             record_cname=record_cname,
@@ -492,8 +499,23 @@ class Field(tree.Field, CythonMixin, Typed):
                 self.is_pointer_to_basic_type(degree=-1)
                 or self.is_pointer_to_void(degree=-1)
             ),
-            # is_pointer_to_record ... # TODO
-            # is_pointer_to_function_proto ...
+            is_pointer_to_record=is_pointer_to_record,
+            is_pointer=is_pointer,
+            # Typed pointee wrapper for the degree-1 pointer-to-record
+            # branch. Assume the wrapper is emitted (no admission
+            # filter for now); this may be revisited.
+            record_wrapper=(
+                self.lookup_innermost_type().cython_global_name
+                if is_pointer_to_record
+                else ""
+            ),
+            # cy*-qualified C pointer type (leading const stripped) used
+            # as the setter cast target for both the pointer-to-record
+            # and the generic pointer branches.
+            pointer_ctype_no_const=self._add_module_cprefix(
+                self.cython_global_typename_no_const, cprefix
+            ),
+            util_types_prefix=getattr(self, "util_types_prefix", ""),
         )
 
 
@@ -625,7 +647,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         rendered_property_names = []
         all_properties_rendered = True
         for field in self.fields:
-            prop = field.render_python_property(self.cname(cprefix))
+            prop = field.render_python_property(self.cname(cprefix), cprefix)
             if len(prop.strip()):
                 rendered_property_names.append(field.cython_name)
                 self.append_to_python_body(prop)

@@ -1212,3 +1212,116 @@ def test_anon_funptr_in_nested_record_emitted_under_strict_prefix_filter(tmp_pat
         f"record was dropped); pxd:\n{pxd}"
     )
     _no_pseudo_spelling_leaks(pxd)
+
+
+# ---------------------------------------------------------------------------
+# Pointer-to-record + generic-pointer struct field accessors
+#
+# Mirrors hipFileDescr.fs_ops (`const hipFileFSOps *`): a degree-1
+# pointer-to-record field used to be dropped from the wrapper (no
+# `Field.render_python_property` dispatch case), so it never got a
+# get_/set_/property and was excluded from PROPERTIES().
+#
+# The fix adds two branches to the record-property template:
+#   * degree-1 `T *` pointer-to-record  -> typed pointee wrapper
+#   * every OTHER unhandled pointer field (function pointer, degree>=2,
+#     pointer-to-enum, ...) -> generic `<util>.types.Pointer`
+# ---------------------------------------------------------------------------
+
+SHAPE_POINTER_TO_RECORD_FIELD = """
+/* hipFileDescr.fs_ops-shaped: a degree-1 pointer-to-record field, a
+   function-pointer field, and a degree-2 pointer-to-record field in a
+   single struct. */
+typedef struct rec_ops {
+    int a;
+} rec_ops;
+
+typedef int (*callback_t)(void *ctx);
+
+typedef struct {
+    int kind;
+    const rec_ops *ops;   /* degree-1 ptr-to-record -> typed wrapper */
+    callback_t cb;        /* function pointer -> generic Pointer */
+    rec_ops **table;      /* degree-2 ptr-to-record -> generic Pointer */
+} ptr_field_descr_t;
+"""
+
+
+def _properties_list(pyx: str, *members: str) -> str:
+    """Return the `PROPERTIES()` return list that contains every given
+    member name, or raise AssertionError if none matches.
+    """
+    for m in re.finditer(r"return\s+(\[[^\]]*\])", pyx):
+        lst = m.group(1)
+        if all(f'"{name}"' in lst for name in members):
+            return lst
+    raise AssertionError(
+        f"no PROPERTIES() list containing all of {members}; pyx:\n{pyx}"
+    )
+
+
+def test_pointer_to_record_field_emits_typed_accessor(tmp_path):
+    """A degree-1 `T *` pointer-to-record field gets get_/set_/property
+    typed on the pointee wrapper and appears in PROPERTIES().
+
+    Locks the fix for hipFileDescr.fs_ops being silently dropped.
+    """
+    gen = make_generator(SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_rec")
+    pyx = write_module(gen, tmp_path)["mod_ptr_rec.pyx"]
+
+    assert re.search(r"def\s+get_ops\(self, i\):", pyx), (
+        f"pointer-to-record field missing get_ops; pyx:\n{pyx}"
+    )
+    assert re.search(r"def\s+set_ops\(self, i, object value\):", pyx), (
+        f"pointer-to-record field missing set_ops; pyx:\n{pyx}"
+    )
+    # Getter is typed on the pointee wrapper (rec_ops), cast via void*.
+    assert re.search(
+        r"return\s+rec_ops\.fromPtr\(<void\*>.*\.ops\)", pyx
+    ), f"get_ops must use the typed rec_ops wrapper; pyx:\n{pyx}"
+    # Setter stores the address via the typed wrapper, cast to the
+    # cprefixed pointee C pointer type.
+    assert re.search(
+        r"\.ops\s*=\s*<cymod_ptr_rec\.rec_ops\s*\*>"
+        r"cpython\.long\.PyLong_AsVoidPtr\(int\(rec_ops\.fromPyobj\(value\)\)\)",
+        pyx,
+    ), f"set_ops must cast to the cprefixed pointee type; pyx:\n{pyx}"
+    # Property + setter.
+    assert re.search(r"def\s+ops\(self\):", pyx), (
+        f"pointer-to-record field missing `ops` property; pyx:\n{pyx}"
+    )
+    assert "@ops.setter" in pyx, f"missing `@ops.setter`; pyx:\n{pyx}"
+    # Included in PROPERTIES().
+    assert '"ops"' in _properties_list(pyx, "kind", "ops"), (
+        f"`ops` missing from PROPERTIES(); pyx:\n{pyx}"
+    )
+
+
+def test_unhandled_pointer_field_falls_back_to_generic_pointer(tmp_path):
+    """Pointer fields that aren't degree-1 pointer-to-record (function
+    pointers, degree>=2 pointers, ...) fall back to the generic
+    `<util>.types.Pointer` accessor and still appear in PROPERTIES().
+    """
+    gen = make_generator(SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_gen")
+    pyx = write_module(gen, tmp_path)["mod_ptr_gen.pyx"]
+
+    # Function-pointer field -> generic Pointer.
+    assert re.search(
+        r"def\s+get_cb\(self, i\):", pyx
+    ), f"function-pointer field missing get_cb; pyx:\n{pyx}"
+    assert re.search(
+        r"return\s+rocm\.bindings\.util\.types\.Pointer\.fromPtr\(<void\*>.*\.cb\)",
+        pyx,
+    ), f"get_cb must use the generic Pointer wrapper; pyx:\n{pyx}"
+
+    # Degree-2 pointer-to-record field -> generic Pointer (not typed).
+    assert re.search(
+        r"return\s+rocm\.bindings\.util\.types\.Pointer\.fromPtr\(<void\*>.*\.table\)",
+        pyx,
+    ), f"degree-2 pointer field must fall back to generic Pointer; pyx:\n{pyx}"
+
+    # Both are exposed as properties in PROPERTIES().
+    lst = _properties_list(pyx, "cb", "table")
+    assert '"cb"' in lst and '"table"' in lst, (
+        f"`cb`/`table` missing from PROPERTIES(); pyx:\n{pyx}"
+    )

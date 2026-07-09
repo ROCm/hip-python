@@ -401,6 +401,46 @@ def get_{{attr}}(self, i):
 def {{attr}}(self):
     \"""{{brief_comment}}\"""
     return self.get_{{attr}}(0)
+{{elif is_pointer_to_record}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{record_wrapper}}.fromPtr(<void*>{{element_ptr}}[i].{{attr}})
+def set_{{attr}}(self, i, object value):
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+
+    Note:
+        This can be dangerous if the pointer is from a python object
+        that is later on garbage collected.
+    \"""
+    {{element_ptr}}[i].{{attr}} = <{{pointer_ctype_no_const}}>cpython.long.PyLong_AsVoidPtr(int({{record_wrapper}}.fromPyobj(value)))
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, object value):
+    self.set_{{attr}}(0,value)
+{{elif is_pointer}}
+def get_{{attr}}(self, i):
+    \"""Get value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+    \"""
+    return {{util_types_prefix}}Pointer.fromPtr(<void*>{{element_ptr}}[i].{{attr}})
+def set_{{attr}}(self, i, object value):
+    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+
+    Note:
+        This can be dangerous if the pointer is from a python object
+        that is later on garbage collected.
+    \"""
+    {{element_ptr}}[i].{{attr}} = <{{pointer_ctype_no_const}}>cpython.long.PyLong_AsVoidPtr(int({{util_types_prefix}}Pointer.fromPyobj(value)))
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+@{{attr}}.setter
+def {{attr}}(self, object value):
+    self.set_{{attr}}(0,value)
 {{endif}}
 """
 
