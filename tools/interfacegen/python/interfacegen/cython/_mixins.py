@@ -554,6 +554,57 @@ class CythonMixin(DoxygenMixin):
         else:
             return f'{renamed} "{orig_name}"'
 
+    # Cython type spellings that should NOT be prefixed with the cy*
+    # module name (``cyhip.``, ``cyhiprtc.``, …). These are primitive
+    # C / stdint types that exist directly in the Cython compilation
+    # context — the cy* module doesn't redefine them, and prepending
+    # the prefix would produce broken declarations like
+    # ``cyhip.char *``.
+    _PRIMITIVE_C_TYPES_FOR_CPREFIX = frozenset({
+        "void", "char", "short", "int", "long", "float", "double",
+        "signed", "unsigned", "_Bool", "bint",
+        "size_t", "ssize_t", "ptrdiff_t",
+        "uint8_t", "uint16_t", "uint32_t", "uint64_t",
+        "int8_t", "int16_t", "int32_t", "int64_t",
+        "intptr_t", "uintptr_t",
+    })
+
+    @staticmethod
+    def _add_module_cprefix(c_type: str, cprefix: str) -> str:
+        """Prepend ``cprefix`` (the cy* module qualifier) to a Cython
+        type spelling, preserving leading ``const`` / ``volatile``
+        qualifiers as outermost — but skip the prefix entirely when
+        the type's leading identifier is a primitive C type (``int``,
+        ``void``, ``char``, ``unsigned``, ``size_t``, ``uint32_t``,
+        …). Primitives exist directly in the Cython compilation
+        context and are not redefined in the cy* module.
+
+        Used by the with-nogil emitter and the four Python-touching
+        ``_analyze_parms`` handlers when the bare cy*-spelling
+        (``hipMemcpyKind``, ``dim3``, ``hipStream_t``) collides with
+        a same-named Python wrapper / IntEnum class in the high-level
+        ``<module>.pyx``, and by the pointer-field property renderer
+        (``Field.render_python_property``) for the setter cast target.
+        """
+        # Strip leading qualifiers (preserving them on the outside).
+        qualifiers = ""
+        rest = c_type
+        for qual in ("const ", "volatile "):
+            if rest.startswith(qual):
+                qualifiers = qual
+                rest = rest[len(qual):]
+                break
+        # Inspect the leading identifier (everything before the first
+        # space, ``*``, or ``(``).
+        head = rest
+        for sep in (" ", "*", "("):
+            idx = head.find(sep)
+            if idx >= 0:
+                head = head[:idx]
+        if head in CythonMixin._PRIMITIVE_C_TYPES_FOR_CPREFIX:
+            return c_type
+        return f"{qualifiers}{cprefix}{rest}"
+
     def _raw_comment_cleaned(self):
 
         assert isinstance(self, tree.Node)
