@@ -28,9 +28,10 @@
 # differences:
 #
 #   1. The auto-generated hipFileHandleRegister takes a hipFileDescr struct
-#      object whose `handle` union (`fd` for POSIX, `hFile` for Win32) is
-#      not yet exposed by the codegen — work around by laying out a ctypes
-#      Structure that matches hipFileDescr_t and passing its address.
+#      object. The generated wrapper is fully settable: `.type` takes a
+#      hipFileFileHandleType, `.handle.fd` writes the POSIX union member in
+#      place, and `.fs_ops` (a pointer-to-record field) is zero-initialized
+#      to NULL by the constructor — so no ctypes shim is needed.
 #   2. hipFileRead / hipFileWrite return (retval, errno, hip_drv_err): the
 #      robust hip-python bindings snapshot POSIX errno and
 #      hipPeekAtLastError() inside the same with-nogil block as the C call
@@ -45,12 +46,13 @@ __author__ = (
     "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com> (port)"
 )
 
-import ctypes
 import os
 import stat
 from sys import stderr
 
 from rocm.bindings.hipfile import (
+    hipFileDescr,
+    hipFileFileHandleType,
     hipFileHandleRegister as _handle_register,
     hipFileHandleDeregister as _handle_deregister,
     hipFileRead as _read,
@@ -59,46 +61,6 @@ from rocm.bindings.hipfile import (
 
 from .enums import FileHandleType, OpError
 from .error import HipFileException
-
-
-# ---------------------------------------------------------------------------
-# Local hipFileDescr_t shim. The auto-generated `hipFileDescr` wrapper class
-# in rocm.bindings.hipfile has a `.type` setter, and the nested union type
-# `hipFileDescr_union_0` is now emitted by the codegen, but the generated
-# wrapper still exposes no ergonomic way to set the `handle.fd` union member
-# before calling hipFileHandleRegister. Laying the struct out in pure ctypes
-# and passing its address stays the simplest, allocation-explicit approach.
-#
-# Layout from include/hipfile.h:
-#
-#     typedef struct hipFileDescr {
-#         hipFileFileHandleType_t type;       // int  (4 bytes)
-#         union {
-#             int   fd;                       // 4 bytes (POSIX)
-#             void *hFile;                    // 8 bytes (Win32)
-#         } handle;
-#         const hipFileFSOps_t *fs_ops;       // 8 bytes
-#     } hipFileDescr_t;
-#
-# C alignment on a 64-bit platform: pads `type` to 8 bytes so the union
-# (which contains a void*) is 8-byte aligned, then 8-byte fs_ops. ctypes
-# follows the same rules.
-# ---------------------------------------------------------------------------
-
-
-class _HipFileDescrHandleUnion(ctypes.Union):
-    _fields_ = (
-        ("fd", ctypes.c_int),
-        ("hFile", ctypes.c_void_p),
-    )
-
-
-class _HipFileDescr(ctypes.Structure):
-    _fields_ = (
-        ("type", ctypes.c_int),
-        ("handle", _HipFileDescrHandleUnion),
-        ("fs_ops", ctypes.c_void_p),
-    )
 
 
 class FileHandle:
@@ -196,18 +158,15 @@ class FileHandle:
             raise RuntimeError("The FileHandle is already open.")
         self._fd = os.open(self._path, self._flags, self._mode)
 
-        # Build the hipFileDescr_t in ctypes (the auto-generated wrapper
-        # can't reach into the union — see module-level comment).
-        descr_struct = _HipFileDescr()
-        descr_struct.type = int(self._handle_type)
-        descr_struct.handle.fd = self._fd
-        descr_struct.fs_ops = None
-        descr_addr = ctypes.addressof(descr_struct)
+        # Build the descriptor with the generated wrapper: the constructor
+        # zero-inits the buffer (so fs_ops stays NULL), `.type` takes a
+        # hipFileFileHandleType, and `.handle.fd` writes the POSIX union
+        # member in place.
+        descr = hipFileDescr()
+        descr.type = hipFileFileHandleType(int(self._handle_type))
+        descr.handle.fd = self._fd
 
-        # The auto-generated wrapper accepts any object Pointer.fromPyobj
-        # can adapt — including a ctypes.c_void_p with the descriptor
-        # address.
-        err, fh = _handle_register(ctypes.c_void_p(descr_addr))
+        err, fh = _handle_register(descr)
         if err.err != OpError.SUCCESS:
             os.close(self._fd)
             self._fd = None
