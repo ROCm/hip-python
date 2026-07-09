@@ -34,15 +34,16 @@ loses its reference to that field entirely. That symptom is documented but
 this test focuses on the named-nested gap because it's the one tied to
 ``node_filter``.
 
-Fix shape (sketched in `share/design/POINTER_ARGUMENTS.md` follow-ups):
-walk a record's nested-non-anonymous types when their parent is admitted
-by ``node_filter``, and either (a) admit them transitively or (b) emit them
-as opaque/forwarded stubs above the parent's ``cdef extern from`` block.
+Fix (landed): ``CythonModuleGenerator.walk_filtered_nodes`` admits a
+nested record/enum (and inline anonymous function pointer) transitively
+whenever its TOP-MOST enclosing declaration is admitted by
+``node_filter`` — see ``_topmost_ancestor``. This closes the gap in the
+codegen tool itself, so recipes no longer need a per-library
+``_topmost_name`` filter (the ``amdsmi`` recipe keeps one, now redundant
+but harmless).
 """
 
 import re
-
-import pytest
 
 from interfacegen.tree import MacroDefinition
 
@@ -68,17 +69,20 @@ def _prefix_only_filter(node):
     return (node.name or "").startswith("my_bdf_t")
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "When node_filter admits the outer typedef but not the named-nested "
-        "inner struct (because its name lacks the prefix), the inner-struct "
-        "definition is dropped while the outer type still references it via "
-        "a synthesised <parent>_<inner> name. Fix: hoist + admit nested-named "
-        "types transitively when their parent is admitted."
-    ),
-)
 def test_named_nested_struct_definition_emitted_when_parent_admitted(tmp_path):
+    """A named-nested struct whose own name lacks the filter prefix is
+    still emitted, because its TOP-MOST enclosing type (``my_bdf_t``) is
+    admitted.
+
+    Previously an ``xfail(strict=True)`` gap: the outer typedef was
+    admitted but the inner ``struct bdf_`` was dropped while the outer
+    type still referenced it via the synthesised ``<parent>_<inner>``
+    name. Closed by the top-most-ancestor transitive-admission rule in
+    ``CythonModuleGenerator.walk_filtered_nodes`` — nested records/enums
+    (and inline anonymous function pointers) inherit their top-most
+    enclosing declaration's admission, so no per-recipe ``_topmost_name``
+    filter is required.
+    """
     gen = make_generator(
         HEADER, module_name="mod_n", node_filter=_prefix_only_filter
     )

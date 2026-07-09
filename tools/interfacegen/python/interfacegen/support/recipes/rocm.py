@@ -1707,14 +1707,19 @@ class hsa:
     # link each entry to its tracking issue.
     #
     # `hsa_amd_memory_copy_op_s` (and its `_t` typedef + the only
-    # consumer `hsa_amd_memory_async_batch_copy`) — the C struct nests
-    # multiple anonymous unions of structs which the codegen currently
-    # collapses into synthesized `<parent>_struct_<N>` field types
-    # without emitting the matching `cdef struct` declarations,
-    # leaving Cython with an undefined type identifier. Fixing the
-    # nested-anonymous-union codegen path is a separate larger
-    # refactor; until then, omit just these three names so the rest
-    # of HSA compiles cleanly.
+    # consumer `hsa_amd_memory_async_batch_copy`) — the C struct uses
+    # C11 *anonymous members with no field name* (e.g.
+    # `union { void* src; void** src_list; };` and an anonymous union of
+    # anonymous structs, all unnamed). The nested-record *admission* gap
+    # that used to drop referenced nested types is now fixed
+    # (CythonModuleGenerator.walk_filtered_nodes top-most-ancestor rule),
+    # so these no longer dangle — BUT the codegen still drops
+    # no-field-name anonymous members entirely: the parent struct loses
+    # `src`/`dst`/`size`/... and the anon-union-of-anon-structs emits as
+    # an empty `cdef union ...: pass`. That is a separate, still-open gap
+    # (C11 anonymous-member name injection is not modeled), so the
+    # emitted binding would be silently wrong. Keep these three omitted
+    # until the anonymous-member path is implemented.
     _CODEGEN_BLOCKLIST = frozenset((
         "hsa_amd_memory_copy_op_s",
         "hsa_amd_memory_copy_op_t",

@@ -271,6 +271,23 @@ class CythonBackend:
         fb = getattr(b, "file", None)
         return fa == fb and fa is not None
 
+    @staticmethod
+    def _topmost_ancestor(node):
+        """Walk ``node.parent`` up to the outermost non-Root ancestor.
+
+        For a top-level node this returns the node itself; for a nested
+        type (a struct/union/enum nested in a record, or an inline
+        function-pointer field/param) it returns the enclosing top-level
+        Record/Function/Typedef. Used to let nested declarations inherit
+        their top-most enclosing declaration's admission verdict — see
+        ``walk_filtered_nodes``.
+        """
+        from .. import tree
+        top = node
+        while top.parent is not None and not isinstance(top.parent, tree.Root):
+            top = top.parent
+        return top
+
     def walk_filtered_nodes(self):
         """Walks the filtered nodes in post-order and sets the renamer of each node.
 
@@ -284,24 +301,26 @@ class CythonBackend:
             the rationale (leading-underscore tag names like
             ``_hipblasLtMatmulAlgo_t``).
 
-            ``AnonymousFunctionPointer`` nodes are admitted transitively
-            whenever their enclosing parent (the Function or Record that
-            owns the inline `T (*)(...)` parameter or field) is itself
-            admitted. The synthesized name (`anon_funptr_0`,
-            `anon_funptr_1`, …) carries no library prefix and would
-            never match a strict-prefix recipe filter, but the parent
-            decl's rendering uses
-            ``<parent_name>_anon_funptr_<N>`` as the parameter type —
-            so the matching ``ctypedef`` MUST be emitted, otherwise
-            Cython sees an undeclared identifier and falls back to
-            "Python object" inference (which then fails under
-            ``nogil``). HSA's `hsa_iterate_agents` etc. exhibit this.
+            Nested declarations — a struct/union/enum nested inside a
+            record, or an inline ``AnonymousFunctionPointer`` field/param
+            — are admitted transitively whenever their TOP-MOST enclosing
+            declaration is admitted. Their synthesized names
+            (``<parent>_struct_<N>``, ``<parent>_union_<N>``,
+            ``<parent>_anon_funptr_<N>``) carry no library prefix and so
+            never match a strict-prefix recipe filter, but the enclosing
+            decl's rendering references those names as field/param types —
+            the matching ``cdef struct``/``ctypedef`` MUST therefore be
+            emitted, otherwise Cython sees an undeclared identifier ("not
+            a type identifier", or a fallback to "Python object" inference
+            that then fails under ``nogil``). Walking to the top-most
+            ancestor (rather than the immediate parent) makes this work at
+            arbitrary nesting depth, e.g. a union field whose type nests a
+            further anonymous struct, or a function pointer inside a
+            nested anonymous record. hipFILE's ``hipFileDescr.handle`` and
+            HSA's ``hsa_iterate_agents`` exhibit these shapes.
         """
         from .. import tree
         transitive_records = self._transitively_admitted_records()
-        # Decide once whether the parent of an AnonymousFunctionPointer
-        # is admitted, by re-running the user filter on the parent.
-        # Cheap because `node_filter` is a pure predicate.
         for node in self.root.walk(postorder=True):
             if isinstance(node, CythonMixin):
                 if not isinstance(node, (Field, Parm, Root)):
@@ -312,13 +331,21 @@ class CythonBackend:
                         and node.name in transitive_records
                     ):
                         admitted = True
+                    # Nested records/enums and inline anonymous function
+                    # pointers inherit the admission of their top-most
+                    # enclosing declaration. ``top is not node`` excludes
+                    # top-level nodes (a rejected top-level type stays
+                    # rejected); the walk handles arbitrary nesting depth.
                     if (
                         not admitted
-                        and isinstance(node, tree.AnonymousFunctionPointer)
-                        and node.parent is not None
-                        and self.node_filter(node.parent)
+                        and isinstance(
+                            node,
+                            (tree.Record, tree.Enum, tree.AnonymousFunctionPointer),
+                        )
                     ):
-                        admitted = True
+                        top = self._topmost_ancestor(node)
+                        if top is not node and self.node_filter(top):
+                            admitted = True
                     if admitted:
                         _log.debug(
                             f" touch {node.__class__.__name__} {node.name} from {node.cursor.kind} {node.cursor.spelling} ({node.render_location()})"

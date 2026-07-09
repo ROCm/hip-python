@@ -1069,3 +1069,146 @@ def test_nogil_with_gil_mode_keeps_inline_emission(tmp_path):
     assert "k.value" in body, (
         f"with-gil should keep `.value` inline:\n{body}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Nested anonymous records under a STRICT-PREFIX node_filter
+#
+# The shapes above run under the default permissive (admit-all) filter, which
+# hides the real-world gap: a per-library recipe (hipfile, hsa) admits only
+# names carrying its prefix. A nested ANONYMOUS record's synthesized name is
+# `struct_<N>` / `union_<N>` (no prefix), so `node.name.startswith("hipFile")`
+# rejects it — the parent field then references `<parent>_struct_<N>` with no
+# matching `cdef struct`, and Cython errors "not a type identifier".
+#
+# These tests lock down the top-most-ancestor transitive-admission rule in
+# `CythonModuleGenerator.walk_filtered_nodes`: a nested record/enum (and inline
+# anonymous function pointer) inherits its top-most enclosing declaration's
+# admission verdict.
+# ---------------------------------------------------------------------------
+
+from interfacegen.tree import MacroDefinition
+
+
+def _hipfile_prefix_filter(node):
+    """Mimics the hipfile recipe's strict-prefix `node_filter`: admit only
+    names starting with `hipFile` (macros dropped)."""
+    if isinstance(node, MacroDefinition):
+        return False
+    return (node.name or "").startswith("hipFile")
+
+
+# hipFILE-shaped: an anon-nested struct, an anon-nested union, and a
+# 2-level anon union wrapping an anon struct — mirrors hipFileDriverProps.nvfs,
+# hipFileDescr.handle, and hipFileIOParams.u.batch respectively.
+SHAPE_HIPFILE_NESTED_ANON = """
+typedef struct {
+    unsigned major_version;
+    struct {
+        unsigned nvfs_major;
+        unsigned nvfs_minor;
+    } nvfs;
+} hipFileDriverProps;
+
+typedef struct {
+    int type;
+    union {
+        int fd;
+        void *opaque;
+    } handle;
+} hipFileDescr;
+
+typedef struct {
+    unsigned nr;
+    union {
+        struct {
+            void *devPtr_base;
+            unsigned long size;
+        } batch;
+        int single;
+    } u;
+} hipFileIOParams;
+"""
+
+
+def test_hipfile_nested_anon_records_emitted_under_strict_prefix_filter(tmp_path):
+    """Under a strict `hipFile`-prefix filter, all nested anonymous
+    records must still be emitted (inheriting their top-most enclosing
+    typedef's admission) so the parent fields don't dangle.
+
+    Was a hard failure before the top-most-ancestor rule: the nested
+    records' synthesized `struct_<N>`/`union_<N>` names fail the prefix
+    check, so they were dropped while the parents referenced them.
+    """
+    gen = make_generator(
+        SHAPE_HIPFILE_NESTED_ANON,
+        module_name="mod_hf",
+        node_filter=_hipfile_prefix_filter,
+    )
+    pxd = write_module(gen, tmp_path)["cymod_hf.pxd"]
+
+    # 1-level anon struct + anon union.
+    assert re.search(r"\bcdef\s+struct\s+hipFileDriverProps_struct_\d+\b", pxd), (
+        f"anon-nested struct hipFileDriverProps_struct_N missing; pxd:\n{pxd}"
+    )
+    assert re.search(r"\bcdef\s+union\s+hipFileDescr_union_\d+\b", pxd), (
+        f"anon-nested union hipFileDescr_union_N missing; pxd:\n{pxd}"
+    )
+    # 2-level: anon union wrapping an anon struct.
+    assert re.search(r"\bcdef\s+union\s+hipFileIOParams_union_\d+\b", pxd), (
+        f"anon-nested union hipFileIOParams_union_N missing; pxd:\n{pxd}"
+    )
+    assert re.search(
+        r"\bcdef\s+struct\s+hipFileIOParams_union_\d+_struct_\d+\b", pxd
+    ), (
+        f"2-level anon-nested struct hipFileIOParams_union_N_struct_M "
+        f"missing; pxd:\n{pxd}"
+    )
+
+    # No dangling references and no libclang pseudo-spelling leaks.
+    _no_pseudo_spelling_leaks(pxd)
+    _all_referenced_types_defined(pxd)
+
+
+# Anonymous function pointer nested INSIDE a nested anonymous record. The
+# funptr's immediate parent is the nested anon struct (`..._struct_N`), which
+# itself fails the prefix filter — so an immediate-parent-only rule would drop
+# the funptr. Only the top-most-ancestor walk admits it.
+SHAPE_HIPFILE_FUNPTR_IN_NESTED_RECORD = """
+typedef struct {
+    int version;
+    struct {
+        int (*submit)(void *ctx, unsigned long n);
+        void *ctx;
+    } ops;
+} hipFileOpsTable;
+"""
+
+
+def test_anon_funptr_in_nested_record_emitted_under_strict_prefix_filter(tmp_path):
+    """An inline anonymous function pointer nested inside a nested
+    anonymous record is admitted via the top-most enclosing type, even
+    though its immediate parent (the nested `..._struct_N`) fails the
+    prefix filter. Locks the generalization of the former
+    immediate-parent-only AnonymousFunctionPointer rule.
+    """
+    gen = make_generator(
+        SHAPE_HIPFILE_FUNPTR_IN_NESTED_RECORD,
+        module_name="mod_hf_fp",
+        node_filter=_hipfile_prefix_filter,
+    )
+    pxd = write_module(gen, tmp_path)["cymod_hf_fp.pxd"]
+
+    # The enclosing nested anon struct is emitted.
+    assert re.search(r"\bcdef\s+struct\s+hipFileOpsTable_struct_\d+\b", pxd), (
+        f"nested anon struct hipFileOpsTable_struct_N missing; pxd:\n{pxd}"
+    )
+    # The anonymous funptr ctypedef is emitted (definition form
+    # `ctypedef <ret> (*<...>anon_funptr_N)(...)`).
+    assert re.search(
+        r"ctypedef\b[^\n]*\(\s*\*[^)]*anon_funptr_\d+\s*\)", pxd
+    ), (
+        f"anonymous function-pointer ctypedef missing (funptr in nested "
+        f"record was dropped); pxd:\n{pxd}"
+    )
+    _no_pseudo_spelling_leaks(pxd)
