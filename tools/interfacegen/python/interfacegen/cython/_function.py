@@ -970,8 +970,7 @@ cdef void* {funptr_name} = NULL
                     textwrap.dedent(
                         f"""\
                     if not isinstance({parm_name},{parm_base_class_name}):
-                        raise TypeError("argument '{parm_name}' must be of type '{parm_base_class_name}'")\
-                    """
+                        raise TypeError("argument '{parm_name}' must be of type '{parm_base_class_name}'")"""
                     )
                 )
                 # IntEnum .value is Python attribute access — must
