@@ -557,6 +557,71 @@ ones.
    Please also see :ref:`ch_datatypes` for more details on automatic type
    conversions supported by HIP Python's datatypes.
 
+.. _sec_hipfile_copy:
+
+Copying a File through GPU Memory with hipFile
+----------------------------------------------
+
+.. admonition:: What will I learn?
+
+   * How I can use the high-level :py:obj:`rocm.hipfile` wrapper classes
+     ``Driver``, ``Buffer``, and ``FileHandle`` as context managers.
+   * How I can read a file directly into device memory and write it back
+     out via ``FileHandle.read`` / ``FileHandle.write``.
+
+hipFile (Accelerated I/O Storage) moves data directly between storage and
+GPU memory. HIP Python ships two layers for it: the auto-generated
+low-level :py:obj:`rocm.bindings.hipfile` bindings and the high-level,
+Pythonic :py:obj:`rocm.hipfile` wrapper. The :ref:`example below
+<hipfile_copy>` uses the high-level wrapper to copy a file through a device
+buffer and then verifies the round-trip by comparing SHA256 hashes.
+
+.. note::
+
+   hipFile requires the ``libhipfile.so`` shared library, which may not be
+   part of a standard ROCm\ |trade| installation (see the note in
+   :doc:`the installation chapter <0_install>`). It also issues its
+   transfers with ``O_DIRECT``, so the scratch files must live on an
+   ``O_DIRECT``-capable filesystem; set the ``HIPFILE_TMPDIR`` environment
+   variable to such a mount (e.g. an ext4 mount) if the default temp
+   directory is a ``tmpfs``.
+
+.. literalinclude:: ../../examples/0_Basic_Usage/hipfile_copy.py
+   :language: python
+   :start-after: [literalinclude-begin]
+   :emphasize-lines: 16, 41, 46, 48, 49-57, 59, 61
+   :linenos:
+   :name: hipfile_copy
+   :caption: Copying a File through GPU Memory with hipFile
+
+.. admonition:: What is happening?
+
+   1. We query the hipFile version via ``get_version`` (line 16) and create
+      a 2 MiB random input file in a temporary directory (line 34). The size
+      is block-aligned so the ``O_DIRECT`` transfers are valid.
+   2. We allocate a device buffer via :py:obj:`~.hipMalloc` and take its
+      address from the returned :py:obj:`~.DeviceArray` (line 41).
+   3. We open the hipFile ``Driver`` (line 46) and register the device
+      buffer as a ``Buffer`` (line 48), both as context managers so they are
+      deregistered/closed automatically on scope exit.
+   4. We register the input and output files as ``FileHandle`` context
+      managers (lines 49-57). ``FileHandleType.OPAQUE_FD`` selects the POSIX
+      file-descriptor handle type (the default).
+   5. We read the input file into the device buffer via
+      ``FileHandle.read`` (line 59) and write it back out to the output file
+      via ``FileHandle.write`` (line 61).
+   6. After the ``with`` blocks tear down the handles, buffer, and driver,
+      we free the device memory via :py:obj:`~.hipFree` and compare the
+      SHA256 hashes of the input and output files.
+
+.. note::
+
+   For a version that drives the auto-generated :py:obj:`rocm.bindings.hipfile`
+   functions directly — showing the raw ``(retval, errno, hip_drv_err)``
+   result tuples and the manual driver/buffer/handle lifecycle that the
+   high-level classes encapsulate — see
+   ``examples/0_Basic_Usage/hipfile_copy_lowlevel.py``.
+
 Basic Usage (Cython)
 --------------------
 
