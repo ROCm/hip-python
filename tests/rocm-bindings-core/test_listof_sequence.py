@@ -4,7 +4,7 @@
 """Tests for the ``ListOf*`` allocator + sequence protocol on
 ``rocm.bindings.util.types``.
 
-The ``ListOfPointer`` / ``ListOfInt`` / ``ListOfUnsigned`` /
+The ``ListOfPointer`` / ``ListOfInt`` / ``ListOfLong`` / ``ListOfUnsigned`` /
 ``ListOfUnsignedLong`` / ``ListOfBytes`` wrapper classes gained:
 
   * ``allocate(count)`` — an owned, zero-initialized buffer of ``count``
@@ -32,6 +32,7 @@ from rocm.bindings.util import types as _t
 
 _INT_CLASSES = [
     (_t.ListOfInt, ctypes.c_int),
+    (_t.ListOfLong, ctypes.c_long),
     (_t.ListOfUnsigned, ctypes.c_uint),
     (_t.ListOfUnsignedLong, ctypes.c_ulong),
 ]

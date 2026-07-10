@@ -42,6 +42,7 @@ __all__ = [
     "ListOfBytes",
     "ListOfPointer",
     "ListOfInt",
+    "ListOfLong",
     "ListOfUnsigned",
     "ListOfUnsignedLong",
 ]
@@ -2192,6 +2193,202 @@ cdef class ListOfInt(Pointer):
             return [self[j] for j in range(*subscript.indices(n))]
         i = _listof_norm_index(subscript, n)
         return (<int*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
+
+cdef class ListOfLong(Pointer):
+    """Handler for `list` / `tuple` whose entries can be converted to C type ``long``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``long``. Such entries might be of Python type `None`, `int`,
+    or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``long``:
+
+        A `list` or `tuple` of types that can be converted to C type ``long``.
+        In this case, this type allocates an array of C ``long`` values wherein it
+        stores the values obtained from the `list`/`tuple` entries. Furthermore, the
+        instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
+    # C members declared in declaration part ``types.pxd``
+
+    def __repr__(self):
+        return f"<ListOfLong object, _ptr={int(self)}>"
+
+    def __cinit__(self):
+        self._is_ptr_owner = False
+        self._len = -1
+
+    @staticmethod
+    cdef ListOfLong fromPtr(void* ptr):
+        cdef ListOfLong wrapper = ListOfLong.__new__(ListOfLong)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        Note:
+            If ``pyobj`` is an instance of ListOfLong, only the pointer is copied.
+            Releasing an acquired Py_buffer and temporary memory are still obligations
+            of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._is_ptr_owner = False
+        if isinstance(pyobj, ListOfLong):
+            self._ptr = (<ListOfLong>pyobj)._ptr
+
+        elif isinstance(pyobj, (tuple, list)):
+            self._is_ptr_owner = True
+            self._len = len(pyobj)
+            self._ptr = libc.stdlib.malloc(len(pyobj)*sizeof(long))
+            libc.string.memset(<void*>self._ptr, 0, len(pyobj)*sizeof(long))
+            for i, entry in enumerate(pyobj):
+                if isinstance(entry, int):
+                    (<long*>self._ptr)[i] = <long>cpython.long.PyLong_AsLongLong(entry)
+                elif isinstance(entry, (
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<long*>self._ptr)[i] = <long>cpython.long.PyLong_AsLongLong(
+                        entry.value
+                    )
+                else:
+                    raise ValueError(f"cannot cast input element '{i}' to C long")
+        else:
+            self._is_ptr_owner = False
+            Pointer.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a ListOfLong from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfLong`` instance, this method
+        returns it directly. No new ``ListOfLong`` is created.
+        """
+        return ListOfLong.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef ListOfLong fromPyobj(object pyobj):
+        """Derives a ListOfLong from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfLong`` instance, this method
+        returns it directly. No new ``ListOfLong`` is created.
+
+        Args:
+            pyobj (`object`):
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``long``, or any other `object` that is accepted as input by
+                `~.Pointer.__init__`.
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of `ListOfLong`.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfLong wrapper
+
+        if isinstance(pyobj, ListOfLong):
+            return pyobj
+        else:
+            wrapper = ListOfLong.__new__(ListOfLong)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._is_ptr_owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.ListOfLong` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+        ListOfLong.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C ``long`` slots.
+
+        The returned `~.ListOfLong` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfLong wrapper = ListOfLong.__new__(ListOfLong)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(long))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(long))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<long*>self._ptr)[i]
 
     def __iter__(self):
         cdef Py_ssize_t n = _listof_require_len(self._len)

@@ -393,29 +393,21 @@ class Typed:
         """If this out parameter is callee-allocated (fresh handle / scalar
         / string produced by the callee).
 
-        Two sources, in priority order:
+        Derived solely from the explicit ``OUT_CALLEE_ALLOCATED`` hint
+        (``intent.allocated_by_callee``). The recipe layer is the single
+        source of truth: structural producers (``double_indirection_out``
+        for ``T**``, ``string_z`` for ``char**``), ``documented_param_intent``
+        (a documented ``@param[out]`` on a callee-allocated shape), and the
+        per-library rank-0 scalar OUTs all set the hint explicitly.
 
-        1. The explicit ``OUT_CALLEE_ALLOCATED`` hint
-           (``intent.allocated_by_callee``) from the recipe — authoritative
-           for buffers/handles whose callee-allocation is *not* derivable
-           from rank (``hipMalloc``'s ``void**`` buffer, ``T**`` handles,
-           ``char**`` strings, opaque-handle creators).
-        2. A Cython-only structural fallback: an ``OUT`` pointer to a
-           single (rank-0) slot is callee-allocated — the callee writes a
-           fresh scalar the binding returns. This catches scalar OUTs that
-           a rule left as plain ``OUT`` (doxygen-derived or library
-           default), without the recipe having to spell out the
-           Cython-specific allocation axis.
-
-        The rank-0 fallback is purely additive; the explicit hint remains
-        load-bearing for buffers/handles (which may be rank>=1).
+        There is deliberately no rank-0 fallback: a caller-allocated rank-0
+        ``OUT`` scalar (e.g. hipFILE's async ``bytes_read_p``, whose stream
+        writes it after the call returns) stays a caller-allocated pointer
+        argument, handled the same way as caller-allocated ``IN`` / ``INOUT``
+        scalars.
         """
         assert self.is_ptr
-        if self.intent.allocated_by_callee:
-            return True
-        ptr_rank = getattr(self, "ptr_rank", None)
-        is_scalar_slot = callable(ptr_rank) and ptr_rank(self) == 0
-        return self.is_out_ptr and is_scalar_slot
+        return self.intent.allocated_by_callee
 
     @property
     def is_autoconverted_by_cython(self):

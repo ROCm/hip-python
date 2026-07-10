@@ -280,6 +280,8 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
                 return f"{util_types_prefix}ListOfInt"
             elif innermost_type_kind == clang.cindex.TypeKind.UINT:
                 return f"{util_types_prefix}ListOfUnsigned"
+            elif innermost_type_kind == clang.cindex.TypeKind.LONG:
+                return f"{util_types_prefix}ListOfLong"
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
                 return f"{util_types_prefix}ListOfUnsignedLong"
             elif (

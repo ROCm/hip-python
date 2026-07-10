@@ -121,6 +121,16 @@ cdef class ListOfInt(Pointer):
     @staticmethod
     cdef ListOfInt fromPyobj(object pyobj)
 
+cdef class ListOfLong(Pointer):
+    cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
+
+    @staticmethod
+    cdef ListOfLong fromPtr(void* ptr)
+
+    @staticmethod
+    cdef ListOfLong fromPyobj(object pyobj)
+
 cdef class ListOfUnsigned(Pointer):
     cdef bint _is_ptr_owner
     cdef Py_ssize_t _len

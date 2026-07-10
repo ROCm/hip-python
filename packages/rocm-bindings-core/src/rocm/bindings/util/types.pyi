@@ -366,6 +366,79 @@ class ListOfInt(Pointer):
     def __reduce__(self):
         """ListOfInt.__reduce_cython__(self)"""
 
+class ListOfLong(Pointer):
+    """ListOfLong(pyobj)
+
+    Handler for `list` / `tuple` whose entries can be converted to C type ``long``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``long``. Such entries might be of Python type `None`, `int`,
+    or of any `ctypes` integer type.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``long``:
+
+        A `list` or `tuple` of types that can be converted to C type ``long``.
+        In this case, this type allocates an array of C ``long`` values wherein it
+        stores the values obtained from the `list`/`tuple` entries. Furthermore, the
+        instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`."""
+    __pyx_vtable__: ClassVar[PyCapsule] = ...
+    def __init__(self, pyobj) -> Any:
+        """Constructor.
+
+                Args:
+                    pyobj (`object`):
+                        See the class description `~.ListOfLong` for information
+                        about accepted types for ``pyobj``.
+
+                Raises:
+                    `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+    @staticmethod
+    def fromObj(pyobj) -> Any:
+        """ListOfLong.fromObj(pyobj)
+
+        Creates a ListOfLong from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfLong`` instance, this method
+        returns it directly. No new ``ListOfLong`` is created."""
+    @staticmethod
+    def allocate(count) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``long`` slots."""
+    def __len__(self) -> int: ...
+    def __getitem__(self, subscript) -> Any: ...
+    def __iter__(self) -> Any: ...
+    def to_list(self) -> Any:
+        """Return the elements as a Python ``list`` of ``int``."""
+    def to_tuple(self) -> Any:
+        """Return the elements as a Python ``tuple`` of ``int``."""
+    def __reduce__(self):
+        """ListOfLong.__reduce_cython__(self)"""
+
 class ListOfPointer(Pointer):
     """ListOfPointer(pyobj)
 

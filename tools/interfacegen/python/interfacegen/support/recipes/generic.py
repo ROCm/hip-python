@@ -447,6 +447,17 @@ def _is_callee_allocated_out_shape(parm):
     return False
 
 
+def is_callee_allocated_out_shape(parm):
+    """Public alias of :func:`_is_callee_allocated_out_shape`.
+
+    Lets a per-library recipe rule (e.g. amdsmi's ``amdsmi_get_*`` verb
+    catch-all) split a shape-mixed ``OUT`` verdict into
+    ``OUT_CALLEE_ALLOCATED`` for a callee-produced shape vs. plain ``OUT``
+    for a caller-sized buffer.
+    """
+    return _is_callee_allocated_out_shape(parm)
+
+
 def _iter_doxygen_param_tags(raw_comment):
     r"""Yield ``(direction, parm_name)`` tuples from a function's
     raw doxygen comment.

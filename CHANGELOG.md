@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+### Caller-allocated `OUT` scalars stay pointer arguments
+
+Callee-vs-caller allocation is now derived solely from the explicit
+`ParmIntent.OUT_CALLEE_ALLOCATED` hint. The Cython layer's additive
+rank-0 fallback (`is_out_ptr and ptr_rank == 0`) in
+`is_out_callee_allocated_ptr` was removed, so caller-allocated `IN`,
+`INOUT`, and `OUT` scalars are all handled the same way — they stay
+pointer arguments (a rank-0 `PointerTo*`, a rank-1 `ListOf*`) — and only
+an explicit `OUT_CALLEE_ALLOCATED` becomes a synthesized return.
+
+To preserve prior return values, the per-library recipe rules now state
+`OUT_CALLEE_ALLOCATED` where the callee genuinely produces the value
+(HIP `hipDeviceGetUuid`/`hipIpcGetMemHandle`; hipRTC version/size/handle
+OUTs; RCCL `ncclGetUniqueId` and basic-scalar OUTs; hipFFT `workSize`;
+hipSPARSE `hipsparseCreate`; amdsmi `_MISTAGGED_OUT` and a shape-aware
+`amdsmi_get_*` catch-all). Redundant `T**` handle-creator hardcodes were
+removed in favor of the shared `double_indirection_out` chain rule. The
+motivating fix: hipFILE's async `hipFileReadAsync`/`hipFileWriteAsync`
+`bytes_read_p`/`bytes_written_p` (`ssize_t*`, `@param[out]`, written by
+the stream after the call returns) now remain caller-allocated
+`PointerToLong` arguments instead of being synthesized as returns. Also
+fixed an RCCL `ncclGetUniqueId` intent guard that compared a tuple to a
+string and never fired.
+
+### Add `ListOfLong` adapter for signed-`long` buffers
+
+Added a `ListOfLong` wrapper to `rocm.bindings.util.types` (mirroring
+`ListOfInt`/`ListOfUnsignedLong`) and a `TypeKind.LONG` branch to the
+Cython complicated-type handler. Rank-1 signed-`long` pointer parameters
+(`off_t`/`hoff_t`/`ssize_t`/`int64_t`, e.g. hipFILE's `hipFileReadAsync`
+/`hipFileWriteAsync` offset and byte-count params, and the hipBLAS/
+hipSOLVER `_64` index-result params) now expose a list-constructible
+`ListOfLong` instead of a plain `Pointer`, consistent with how `size_t*`
+already maps to `ListOfUnsignedLong`.
+
 ### Version metadata overhaul
 
 Retired the commit-count-derived version slots. The runtime

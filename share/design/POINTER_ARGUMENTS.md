@@ -234,6 +234,29 @@ contributors don't try to use them):
 - `restrict` — aliasing hint, no direction signal.
 - `volatile` — memory-model qualifier, no direction or shape signal.
 
+### 4.5 Numeric rank-1 buffers map to `ListOf*` by element kind
+
+Once a pointer parameter is classified as rank-1 (a sized buffer, not a
+scalar slot), the Cython complicated-type handler
+(`CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER` in
+`interfacegen/cython/_defaults.py`) picks the `rocm.bindings.util.types`
+wrapper from the **innermost canonical clang `TypeKind`** of the pointee:
+
+| Innermost `TypeKind` | C element type    | Wrapper              |
+|----------------------|-------------------|----------------------|
+| `INT`                | `int`             | `ListOfInt`          |
+| `LONG`               | `long` (`off_t`/`hoff_t`/`ssize_t`/`int64_t`) | `ListOfLong` |
+| `UINT`               | `unsigned`        | `ListOfUnsigned`     |
+| `ULONG`              | `unsigned long` (`size_t`) | `ListOfUnsignedLong` |
+| `CHAR_S`             | `char`            | `CStr` (see §4)      |
+| `VOID` (degree ≥ 2)  | `void*` slot      | `ListOfPointer`      |
+
+Anything without a matching branch falls through to the generic
+`Pointer`. The `LONG` → `ListOfLong` row exists so signed-`long` buffers
+(notably hipFILE's `hoff_t*`/`ssize_t*` offset params) are list-
+constructible sequences, consistent with `size_t*` → `ListOfUnsignedLong`,
+instead of an opaque `Pointer`.
+
 ## 5. Module layout
 
 ```
@@ -370,41 +393,47 @@ documented rank-0/double-indirection promotion in
 plain `OUT` by reading `.direction`; direction-only backends (Fortran)
 do exactly that and ignore the allocation axis entirely.
 
-**The allocation axis is derived, not solely prescribed.** `@param[out]`
-denotes output *direction* only — it says nothing about who allocates.
-A caller-allocated output buffer (e.g. `hipMemcpy`'s `dst`, a rank-1
-`void*`) is correctly tagged `[out]` and stays in the args; allocation
-is decided separately. The recipe layer therefore prescribes only the
-two real, language-agnostic properties — direction (`IN`/`OUT`/`INOUT`)
-and rank (0 = single slot, ≥1 = sized buffer) — plus the explicit hint
-where it is genuinely known. The Cython generator then *derives* the
-allocation axis:
+**The allocation axis is stated by the rules, not re-derived from rank.**
+`@param[out]` denotes output *direction* only — it says nothing about who
+allocates. A caller-allocated output buffer (e.g. `hipMemcpy`'s `dst`, a
+rank-1 `void*`) is correctly tagged `[out]` and stays in the args. The
+recipe layer prescribes the two real, language-agnostic properties —
+direction (`IN`/`OUT`/`INOUT`) and rank (0 = single slot, ≥1 = sized
+buffer) — plus the explicit `OUT_CALLEE_ALLOCATED` hint wherever a rule
+can prove the callee produces the value. The Cython consumer then reads
+*only* that hint:
 
 ```python
-is_out_callee_allocated_ptr = (
-    intent.allocated_by_callee          # explicit hint (authoritative)
-    or (is_out_ptr and ptr_rank == 0)   # additive scalar fallback
-)
+is_out_callee_allocated_ptr = intent.allocated_by_callee
 ```
 
-The first disjunct is authoritative for buffers/handles carrying the
-hint (independent of rank). The second is an additive *fallback* that
-promotes a scalar OUT a rule left as plain `OUT` (so a leaked rank-0
-scalar still returns a bare value, not a `Pointer`).
+There is deliberately **no rank-0 fallback**. Caller-allocated `IN`,
+`INOUT`, and `OUT` scalars are all handled the same way — they stay
+pointer arguments (a rank-0 `PointerTo*`, a rank-1 `ListOf*`) — and only
+an explicit `OUT_CALLEE_ALLOCATED` becomes a synthesized return. This is
+what lets a caller-*provided* rank-0 `OUT` scalar the callee writes later
+stay an argument: the canonical case is hipFILE's async `bytes_read_p` /
+`bytes_written_p` (`ssize_t*`, documented `@param[out]`), whose stream
+writes them *after* the call returns, so the caller must keep the pointer
+and read it post-synchronization. The `hipfile` recipe pins these to plain
+`OUT` (ahead of `documented_param_intent` in the chain) and leaves them at
+their honest rank 0, so they render as `PointerToLong` arguments.
 
-The rank-0 fallback assumes a rank-0 `OUT` slot is a value the callee
-*produces*. That is wrong for the rare case of a caller-*provided*
-rank-0 handle the callee writes *into* — e.g. `hipMemcpyHtoA`'s
-`hipArray_t dstArray` (a `struct hipArray*`, rank-0 record handle the
-caller created with `hipMallocArray`). Such a destination must stay a
-caller-allocated argument. Rather than complicate the generic fallback,
-the recipe handles these with a targeted per-parameter **rank override
-to 1** (HIP's `_HIPMEMCPY_RECORD_DST_NAMES`, gated on
-`is_pointer_to_record(degree=1)`): at rank 1 the fallback no longer
-fires and the parm stays caller-allocated, while its honest `OUT`
-direction is preserved. The `void*`-alias destinations
-(`hipDeviceptr_t`) need no override — `opaque_typedef_is_handle` already
-defers for `void*`, so they are rank-1 buffers.
+Consequently, a rule that wants a rank-0 scalar `OUT` to become a return
+must *say so* by returning `ParmIntent.OUT_CALLEE_ALLOCATED`. The
+structural producers already do (`double_indirection_out` for `T**`,
+`string_z` for `char**`, `documented_param_intent` for a documented
+`[out]` on a callee-allocated shape); a per-library hardcode that pins a
+bare rank-0 `T*` / `record*` / `enum*` scalar `OUT` states the hint
+directly (there is no structural signal for a single `T*`'s direction, so
+it cannot be inferred by a chain rule).
+
+Because the fallback is gone, the earlier `_HIPMEMCPY_RECORD_DST_NAMES`
+rank-override-to-1 is no longer load-bearing for *allocation* (a rank-0
+`record*` destination pinned to plain `OUT` already stays a caller-
+allocated argument); it is retained only where it still matters for the
+wrapper/shape choice. The `void*`-alias destinations (`hipDeviceptr_t`)
+remain rank-1 buffers via `opaque_typedef_is_handle`.
 
 **Callee-allocation is decoupled from rank and from the wrapper type.**
 A callee-allocated parameter can be a scalar, a handle, *or* a buffer:
@@ -412,14 +441,13 @@ A callee-allocated parameter can be a scalar, a handle, *or* a buffer:
 by the complicated-type handler as a `DeviceArray` (a byte sequence),
 not a scalar. Who allocates (the allocation axis) and what Python type
 is returned (the wrapper) are separate decisions — which is why the
-hint cannot be reconstructed from rank-0 alone and must be preserved for
-such sites.
+hint must be stated by a rule and preserved for such sites.
 
 Both backends consume the effective verdict through `parm.intent` and
 branch on `parm.intent.direction` directly. The cython `Parm` keeps two
 convenience predicates over that verdict — `is_out_ptr`
 (`intent.direction == OUT`) and `is_out_callee_allocated_ptr`
-(the derivation above) — because the cython OUT dispatch reads
+(`intent.allocated_by_callee`) — because the cython OUT dispatch reads
 them; the IN / INOUT cases need no predicate (they are the dispatch's
 default branch).
 
@@ -456,6 +484,20 @@ precedence — these run before the structural chain):
   `status_return_out_pointer` (#8) once that relational rule lands.)
 - **hipBLAS / hipSOLVER handle creators** — a `void**` named `handle`
   (`hipblasCreate`, `hipsolverCreate`).
+- **Per-library rank-0 scalar/handle OUTs** — bare `T*` / `record*` /
+  `enum*` scalar OUTs that a rule knows are callee-produced now state the
+  hint directly (there is no structural signal for a single `T*`'s
+  direction). Examples: HIP `hipDeviceGetUuid` / `hipIpcGetMemHandle`;
+  hipRTC `hiprtcVersion` (`major`/`minor`), `*SizeRet`, `hip_link_state_ptr`,
+  `size_out`; RCCL `ncclGetUniqueId` and basic-scalar OUTs; hipFFT
+  `workSize`; hipSPARSE `hipsparseCreate`; amdsmi `_MISTAGGED_OUT` and the
+  shape-aware `amdsmi_get_*` verb catch-all (via
+  `generic.is_callee_allocated_out_shape`).
+- **`T**` handle creators defer to the chain** — the redundant per-library
+  `is_pointer_to_record(degree=2)` hardcodes (RCCL `comm`, hipRAND, hipFFT
+  `plan`, hipSPARSE descriptor creators) were removed; `double_indirection_out`
+  in the shared chain already classifies non-const `T**` as
+  `OUT_CALLEE_ALLOCATED`.
 
 **3. Cython-only recipe-generator overrides** (`generators_hip.py`):
 

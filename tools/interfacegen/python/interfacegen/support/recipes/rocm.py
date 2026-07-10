@@ -507,29 +507,32 @@ class hip:
         if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM01 and parm_idx in (0, 1):
             return ParmIntent.OUT_CALLEE_ALLOCATED
 
+        # Callee-produced OUT slots the callee writes a fresh value into: rank-0
+        # struct handles, and `const char**` slots the callee points at its own
+        # internal storage. These are returns. Stated explicitly now that the
+        # rank-0 consumer fallback is gone (`const char**` is skipped by both
+        # `string_z` and `double_indirection_out`, so it cannot be deferred).
         if (func_name, parm_idx) in (
-            ("hipDeviceGetName", 0),
-            ("hipIpcGetMemHandle", 0),
-            ("hipDeviceGetUuid", 0),
-            ("hipDeviceGetPCIBusId", 0),
-            ("hipDrvGetErrorName", 1),
+            ("hipIpcGetMemHandle", 0),   # hipIpcMemHandle_t* — rank-0 struct
+            ("hipDeviceGetUuid", 0),     # hipUUID*          — rank-0 struct
+            ("hipDrvGetErrorName", 1),   # const char**      — internal string
             ("hipDrvGetErrorString", 1),
         ):
-            # Mixed shapes, all OUT — the allocation axis is derived
-            # downstream from rank by the Cython layer, so we declare
-            # only the direction here: caller-sized char buffers (name,
-            # pciBusId, error strings) are rank-1 and stay caller-
-            # allocated OUT; scalar handle/struct slots (uuid, ipc
-            # handle) are rank-0 and become callee-allocated.
-            #
-            # NOTE: `hipMemGetAddressRange`'s `pbase` is deliberately NOT
-            # listed here. It is a `hipDeviceptr_t*` (canonically `void**`):
-            # a callee-produced pointer returned through a pointer-to-pointer
-            # slot. Pinning it to plain OUT here would, under the
-            # `void**`->rank-1 convention, miss the rank-0 callee-allocation
-            # fallback and wrongly emit it as a caller arg. Deferring to the
-            # chain lets `documented_param_intent` / `double_indirection_out`
-            # classify it as OUT_CALLEE_ALLOCATED (a return), which is correct.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+        # Caller-sized char buffers (rank 1): caller-allocated OUT, kept in the
+        # argument list (the HIP Cython generator turns `name`/`pciBusId` into
+        # returns via `_CSTR_OUT_BUFFERS`; see POINTER_ARGUMENTS.md §4.3).
+        #
+        # NOTE: `hipMemGetAddressRange`'s `pbase` is deliberately NOT listed
+        # here. It is a `hipDeviceptr_t*` (canonically `void**`): a callee-
+        # produced pointer returned through a pointer-to-pointer slot.
+        # Deferring to the chain lets `documented_param_intent` /
+        # `double_indirection_out` classify it as OUT_CALLEE_ALLOCATED (a
+        # return), which is correct.
+        if (func_name, parm_idx) in (
+            ("hipDeviceGetName", 0),
+            ("hipDeviceGetPCIBusId", 0),
+        ):
             return ParmIntent.OUT
         if (func_name, parm_idx) in (
             ("hipPointerGetAttribute", 0),
@@ -662,11 +665,14 @@ class hiprtc:
     @fallback(*_RUNTIME_INTENT_CHAIN)
     def ptr_parm_intent(parm: Parm):
         """ """
-        out_parms = (
+        # Callee-produced OUT slots (version scalars, sizes, program/link-state
+        # handles, and `lowered_name` — a `const char**` the callee points at
+        # its internal mangled-name storage): callee-allocated returns.
+        out_callee_parms = (
             ("hiprtcVersion", "major"),
             ("hiprtcVersion", "minor"),
             ("hiprtcCreateProgram", "prog"),
-            ("hiprtcGetLoweredName", "lowered_name"),  # rank == 1
+            ("hiprtcGetLoweredName", "lowered_name"),
             ("hiprtcGetProgramLogSize", "logSizeRet"),
             ("hiprtcGetCodeSize", "codeSizeRet"),
             ("hiprtcGetBitcodeSize", "bitcode_size"),
@@ -674,18 +680,16 @@ class hiprtc:
             ("hiprtcLinkComplete", "size_out"),
         )
         # NOTE: `hiprtcLinkComplete`'s `bin_out` (`void**`) is deliberately
-        # NOT in `out_parms`. It is a callee-produced pointer returned through
-        # a pointer-to-pointer slot; pinning it to plain OUT would (under the
-        # `void**`->rank-1 convention) miss the rank-0 callee-allocation
-        # fallback and wrongly emit it as a caller arg. Deferring to the chain
-        # lets `double_indirection_out` classify it as OUT_CALLEE_ALLOCATED.
+        # NOT listed. It is a callee-produced pointer returned through a
+        # pointer-to-pointer slot; deferring to the chain lets
+        # `double_indirection_out` classify it as OUT_CALLEE_ALLOCATED.
         inout_parms = (  # these buffers must be allocated by user
             ("hiprtcGetCode", "code"),
             ("hiprtcGetProgramLog", "log"),
             ("hiprtcGetBitcode", "bitcode"),
         )
-        if (parm.parent.name, parm.name) in out_parms:
-            return ParmIntent.OUT
+        if (parm.parent.name, parm.name) in out_callee_parms:
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         if (parm.parent.name, parm.name) in inout_parms:
             return ParmIntent.INOUT
         return None  # defer to chain
@@ -954,18 +958,22 @@ class rccl:
                 ("pncclCommInitAll", "comm"),
             ):
                 return ParmIntent.INOUT
-            # `ncclComm_t* comm` creators — callee produces fresh handles.
-            return ParmIntent.OUT
+            # `ncclComm_t** comm` creators — defer to the chained
+            # `double_indirection_out`, which classifies non-const `T**`
+            # as OUT_CALLEE_ALLOCATED (callee produces a fresh handle).
+            return None
         if node.is_pointer_to_record(degree=1):
-            if (node.parent.name, node.name) == "ncclGetUniqueId":
-                return ParmIntent.OUT
+            if node.parent.name == "ncclGetUniqueId":
+                # `ncclUniqueId* uniqueId` — rank-0 callee-produced handle
+                # (degree 1, so not caught by `double_indirection_out`).
+                return ParmIntent.OUT_CALLEE_ALLOCATED
         if node.is_pointer_to_basic_type(degree=1):
             if (node.parent.name, node.name) in (
                 ("ncclCommInitAll", "devlist"),
                 ("pncclCommInitAll", "devlist"),
             ):
                 return ParmIntent.IN
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -1025,13 +1033,15 @@ class hiprand:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         if node.is_pointer_to_constantarray_of_basic_type(degree=2):
-            return ParmIntent.OUT
+            return ParmIntent.OUT  # caller-sized buffer, not a handle
         if node.is_pointer_to_record(degree=2):
-            return ParmIntent.OUT
+            # `T**` handle creator — defer to the chained
+            # `double_indirection_out` (OUT_CALLEE_ALLOCATED).
+            return None
         if node.is_pointer_to_basic_type(degree=1):
             if node.name == "output_data":
                 return ParmIntent.INOUT
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -1091,10 +1101,11 @@ class hipfft:
         ) and node.name == "odata":
             return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
-            # `hipfftHandle* plan` creator — callee-allocated handle.
-            return ParmIntent.OUT
+            # `hipfftHandle* plan` creator — defer to the chained
+            # `double_indirection_out` (OUT_CALLEE_ALLOCATED).
+            return None
         if node.name == "workSize":
-            return ParmIntent.OUT
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -1139,12 +1150,19 @@ class hipsparse:
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
-        func_name = node.parent.name
         if node.is_pointer_to_record(degree=2):
-            # opaque descriptor/handle creator — callee-allocated.
-            return ParmIntent.OUT
-        if func_name == "hipsparseCreate":
-            return ParmIntent.OUT
+            # opaque descriptor/handle creator (`T**`) — callee-allocated
+            # return. Stated explicitly (not deferred) because the const
+            # descriptor creators (`hipsparseCreateConst*`) are `const T**`,
+            # which `double_indirection_out` skips (const guard).
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+        if node.is_pointer_to_void(degree=2) and node.name == "handle":
+            # `hipsparseHandle_t* handle` creator (void** slot) — callee
+            # produces a fresh opaque handle, like hipblasCreate /
+            # hipsolverCreate. Paired with the rank-0 override in `ptr_rank`
+            # so it renders as a single returned handle rather than a
+            # rank-1 `ListOfPointer` buffer.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
     @staticmethod
@@ -1155,6 +1173,10 @@ class hipsparse:
         Most of the parameter names follow LAPACK convention.
         """
         if isinstance(node, Parm):
+            if node.name == "handle":
+                # `hipsparseHandle_t* handle` (void**) is a single opaque
+                # handle slot, not a rank-1 buffer — mirrors hipblas.
+                return 0
             if node.is_pointer_to_record(degree=(1, 2)):
                 return 0
             elif node.is_pointer_to_basic_type(degree=1):
@@ -1604,7 +1626,9 @@ class amdsmi:
         """
         fname = node.parent.name
         if (fname, node.parm_index) in amdsmi._MISTAGGED_OUT:
-            return ParmIntent.OUT
+            # Both entries are callee-produced (version scalar, node_handle):
+            # rank-0 slots the callee writes -> callee-allocated returns.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         if (fname, node.parm_index) in amdsmi._FORCE_INOUT:
             return ParmIntent.INOUT
         doxy = generic.documented_param_intent.ptr_parm_intent(node)
@@ -1618,6 +1642,12 @@ class amdsmi:
         if fname.startswith("amdsmi_set_"):
             return ParmIntent.IN
         if fname.startswith("amdsmi_get_"):
+            # Verb catch-all for the handful of undocumented get_* params
+            # (the ~294 documented ones resolved above via doxygen). Shape
+            # decides allocation: rank-0 scalars are callee-produced returns,
+            # caller-sized buffers stay caller-allocated OUT.
+            if generic.is_callee_allocated_out_shape(node):
+                return ParmIntent.OUT_CALLEE_ALLOCATED
             return ParmIntent.OUT
         if fname in ("amdsmi_init", "amdsmi_shut_down", "amdsmi_status_string"):
             return ParmIntent.IN
@@ -1842,15 +1872,31 @@ class hipfile:
     def macro_type(node: MacroDefinition):
         return "int"
 
+    # Async byte-count OUT slots: documented ``@param[out]`` but CALLER-
+    # allocated — the stream writes them after the call returns, so they must
+    # persist as pointer arguments (a rank-0 ``PointerToLong``), not be
+    # synthesized as scalar returns. Pinning plain OUT here (ahead of
+    # ``documented_param_intent`` in the chain) keeps them caller-allocated;
+    # ``ptr_rank`` leaves them at their honest rank 0.
+    _ASYNC_CALLER_ALLOCATED_OUT = (
+        ("hipFileReadAsync", "bytes_read_p"),
+        ("hipFileWriteAsync", "bytes_written_p"),
+    )
+
     @staticmethod
     @fallback(*_RUNTIME_INTENT_CHAIN)
     def ptr_parm_intent(node: Parm):
         """Classify pointer parameter intent for hipFILE APIs.
 
-        No library-specific overrides yet — defers fully to the chain
-        (``double_indirection_out`` for handle creation, ``string_z`` for
-        path strings, ``conservative`` for pointer-to-const, etc.).
+        Only one library-specific override: the async byte-count OUT slots
+        (see ``_ASYNC_CALLER_ALLOCATED_OUT``) are pinned to plain OUT so they
+        stay caller-allocated pointer arguments. Everything else defers to the
+        chain (``documented_param_intent``, ``double_indirection_out`` for
+        handle creation, ``string_z`` for path strings, ``conservative`` for
+        pointer-to-const, etc.).
         """
+        if (node.parent.name, node.name) in hipfile._ASYNC_CALLER_ALLOCATED_OUT:
+            return ParmIntent.OUT
         return None  # defer to chain
 
     @staticmethod
@@ -1860,11 +1906,11 @@ class hipfile:
 
         A non-``char`` ``pointer-to-basic-type`` (degree 1) is a single
         value passed by reference. Rank 0 marks it as a single slot rather
-        than a rank-1 ``ListOf*`` buffer; combined with an ``OUT`` /
-        ``OUT_CALLEE_ALLOCATED`` intent this lets the codegen synthesize a
-        scalar return value (see ``Parm.is_out_callee_allocated_ptr``, whose
-        scalar-slot fallback keys on ``ptr_rank == 0``). This fixes
-        ``hipFileGetVersion``'s ``unsigned int * major/minor/patch``
+        than a rank-1 ``ListOf*`` buffer. Direction and allocation are
+        applied downstream: a callee-produced rank-0 OUT
+        (``OUT_CALLEE_ALLOCATED``) becomes a scalar return, while a caller-
+        allocated rank-0 OUT/INOUT stays a ``PointerTo*`` argument. This
+        fixes ``hipFileGetVersion``'s ``unsigned int * major/minor/patch``
         (``@param[out]``), and pairs with the ``OUT_CALLEE_ALLOCATED``
         overrides on ``hipFileGetParameterSizeT`` / ``hipFileGetParameterBool``
         ``value`` (see ``generators_systems._hipfile_node_init``).
@@ -1875,27 +1921,19 @@ class hipfile:
         (``is_indirection`` -> ``ptr_rank``), which would recurse. Direction
         (OUT vs INOUT) is applied downstream, so ``@param[in,out]`` slots
         such as ``hipFileBatchIOGetStatus``'s ``nr`` stay caller-allocated
-        (rendered as a generic ``Pointer``) rather than becoming scalar
-        returns.
+        rather than becoming scalar returns.
 
         ``char *`` is excluded so string params stay rank-1 sequences
         (``generic.string_z``); void buffers, handles, and
         pointer-to-record (including the ``hipFileIOEvents_t *`` event
         arrays) are not basic types and keep the chain default.
 
-        The async APIs ``hipFileReadAsync`` / ``hipFileWriteAsync`` are
-        excluded even though ``bytes_read_p`` / ``bytes_written_p`` are
-        ``@param[out]``: those slots must outlive the call (the stream
-        writes them after return), so they stay caller-allocated rank-1
-        rather than becoming stack-temporary scalar returns.
+        The async ``bytes_read_p`` / ``bytes_written_p`` slots keep their
+        honest rank 0 here; ``ptr_parm_intent`` pins them to plain OUT so
+        they stay caller-allocated ``PointerToLong`` arguments (the stream
+        writes them after the call returns) instead of scalar returns.
         """
         if isinstance(node, Parm):
-            parent = node.parent
-            if parent is not None and parent.name in (
-                "hipFileReadAsync",
-                "hipFileWriteAsync",
-            ):
-                return None  # defer to chain (rank 1); async slots persist
             if node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(
                 degree=1
             ):
