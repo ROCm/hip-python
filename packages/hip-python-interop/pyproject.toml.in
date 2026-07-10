@@ -5,7 +5,7 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "hip-python-interop"
 dynamic = ["version"]
-description = "CUDA API bindings for HIP interoperability (driver, runtime, NVRTC, NVML/pynvml, NVTX/nvtx)"
+description = "CUDA API bindings for HIP interoperability (driver, runtime, NVRTC, cuFile/cufile, NVML/pynvml, NVTX/nvtx)"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
@@ -53,6 +53,9 @@ install.components = ["hip-python-interop"]
 sdist.include = [
     "VERSION",
     "cmake/HipPythonBuild.cmake",
+    # Compiled Cython bindings + their cimport headers. Covers the generated
+    # driver/runtime/nvrtc modules AND the hand-written cuFile interop layer
+    # (cufile.pyx, cufile.pxd, cycufile.pxd).
     "src/cuda/bindings/*.pxd",
     "src/cuda/bindings/*.pyx",
     # Handcoded high-level cuda.core shim (pure Python; wheel inclusion is

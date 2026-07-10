@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Add `cuda.bindings.cufile` interop module
+
+The `hip-python-interop` wheel gained a `cuda.bindings.cufile` module:
+a compiled interop layer mirroring CUDA Python's cuFile API, backed by
+AMD's hipFILE. It is a hand-written pair
+(`cufile.pyx`/`cufile.pxd` cpdef layer over a hand-written
+`cycufile.pxd` that aliases `rocm.bindings.cyhipfile`), exposing the
+snake_case functions (`driver_open`, `handle_register`, `buf_register`,
+`read`/`write`, the batch/async/stream APIs), the `Descr`/`IOParams`/
+`IOEvents` array helpers, the cuFile `IntEnum`s, and a `cuFileError`
+exception. Like the `rocm.bindings.hipfile` bindings it builds on, the
+module is optional (built only when hipFILE and a loadable
+`libhipfile.so` are present). Ships with a `.pyi` stub, an API-reference
+page, and a `1_CUDA_Interop/cufile_copy_with_cuda_bindings.py` example.
+
 ### Caller-allocated `OUT` scalars stay pointer arguments
 
 Callee-vs-caller allocation is now derived solely from the explicit

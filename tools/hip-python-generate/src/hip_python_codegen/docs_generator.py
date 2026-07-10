@@ -120,6 +120,14 @@ def _all_emitted_modules(recipe_results):
     for name in ("driver", "runtime", "nvrtc"):
         _add(f"cuda.bindings.{name}")
 
+    # `cuda.bindings.cufile` is a HAND-WRITTEN interop module (cufile.pyx +
+    # the hand-written cycufile.pxd aliasing rocm.bindings.cyhipfile); it is
+    # not emitted by any recipe, but it ships in the hip-python-interop wheel
+    # and is documented like the generated interop modules. Listing it here
+    # gives it both the high-level autoapi page (from the committed
+    # cufile.pyi) and the cy-level cycufile literalinclude page.
+    _add("cuda.bindings.cufile")
+
     # llvm modules now flow through the hip recipe's llvm_modules.
     hip_llvm = (recipe_results.get("hip") or {}).get("llvm_modules") or []
     for global_name in hip_llvm:

@@ -148,6 +148,18 @@ if have_hip_python_interop and have_roctx:
         "1_CUDA_Interop/nvtx_annotate_ranges.py",
     ]
 
+# The cuFile shim ships with hip-python-interop but is backed by hipFILE. Like
+# the hipfile_copy examples it creates its own O_DIRECT scratch fixture, so it
+# only needs the hipFILE bindings with a loadable libhipfile.so (guarded by the
+# same _hipfile_skipif marker as the low-level hipfile examples).
+if have_hip_python_interop and have_hipfile:
+    python_examples += [
+        pytest.param(
+            "1_CUDA_Interop/cufile_copy_with_cuda_bindings.py",
+            marks=_hipfile_skipif,
+        ),
+    ]
+
 python_examples += [
     "2_Advanced/hiprtc_linking_device_functions.py",
 ]

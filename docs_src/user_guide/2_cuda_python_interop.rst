@@ -97,10 +97,12 @@ modules that you need as shown below:
 .. note::
 
    The ``cuda.bindings`` modules above mirror the surface CUDA Python
-   itself exposes under ``cuda.bindings``. In addition, the
-   ``hip-python-interop`` wheel ships three small convenience
-   compatibility shims for common CUDA-ecosystem entry points:
-   :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim),
+   itself exposes under ``cuda.bindings``. A fourth module,
+   :ref:`sec_cufile` (a cuFile file-IO shim), is built and
+   shipped whenever the underlying hipFILE bindings are available. In
+   addition, the ``hip-python-interop`` wheel ships three small
+   convenience compatibility shims for common CUDA-ecosystem entry
+   points: :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim),
    :ref:`sec_nvtx_shim` (an NVTX / ``nvtx`` shim) and
    :ref:`sec_cuda_core_shim` (a minimal ``cuda.core.Device`` shim).
 
@@ -139,6 +141,88 @@ objects.
 
    See :ref:`sec_hip_streams` for an explanation of a similar HIP program's
    steps.
+
+.. _sec_cufile:
+
+cuFile shim (``cuda.bindings.cufile``)
+-------------------------------------------------
+
+.. admonition:: What will I learn?
+
+   * That ``from cuda.bindings import cufile`` keeps working unchanged on
+     AMD GPUs.
+   * How the cuFile API maps onto AMD's hipFILE.
+
+The ``hip-python-interop`` wheel provides a ``cuda.bindings.cufile``
+module: a compiled interop layer for the CUDA cuFile API, backed by
+AMD's hipFILE via the low-level
+:py:obj:`rocm.bindings.cyhipfile` declarations. Code that already
+drives ``cuda.bindings.cufile`` --- ``driver_open``,
+``handle_register``, ``buf_register``, ``read`` / ``write``, the async
+and batch APIs --- can keep calling it unmodified on AMD hardware,
+where it dispatches into ``libhipfile``.
+
+.. note::
+
+   Unlike :py:obj:`cuda.bindings.driver` / ``runtime`` / ``nvrtc``,
+   which are emitted by the HIP Python code generator, ``cufile`` is a
+   hand-written module. Like the ``rocm.bindings.hipfile`` bindings it
+   builds on, it is **optional**: it is only compiled and shipped when
+   the hipFILE bindings (and a loadable ``libhipfile.so``) are present.
+   Use ``from cuda.bindings import cufile`` guarded by a ``try`` /
+   ``except ImportError`` if you need to run where hipFILE is absent.
+
+The module mirrors CUDA Python's ``cuda.bindings.cufile`` surface:
+
+* snake_case functions that take ``intptr_t`` pointer arguments
+  (device pointers, file handles, ``hipFileDescr_t*``) as plain Python
+  integers, and raise ``cufile.cuFileError`` on a non-success status;
+* ``read`` / ``write`` return the number of bytes transferred and raise
+  :py:obj:`OSError` for a POSIX error (raw return ``-1``);
+* the ``Descr`` / ``IOParams`` / ``IOEvents`` array helpers that expose
+  the backing C structs and a ``.ptr`` address to hand to the calls;
+* :py:obj:`~enum.IntEnum` mirrors of the cuFile enums (``OpError``,
+  ``FileHandleType``, ``Status``, the config-parameter enums, ...) whose
+  member *names* follow cuda-python and whose *values* come from hipFILE.
+
+.. important::
+
+   **Divergences from cuFile.** ``get_version()`` returns the version
+   packed into a single integer (``major*1000 + minor*10 + patch``),
+   matching cuFile, even though hipFILE reports the three components
+   separately. ``cuFileError`` additionally carries a ``cu_err``
+   attribute (the underlying ``hipError_t`` for ``CUDA_DRIVER_ERROR``).
+
+.. admonition:: See
+
+   :py:obj:`~.cuda.bindings.cufile.driver_open`,
+   :py:obj:`~.cuda.bindings.cufile.buf_register`,
+   :py:obj:`~.cuda.bindings.cufile.Descr`,
+   :py:obj:`~.cuda.bindings.cufile.handle_register`,
+   :py:obj:`~.cuda.bindings.cufile.read`,
+   :py:obj:`~.cuda.bindings.cufile.write`,
+   :py:obj:`~.cuda.bindings.cufile.driver_close`
+
+.. literalinclude:: ../../examples/1_CUDA_Interop/cufile_copy_with_cuda_bindings.py
+   :language: python
+   :start-after: [literalinclude-begin]
+   :linenos:
+   :name: cufile_copy_with_cuda_bindings
+   :caption: File copy through the CUDA cuFile API
+
+.. note::
+
+   cuFile issues its transfers with ``O_DIRECT``, which requires an
+   ``O_DIRECT``-capable filesystem. The example creates its own scratch
+   files; point ``HIPFILE_TMPDIR`` at such a mount (e.g. an ext4 volume)
+   if your default temp dir is ``tmpfs``.
+
+.. seealso::
+
+   The full API reference for the module is at
+   :doc:`/python_api/cuda/bindings/cufile/index`. For the underlying
+   AMD API see the high-level :doc:`/python_api/rocm/hipfile/index`
+   wrappers and the ``rocm.bindings.hipfile`` bindings.
 
 .. _sec_pynvml_shim:
 

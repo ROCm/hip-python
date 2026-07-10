@@ -620,6 +620,7 @@ if(HIP_PYTHON_ENABLE_STUBGEN)
     "core|rocm.bindings.util.posixloader|rocm-bindings-core/src/rocm/bindings/util|rocm_bindings_core_platform_loader"
     "hip|rocm.bindings._hip_helpers|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hip_helpers"
     "hip|rocm.bindings._hiprtc_helpers|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hiprtc_helpers"
+    "interop|cuda.bindings.cufile|hip-python-interop/src/cuda/bindings|cuda_bindings_cufile"
   )
 
   # Bucket per-module stub targets by package shortname; these populate
@@ -644,6 +645,14 @@ if(HIP_PYTHON_ENABLE_STUBGEN)
     set(_owning_var "HIP_PYTHON_BUILD_${_pkg_short}")
     string(TOUPPER "${_owning_var}" _owning_var)
     if(NOT ${_owning_var})
+      continue()
+    endif()
+
+    # Skip entries whose cython target was not created in this configure —
+    # e.g. optional modules like cuda.bindings.cufile that are only built
+    # when their backing library (hipfile) is present. DEPENDS on a missing
+    # target would otherwise fail at generate time.
+    if(NOT TARGET ${_cython_target})
       continue()
     endif()
 
