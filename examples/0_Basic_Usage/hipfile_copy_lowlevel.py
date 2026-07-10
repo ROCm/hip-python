@@ -36,10 +36,12 @@ bindings directly instead of the :py:mod:`rocm.hipfile` wrappers:
 * ``hipFileHandleRegister`` / ``hipFileHandleDeregister`` register the files,
 * ``hipFileRead`` / ``hipFileWrite`` move bytes through GPU memory.
 
-This surfaces the raw return shapes (the ``hipFileError`` struct with
-``.err`` / ``.hip_drv_err``, and the ``(retval, errno, hip_drv_err)`` I/O
-tuple) and the ``hipFileDescr`` union handling that the high-level classes
-encapsulate.
+This surfaces the raw return shapes. Every generated wrapper returns a tuple,
+so error-only calls hand back a 1-tuple ``(hipFileError,)`` (the struct
+carries ``.err`` / ``.hip_drv_err``), ``hipFileGetVersion`` returns
+``(hipFileError, major, minor, patch)``, and ``hipFileRead`` / ``hipFileWrite``
+return ``(retval, errno, hip_drv_err)``. It also shows the ``hipFileDescr``
+union handling that the high-level classes encapsulate.
 
 The scratch files are created and removed during the run, so no pre-existing
 fixture is needed. hipFile issues its I/O with ``O_DIRECT``, which requires an
@@ -145,10 +147,15 @@ with tempfile.TemporaryDirectory(dir=scratch_dir) as tmp_dir:
     print(f"Buffer located at: {buffer_ptr} | {hex(buffer_ptr)}")
 
     try:
-        check(hipFileDriverOpen(), "hipFileDriverOpen")
-        print(f"Driver Use Count: {hipFileUseCount()}")
+        # Error-only calls come back as a 1-tuple ``(hipFileError,)``.
+        (open_err,) = hipFileDriverOpen()
+        check(open_err, "hipFileDriverOpen")
+        # hipFileUseCount returns int64_t, also wrapped as a 1-tuple.
+        (use_count,) = hipFileUseCount()
+        print(f"Driver Use Count: {use_count}")
         try:
-            check(hipFileBufRegister(buffer_ptr, size, 0), "hipFileBufRegister")
+            (reg_err,) = hipFileBufRegister(buffer_ptr, size, 0)
+            check(reg_err, "hipFileBufRegister")
             try:
                 in_fd, in_fh = register_file(
                     input_path, os.O_RDWR | os.O_DIRECT | os.O_CREAT
@@ -177,13 +184,14 @@ with tempfile.TemporaryDirectory(dir=scratch_dir) as tmp_dir:
                     hipFileHandleDeregister(in_fh)
                     os.close(in_fd)
             finally:
-                check(
-                    hipFileBufDeregister(buffer_ptr), "hipFileBufDeregister"
-                )
+                (dereg_err,) = hipFileBufDeregister(buffer_ptr)
+                check(dereg_err, "hipFileBufDeregister")
         finally:
-            check(hipFileDriverClose(), "hipFileDriverClose")
+            (close_err,) = hipFileDriverClose()
+            check(close_err, "hipFileDriverClose")
     finally:
-        free_err = hipFree(dev_array)
+        # hipFree returns only an error, wrapped as a 1-tuple.
+        (free_err,) = hipFree(dev_array)
         assert int(free_err) == 0, f"hipFree failed: {free_err}"
 
     # Hash both files to confirm the GPU round-trip preserved the bytes.

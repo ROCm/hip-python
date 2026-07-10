@@ -112,7 +112,8 @@ with tempfile.TemporaryDirectory(dir=scratch_dir) as tmp_dir:
                     bytes_written = fh_output.write(registered_buffer, size, 0, 0)
                     print(f"Bytes Written: {bytes_written}")
 
-    free_err = hipFree(dev_array)
+    # hipFree returns only an error; the wrapper hands it back as a 1-tuple.
+    (free_err,) = hipFree(dev_array)
     assert int(free_err) == 0, f"hipFree failed: {free_err}"
 
     with open(input_path, "br") as file_in:

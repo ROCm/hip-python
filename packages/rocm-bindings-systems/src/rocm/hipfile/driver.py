@@ -61,7 +61,10 @@ class Driver:
     @staticmethod
     def use_count():
         """Return the current driver reference count."""
-        return _use_count()
+        # hipFileUseCount returns int64_t; the always-return-tuple wrappers
+        # hand it back as a 1-tuple.
+        (count,) = _use_count()
+        return count
 
     def __enter__(self):
         self.open()
@@ -71,11 +74,15 @@ class Driver:
         self.close()
 
     def close(self):
-        err = _driver_close()
+        # hipFileDriverClose returns only a hipFileError; the
+        # always-return-tuple wrappers wrap it in a 1-tuple.
+        (err,) = _driver_close()
         if err.err != OpError.SUCCESS:
             raise HipFileException(err.err, err.hip_drv_err)
 
     def open(self):
-        err = _driver_open()
+        # hipFileDriverOpen returns only a hipFileError; the
+        # always-return-tuple wrappers wrap it in a 1-tuple.
+        (err,) = _driver_open()
         if err.err != OpError.SUCCESS:
             raise HipFileException(err.err, err.hip_drv_err)

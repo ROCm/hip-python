@@ -99,13 +99,17 @@ class Buffer:
 
     def deregister(self):
         if self._registered:
-            err = _buf_deregister(self._buffer_ptr)
+            # hipFileBufDeregister returns only a hipFileError; the
+            # always-return-tuple wrappers wrap it in a 1-tuple.
+            (err,) = _buf_deregister(self._buffer_ptr)
             if err.err != OpError.SUCCESS:
                 raise HipFileException(err.err, err.hip_drv_err)
             self._registered = False
 
     def register(self):
-        err = _buf_register(self._buffer_ptr, self._length, self._flags)
+        # hipFileBufRegister returns only a hipFileError; the
+        # always-return-tuple wrappers wrap it in a 1-tuple.
+        (err,) = _buf_register(self._buffer_ptr, self._length, self._flags)
         if err.err != OpError.SUCCESS:
             raise HipFileException(err.err, err.hip_drv_err)
         self._registered = True

@@ -58,12 +58,15 @@ class HipFileException(Exception):
         return self._hip_err
 
     def __str__(self):
-        # rocm.bindings.hipfile.hipFileGetOpErrorString returns bytes;
-        # decode for friendlier rendering. The OpError enum coerces to
-        # int when fed to the C wrapper.
-        descr = _get_op_error_string(OpError(int(self._hipfile_err)))
+        # rocm.bindings.hipfile.hipFileGetOpErrorString returns a
+        # ``const char *`` as a CStr, wrapped in a 1-tuple by the
+        # always-return-tuple wrappers. Decode for friendlier rendering.
+        # The OpError enum coerces to int when fed to the C wrapper.
+        (descr,) = _get_op_error_string(OpError(int(self._hipfile_err)))
         if isinstance(descr, (bytes, bytearray)):
             descr = descr.decode("utf-8", "replace")
+        else:
+            descr = str(descr)
         err_msg = f"{self._hipfile_err} - {descr}"
         if int(self._hipfile_err) == OpError.HIP_DRIVER_ERROR:
             err_msg += f" {self._hip_err}"
