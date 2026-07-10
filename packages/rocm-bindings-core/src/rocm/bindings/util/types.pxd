@@ -150,3 +150,35 @@ cdef class ListOfUnsignedLong(Pointer):
 
     @staticmethod
     cdef ListOfUnsignedLong fromPyobj(object pyobj)
+
+cdef class PointerToInt(ListOfInt):
+
+    @staticmethod
+    cdef PointerToInt fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToInt fromPyobj(object pyobj)
+
+cdef class PointerToLong(ListOfLong):
+
+    @staticmethod
+    cdef PointerToLong fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToLong fromPyobj(object pyobj)
+
+cdef class PointerToUnsigned(ListOfUnsigned):
+
+    @staticmethod
+    cdef PointerToUnsigned fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToUnsigned fromPyobj(object pyobj)
+
+cdef class PointerToUnsignedLong(ListOfUnsignedLong):
+
+    @staticmethod
+    cdef PointerToUnsignedLong fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToUnsignedLong fromPyobj(object pyobj)

@@ -272,6 +272,32 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
             and node.is_out_ptr
         ):
             return f"{util_types_prefix}CStr"
+        if (
+            node.actual_rank == 0
+            and isinstance(node, tree.Parm)
+            and node.get_pointer_degree() == 1
+        ):
+            # A rank-0 caller-allocated scalar pointer (``T *`` pointing at a
+            # single value, not a sized buffer). Expose a ``PointerTo*``
+            # wrapper — a length-1 ``ListOf*`` subclass — so the single slot
+            # is allocatable / indexable and the signature reads "pointer to
+            # one scalar" rather than an opaque ``Pointer``. Callee-allocated
+            # rank-0 scalar OUTs never reach here: they are synthesized as
+            # bare scalar returns (see ``handle_callee_allocated_ptr_parm``).
+            # ``char *`` (``CHAR_S``) is a NUL-terminated string, handled
+            # above; enums / records / ``void *`` don't match the numeric
+            # kinds below and stay ``Pointer``.
+            innermost_type_kind = next(
+                node.clang_type_layer_kinds(postorder=-1, canonical=True)
+            )
+            if innermost_type_kind == clang.cindex.TypeKind.INT:
+                return f"{util_types_prefix}PointerToInt"
+            elif innermost_type_kind == clang.cindex.TypeKind.UINT:
+                return f"{util_types_prefix}PointerToUnsigned"
+            elif innermost_type_kind == clang.cindex.TypeKind.LONG:
+                return f"{util_types_prefix}PointerToLong"
+            elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
+                return f"{util_types_prefix}PointerToUnsignedLong"
         if node.actual_rank == 1:
             innermost_type_kind = next(
                 node.clang_type_layer_kinds(postorder=-1, canonical=True)

@@ -656,6 +656,92 @@ class ListOfUnsignedLong(Pointer):
     def __reduce__(self):
         """ListOfUnsignedLong.__reduce_cython__(self)"""
 
+class PointerToInt(ListOfInt):
+    """PointerToInt(pyobj)
+
+    Handler for a rank-0 pointer to a single C ``int``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching ``ListOf*``
+    (here `~.ListOfInt`): it wraps a ``T *`` that points at a single value
+    rather than a sized buffer. Use it for a caller-allocated scalar pointer
+    argument: allocate one slot, pass it to the C call, then read the result
+    back through `~.value` (or ``self[0]``)."""
+    __pyx_vtable__: ClassVar[PyCapsule] = ...
+    value: Incomplete
+    def __init__(self, pyobj) -> Any:
+        """Constructor. See `~.PointerToInt` for accepted ``pyobj`` types."""
+    @staticmethod
+    def fromObj(pyobj) -> Any:
+        """Creates a PointerToInt from the given object."""
+    @staticmethod
+    def allocate(count=...) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``int`` slots (default 1)."""
+
+class PointerToLong(ListOfLong):
+    """PointerToLong(pyobj)
+
+    Handler for a rank-0 pointer to a single C ``long``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching ``ListOf*``
+    (here `~.ListOfLong`): it wraps a ``T *`` that points at a single value
+    rather than a sized buffer. Use it for a caller-allocated scalar pointer
+    argument (e.g. hipFILE's async ``bytes_read_p`` / ``bytes_written_p``):
+    allocate one slot, pass it to the C call, then read the result back
+    through `~.value` (or ``self[0]``)."""
+    __pyx_vtable__: ClassVar[PyCapsule] = ...
+    value: Incomplete
+    def __init__(self, pyobj) -> Any:
+        """Constructor. See `~.PointerToLong` for accepted ``pyobj`` types."""
+    @staticmethod
+    def fromObj(pyobj) -> Any:
+        """Creates a PointerToLong from the given object."""
+    @staticmethod
+    def allocate(count=...) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``long`` slots (default 1)."""
+
+class PointerToUnsigned(ListOfUnsigned):
+    """PointerToUnsigned(pyobj)
+
+    Handler for a rank-0 pointer to a single C ``unsigned int``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching ``ListOf*``
+    (here `~.ListOfUnsigned`): it wraps a ``T *`` that points at a single value
+    rather than a sized buffer. Use it for a caller-allocated scalar pointer
+    argument: allocate one slot, pass it to the C call, then read the result
+    back through `~.value` (or ``self[0]``)."""
+    __pyx_vtable__: ClassVar[PyCapsule] = ...
+    value: Incomplete
+    def __init__(self, pyobj) -> Any:
+        """Constructor. See `~.PointerToUnsigned` for accepted ``pyobj`` types."""
+    @staticmethod
+    def fromObj(pyobj) -> Any:
+        """Creates a PointerToUnsigned from the given object."""
+    @staticmethod
+    def allocate(count=...) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned int`` slots (default 1)."""
+
+class PointerToUnsignedLong(ListOfUnsignedLong):
+    """PointerToUnsignedLong(pyobj)
+
+    Handler for a rank-0 pointer to a single C ``unsigned long``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching ``ListOf*``
+    (here `~.ListOfUnsignedLong`): it wraps a ``T *`` that points at a single
+    value rather than a sized buffer. Use it for a caller-allocated scalar
+    pointer argument (an ``unsigned long *`` / ``size_t *``): allocate one
+    slot, pass it to the C call, then read the result back through `~.value`
+    (or ``self[0]``)."""
+    __pyx_vtable__: ClassVar[PyCapsule] = ...
+    value: Incomplete
+    def __init__(self, pyobj) -> Any:
+        """Constructor. See `~.PointerToUnsignedLong` for accepted ``pyobj`` types."""
+    @staticmethod
+    def fromObj(pyobj) -> Any:
+        """Creates a PointerToUnsignedLong from the given object."""
+    @staticmethod
+    def allocate(count=...) -> Any:
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned long`` slots (default 1)."""
+
 class NDBuffer(Pointer):
     """NDBuffer(pyobj)
 

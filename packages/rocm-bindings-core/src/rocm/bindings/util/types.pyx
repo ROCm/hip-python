@@ -45,6 +45,10 @@ __all__ = [
     "ListOfLong",
     "ListOfUnsigned",
     "ListOfUnsignedLong",
+    "PointerToInt",
+    "PointerToLong",
+    "PointerToUnsigned",
+    "PointerToUnsignedLong",
 ]
 
 cdef class Pointer:
@@ -2812,6 +2816,408 @@ cdef class ListOfUnsignedLong(Pointer):
     def to_tuple(self):
         """Return the elements as a Python `tuple` of `int`."""
         return tuple(self)
+
+cdef int _pointerto_require_scalar(object pyobj) except -1:
+    """Reject multi-element sequence initializers for a ``PointerTo*``.
+
+    A ``PointerTo*`` wraps a pointer to a *single* scalar, so when the
+    initializer is a ``list`` / ``tuple`` it must have exactly one element
+    (mirroring the length-1 nature of the wrapper). Non-sequence inputs (a
+    raw address ``int`` / buffer / another wrapper) are unaffected and keep
+    the inherited `~.Pointer` semantics.
+    """
+    if isinstance(pyobj, (tuple, list)) and len(pyobj) != 1:
+        raise ValueError(
+            "a 'PointerTo*' wraps a single scalar; a 'list'/'tuple' "
+            f"initializer must have exactly one element (got {len(pyobj)})"
+        )
+    return 0
+
+cdef class PointerToInt(ListOfInt):
+    """Handler for a rank-0 pointer to a single C ``int``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfInt`): it wraps a ``T *`` that points at a
+    *single* value rather than a sized buffer. Use it for a caller-allocated
+    scalar pointer argument (an ``IN`` / ``INOUT`` / caller-allocated ``OUT``
+    ``int *`` parameter): allocate one slot, pass it to the C call, then read
+    the result back through `~.value` (or ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfInt` (a `list` / `tuple`, another
+    ``ListOfInt`` / ``PointerToInt``, or any object accepted by `~.Pointer`),
+    except that a `list` / `tuple` initializer must have exactly one element
+    (a ``PointerTo*`` points at a single scalar); `~.allocate` defaults to a
+    single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToInt object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToInt fromPtr(void* ptr):
+        cdef PointerToInt wrapper = PointerToInt.__new__(PointerToInt)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToInt from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToInt`` instance, this method
+        returns it directly. No new ``PointerToInt`` is created.
+        """
+        return PointerToInt.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToInt fromPyobj(object pyobj):
+        """Derives a PointerToInt from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToInt`` instance, this method
+        returns it directly. No new ``PointerToInt`` is created.
+        """
+        cdef PointerToInt wrapper
+        if isinstance(pyobj, PointerToInt):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToInt.__new__(PointerToInt)
+            ListOfInt.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToInt` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfInt.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``int`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToInt wrapper = PointerToInt.__new__(PointerToInt)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(int))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(int))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``int`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToInt")
+        return (<int*>self._ptr)[0]
+
+    @value.setter
+    def value(self, int v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToInt")
+        (<int*>self._ptr)[0] = v
+
+cdef class PointerToLong(ListOfLong):
+    """Handler for a rank-0 pointer to a single C ``long``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfLong`): it wraps a ``T *`` that points at a
+    *single* value rather than a sized buffer. Use it for a caller-allocated
+    scalar pointer argument (an ``IN`` / ``INOUT`` / caller-allocated ``OUT``
+    ``long *`` parameter, e.g. hipFILE's async ``bytes_read_p`` /
+    ``bytes_written_p``): allocate one slot, pass it to the C call, then read
+    the result back through `~.value` (or ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfLong` (a `list` / `tuple`, another
+    ``ListOfLong`` / ``PointerToLong``, or any object accepted by `~.Pointer`),
+    except that a `list` / `tuple` initializer must have exactly one element
+    (a ``PointerTo*`` points at a single scalar); `~.allocate` defaults to a
+    single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToLong object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToLong fromPtr(void* ptr):
+        cdef PointerToLong wrapper = PointerToLong.__new__(PointerToLong)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToLong from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToLong`` instance, this method
+        returns it directly. No new ``PointerToLong`` is created.
+        """
+        return PointerToLong.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToLong fromPyobj(object pyobj):
+        """Derives a PointerToLong from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToLong`` instance, this method
+        returns it directly. No new ``PointerToLong`` is created.
+        """
+        cdef PointerToLong wrapper
+        if isinstance(pyobj, PointerToLong):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToLong.__new__(PointerToLong)
+            ListOfLong.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToLong` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfLong.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``long`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToLong wrapper = PointerToLong.__new__(PointerToLong)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(long))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(long))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``long`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToLong")
+        return (<long*>self._ptr)[0]
+
+    @value.setter
+    def value(self, long v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToLong")
+        (<long*>self._ptr)[0] = v
+
+cdef class PointerToUnsigned(ListOfUnsigned):
+    """Handler for a rank-0 pointer to a single C ``unsigned int``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfUnsigned`): it wraps a ``T *`` that points at
+    a *single* value rather than a sized buffer. Use it for a caller-allocated
+    scalar pointer argument (an ``IN`` / ``INOUT`` / caller-allocated ``OUT``
+    ``unsigned int *`` parameter): allocate one slot, pass it to the C call,
+    then read the result back through `~.value` (or ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfUnsigned` (a `list` / `tuple`, another
+    ``ListOfUnsigned`` / ``PointerToUnsigned``, or any object accepted by
+    `~.Pointer`), except that a `list` / `tuple` initializer must have exactly
+    one element (a ``PointerTo*`` points at a single scalar); `~.allocate`
+    defaults to a single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToUnsigned object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToUnsigned fromPtr(void* ptr):
+        cdef PointerToUnsigned wrapper = PointerToUnsigned.__new__(PointerToUnsigned)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToUnsigned from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUnsigned`` instance, this method
+        returns it directly. No new ``PointerToUnsigned`` is created.
+        """
+        return PointerToUnsigned.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToUnsigned fromPyobj(object pyobj):
+        """Derives a PointerToUnsigned from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUnsigned`` instance, this method
+        returns it directly. No new ``PointerToUnsigned`` is created.
+        """
+        cdef PointerToUnsigned wrapper
+        if isinstance(pyobj, PointerToUnsigned):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToUnsigned.__new__(PointerToUnsigned)
+            ListOfUnsigned.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToUnsigned` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfUnsigned.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned int`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToUnsigned wrapper = PointerToUnsigned.__new__(PointerToUnsigned)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(unsigned int))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(unsigned int))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``unsigned int`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToUnsigned")
+        return (<unsigned int*>self._ptr)[0]
+
+    @value.setter
+    def value(self, unsigned int v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToUnsigned")
+        (<unsigned int*>self._ptr)[0] = v
+
+cdef class PointerToUnsignedLong(ListOfUnsignedLong):
+    """Handler for a rank-0 pointer to a single C ``unsigned long``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfUnsignedLong`): it wraps a ``T *`` that points
+    at a *single* value rather than a sized buffer. Use it for a caller-
+    allocated scalar pointer argument (an ``IN`` / ``INOUT`` / caller-allocated
+    ``OUT`` ``unsigned long *`` / ``size_t *`` parameter): allocate one slot,
+    pass it to the C call, then read the result back through `~.value` (or
+    ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfUnsignedLong` (a `list` / `tuple`,
+    another ``ListOfUnsignedLong`` / ``PointerToUnsignedLong``, or any object
+    accepted by `~.Pointer`), except that a `list` / `tuple` initializer must
+    have exactly one element (a ``PointerTo*`` points at a single scalar);
+    `~.allocate` defaults to a single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToUnsignedLong object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToUnsignedLong fromPtr(void* ptr):
+        cdef PointerToUnsignedLong wrapper = PointerToUnsignedLong.__new__(PointerToUnsignedLong)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToUnsignedLong from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUnsignedLong`` instance, this
+        method returns it directly. No new ``PointerToUnsignedLong`` is created.
+        """
+        return PointerToUnsignedLong.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToUnsignedLong fromPyobj(object pyobj):
+        """Derives a PointerToUnsignedLong from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUnsignedLong`` instance, this
+        method returns it directly. No new ``PointerToUnsignedLong`` is created.
+        """
+        cdef PointerToUnsignedLong wrapper
+        if isinstance(pyobj, PointerToUnsignedLong):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToUnsignedLong.__new__(PointerToUnsignedLong)
+            ListOfUnsignedLong.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToUnsignedLong` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfUnsignedLong.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``unsigned long`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToUnsignedLong wrapper = PointerToUnsignedLong.__new__(PointerToUnsignedLong)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(count*sizeof(unsigned long))
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(wrapper._ptr, 0, count*sizeof(unsigned long))
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``unsigned long`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToUnsignedLong")
+        return (<unsigned long*>self._ptr)[0]
+
+    @value.setter
+    def value(self, unsigned long v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToUnsignedLong")
+        (<unsigned long*>self._ptr)[0] = v
 
 
 def _clear_retained_inputs():

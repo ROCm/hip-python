@@ -165,3 +165,86 @@ def test_unknown_length_raises_typeerror(cls):
         list(w)
     with pytest.raises(TypeError):
         w.to_list()
+
+
+# ---------------------------------------------------------------------------
+# PointerTo* — rank-0 scalar-pointer subclasses of the matching ListOf*
+# ---------------------------------------------------------------------------
+
+
+_POINTER_CLASSES = [
+    (_t.PointerToInt, _t.ListOfInt, ctypes.c_int),
+    (_t.PointerToLong, _t.ListOfLong, ctypes.c_long),
+    (_t.PointerToUnsigned, _t.ListOfUnsigned, ctypes.c_uint),
+    (_t.PointerToUnsignedLong, _t.ListOfUnsignedLong, ctypes.c_ulong),
+]
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_is_listof_subclass(cls, base, ctype):
+    assert issubclass(cls, base)
+    assert isinstance(cls.allocate(), base)
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_allocate_defaults_to_single_slot(cls, base, ctype):
+    w = cls.allocate()
+    assert len(w) == 1
+    assert w[0] == 0
+    assert w.value == 0
+    assert w.to_list() == [0]
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_value_get_set_roundtrip(cls, base, ctype):
+    w = cls.allocate()
+    w.value = 123
+    assert w.value == 123
+    assert w[0] == 123
+    # value tracks a mutation performed through the raw buffer too.
+    _write_scalars(w, ctype, [456])
+    assert w.value == 456
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_allocate_count_still_supported(cls, base, ctype):
+    w = cls.allocate(3)
+    assert len(w) == 3
+    assert w.to_list() == [0, 0, 0]
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_from_single_element_list(cls, base, ctype):
+    w = cls([7])
+    assert isinstance(w, cls)
+    assert len(w) == 1
+    assert w.to_list() == [7]
+    assert w.value == 7
+    # a single-element tuple works too, via fromObj / fromPyobj.
+    w2 = cls.fromObj((9,))
+    assert w2.value == 9
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+@pytest.mark.parametrize("seq", [[], [1, 2], (1, 2, 3)])
+def test_pointerto_rejects_non_scalar_sequence(cls, base, ctype, seq):
+    # a PointerTo* wraps a single scalar: list/tuple init must have len 1.
+    with pytest.raises(ValueError):
+        cls(seq)
+    with pytest.raises(ValueError):
+        cls.fromObj(seq)
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_fromobj_passthrough_identity(cls, base, ctype):
+    w = cls.allocate()
+    assert cls.fromObj(w) is w
+
+
+@pytest.mark.parametrize("cls,base,ctype", _POINTER_CLASSES)
+def test_pointerto_null_value_raises(cls, base, ctype):
+    w = cls.fromObj(0)  # NULL address
+    with pytest.raises(ValueError):
+        w.value
+    with pytest.raises(ValueError):
+        w.value = 1

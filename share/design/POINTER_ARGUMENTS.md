@@ -257,6 +257,37 @@ Anything without a matching branch falls through to the generic
 constructible sequences, consistent with `size_t*` → `ListOfUnsignedLong`,
 instead of an opaque `Pointer`.
 
+### 4.6 Numeric rank-0 scalar pointers map to `PointerTo*`
+
+A caller-allocated **rank-0** typed scalar pointer (a `T *` that points
+at a *single* value, not a sized buffer) is wrapped by a `PointerTo*`
+class — a **length-1 specialization of the matching `ListOf*`** (e.g.
+`PointerToLong(ListOfLong)`). The same handler picks it, gated on
+`node.actual_rank == 0`, `isinstance(node, Parm)`, and pointer degree 1:
+
+| Innermost `TypeKind` | C element type              | Wrapper                 |
+|----------------------|-----------------------------|-------------------------|
+| `INT`                | `int`                       | `PointerToInt`          |
+| `LONG`               | `long` (`ssize_t`/`int64_t`)| `PointerToLong`         |
+| `UINT`               | `unsigned`                  | `PointerToUnsigned`     |
+| `ULONG`              | `unsigned long` (`size_t`)  | `PointerToUnsignedLong` |
+
+This applies to caller-allocated `IN` / `INOUT` / caller-allocated `OUT`
+scalar slots. A *callee-allocated* rank-0 scalar `OUT`
+(`OUT_CALLEE_ALLOCATED`) never reaches this branch — it is synthesized as
+a bare scalar return (see `handle_callee_allocated_ptr_parm` and §8).
+`char *` is a NUL-terminated string (handled earlier as `CStr`); enums,
+records, and `void *` don't match the numeric kinds and stay `Pointer`.
+
+The wrapper gives the single slot an ergonomic surface: `allocate()`
+defaults to one element, and a `.value` property reads/writes slot 0. The
+canonical use is hipFILE's async `bytes_read_p` / `bytes_written_p`
+(`ssize_t*`, caller-allocated `@param[out]` written by the stream after
+the call returns): the caller does `p = PointerToLong.allocate()`, passes
+`p`, synchronizes, then reads `p.value` — where a plain `Pointer` would
+have been opaque and a `ListOfLong` would have misleadingly implied a
+buffer.
+
 ## 5. Module layout
 
 ```

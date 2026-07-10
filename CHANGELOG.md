@@ -26,6 +26,20 @@ the stream after the call returns) now remain caller-allocated
 fixed an RCCL `ncclGetUniqueId` intent guard that compared a tuple to a
 string and never fired.
 
+### Add `PointerTo*` adapters for rank-0 scalar pointers
+
+Added `PointerToInt` / `PointerToLong` / `PointerToUnsigned` /
+`PointerToUnsignedLong` to `rocm.bindings.util.types` — length-1
+subclasses of the matching `ListOf*`. The Cython complicated-type handler
+now maps a caller-allocated **rank-0** typed scalar pointer (a `T *` at a
+single value) to the corresponding `PointerTo*` instead of an opaque
+`Pointer`; callee-allocated rank-0 scalar OUTs are unaffected (still bare
+scalar returns). Each wrapper adds an ergonomic scalar surface —
+`allocate()` defaults to one slot and a `.value` property reads/writes
+that slot — so caller-allocated scalar `IN`/`INOUT`/`OUT` arguments (e.g.
+hipFILE's async `bytes_read_p`/`bytes_written_p`) can be allocated,
+passed, and read back without ctypes plumbing.
+
 ### Add `ListOfLong` adapter for signed-`long` buffers
 
 Added a `ListOfLong` wrapper to `rocm.bindings.util.types` (mirroring
