@@ -577,7 +577,7 @@ to build a Cython module in-place (via ``make build``) and run the code (by
 importing the module via ``make run``).
 
 .. literalinclude:: ../../examples/1_CUDA_Interop/Makefile
-   :language: python
+   :language: make
    :start-after: [literalinclude-begin]
    :linenos:
    :name: cuda_cython_makefile
