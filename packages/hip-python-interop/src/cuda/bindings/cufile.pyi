@@ -147,8 +147,11 @@ class cuFileError(Exception):
     """Raised when a cuFile operation returns a non-``SUCCESS`` status.
 
     Args:
-        status (int): the ``hipFileOpError`` / :class:`OpError` status code.
-        cu_err (int | None): for ``OpError.CUDA_DRIVER_ERROR`` this carries the
+        status (``int``):
+            the ``hipFileOpError`` / `~.OpError` status code.
+
+        cu_err (``int`` | ``None``):
+            for ``OpError.CUDA_DRIVER_ERROR`` this carries the
             underlying HIP driver error code (``hipError_t``); ``None``
             otherwise.
     """
@@ -160,14 +163,15 @@ class Descr:
     """Empty-initialize an array of ``hipFileDescr_t``.
 
     A ``hipFileDescr_t`` carries the OS-neutral file identity handed to
-    :func:`handle_register`: a ``type`` (a :class:`FileHandleType`), a ``handle``
+    `~.handle_register`: a ``type`` (a `~.FileHandleType`), a ``handle``
     union (the Linux ``fd`` or a Windows handle), and an optional ``fs_ops``
     table. Element ``0`` is exposed directly through the ``type`` / ``handle`` /
     ``fs_ops`` properties; use ``descr[i]`` to view any other element. ``ptr``
     yields the base C address to hand to the cuFile calls.
 
     Args:
-        size (int): the number of contiguous elements to allocate (default 1).
+        size (``int``):
+            the number of contiguous elements to allocate (default 1).
     """
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
@@ -189,14 +193,15 @@ class IOParams:
     """Empty-initialize an array of ``hipFileIOParams_t``.
 
     Each ``hipFileIOParams_t`` describes one request in a batch submitted with
-    :func:`batch_io_submit`: the ``mode`` (a :class:`BatchMode`), the file
-    handle ``fh``, the ``opcode`` (a :class:`Opcode`), an opaque ``cookie``, and
+    `~.batch_io_submit`: the ``mode`` (a `~.BatchMode`), the file
+    handle ``fh``, the ``opcode`` (a `~.Opcode`), an opaque ``cookie``, and
     the per-request ``u.batch`` fields (device pointer base/offset, file offset
     and size). Element ``0`` is exposed directly through the properties; use
     ``params[i]`` to view any other element, and ``ptr`` for the base C address.
 
     Args:
-        size (int): the number of contiguous elements to allocate (default 1).
+        size (``int``):
+            the number of contiguous elements to allocate (default 1).
     """
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
@@ -226,14 +231,15 @@ class IOEvents:
     """Empty-initialize an array of ``hipFileIOEvents_t``.
 
     Each ``hipFileIOEvents_t`` receives the outcome of one batch request from
-    :func:`batch_io_get_status`: the request ``cookie``, the ``status`` (a
-    :class:`Status`), and ``ret`` (the bytes transacted, valid only once the
+    `~.batch_io_get_status`: the request ``cookie``, the ``status`` (a
+    `~.Status`), and ``ret`` (the bytes transacted, valid only once the
     request has completed successfully). Element ``0`` is exposed directly
     through the properties; use ``events[i]`` to view any other element, and
-    ``ptr`` for the base C address to hand to :func:`batch_io_get_status`.
+    ``ptr`` for the base C address to hand to `~.batch_io_get_status`.
 
     Args:
-        size (int): the number of contiguous elements to allocate (default 1).
+        size (``int``):
+            the number of contiguous elements to allocate (default 1).
     """
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
@@ -258,11 +264,12 @@ def driver_open() -> None:
 
     Explicitly opens the cuFile driver session used for the file IO
     operations. Calling this is optional: driver initialization otherwise
-    happens implicitly on the first use of :func:`handle_register`,
-    :func:`read`, :func:`write`, or :func:`buf_register`.
+    happens implicitly on the first use of `~.handle_register`,
+    `~.read`, `~.write`, or `~.buf_register`.
 
     Raises:
-        cuFileError: if the driver fails to initialize, e.g.
+        `~.cuFileError`:
+            if the driver fails to initialize, e.g.
             ``OpError.DRIVER_NOT_INITIALIZED``, ``OpError.PERMISSION_DENIED``,
             ``OpError.DRIVER_VERSION_MISMATCH``, or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
@@ -271,20 +278,22 @@ def driver_close() -> None:
     """Reset the cuFile library and release the driver.
 
     Closes the driver session and frees the associated resources. Any
-    buffers still registered via :func:`buf_register` are implicitly
+    buffers still registered via `~.buf_register` are implicitly
     deregistered, and any in-flight IO receives an error. The driver may be
     reopened afterwards; this cleanup also happens implicitly on process exit.
 
     Raises:
-        cuFileError: if the driver was not initialized
+        `~.cuFileError`:
+            if the driver was not initialized
             (``OpError.DRIVER_NOT_INITIALIZED``).
     """
 def use_count() -> int:
     """Return the process-wide cuFile driver use count.
 
     Returns:
-        int: the number of times the cuFile driver is currently in use by
-        this process at the moment of the call.
+        ``int``:
+            the number of times the cuFile driver is currently in use by
+            this process at the moment of the call.
     """
 def driver_get_properties(props: int) -> None:
     """Get the driver session properties.
@@ -295,11 +304,13 @@ def driver_get_properties(props: int) -> None:
     flags, feature flags, and the IO/cache/pinned-memory size limits).
 
     Args:
-        props (int): address (as a Python integer) of a caller-allocated
+        props (``int``):
+            address (as a Python integer) of a caller-allocated
             ``hipFileDriverProps_t`` structure to fill in.
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_NOT_INITIALIZED``,
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_NOT_INITIALIZED``,
             ``OpError.DRIVER_VERSION_MISMATCH``, or ``OpError.INVALID_VALUE``
             if ``props`` is invalid.
     """
@@ -311,12 +322,16 @@ def driver_set_poll_mode(poll: bool, poll_threshold_size: int) -> None:
     polling.
 
     Args:
-        poll (bool): whether to enable poll mode.
-        poll_threshold_size (int): the IO size threshold for polling, in KB
+        poll (``bool``):
+            whether to enable poll mode.
+
+        poll_threshold_size (``int``):
+            the IO size threshold for polling, in KB
             (must be 4K aligned; the default is 4KB).
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid threshold.
     """
 def driver_set_max_direct_io_size(max_direct_io_size: int) -> None:
@@ -327,11 +342,13 @@ def driver_set_max_direct_io_size(max_direct_io_size: int) -> None:
     mode, the maximum chunk size the library uses for POSIX read/write).
 
     Args:
-        max_direct_io_size (int): the maximum direct IO size, in KB (must be
+        max_direct_io_size (``int``):
+            the maximum direct IO size, in KB (must be
             4K aligned; the default is 16384KB).
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
 def driver_set_max_cache_size(max_cache_size: int) -> None:
@@ -343,11 +360,13 @@ def driver_set_max_cache_size(max_cache_size: int) -> None:
     size.
 
     Args:
-        max_cache_size (int): the maximum per-device GPU cache size, in KB
+        max_cache_size (``int``):
+            the maximum per-device GPU cache size, in KB
             (must be 4K aligned; the default is 131072KB).
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
 def driver_set_max_pinned_mem_size(max_pinned_size: int) -> None:
@@ -355,14 +374,16 @@ def driver_set_max_pinned_mem_size(max_pinned_size: int) -> None:
 
     Must be called before the driver is opened. This is the upper limit on GPU
     memory that can be pinned and mapped for device IO (as used by
-    :func:`buf_register`); it may be rounded down to the nearest GPU page size.
+    `~.buf_register`); it may be rounded down to the nearest GPU page size.
 
     Args:
-        max_pinned_size (int): the maximum pinned buffer space, in KB (must be
+        max_pinned_size (``int``):
+            the maximum pinned buffer space, in KB (must be
             4K aligned). ``UINT64_MAX`` is equivalent to no enforced limit.
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
 def handle_register(descr: int) -> int:
@@ -374,17 +395,20 @@ def handle_register(descr: int) -> int:
     cuFile IO on a file.
 
     Args:
-        descr (int): address (as a Python integer) of a caller-populated
-            ``hipFileDescr_t``; see :class:`Descr`. For
+        descr (``int``):
+            address (as a Python integer) of a caller-populated
+            ``hipFileDescr_t``; see `~.Descr`. For
             Linux this carries the file's ``fd`` and a ``type`` of
             ``FileHandleType.OPAQUE_FD``.
 
     Returns:
-        int: an opaque ``hipFileHandle_t`` (as a Python integer) to pass to the
-        read/write/async/batch APIs.
+        ``int``:
+            an opaque ``hipFileHandle_t`` (as a Python integer) to pass to the
+            read/write/async/batch APIs.
 
     Raises:
-        cuFileError: e.g. ``OpError.IO_NOT_SUPPORTED``,
+        `~.cuFileError`:
+            e.g. ``OpError.IO_NOT_SUPPORTED``,
             ``OpError.INVALID_VALUE``, ``OpError.INVALID_FILE_OPEN_FLAG``,
             ``OpError.INVALID_FILE_TYPE``, or
             ``OpError.HANDLE_ALREADY_REGISTERED``.
@@ -392,14 +416,15 @@ def handle_register(descr: int) -> int:
 def handle_deregister(fh: int) -> None:
     """Release a registered file handle from cuFile.
 
-    Frees the cuFile resources claimed by :func:`handle_register`. Call this
+    Frees the cuFile resources claimed by `~.handle_register`. Call this
     only after ensuring no IO is outstanding on the handle (otherwise the
     behavior is undefined). The underlying file descriptor is *not* closed; the
     caller must still ``os.close`` it.
 
     Args:
-        fh (int): the file handle (as a Python integer) returned by
-            :func:`handle_register`.
+        fh (``int``):
+            the file handle (as a Python integer) returned by
+            `~.handle_register`.
     """
 def buf_register(buf_ptr_base: int, length: int, flags: int) -> None:
     """Register a device/host memory region with cuFile for GPU IO.
@@ -407,17 +432,23 @@ def buf_register(buf_ptr_base: int, length: int, flags: int) -> None:
     Pins existing device memory (or host memory) for direct file IO.
     Registration is optional but recommended: it incurs a
     significant one-time cost that should be amortized off the critical path.
-    :func:`read` / :func:`write` must use the same ``buf_ptr_base`` as their
+    `~.read` / `~.write` must use the same ``buf_ptr_base`` as their
     base address to benefit from the registration.
 
     Args:
-        buf_ptr_base (int): base address (as a Python integer) of the device or
+        buf_ptr_base (``int``):
+            base address (as a Python integer) of the device or
             host buffer to register.
-        length (int): the size, in bytes from the start of the buffer, to map.
-        flags (int): reserved for future use; must be 0.
+
+        length (``int``):
+            the size, in bytes from the start of the buffer, to map.
+
+        flags (``int``):
+            reserved for future use; must be 0.
 
     Raises:
-        cuFileError: e.g. ``OpError.MEMORY_ALREADY_REGISTERED``,
+        `~.cuFileError`:
+            e.g. ``OpError.MEMORY_ALREADY_REGISTERED``,
             ``OpError.CUDA_MEMORY_TYPE_INVALID``,
             ``OpError.CUDA_POINTER_RANGE_ERROR``,
             ``OpError.INVALID_MAPPING_SIZE``, or
@@ -426,14 +457,16 @@ def buf_register(buf_ptr_base: int, length: int, flags: int) -> None:
 def buf_deregister(buf_ptr_base: int) -> None:
     """Deregister a device/host memory region from cuFile.
 
-    Releases the pinned-memory mappings created by :func:`buf_register`.
+    Releases the pinned-memory mappings created by `~.buf_register`.
 
     Args:
-        buf_ptr_base (int): the base address (as a Python integer) that was
-            passed to :func:`buf_register`.
+        buf_ptr_base (``int``):
+            the base address (as a Python integer) that was
+            passed to `~.buf_register`.
 
     Raises:
-        cuFileError: e.g. ``OpError.MEMORY_NOT_REGISTERED`` if ``buf_ptr_base``
+        `~.cuFileError`:
+            e.g. ``OpError.MEMORY_NOT_REGISTERED`` if ``buf_ptr_base``
             was not registered.
     """
 def read(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset: int) -> int:
@@ -444,23 +477,36 @@ def read(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset
     (with a possible performance cost), and blocks until the IO completes.
 
     Args:
-        fh (int): the file handle from :func:`handle_register`.
-        buf_ptr_base (int): base address of the destination device/host buffer.
+        fh (``int``):
+            the file handle from `~.handle_register`.
+
+        buf_ptr_base (``int``):
+            base address of the destination device/host buffer.
             For registered buffers this must equal the base address passed to
-            :func:`buf_register`.
-        size (int): the number of bytes to read.
-        file_offset (int): the offset in the file to read from.
-        buf_ptr_offset (int): the offset relative to ``buf_ptr_base`` to read
+            `~.buf_register`.
+
+        size (``int``):
+            the number of bytes to read.
+
+        file_offset (``int``):
+            the offset in the file to read from.
+
+        buf_ptr_offset (``int``):
+            the offset relative to ``buf_ptr_base`` to read
             into (use 0 to read into the very start; only meaningful for
             registered buffers).
 
     Returns:
-        int: the number of bytes read.
+        ``int``:
+            the number of bytes read.
 
     Raises:
-        OSError: on a POSIX/filesystem error (raw return ``-1``); ``errno`` is
+        ``OSError``:
+            on a POSIX/filesystem error (raw return ``-1``); ``errno`` is
             set accordingly.
-        cuFileError: on any other (cuFile-specific) error.
+
+        `~.cuFileError`:
+            on any other (cuFile-specific) error.
     """
 def write(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset: int) -> int:
     """Write device/host memory to a registered file handle.
@@ -472,23 +518,36 @@ def write(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offse
     (or open the file with ``O_SYNC``) for durability.
 
     Args:
-        fh (int): the file handle from :func:`handle_register`.
-        buf_ptr_base (int): base address of the source device/host buffer. For
+        fh (``int``):
+            the file handle from `~.handle_register`.
+
+        buf_ptr_base (``int``):
+            base address of the source device/host buffer. For
             registered buffers this must equal the base address passed to
-            :func:`buf_register`.
-        size (int): the number of bytes to write.
-        file_offset (int): the offset in the file to write to.
-        buf_ptr_offset (int): the offset relative to ``buf_ptr_base`` to write
+            `~.buf_register`.
+
+        size (``int``):
+            the number of bytes to write.
+
+        file_offset (``int``):
+            the offset in the file to write to.
+
+        buf_ptr_offset (``int``):
+            the offset relative to ``buf_ptr_base`` to write
             from (use 0 to write from the very start; only meaningful for
             registered buffers).
 
     Returns:
-        int: the number of bytes written.
+        ``int``:
+            the number of bytes written.
 
     Raises:
-        OSError: on a POSIX/filesystem error (raw return ``-1``); ``errno`` is
+        ``OSError``:
+            on a POSIX/filesystem error (raw return ``-1``); ``errno`` is
             set accordingly.
-        cuFileError: on any other (cuFile-specific) error.
+
+        `~.cuFileError`:
+            on any other (cuFile-specific) error.
     """
 def batch_io_set_up(nr: int) -> int:
     """Prepare a batch IO operation.
@@ -497,34 +556,45 @@ def batch_io_set_up(nr: int) -> int:
     ``nr`` batch entries and returns a handle for the subsequent batch calls.
 
     Args:
-        nr (int): the maximum number of entries (events) the batch will hold;
+        nr (``int``):
+            the maximum number of entries (events) the batch will hold;
             should be at least 1 and within the driver's supported batch size.
 
     Returns:
-        int: an opaque ``hipFileBatchHandle_t`` (as a Python integer) for use
-        with the other ``batch_io_*`` functions.
+        ``int``:
+            an opaque ``hipFileBatchHandle_t`` (as a Python integer) for use
+            with the other ``batch_io_*`` functions.
 
     Raises:
-        cuFileError: e.g. ``OpError.INTERNAL_ERROR`` on failure.
+        `~.cuFileError`:
+            e.g. ``OpError.INTERNAL_ERROR`` on failure.
     """
 def batch_io_submit(batch_idp: int, nr: int, iocbp: int, flags: int) -> None:
     """Enqueue a batch of IO requests.
 
     Submits ``nr`` read/write requests described by an array of
     ``hipFileIOParams_t``. This is asynchronous with respect to the host thread:
-    monitor progress with :func:`batch_io_get_status` and cancel/destroy with
-    :func:`batch_io_cancel` / :func:`batch_io_destroy`.
+    monitor progress with `~.batch_io_get_status` and cancel/destroy with
+    `~.batch_io_cancel` / `~.batch_io_destroy`.
 
     Args:
-        batch_idp (int): the batch handle from :func:`batch_io_set_up`.
-        nr (int): the number of requests to submit; must be > 0 and <= the
-            ``nr`` passed to :func:`batch_io_set_up`.
-        iocbp (int): address of a ``hipFileIOParams_t`` array of length ``nr``;
-            see :class:`IOParams`.
-        flags (int): reserved for future use; must be 0.
+        batch_idp (``int``):
+            the batch handle from `~.batch_io_set_up`.
+
+        nr (``int``):
+            the number of requests to submit; must be > 0 and <= the
+            ``nr`` passed to `~.batch_io_set_up`.
+
+        iocbp (``int``):
+            address of a ``hipFileIOParams_t`` array of length ``nr``;
+            see `~.IOParams`.
+
+        flags (``int``):
+            reserved for future use; must be 0.
 
     Raises:
-        cuFileError: e.g. ``OpError.INTERNAL_ERROR`` on failure.
+        `~.cuFileError`:
+            e.g. ``OpError.INTERNAL_ERROR`` on failure.
     """
 def batch_io_get_status(batch_idp: int, min_nr: int, nr: int, iocbp: int, timeout: int) -> None:
     """Poll for the status of completed batch IO operations.
@@ -535,20 +605,30 @@ def batch_io_get_status(batch_idp: int, min_nr: int, nr: int, iocbp: int, timeou
     successfully completed IOs.
 
     Args:
-        batch_idp (int): the batch handle from :func:`batch_io_set_up`.
-        min_nr (int): the minimum number of completed entries to wait for; must
+        batch_idp (``int``):
+            the batch handle from `~.batch_io_set_up`.
+
+        min_nr (``int``):
+            the minimum number of completed entries to wait for; must
             be >= 0 and <= ``*nr``.
-        nr (int): address of an ``unsigned int`` used as input/output: on input
+
+        nr (``int``):
+            address of an ``unsigned int`` used as input/output: on input
             the maximum number of entries to poll for, on output the number of
             completed IOs.
-        iocbp (int): address of a ``hipFileIOEvents_t`` array to receive the
-            completed IO statuses; see :class:`IOEvents`.
-        timeout (int): address of a ``struct timespec`` giving the maximum time
+
+        iocbp (``int``):
+            address of a ``hipFileIOEvents_t`` array to receive the
+            completed IO statuses; see `~.IOEvents`.
+
+        timeout (``int``):
+            address of a ``struct timespec`` giving the maximum time
             to wait; if it elapses, fewer than ``min_nr`` entries may be
             returned.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` for an invalid batch ID.
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` for an invalid batch ID.
             Note that success here refers to the API call itself; inspect the
             per-IO ``iocbp`` entries for the individual IO status.
     """
@@ -557,83 +637,114 @@ def batch_io_cancel(batch_idp: int) -> None:
 
     Attempts to cancel the in-flight IOs for the batch; there is no guarantee
     an already-executing IO can be canceled. Canceled IOs report
-    ``Status.CANCELED`` via :func:`batch_io_get_status`.
+    ``Status.CANCELED`` via `~.batch_io_get_status`.
 
     Args:
-        batch_idp (int): the batch handle from :func:`batch_io_set_up`.
+        batch_idp (``int``):
+            the batch handle from `~.batch_io_set_up`.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` on failure.
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` on failure.
     """
 def batch_io_destroy(batch_idp: int) -> None:
     """Destroy the batch IO handle and free the associated resources.
 
     Destroys the batch context and the resources allocated by
-    :func:`batch_io_set_up`.
+    `~.batch_io_set_up`.
 
     Args:
-        batch_idp (int): the batch handle from :func:`batch_io_set_up`.
+        batch_idp (``int``):
+            the batch handle from `~.batch_io_set_up`.
     """
 def read_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf_ptr_offset_p: int, bytes_read_p: int, stream: int) -> None:
     """Enqueue an asynchronous read on ``stream``.
 
     Enqueues a read into device/host memory, FIFO-ordered within the CUDA/HIP
     stream. The size/offset arguments are passed by pointer because, unless
-    fixed via :func:`stream_register`, they are not evaluated until the
+    fixed via `~.stream_register`, they are not evaluated until the
     operation executes; ``size_p`` should be set to the maximum possible IO
     size at submission time. All of these pointers are caller-allocated
     (``intptr_t``) and must outlive the operation.
 
     Args:
-        fh (int): the file handle from :func:`handle_register`.
-        buf_ptr_base (int): base address of the destination device/host buffer.
+        fh (``int``):
+            the file handle from `~.handle_register`.
+
+        buf_ptr_base (``int``):
+            base address of the destination device/host buffer.
             For registered buffers this must equal the base address passed to
-            :func:`buf_register`.
-        size_p (int): address of a ``size_t`` holding the number of bytes to
+            `~.buf_register`.
+
+        size_p (``int``):
+            address of a ``size_t`` holding the number of bytes to
             read.
-        file_offset_p (int): address of an ``off_t`` holding the file offset to
+
+        file_offset_p (``int``):
+            address of an ``off_t`` holding the file offset to
             read from.
-        buf_ptr_offset_p (int): address of an ``off_t`` holding the offset
+
+        buf_ptr_offset_p (``int``):
+            address of an ``off_t`` holding the offset
             relative to ``buf_ptr_base``.
-        bytes_read_p (int): address of an ``ssize_t`` (initialized to 0) that,
+
+        bytes_read_p (``int``):
+            address of an ``ssize_t`` (initialized to 0) that,
             after the stream completes, holds the number of bytes read (``-1``
             on an IO error, or a negative ``hipFileOpError`` value otherwise).
-        stream (int): the CUDA/HIP stream to enqueue on; 0 (NULL) makes the
+
+        stream (``int``):
+            the CUDA/HIP stream to enqueue on; 0 (NULL) makes the
             operation synchronous.
 
     Raises:
-        cuFileError: on a submission error.
+        `~.cuFileError`:
+            on a submission error.
     """
 def write_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf_ptr_offset_p: int, bytes_written_p: int, stream: int) -> None:
     """Enqueue an asynchronous write on ``stream``.
 
     Enqueues a write from device/host memory, FIFO-ordered within the CUDA/HIP
     stream. The size/offset arguments are passed by pointer because, unless
-    fixed via :func:`stream_register`, they are not evaluated until the
+    fixed via `~.stream_register`, they are not evaluated until the
     operation executes; ``size_p`` should be set to the maximum possible IO
     size at submission time. All of these pointers are caller-allocated
     (``intptr_t``) and must outlive the operation.
 
     Args:
-        fh (int): the file handle from :func:`handle_register`.
-        buf_ptr_base (int): base address of the source device/host buffer. For
+        fh (``int``):
+            the file handle from `~.handle_register`.
+
+        buf_ptr_base (``int``):
+            base address of the source device/host buffer. For
             registered buffers this must equal the base address passed to
-            :func:`buf_register`.
-        size_p (int): address of a ``size_t`` holding the number of bytes to
+            `~.buf_register`.
+
+        size_p (``int``):
+            address of a ``size_t`` holding the number of bytes to
             write.
-        file_offset_p (int): address of an ``off_t`` holding the file offset to
+
+        file_offset_p (``int``):
+            address of an ``off_t`` holding the file offset to
             write to.
-        buf_ptr_offset_p (int): address of an ``off_t`` holding the offset
+
+        buf_ptr_offset_p (``int``):
+            address of an ``off_t`` holding the offset
             relative to ``buf_ptr_base``.
-        bytes_written_p (int): address of an ``ssize_t`` (initialized to 0)
+
+        bytes_written_p (``int``):
+            address of an ``ssize_t`` (initialized to 0)
             that, after the stream completes, holds the number of bytes written
             (``-1`` on an IO error, or a negative ``hipFileOpError`` value
             otherwise).
-        stream (int): the CUDA/HIP stream to enqueue on; 0 (NULL) makes the
+
+        stream (``int``):
+            the CUDA/HIP stream to enqueue on; 0 (NULL) makes the
             operation synchronous.
 
     Raises:
-        cuFileError: on a submission error.
+        `~.cuFileError`:
+            on a submission error.
     """
 def stream_register(stream: int, flags: int) -> None:
     """Register a stream for asynchronous GPU IO.
@@ -643,31 +754,37 @@ def stream_register(stream: int, flags: int) -> None:
     the stream before allocating resources.
 
     Args:
-        stream (int): the CUDA/HIP stream to register; 0 (NULL) selects the
+        stream (``int``):
+            the CUDA/HIP stream to register; 0 (NULL) selects the
             default stream.
-        flags (int): bitmask declaring which inputs are fixed at submission
+
+        flags (``int``):
+            bitmask declaring which inputs are fixed at submission
             time: ``0x1`` buffer offset, ``0x2`` file offset, ``0x4`` size,
             ``0x8`` all inputs 4K-aligned; ``0xf`` means all are aligned and
             known (best performance). ``0x0`` means all parameters are valid
             only at execution time.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` or
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
     """
 def stream_deregister(stream: int) -> None:
     """Deregister a stream and free the associated resources.
 
-    Optional API that frees the resources allocated by :func:`stream_register`.
+    Optional API that frees the resources allocated by `~.stream_register`.
     The call synchronizes on the stream first. Streams are also deregistered
-    automatically by :func:`driver_close`.
+    automatically by `~.driver_close`.
 
     Args:
-        stream (int): the stream (as a Python integer) previously passed to
-            :func:`stream_register`.
+        stream (``int``):
+            the stream (as a Python integer) previously passed to
+            `~.stream_register`.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` or
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
     """
 def get_version() -> int:
@@ -679,10 +796,12 @@ def get_version() -> int:
     It can be used to gate on the presence of a specific library feature.
 
     Returns:
-        int: the packed version number.
+        ``int``:
+            the packed version number.
 
     Raises:
-        cuFileError: e.g. ``OpError.DRIVER_VERSION_READ_ERROR`` if the version
+        `~.cuFileError`:
+            e.g. ``OpError.DRIVER_VERSION_READ_ERROR`` if the version
             is unavailable.
     """
 def get_parameter_size_t(param: int) -> int:
@@ -693,14 +812,17 @@ def get_parameter_size_t(param: int) -> int:
     driver opens).
 
     Args:
-        param (int): the parameter to read; a :class:`SizeTConfigParameter`
+        param (``int``):
+            the parameter to read; a `~.SizeTConfigParameter`
             value.
 
     Returns:
-        int: the parameter's value.
+        ``int``:
+            the parameter's value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
 def get_parameter_bool(param: int) -> bool:
     """Get the value of a Boolean configuration parameter.
@@ -710,14 +832,17 @@ def get_parameter_bool(param: int) -> bool:
     driver opens).
 
     Args:
-        param (int): the parameter to read; a :class:`BoolConfigParameter`
+        param (``int``):
+            the parameter to read; a `~.BoolConfigParameter`
             value.
 
     Returns:
-        bool: the parameter's value.
+        ``bool``:
+            the parameter's value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
 def get_parameter_string(param: int, len: int) -> str:
     """Get the value of a string configuration parameter.
@@ -727,16 +852,21 @@ def get_parameter_string(param: int, len: int) -> str:
     driver opens).
 
     Args:
-        param (int): the parameter to read; a :class:`StringConfigParameter`
+        param (``int``):
+            the parameter to read; a `~.StringConfigParameter`
             value.
-        len (int): the size, in bytes, of the internal buffer to allocate for
+
+        len (``int``):
+            the size, in bytes, of the internal buffer to allocate for
             the returned string.
 
     Returns:
-        str: the parameter's value.
+        ``str``:
+            the parameter's value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
 def set_parameter_size_t(param: int, value: int) -> None:
     """Set the value of a ``size_t`` configuration parameter.
@@ -747,12 +877,16 @@ def set_parameter_size_t(param: int, value: int) -> None:
     variable > the built-in defaults.
 
     Args:
-        param (int): the parameter to set; a :class:`SizeTConfigParameter`
+        param (``int``):
+            the parameter to set; a `~.SizeTConfigParameter`
             value.
-        value (int): the new value.
+
+        value (``int``):
+            the new value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` or
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
 def set_parameter_bool(param: int, value: bool) -> None:
@@ -764,36 +898,46 @@ def set_parameter_bool(param: int, value: bool) -> None:
     variable > the built-in defaults.
 
     Args:
-        param (int): the parameter to set; a :class:`BoolConfigParameter`
+        param (``int``):
+            the parameter to set; a `~.BoolConfigParameter`
             value.
-        value (bool): the new value.
+
+        value (``bool``):
+            the new value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` or
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
 def set_parameter_string(param: int, desc_str: int) -> None:
     """Set the value of a string configuration parameter.
 
     Must be called before the driver is opened; the value takes effect once the
-    driver opens. See :func:`set_parameter_size_t` for the precedence rules.
+    driver opens. See `~.set_parameter_size_t` for the precedence rules.
 
     Args:
-        param (int): the parameter to set; a :class:`StringConfigParameter`
+        param (``int``):
+            the parameter to set; a `~.StringConfigParameter`
             value.
-        desc_str (int): address of a NUL-terminated C string (``char*``)
+
+        desc_str (``int``):
+            address of a NUL-terminated C string (``char*``)
             holding the new value.
 
     Raises:
-        cuFileError: e.g. ``OpError.INVALID_VALUE`` or
+        `~.cuFileError`:
+            e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
 def op_status_error(status: int) -> str:
     """Return the cuFile status string for ``status``.
 
     Args:
-        status (int): a ``hipFileOpError`` / :class:`OpError` status code.
+        status (``int``):
+            a ``hipFileOpError`` / `~.OpError` status code.
 
     Returns:
-        str: a human-readable description of the status.
+        ``str``:
+            a human-readable description of the status.
     """
