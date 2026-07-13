@@ -24,7 +24,7 @@
 
 This is NOT a full port of NVIDIA's ``cuda.core`` / ``cuda.core.experimental``
 package. It implements just enough of the high-level surface for HIP ports of
-CUDA-Python consumers: a :class:`Device` exposing ``uuid``.
+CUDA-Python consumers: a `~.Device` exposing ``uuid``.
 
 Everything is implemented on top of the high-level ``rocm.bindings.hip`` HIP
 runtime API. Additional high-level abstractions (Stream, Buffer, Program, ...)
