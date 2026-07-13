@@ -24,7 +24,7 @@
 
 This is NOT a port of the upstream (Apache-2.0) ``nvtx`` Python package. It is a
 fresh, MIT-licensed re-implementation of the ``nvtx`` Python surface, backed
-entirely by ROCTX via the high-level :py:obj:`rocm.bindings.roctx` bindings.
+entirely by ROCTX via the high-level `~.rocm.bindings.roctx` bindings.
 
 Goal: code that does ``import nvtx`` and uses annotations, ranges and markers
 keeps working on AMD GPUs without modification. Profile with a ROCm-aware tool
@@ -32,15 +32,15 @@ keeps working on AMD GPUs without modification. Profile with a ROCm-aware tool
 
 Implemented surface (faithfully backed by ROCTX):
 
-* :func:`mark` - instantaneous event (``roctxMarkA``).
-* :func:`push_range` / :func:`pop_range` - nested, per-thread ranges
+* `~.mark` - instantaneous event (``roctxMarkA``).
+* `~.push_range` / `~.pop_range` - nested, per-thread ranges
   (``roctxRangePushA`` / ``roctxRangePop``).
-* :func:`start_range` / :func:`end_range` - process ranges that may cross
+* `~.start_range` / `~.end_range` - process ranges that may cross
   threads (``roctxRangeStartA`` / ``roctxRangeStop``).
-* :class:`annotate` - decorator and context manager around push/pop ranges.
-* :class:`Profile` - automatic function annotation via ``sys.setprofile`` /
+* `~.annotate` - decorator and context manager around push/pop ranges.
+* `~.Profile` - automatic function annotation via ``sys.setprofile`` /
   ``threading.setprofile``.
-* :func:`enabled` - honors the ``NVTX_DISABLE`` environment variable and the
+* `~.enabled` - honors the ``NVTX_DISABLE`` environment variable and the
   availability of the ROCTX runtime.
 
 .. important::
@@ -52,27 +52,27 @@ Implemented surface (faithfully backed by ROCTX):
 
    Accepted but silently *dropped* (only the message reaches ROCTX):
 
-   * ``domain`` / :func:`get_domain` / :class:`Domain` - ROCTX has no domain
+   * ``domain`` / `~.get_domain` / `~.Domain` - ROCTX has no domain
      concept. Domain objects route to the same global ROCTX calls; the domain
      name has no effect and cross-domain isolation is lost. All events share a
      single per-thread namespace.
-   * ``color`` (and :func:`nvtx.colors.color_to_hex`) - no color channel.
-   * ``category`` / :func:`Domain.get_category_id` - no category channel.
+   * ``color`` (and `~.colors.color_to_hex`) - no color channel.
+   * ``category`` / `~.Domain.get_category_id` - no category channel.
    * ``payload`` - no payload channel.
-   * :class:`RegisteredString` / :func:`Domain.get_registered_string`,
-     :class:`EventAttributes` / :func:`Domain.get_event_attributes` /
-     :func:`Domain.set_event_attributes` - lightweight holders only; the
+   * `~.RegisteredString` / `~.Domain.get_registered_string`,
+     `~.EventAttributes` / `~.Domain.get_event_attributes` /
+     `~.Domain.set_event_attributes` - lightweight holders only; the
      message is re-sent as a plain string on every call.
 
    Accepted but complete *no-ops* (record nothing):
 
-   * :class:`Counter`, :class:`Int64Counter`, :class:`Float64Counter`,
-     :class:`ExtCounter`, :func:`Domain.get_counter`, ``sample``,
-     ``sample_no_value``, ``batch_submit``, :func:`Domain.get_timestamp`.
-   * :class:`CounterSemantics` and the enums :class:`CounterValueType`,
-     :class:`CounterInterpolation`, :class:`CounterNoValueReason`,
-     :class:`TimestampType` (defined for import compatibility only).
-   * :func:`numpy_dtype` (builds a NumPy dtype but carries no runtime effect).
+   * `~.Counter`, `~.Int64Counter`, `~.Float64Counter`,
+     `~.ExtCounter`, `~.Domain.get_counter`, ``sample``,
+     ``sample_no_value``, ``batch_submit``, `~.Domain.get_timestamp`.
+   * `~.CounterSemantics` and the enums `~.CounterValueType`,
+     `~.CounterInterpolation`, `~.CounterNoValueReason`,
+     `~.TimestampType` (defined for import compatibility only).
+   * `~.numpy_dtype` (builds a NumPy dtype but carries no runtime effect).
 
    The counter/semantics surface additionally postdates NVTX release-v3 and is
    provided here only as forward-compatible stubs.
@@ -86,13 +86,13 @@ The mode is one of:
 
 * ``"silent"`` (default) - accept and drop/no-op silently, preserving drop-in
   behavior.
-* ``"warn"`` - emit an :class:`NvtxCompatWarning` and then drop/no-op.
-* ``"error"`` - raise an :class:`NvtxCompatError`.
+* ``"warn"`` - emit an `~.NvtxCompatWarning` and then drop/no-op.
+* ``"error"`` - raise an `~.NvtxCompatError`.
 
 Select it via the ``HIP_PYTHON_NVTX_COMPAT`` environment variable
 (``silent`` / ``warn`` / ``error``) or at runtime with
-:func:`set_compat_mode` / :func:`get_compat_mode`. The checks fire regardless
-of whether tracing is enabled (see :func:`enabled`), so they also flag
+`~.set_compat_mode` / `~.get_compat_mode`. The checks fire regardless
+of whether tracing is enabled (see `~.enabled`), so they also flag
 non-portable usage in CI that runs without a ROCTX runtime.
 """
 
@@ -197,7 +197,7 @@ class NvtxCompatWarning(UserWarning):
     """Warning emitted when an unsupported NVTX feature/argument is used.
 
     Only emitted when the compatibility mode is ``"warn"`` (see
-    :func:`set_compat_mode`).
+    `~.set_compat_mode`).
     """
 
 
@@ -205,7 +205,7 @@ class NvtxCompatError(RuntimeError):
     """Error raised when an unsupported NVTX feature/argument is used.
 
     Only raised when the compatibility mode is ``"error"`` (see
-    :func:`set_compat_mode`).
+    `~.set_compat_mode`).
     """
 
 
@@ -229,10 +229,12 @@ def set_compat_mode(mode):
     """Set the compatibility mode.
 
     Args:
-        mode: One of ``"silent"``, ``"warn"`` or ``"error"``.
+        mode:
+            One of ``"silent"``, ``"warn"`` or ``"error"``.
 
     Raises:
-        ValueError: If ``mode`` is not a recognized compatibility mode.
+        ``ValueError``:
+            If ``mode`` is not a recognized compatibility mode.
     """
     global _COMPAT_MODE
     if mode not in _COMPAT_MODES:
@@ -247,8 +249,8 @@ def _compat(feature, stacklevel=3):
     """Report use of a feature/argument that ROCTX cannot express.
 
     Honors the current compatibility mode: no-op when ``silent``, emits an
-    :class:`NvtxCompatWarning` when ``warn``, raises :class:`NvtxCompatError`
-    when ``error``. ``stacklevel`` is forwarded to :func:`warnings.warn` so the
+    `~.NvtxCompatWarning` when ``warn``, raises `~.NvtxCompatError`
+    when ``error``. ``stacklevel`` is forwarded to ``warnings.warn`` so the
     warning points at the user's call site.
     """
     if _COMPAT_MODE == "silent":
@@ -280,7 +282,7 @@ def _check_dropped_kwargs(color=_UNSET, domain=_UNSET, category=_UNSET,
 
 
 def _check_dropped_attributes(attributes, kwargs, _stacklevel=5):
-    """Run compat checks for droppable fields on a :class:`Domain` call.
+    """Run compat checks for droppable fields on a `~.Domain` call.
 
     Considers both a passed ``EventAttributes`` object (its ``color`` /
     ``category`` / ``payload``) and any droppable keyword arguments. A field
@@ -355,11 +357,21 @@ class annotate:
     """Annotate code ranges using a context manager or a decorator.
 
     Args:
-        message: Message for the range; as a decorator it defaults to the decorated function name, as a context manager to the empty string.
-        color: Accepted for compatibility; **dropped** (ROCTX has no color).
-        domain: Accepted for compatibility; **dropped** (ROCTX has no domains).
-        category: Accepted for compatibility; **dropped**.
-        payload: Accepted for compatibility; **dropped**.
+        message:
+            Message for the range; as a decorator it defaults to the decorated
+            function name, as a context manager to the empty string.
+
+        color:
+            Accepted for compatibility; **dropped** (ROCTX has no color).
+
+        domain:
+            Accepted for compatibility; **dropped** (ROCTX has no domains).
+
+        category:
+            Accepted for compatibility; **dropped**.
+
+        payload:
+            Accepted for compatibility; **dropped**.
 
     Examples:
         Using a decorator (``message`` defaults to ``"func"``)::
@@ -424,11 +436,24 @@ def mark(
     """Mark an instantaneous event.
 
     Args:
-        message: A message associated with the event.
-        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        message:
+            A message associated with the event.
+
+        color:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        domain:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        category:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        payload:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
     """
     _check_dropped_kwargs(color, domain, category, payload)
     _mark(message)
@@ -440,24 +465,39 @@ def push_range(
     """Mark the beginning of a (nested, per-thread) code range.
 
     Args:
-        message: A message associated with the annotated code range.
-        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        message:
+            A message associated with the annotated code range.
+
+        color:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        domain:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        category:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        payload:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
 
     Note:
-        When applicable, prefer :class:`annotate`.
+        When applicable, prefer `~.annotate`.
     """
     _check_dropped_kwargs(color, domain, category, payload)
     _push(message)
 
 
 def pop_range(domain=_UNSET):
-    """Mark the end of a code range started with :func:`push_range`.
+    """Mark the end of a code range started with `~.push_range`.
 
     Args:
-        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        domain:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
     """
     _check_dropped_kwargs(domain=domain)
     _pop()
@@ -469,25 +509,39 @@ def start_range(
     """Mark the beginning of a process range.
 
     Args:
-        message: A message associated with the range.
-        color: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        domain: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        category: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
-        payload: Accepted for compatibility; **dropped** (supplying it triggers the compatibility mode).
+        message:
+            A message associated with the range.
+
+        color:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        domain:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        category:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
+
+        payload:
+            Accepted for compatibility; **dropped** (supplying it triggers the
+            compatibility mode).
 
     Returns:
         A ``(range_id, domain_handle)`` tuple that must be passed to
-        :func:`end_range`. ``domain_handle`` is always ``0`` in this shim.
+        `~.end_range`. ``domain_handle`` is always ``0`` in this shim.
     """
     _check_dropped_kwargs(color, domain, category, payload)
     return (_start(message), 0)
 
 
 def end_range(range_id):
-    """Mark the end of a process range started with :func:`start_range`.
+    """Mark the end of a process range started with `~.start_range`.
 
     Args:
-        range_id: The tuple (or bare id) returned by :func:`start_range`.
+        range_id:
+            The tuple (or bare id) returned by `~.start_range`.
     """
     if range_id is None:
         return
@@ -506,8 +560,11 @@ class Profile:
     range using ``sys.setprofile`` / ``threading.setprofile``.
 
     Args:
-        linenos: Include file and line number information in annotations.
-        annotate_cfuncs: Also annotate C-extension and builtin functions.
+        linenos:
+            Include file and line number information in annotations.
+
+        annotate_cfuncs:
+            Also annotate C-extension and builtin functions.
 
     Examples:
         >>> import nvtx, time
@@ -575,7 +632,7 @@ class RegisteredString:
 class EventAttributes:
     """A holder for event attributes.
 
-    Only :attr:`message` reaches ROCTX; ``color``, ``category`` and ``payload``
+    Only ``message`` reaches ROCTX; ``color``, ``category`` and ``payload``
     are stored for compatibility but **dropped**.
     """
 
@@ -612,7 +669,7 @@ class Domain:
 
        ROCTX has no domain concept. The ``name`` is accepted but ignored, and
        every method routes to the same global ROCTX calls, so events from
-       different :class:`Domain` instances are **not** isolated from one another.
+       different `~.Domain` instances are **not** isolated from one another.
     """
 
     def __init__(self, name=None):
@@ -624,26 +681,26 @@ class Domain:
         self._categories = {}
 
     def push_range(self, attributes=None, **kwargs):
-        """Mark the beginning of a code range (see :func:`push_range`)."""
+        """Mark the beginning of a code range (see `~nvtx.push_range`)."""
         _check_dropped_attributes(attributes, kwargs)
         _push(_message_text(attributes, kwargs))
 
     def pop_range(self):
-        """Mark the end of a code range (see :func:`pop_range`)."""
+        """Mark the end of a code range (see `~nvtx.pop_range`)."""
         _pop()
 
     def mark(self, attributes=None, **kwargs):
-        """Mark an instantaneous event (see :func:`mark`)."""
+        """Mark an instantaneous event (see `~nvtx.mark`)."""
         _check_dropped_attributes(attributes, kwargs)
         _mark(_message_text(attributes, kwargs))
 
     def start_range(self, attributes=None, **kwargs):
-        """Mark the beginning of a process range (see :func:`start_range`)."""
+        """Mark the beginning of a process range (see `~nvtx.start_range`)."""
         _check_dropped_attributes(attributes, kwargs)
         return _start(_message_text(attributes, kwargs))
 
     def end_range(self, range_id):
-        """Mark the end of a process range (see :func:`end_range`)."""
+        """Mark the end of a process range (see `~nvtx.end_range`)."""
         _stop(_unwrap_range_id(range_id))
 
     def get_category_id(self, name):
@@ -652,13 +709,13 @@ class Domain:
         return self._categories.setdefault(name, len(self._categories) + 1)
 
     def get_registered_string(self, string):
-        """Return a :class:`RegisteredString` wrapper (no C registration)."""
+        """Return a `~.RegisteredString` wrapper (no C registration)."""
         return RegisteredString(self, string)
 
     def get_event_attributes(
         self, message=None, color=None, category=None, payload=None
     ):
-        """Create an :class:`EventAttributes` object."""
+        """Create an `~.EventAttributes` object."""
         return EventAttributes(self, message, color, category, payload)
 
     def set_event_attributes(
@@ -670,7 +727,7 @@ class Domain:
         category=_DONT_SET,
         payload=_DONT_SET,
     ):
-        """Set attributes on an existing :class:`EventAttributes` object."""
+        """Set attributes on an existing `~.EventAttributes` object."""
         if message is not _DONT_SET:
             attributes.message = message
         if color is not _DONT_SET:
@@ -704,7 +761,7 @@ class Domain:
 
 
 class DummyDomain:
-    """A no-op replacement for :class:`Domain` used when NVTX is disabled."""
+    """A no-op replacement for `~.Domain` used when NVTX is disabled."""
 
     handle = 0
     name = None
@@ -754,9 +811,9 @@ def _get_domain_cached(name):
 
 
 def get_domain(name=None):
-    """Get or create a :class:`Domain` for a domain name.
+    """Get or create a `~.Domain` for a domain name.
 
-    Returns a :class:`DummyDomain` when NVTX is disabled.
+    Returns a `~.DummyDomain` when NVTX is disabled.
     """
     if not _ENABLED:
         return dummy_domain
@@ -811,7 +868,7 @@ class ExtCounter(Counter):
 
 
 class DummyCounter(Counter):
-    """A no-op replacement for :class:`Counter` when the domain is disabled."""
+    """A no-op replacement for `~.Counter` when the domain is disabled."""
 
 
 class CounterSemantics:
@@ -884,11 +941,12 @@ class TimestampType(enum.IntEnum):
 def numpy_dtype(*args, counter_semantics=None, **kwargs):
     """Construct a NumPy dtype, optionally carrying counter semantics metadata.
 
-    Accepts the same arguments as :func:`numpy.dtype`. The ``counter_semantics``
+    Accepts the same arguments as ``numpy.dtype``. The ``counter_semantics``
     metadata is attached but has **no runtime effect** on ROCTX.
 
     Raises:
-        RuntimeError: If NumPy is not installed.
+        ``RuntimeError``:
+            If NumPy is not installed.
     """
     _compat("numpy_dtype (no runtime effect)")
     try:
