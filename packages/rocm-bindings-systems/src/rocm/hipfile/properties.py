@@ -42,7 +42,7 @@ from .enums import OpError
 
 
 def driver_get_properties():
-    """Return the driver properties struct as set by `hipFileDriverGetProperties`."""
+    """Return the driver properties struct as set by `~.hipFileDriverGetProperties`."""
     err, props = _driver_get_properties()
     if err.err != OpError.SUCCESS:
         raise HipFileException(err.err, err.hip_drv_err)

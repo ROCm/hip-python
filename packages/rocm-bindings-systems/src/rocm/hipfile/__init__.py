@@ -30,17 +30,17 @@
 """High-level Pythonic interface to the hipFile (Accelerated I/O Storage)
 library.
 
-This sub-package wraps the lower-level :py:mod:`rocm.bindings.hipfile`
+This sub-package wraps the lower-level `~.rocm.bindings.hipfile`
 auto-generated bindings with idiomatic Python classes:
 
-* :py:class:`Driver` — context manager for the hipFile driver lifecycle.
-* :py:class:`FileHandle` — context manager for an open + registered file.
-* :py:class:`Buffer` — context manager for a registered GPU memory region.
+* `~.Driver` — context manager for the hipFile driver lifecycle.
+* `~.FileHandle` — context manager for an open + registered file.
+* `~.Buffer` — context manager for a registered GPU memory region.
 
-plus the mirrored enums (:py:class:`OpError`,
-:py:class:`FileHandleType`), the :py:class:`HipFileException` type, and
-the standalone :py:func:`driver_get_properties` /
-:py:func:`get_version` helpers.
+plus the mirrored enums (`~.enums.OpError`,
+`~.enums.FileHandleType`), the `~.HipFileException` type, and
+the standalone `~.properties.driver_get_properties` /
+`~.properties.get_version` helpers.
 
 The complete copy-via-GPU-memory example lives in
 ``examples/0_Basic_Usage/hipfile_copy.py``.

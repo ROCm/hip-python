@@ -54,10 +54,10 @@ class Buffer:
     """Lifecycle manager for a hipFile-registered GPU memory region.
 
     The caller pre-allocates the underlying device buffer (typically
-    via :py:func:`rocm.bindings.hip.hipMalloc` or any equivalent
-    GPU-allocator) and constructs a :py:class:`Buffer` to register it
+    via `~.rocm.bindings.hip.hipMalloc` or any equivalent
+    GPU-allocator) and constructs a `~.Buffer` to register it
     with the hipFile driver. Deregistration happens on context exit
-    (or via explicit :py:meth:`deregister`).
+    (or via explicit `~.deregister`).
 
     Use as a context manager:
 
@@ -67,7 +67,7 @@ class Buffer:
 
     @classmethod
     def from_ctypes_void_p(cls, ctypes_void_p: c_void_p, length, flags):
-        """Construct a :py:class:`Buffer` from a :py:class:`ctypes.c_void_p`."""
+        """Construct a `~.Buffer` from a :py:class:`ctypes.c_void_p`."""
         return cls(ctypes_void_p.value, length, flags)
 
     def __init__(self, buffer_ptr, length, flags) -> None:

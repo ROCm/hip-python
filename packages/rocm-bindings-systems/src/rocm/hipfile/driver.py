@@ -55,7 +55,7 @@ class Driver:
         with Driver():
             ...
 
-    or call :py:meth:`open` / :py:meth:`close` explicitly.
+    or call `~.Driver.open` / `~.Driver.close` explicitly.
     """
 
     @staticmethod

@@ -66,8 +66,8 @@ from .error import HipFileException
 class FileHandle:
     """Lifecycle manager for a hipFile-registered open file.
 
-    Wraps `hipFileHandleRegister` / `hipFileHandleDeregister` plus
-    synchronous `hipFileRead` / `hipFileWrite`.
+    Wraps `~.hipFileHandleRegister` / `~.hipFileHandleDeregister` plus
+    synchronous `~.hipFileRead` / `~.hipFileWrite`.
 
     Use as a context manager:
 
@@ -184,12 +184,12 @@ class FileHandle:
     # --- I/O ---------------------------------------------------------------
 
     def read(self, buffer, size, file_offset, buffer_offset):
-        """Synchronous read into a registered :py:class:`Buffer`.
+        """Synchronous read into a registered `~.buffer.Buffer`.
 
         Returns the number of bytes read on success. Raises
-        :py:class:`HipFileException` (with the parsed
-        :py:class:`OpError` and HIP driver error) on a hipFile-level
-        error, or :py:class:`OSError` (with the real ``errno``) on a
+        `~.error.HipFileException` (with the parsed
+        `~.enums.OpError` and HIP driver error) on a hipFile-level
+        error, or ``OSError`` (with the real ``errno``) on a
         POSIX-level error.
         """
         if self._handle is None:
@@ -200,10 +200,10 @@ class FileHandle:
         return self._check_io_result(n, err, drv)
 
     def write(self, buffer, size, file_offset, buffer_offset):
-        """Synchronous write from a registered :py:class:`Buffer`.
+        """Synchronous write from a registered `~.buffer.Buffer`.
 
         Returns the number of bytes written on success. Same error
-        semantics as :py:meth:`read`.
+        semantics as `~.FileHandle.read`.
         """
         if self._handle is None:
             raise RuntimeError("The FileHandle is not open.")
