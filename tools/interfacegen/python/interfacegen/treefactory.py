@@ -175,8 +175,14 @@ def from_libclang_translation_unit(
                 root,
                 from_typedef_with_anon_child=_is_anonymous_typedef_inner(cursor),
             )
-            descend_into_child_cursors_(node)
+            # Register the record in the type registry BEFORE descending into
+            # its fields so a self-referential pointer field (e.g.
+            # ``struct hipDevResource_st * nextResource``) can resolve its
+            # typeref to this record. Descent only
+            # appends to ``node``, never to ``root``, so ``root.child_nodes``
+            # ordering is unchanged.
             root.append(node)
+            descend_into_child_cursors_(node)
 
     def handle_typedef_cursor_(
         cursor: clang.cindex.Cursor, root
@@ -346,8 +352,13 @@ def from_libclang_translation_unit(
                 node = cls_anon(cursor, parent)
             else:
                 node = cls(cursor, parent)
-            descend_into_child_cursors_(node)
+            # Register before descending (see rationale in
+            # ``handle_top_level_record_or_enum_cursor_``): lets a nested
+            # record's self-referential field resolve its typeref. Descent
+            # appends only to ``node``, so ``parent.child_nodes`` ordering and
+            # anonymous-node indexing are unaffected.
             parent.append(node)
+            descend_into_child_cursors_(node)
 
     def handle_param_or_field_decl_cursor_(
         cursor: clang.cindex.Cursor, parent  # t: backend.Node
