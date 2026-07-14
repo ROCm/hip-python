@@ -42,12 +42,14 @@ def parse_hipify_perl(hipify_perl_path: str):
     hip2cuda = {}
 
     # Examples:
-    # old format: subst("cudaFuncSetAttribute", "hipFuncSetAttribute")
-    # new format: $mappings{"cudaFuncSetAttribute"} = {rep => "hipFuncSetAttribute", type => "execution"};
+    # old format 1: subst("cudaFuncSetAttribute", "hipFuncSetAttribute")
+    # old format 2: $mappings{"cudaFuncSetAttribute"} = {rep => "hipFuncSetAttribute", type => "execution"};
+    # latest format  (ROCm 7.14.0+): k("cudaFuncSetAttribute", "hipFuncSetAttribute", "execution");
     p_mapping_str = "|".join(
         [
             r'(subst\s*\(\s*"(?P<cuda>\w+)"\s*,\s*"(?P<hip>\w+)")',
             r'(\$mappings\{"(?P<cuda2>\w+)"\}\s*=\s*\{\s*rep\s*=>\s*"(?P<hip2>\w+)")',
+            r'(k\s*\(\s*"(?P<cuda3>\w+)"\s*,\s*"(?P<hip3>\w+)"\s*,\s*"(?P<type3>\w+)")',
         ]
     )
     # print(p_mapping_str)
@@ -56,8 +58,8 @@ def parse_hipify_perl(hipify_perl_path: str):
     with open(hipify_perl_path, "r") as infile:
         for ln in infile.readlines():
             for m in p_mapping.finditer(ln):
-                cuda = m.group("cuda") or m.group("cuda2")
-                hip = m.group("hip") or m.group("hip2")
+                cuda = m.group("cuda") or m.group("cuda2") or m.group("cuda3")
+                hip = m.group("hip") or m.group("hip2") or m.group("hip3")
                 cuda2hip[cuda] = hip
                 if hip not in hip2cuda:
                     hip2cuda[hip] = []
