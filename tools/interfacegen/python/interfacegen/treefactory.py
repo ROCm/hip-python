@@ -115,6 +115,20 @@ def from_libclang_translation_unit(
     # share/design/UPSTREAM_BUGS/hip_runtime_api_duplicate_function_declarations.md.
     seen_function_spellings = set()
 
+    # Tracks top-level record/enum canonical typenames already emitted for
+    # this translation unit, mapping the canonical spelling to the appended
+    # node. Two top-level STRUCT_DECL/UNION_DECL/ENUM_DECL cursors with the
+    # same canonical typename denote the same C type; libclang can surface
+    # more than one when a type is defined at two sites in the include graph
+    # (e.g. ROCm 7.14 ``rocrand.h`` provides a C-mode fallback
+    # ``typedef struct { uint32_t x, y, z, w; } uint4;`` that collides with
+    # HIP's ``uint4`` from ``amd_hip_vector_types.h`` when parsed with
+    # ``-x c``). Without dedup the cython backend emits a duplicate
+    # ``cdef class uint4`` / ``ctypedef struct uint4`` that Cython rejects
+    # with "C class '...' already defined". See
+    # share/design/UPSTREAM_BUGS/rocrand_duplicate_uint4_definition.md.
+    seen_record_or_enum_by_canonical = {}
+
     def handle_top_level_cursor_(
         cursor: clang.cindex.Cursor, root
     ):  # t: backend.Root
@@ -167,8 +181,26 @@ def from_libclang_translation_unit(
             gets overwritten when the respetive typedef is handled.
         """
         nonlocal structure_types
+        nonlocal seen_record_or_enum_by_canonical
 
         if cursor.kind in structure_types:
+            # Dedup redeclarations of the same record/enum by canonical
+            # typename. Distinct C types never share a canonical spelling
+            # (anonymous typedef records canonicalize to their typedef name;
+            # untypedef'd anonymous records canonicalize to a location-unique
+            # ``struct (unnamed at ...)``), so this cannot collapse genuinely
+            # different types. Prefer a definition over a bare forward
+            # declaration: if the previously kept node was only a forward
+            # declaration and this cursor is the definition, drop the
+            # forward-decl node and emit the definition instead; otherwise
+            # skip the duplicate.
+            canonical = cursor.type.get_canonical().spelling
+            prev = seen_record_or_enum_by_canonical.get(canonical)
+            if prev is not None:
+                if cursor.is_definition() and not prev.cursor.is_definition():
+                    root.remove(prev)
+                else:
+                    return
             cls = structure_types[cursor.kind]
             node = cls(
                 cursor,
@@ -183,6 +215,7 @@ def from_libclang_translation_unit(
             # ordering is unchanged.
             root.append(node)
             descend_into_child_cursors_(node)
+            seen_record_or_enum_by_canonical[canonical] = node
 
     def handle_typedef_cursor_(
         cursor: clang.cindex.Cursor, root
