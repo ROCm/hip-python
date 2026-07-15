@@ -29,15 +29,13 @@ option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm librari
 # RCCL (communication) and ROCTX (tracing) live in the sibling
 # rocm-bindings-systems wheel.
 #
-# NOTE: the experimental bindings (hipblaslt, hipsparselt, hiptensor,
-# hipdnn_backend) are produced by the codegen but have a known typedef-vs-tag
-# resolution issue in their cython output (struct tag like
-# `_hipblasLtMatmulAlgo_t` is referenced without a matching
-# `cdef struct` declaration). They are intentionally omitted from the
-# build until the codegen handles that case. Once the codegen is
-# fixed this list can be replaced with the contents of
-# cmake/generated_modules.cmake (HIP_PYTHON_LIBRARIES_GENERATED_MODULES).
-set(HIP_PYTHON_ALL_LIBRARIES hipblas hipsolver hiprand hipfft hipsparse)
+# hipblaslt and hipsparselt require patched shim headers (their public
+# C API headers pull in C++-only includes) — those shims are produced
+# by the codegen and prepended to the include path below, so the
+# bindings compile as C. hiptensor and hipdnn_backend remain excluded
+# (hipdnn_backend also has a missing CMake-generated export header in
+# the source tree; see AVAILABLE_GENERATORS in the codegen).
+set(HIP_PYTHON_ALL_LIBRARIES hipblas hipsolver hiprand hipfft hipsparse hipblaslt hipsparselt)
 
 # Allow selective building of libraries
 hip_python_define_module_options(HIP_PYTHON_ENABLE_LIB HIP_PYTHON_LIBS "Build library module" ${HIP_PYTHON_ALL_LIBRARIES})
