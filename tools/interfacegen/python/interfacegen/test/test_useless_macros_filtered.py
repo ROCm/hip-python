@@ -183,3 +183,32 @@ def test_recipe_node_filter_drops_useless_macros(recipe, prefix):
     assert recipe.node_filter(int_m) is True, (
         f"{recipe.__name__}.node_filter must keep normal int macros"
     )
+
+
+# ---------------------------------------------------------------------------
+# hipblaslt `_CODEGEN_BLOCKLIST` — C++-only macro bodies (static_cast /
+# static_assert / bare git-hash token) must be dropped from export even
+# though they carry the `HIPBLASLT_` prefix, because the default `int`
+# macro_type would emit uncompilable `__Pyx_PyLong_From_int(MACRO)`.
+# ---------------------------------------------------------------------------
+
+
+def test_hipblaslt_node_filter_drops_cxx_only_macros():
+    """Every name in `hipblaslt._CODEGEN_BLOCKLIST` is rejected by
+    `hipblaslt.node_filter`, while a normal `HIPBLASLT_*` int macro is
+    still accepted."""
+    src = "".join(
+        f"#define {name} 0\n" for name in hipblaslt._CODEGEN_BLOCKLIST
+    ) + "#define HIPBLASLT_VERSION_MAJOR 1\n"
+    root = build_root(src)
+
+    for name in hipblaslt._CODEGEN_BLOCKLIST:
+        m = _macro_named(root, name)
+        assert hipblaslt.node_filter(m) is False, (
+            f"hipblaslt.node_filter must drop blocklisted macro {name}"
+        )
+
+    keep = _macro_named(root, "HIPBLASLT_VERSION_MAJOR")
+    assert hipblaslt.node_filter(keep) is True, (
+        "hipblaslt.node_filter must keep normal HIPBLASLT_* int macros"
+    )

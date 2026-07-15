@@ -835,11 +835,30 @@ class hipblaslt:
     relies on `from rocm.bindings.cyhip cimport *`).
     """
 
+    # `HIPBLASLT_*` macros whose bodies are NOT integer constants, so the
+    # default `int` macro_type would emit `__Pyx_PyLong_From_int(MACRO)`,
+    # which fails to compile. They are only referenced in comments in the
+    # public header, so dropping them from export is sufficient (no shim).
+    #   * VERSION_TWEAK — bare git-hash token (from hipblaslt-version.h).
+    #   * *_INVALID     — `static_cast<T>(v)` (C++ only, no C fallback).
+    #   * *_VEC_EXT     — `static_assert(false, "…deprecated…")` traps for
+    #                     removed enum values.
+    _CODEGEN_BLOCKLIST = frozenset({
+        "HIPBLASLT_VERSION_TWEAK",                       # bare git-hash token
+        "HIPBLASLT_DATATYPE_INVALID",                    # static_cast<...>
+        "HIPBLASLT_COMPUTE_TYPE_INVALID",                # static_cast<...>
+        "HIPBLASLT_OPERATION_INVALID",                   # static_cast<...>
+        "HIPBLASLT_MATMUL_DESC_A_SCALE_POINTER_VEC_EXT", # static_assert(false, ...)
+        "HIPBLASLT_MATMUL_DESC_B_SCALE_POINTER_VEC_EXT", # static_assert(false, ...)
+    })
+
     @staticmethod
     def node_filter(node: Node):
         if _is_useless_macro(node):
             return False
         if isinstance(node, MacroDefinition):
+            if node.name in hipblaslt._CODEGEN_BLOCKLIST:
+                return False
             return node.name.startswith("HIPBLASLT_")
         return node.name.startswith("hipblasLt") or node.name.startswith("HIPBLASLT_")
 
