@@ -30,8 +30,37 @@ import pytest
 
 from hip_python_codegen.binding_generator import (
     _apply_header_workarounds,
+    _neutralize_rocrand_c_fallback,
     _persist_shim_header,
     SHIM_INCLUDES_SUBDIR,
+)
+
+
+# The C-mode fallback block from ROCm 7.14 rocrand.h that collides with
+# HIP's uint4 under a C compile (see
+# share/design/UPSTREAM_BUGS/rocrand_duplicate_uint4_definition.md).
+_ROCRAND_FALLBACK_SRC = textwrap.dedent(
+    """\
+    #define ROCRAND_DEFAULT_MAX_BLOCK_SIZE 256
+
+    #if defined(__cplusplus)
+        #include <hip/hip_fp16.h>
+        #include <hip/hip_runtime.h>
+        #include <hip/hip_vector_types.h>
+    #else
+        #include <stddef.h>
+        #include <stdint.h>
+    typedef unsigned short __half;
+    struct ihipStream_t;
+    typedef struct ihipStream_t* hipStream_t;
+    typedef struct
+    {
+        uint32_t x, y, z, w;
+    } uint4;
+    #endif
+
+    typedef __half half;
+    """
 )
 
 
@@ -105,6 +134,45 @@ def test_apply_workarounds_pass_through_unaffected_header(tmp_path):
     )
     # No content load forced, no patches applied.
     assert content is None
+
+
+def test_apply_workarounds_neutralizes_rocrand_c_fallback(tmp_path):
+    """rocrand.h: the `#if defined(__cplusplus) ... #else <fallback> #endif`
+    block is replaced with the unconditional HIP includes, so the C-mode
+    fallback that redefines uint4/__half/hipStream_t is gone."""
+    h = tmp_path / "fake_rocrand.h"
+    h.write_text(_ROCRAND_FALLBACK_SRC)
+    _path, content = _apply_header_workarounds(
+        "rocrand/rocrand.h", str(h), None
+    )
+    # The colliding fallback typedefs are gone.
+    assert "} uint4;" not in content
+    assert "typedef struct ihipStream_t* hipStream_t;" not in content
+    assert "typedef unsigned short __half;" not in content
+    # The guard and its #else are gone (block fully replaced).
+    assert "#if defined(__cplusplus)" not in content
+    assert "#else" not in content
+    # The HIP includes are now unconditional.
+    assert "#include <hip/hip_fp16.h>" in content
+    assert "#include <hip/hip_runtime.h>" in content
+    assert "#include <hip/hip_vector_types.h>" in content
+    # Provenance marker + upstream-bug reference are present.
+    assert "hip-python codegen" in content
+    assert "rocrand_duplicate_uint4_definition.md" in content
+    # Surrounding content is preserved.
+    assert "#define ROCRAND_DEFAULT_MAX_BLOCK_SIZE 256" in content
+    assert "typedef __half half;" in content
+
+
+def test_neutralize_rocrand_noop_and_warns_when_block_absent(caplog):
+    """When the expected fallback block is absent (upstream reshuffle),
+    the content is returned unchanged and a warning is logged so the
+    regression surfaces at codegen time."""
+    src = "#include <hip/hip_runtime.h>\ntypedef int rocrand_generator;\n"
+    with caplog.at_level("WARNING"):
+        out = _neutralize_rocrand_c_fallback(src)
+    assert out == src
+    assert any("rocrand.h" in r.message for r in caplog.records)
 
 
 def test_persist_shim_header_creates_dirs_and_writes(tmp_path):

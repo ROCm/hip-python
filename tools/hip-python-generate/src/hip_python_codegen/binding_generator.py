@@ -34,6 +34,7 @@ import datetime
 import importlib.metadata
 import logging
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -138,6 +139,10 @@ def get_libraries_header(header_relpath: str, rocm_libraries_dir: str):
         "hipblaslt/hipblaslt.h": "projects/hipblaslt/library/include/hipblaslt/hipblaslt.h",
         "hipsolver/hipsolver.h": "projects/hipsolver/library/include/hipsolver/hipsolver.h",
         "hiprand/hiprand.h": "projects/hiprand/library/include/hiprand/hiprand.h",
+        # rocrand.h is not a bound library of its own; it is resolved and
+        # shimmed transitively for hiprand (see _TRANSITIVE_SHIM_HEADERS and
+        # the rocrand/rocrand.h branch in _apply_header_workarounds).
+        "rocrand/rocrand.h": "projects/rocrand/library/include/rocrand/rocrand.h",
         "hipsparse/hipsparse.h": "projects/hipsparse/library/include/hipsparse/hipsparse.h",
         "hipfft/hipfft.h": "projects/hipfft/library/include/hipfft/hipfft.h",
         "hipfft/hipfftXt.h": "projects/hipfft/library/include/hipfft/hipfftXt.h",
@@ -236,6 +241,56 @@ def _stripped_include_marker(line: str) -> str:
     )
 
 
+# Matches rocRAND's `#if defined(__cplusplus) / #else / #endif` block that
+# gates the HIP includes against a C-mode fallback which (re)defines
+# `uint4` / `__half` / `ihipStream_t` / `hipStream_t`. Anchored on the
+# `#if defined(__cplusplus)` that is immediately followed by the
+# `<hip/hip_fp16.h>` include (the file's other `__cplusplus` guards are
+# followed by `extern "C" {`) and closed at the `} uint4;` / `#endif`
+# that terminates the fallback, so only this block is rewritten.
+_ROCRAND_CXX_FALLBACK_RE = re.compile(
+    r"#if\s+defined\(__cplusplus\)\s*\n"
+    r"\s*#include\s*<hip/hip_fp16\.h>.*?"
+    r"\}\s*uint4;\s*\n#endif",
+    re.DOTALL,
+)
+
+_ROCRAND_UNCONDITIONAL_HIP_INCLUDES = (
+    "/* hip-python codegen: rocRAND's C-mode fallback block "
+    "(re)defined uint4/__half/ihipStream_t/hipStream_t and collided "
+    "with the HIP headers under a C compile. Replaced with the "
+    "unconditional HIP includes the __cplusplus branch already used. "
+    "See share/design/UPSTREAM_BUGS/rocrand_duplicate_uint4_definition.md */\n"
+    "#include <hip/hip_fp16.h>\n"
+    "#include <hip/hip_runtime.h>\n"
+    "#include <hip/hip_vector_types.h>"
+)
+
+
+def _neutralize_rocrand_c_fallback(content: str) -> str:
+    """Replace rocRAND's `#if defined(__cplusplus) ... #endif` fallback
+    block with the unconditional HIP includes so `rocrand.h` compiles in
+    a C translation unit that also pulls in the HIP headers (via
+    `hiprand.h`). See the `rocrand/rocrand.h` entry in
+    `_apply_header_workarounds` for the full rationale.
+
+    If the expected block is not found (e.g. upstream reshuffled the
+    header), leave the content unchanged and log a warning so the
+    regression surfaces at codegen time rather than silently.
+    """
+    new_content, n = _ROCRAND_CXX_FALLBACK_RE.subn(
+        _ROCRAND_UNCONDITIONAL_HIP_INCLUDES, content
+    )
+    if n == 0:
+        _log.warning(
+            "rocrand.h: expected C-mode `#if defined(__cplusplus)` uint4 "
+            "fallback block not found; shim not applied. The header layout "
+            "may have changed upstream — verify the uint4 collision "
+            "workaround is still needed."
+        )
+    return new_content
+
+
 def _apply_header_workarounds(header_relpath: str, header_path: str, content: str | None):
     """Apply per-header source patches before libclang sees the file.
 
@@ -273,6 +328,21 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
       includes. With them removed the header parses cleanly under
       gcc. Tracked upstream as
       `share/design/UPSTREAM_BUGS/hipsparselt_c_api_requires_cxx_compile.md`.
+
+    - `rocrand/rocrand.h` — ROCm 7.14 gained a C-mode fallback that
+      unconditionally (re)defines `uint4` (plus `__half`,
+      `ihipStream_t`, `hipStream_t`) in its `#else` (non-`__cplusplus`)
+      branch. When rocrand.h is pulled into a C translation unit that
+      also has the HIP headers (exactly what hiprand.h does), the
+      fallback `uint4` collides with HIP's `uint4` from
+      `amd_hip_vector_types.h` and gcc fails with "conflicting types
+      for 'uint4'". The whole `#if defined(__cplusplus) ... #endif`
+      block is replaced with the unconditional HIP includes (the same
+      three the `#if` branch already uses), matching how the newer
+      upstream header behaves. rocrand.h is not a bound library; it is
+      shimmed transitively for hiprand (see _TRANSITIVE_SHIM_HEADERS).
+      Tracked upstream as
+      `share/design/UPSTREAM_BUGS/rocrand_duplicate_uint4_definition.md`.
     """
     if header_relpath == "hipblaslt/hipblaslt.h":
         if content is None:
@@ -308,6 +378,11 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
             "#include <hip/hip_fp8.h>",
         ):
             content = content.replace(bad, _stripped_include_marker(bad))
+    elif header_relpath == "rocrand/rocrand.h":
+        if content is None:
+            with open(header_path) as f:
+                content = f.read()
+        content = _neutralize_rocrand_c_fallback(content)
     return (header_path, content)
 
 
@@ -337,6 +412,56 @@ def _persist_shim_header(
     with open(shim_path, "w") as f:
         f.write(content)
     _log.info(f"  wrote shim header: {shim_path}")
+
+
+# Some bound headers transitively `#include` a *different* header that
+# itself needs patching for the gcc compile of the generated `.c`. The
+# bound header (key) may compile fine on its own, but a header it pulls
+# in (value) is broken under a C compile, so we must persist a patched
+# shim for that transitive header too. Example: hiprand.h ->
+# hiprand_rocm.h -> rocrand.h, where rocrand.h carries the C-mode uint4
+# fallback (see _neutralize_rocrand_c_fallback).
+_TRANSITIVE_SHIM_HEADERS = {
+    "hiprand/hiprand.h": ["rocrand/rocrand.h"],
+}
+
+
+def _persist_transitive_shims(
+    header_relpath: str,
+    output_dir: str,
+    package: str,
+    rocm_inc: str | None,
+    rocm_systems_dir: str | None,
+    rocm_libraries_dir: str | None,
+    rocm_llvm_project_dir: str | None,
+):
+    """Resolve and persist patched shims for any transitively-included
+    headers registered for `header_relpath` in `_TRANSITIVE_SHIM_HEADERS`.
+
+    Each transitive header is run through `resolve_header_path` (which
+    applies `_apply_header_workarounds`); only headers that actually
+    produced patched content are persisted to the wheel's
+    `shim_includes/` directory.
+    """
+    for extra_relpath in _TRANSITIVE_SHIM_HEADERS.get(header_relpath, ()):
+        try:
+            _extra_path, extra_content = resolve_header_path(
+                extra_relpath,
+                rocm_inc,
+                rocm_systems_dir,
+                rocm_libraries_dir,
+                rocm_llvm_project_dir,
+            )
+        except FileNotFoundError as e:
+            _log.warning(
+                f"Transitive shim header '{extra_relpath}' for "
+                f"'{header_relpath}' not found: {e}"
+            )
+            continue
+        if extra_content is not None:
+            _persist_shim_header(
+                extra_relpath, extra_content, output_dir, package=package
+            )
 
 
 def resolve_header_path(
@@ -574,6 +699,17 @@ def _worker_generate_library(
                     output_dir_root,
                     package=_PKG_TO_DIR[pkg_short][0],
                 )
+            # Also persist shims for any transitively-included headers
+            # that need patching (e.g. hiprand.h -> rocrand.h).
+            _persist_transitive_shims(
+                header_relpath,
+                output_dir_root,
+                _PKG_TO_DIR[pkg_short][0],
+                rocm_inc,
+                rocm_systems_dir,
+                rocm_libraries_dir,
+                rocm_llvm_project_dir,
+            )
 
             kwargs = dict(
                 include_dir=include_dir,
@@ -954,6 +1090,17 @@ def generate(opts):  # noqa: C901
                     output_dir,
                     package=_PKG_TO_DIR[pkg_short][0],
                 )
+            # Also persist shims for any transitively-included headers
+            # that need patching (e.g. hiprand.h -> rocrand.h).
+            _persist_transitive_shims(
+                header_relpath,
+                output_dir,
+                _PKG_TO_DIR[pkg_short][0],
+                rocm_inc,
+                rocm_systems_dir,
+                rocm_libraries_dir,
+                rocm_llvm_project_dir,
+            )
             kwargs = dict(common_kwargs)
             kwargs["include_dir"] = include_dir
             kwargs["header_relpath"] = header_relpath
