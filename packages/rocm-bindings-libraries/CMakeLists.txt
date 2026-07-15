@@ -54,6 +54,32 @@ set(LIBRARIES_INCLUDE_DIRS
   "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
+# Patched upstream headers ("shims") produced by the codegen live under
+# shim_includes/ (see binding_generator._persist_shim_header). Prepend
+# that directory so the gcc compile of the Cython-generated `.c` reads
+# the patched copy before the unpatched original under
+# ${ROCM_PATH}/include. hip_python_add_cython_module orders these
+# include dirs ahead of HIP_PYTHON_ROCM_INCLUDE_DIR, so a plain prepend
+# here is sufficient for the shim to win.
+set(_shim_includes_dir "${CMAKE_CURRENT_SOURCE_DIR}/shim_includes")
+if(EXISTS "${_shim_includes_dir}")
+  list(PREPEND LIBRARIES_INCLUDE_DIRS "${_shim_includes_dir}")
+
+  # Surface every shim that is in effect. These bindings only compile
+  # because the patched header shadows the on-disk ROCm header; anyone
+  # recompiling the generated sources must apply the same shim.
+  file(GLOB_RECURSE _shim_headers "${_shim_includes_dir}/*.h")
+  foreach(_shim_header IN LISTS _shim_headers)
+    file(RELATIVE_PATH _shim_rel "${_shim_includes_dir}" "${_shim_header}")
+    message(WARNING
+      "hip-python: compiling against patched shim header '${_shim_rel}' "
+      "from shim_includes/ instead of \${ROCM_PATH}/include. The generated "
+      "Cython bindings only build because this shim is prepended to the "
+      "include path; any consumer recompiling these bindings must apply the "
+      "same shim. See share/design/UPSTREAM_BUGS/.")
+  endforeach()
+endif()
+
 # Cross-package cimports: rocm.bindings.util.loader from
 # rocm-bindings-core, rocm.bindings.cyhip from rocm-bindings-hip.
 hip_python_append_sibling_includes(LIBRARIES_INCLUDE_DIRS)

@@ -54,7 +54,10 @@ sdist.include = [
     "src/*/*.pxd",
     "src/*/*/*.pxd",
     "src/*/*.pyx",
-    "src/*/*/*.pyx"
+    "src/*/*/*.pyx",
+    # Patched upstream headers ("shims") needed by the gcc compile of the
+    # Cython-generated `.c` (see binding_generator._persist_shim_header).
+    "shim_includes/*/*.h"
 ]
 
 [tool.cibuildwheel]
