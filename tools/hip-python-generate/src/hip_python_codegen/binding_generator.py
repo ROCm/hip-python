@@ -301,7 +301,7 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
 
     Currently patches:
 
-    - `hipblaslt/hipblaslt.h` — three problems:
+    - `hipblaslt/hipblaslt.h` — four problems:
 
       1. Strips `<memory>` / `<regex>` / `<vector>` C++ stdlib
          `#include` lines (none of those types are referenced in
@@ -316,6 +316,10 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
          `typedef hip_bfloat16 hipblasLtBfloat16;` in the
          transitively-included `hipblaslt-types.h` resolves to a
          C-compatible POD type.
+      4. Strips the three unguarded C++ default member initializers
+         (`workspaceSize = 0`, `state = HIPBLAS_STATUS_SUCCESS`,
+         `wavesCount = 1.0`) from `hipblasLtMatmulHeuristicResult_t`;
+         gcc rejects in-struct member initializers in C mode.
 
       Tracked upstream as
       `share/design/UPSTREAM_BUGS/hipblaslt_c_api_requires_cxx_compile.md`.
@@ -369,6 +373,14 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
             '#include "hipblaslt-types.h"',
         ):
             content = content.replace(bad, _stripped_include_marker(bad))
+        # Strip the three unguarded C++ default member initializers in
+        # `hipblasLtMatmulHeuristicResult_t` (gcc rejects `= <expr>` on a
+        # struct member in C mode). Anchor each regex on `type name` so
+        # enum `= N` values and the guarded `hipblasLtMatmulAlgo_t algo`
+        # field are left untouched. The initialized value is irrelevant to
+        # the binding (the struct is caller-allocated and callee-filled).
+        for decl in ("size_t workspaceSize", "hipblasStatus_t state", "float wavesCount"):
+            content = re.sub(re.escape(decl) + r"\s*=\s*[^;]+;", decl + ";", content)
     elif header_relpath == "hipsparselt/hipsparselt.h":
         if content is None:
             with open(header_path) as f:

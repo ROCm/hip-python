@@ -97,6 +97,45 @@ def test_apply_workarounds_strips_hipblaslt_cxx_includes(tmp_path):
         assert "stripped by hip-python codegen" in content
 
 
+def test_apply_workarounds_strips_hipblaslt_cxx_member_initializers(tmp_path):
+    """hipblaslt.h: the three unguarded C++ default member initializers in
+    `hipblasLtMatmulHeuristicResult_t` (`workspaceSize = 0`,
+    `state = HIPBLAS_STATUS_SUCCESS`, `wavesCount = 1.0`) are stripped so
+    the struct parses under a C compiler, while enum `= N` values and the
+    guarded `hipblasLtMatmulAlgo_t algo` field are left untouched."""
+    src = textwrap.dedent(
+        """\
+        typedef enum { HIPBLASLT_ORDER_COL = 0, HIPBLASLT_ORDER_ROW = 1 } hipblasLtOrder_t;
+
+        typedef struct _hipblasLtMatmulHeuristicResult_t {
+          hipblasLtMatmulAlgo_t algo;
+          size_t workspaceSize = 0;
+          hipblasStatus_t state = HIPBLAS_STATUS_SUCCESS;
+          float wavesCount = 1.0;
+          int reserved[4];
+        } hipblasLtMatmulHeuristicResult_t;
+        """
+    )
+    h = tmp_path / "fake_hipblaslt.h"
+    h.write_text(src)
+    _path, content = _apply_header_workarounds(
+        "hipblaslt/hipblaslt.h", str(h), src
+    )
+    # The three initializers are gone; the bare declarations remain.
+    assert "size_t workspaceSize;" in content
+    assert "hipblasStatus_t state;" in content
+    assert "float wavesCount;" in content
+    assert "workspaceSize = 0" not in content
+    assert "state = HIPBLAS_STATUS_SUCCESS" not in content
+    assert "wavesCount = 1.0" not in content
+    # Enum `= N` values are NOT touched.
+    assert "HIPBLASLT_ORDER_COL = 0" in content
+    assert "HIPBLASLT_ORDER_ROW = 1" in content
+    # The guarded/plain fields survive verbatim.
+    assert "hipblasLtMatmulAlgo_t algo;" in content
+    assert "int reserved[4];" in content
+
+
 def test_apply_workarounds_strips_hipsparselt_unused_includes(tmp_path):
     """hipsparselt.h: <hip/hip_bfloat16.h> and <hip/hip_fp8.h> are
     stripped. No POD substitute needed because the types aren't
