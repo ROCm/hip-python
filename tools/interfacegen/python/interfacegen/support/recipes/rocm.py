@@ -1487,15 +1487,24 @@ class amdsmi:
     _IGNORE_FUNCTIONS = frozenset()
     _IGNORE_TYPES = frozenset()
 
-    # Top-level types that are declared INSIDE amdsmi.h but lack the
-    # `amdsmi_` prefix. They're referenced by amdsmi-prefixed functions /
-    # records so the binding is incomplete without them. (`<stdint.h>` types
-    # — uint{8,16,32,64}_t, int{32,64}_t — don't need to be listed here:
-    # the codegen already handles them via `from libc.stdint cimport *`.)
+    # Top-level types that lack the `amdsmi_` prefix but are referenced by
+    # amdsmi-prefixed functions / records, so the binding is incomplete
+    # without them. (`<stdint.h>` types — uint{8,16,32,64}_t, int{32,64}_t —
+    # don't need to be listed here: the codegen already handles them via
+    # `from libc.stdint cimport *`.)
     _EXTRA_TYPES = frozenset({
         "amd_metrics_table_header_t",   # used by amdsmi_gpu_metrics_t and
                                         # amdsmi_get_gpu_metrics_header_info
         "processor_type_t",             # used by amdsmi_get_processor_type
+        # `struct timespec` (<time.h>, transitively included by amdsmi.h) is
+        # a BY-VALUE field of amdsmi_fabric_telemetry_dataset_t.timestamp.
+        # Admitting it lets the codegen emit its `cdef struct timespec:`
+        # layout AND a `.fromPtr` wrapper (mirrors the in-header by-value
+        # record amdsmi_cper_timestamp_t). It is a tagged struct (not a
+        # typedef), so it renders as `cdef struct timespec` -> valid C
+        # `struct timespec`; the real per-platform layout comes from the
+        # `cdef extern from "amd_smi/amdsmi.h"` block, so no ABI is baked in.
+        "timespec",
     })
 
     # Useful non-`AMDSMI_`-prefixed integer macros declared in amdsmi.h.
