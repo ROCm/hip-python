@@ -72,35 +72,33 @@ if have_rccl_support:
         "0_Basic_Usage/rccl_comminitall_bcast.py"
     ]
 
-try:
-    from rocm.bindings import amdsmi as _amdsmi  # noqa: F401
-    del _amdsmi
-    have_amdsmi = True
-except ImportError:
-    have_amdsmi = False
+def _have_runtime_library(module_name: str, probe_symbol: str) -> bool:
+    """True only if the binding module imports AND its backing runtime-linked
+    DLL exports ``probe_symbol``.
+    """
+    import importlib
 
-try:
-    from rocm.bindings import roctx as _roctx  # noqa: F401
-    del _roctx
-    have_roctx = True
-except ImportError:
-    have_roctx = False
+    try:
+        module = importlib.import_module(f"rocm.bindings.{module_name}")
+        return module.has_symbol(probe_symbol)
+    except (ImportError, AttributeError):
+        return False
 
-try:
-    from rocm import hipfile as _hipfile
 
-    # Importing the sub-package only pulls in compile-time version macros;
-    # the driver/sync entry points are runtime-linked, so force an actual
-    # dlopen + dlsym of libhipfile by calling into a native symbol
-    # (hipFileGetVersion). This fails (RuntimeError/OSError) when the systems
-    # wheel was built without the hipFILE bindings or libhipfile.so is not
-    # loadable at runtime, so `have_hipfile` reflects real symbol availability
-    # rather than a mere successful import.
-    _hipfile.get_version()
-    del _hipfile
-    have_hipfile = True
-except Exception:
-    have_hipfile = False
+have_amdsmi = _have_runtime_library("amdsmi", "amdsmi_init")
+have_roctx = _have_runtime_library("roctx", "roctxMarkA")
+have_hipfile = _have_runtime_library("hipfile", "hipFileGetVersion")
+have_hipblaslt = _have_runtime_library("hipblaslt", "hipblasLtCreate")
+have_hipsparselt = _have_runtime_library("hipsparselt", "hipsparseLtInit")
+
+_hipblaslt_skipif = pytest.mark.skipif(
+    not have_hipblaslt,
+    reason="requires the hipblaslt bindings with a loadable libhipblaslt.so",
+)
+_hipsparselt_skipif = pytest.mark.skipif(
+    not have_hipsparselt,
+    reason="requires the hipsparselt bindings with a loadable libhipsparselt.so",
+)
 
 if have_amdsmi:
     python_examples += [
@@ -121,6 +119,14 @@ _hipfile_skipif = pytest.mark.skipif(
 python_examples += [
     pytest.param("0_Basic_Usage/hipfile_copy.py", marks=_hipfile_skipif),
     pytest.param("0_Basic_Usage/hipfile_copy_lowlevel.py", marks=_hipfile_skipif),
+]
+
+# hipBLASLt / hipSPARSELt GEMM examples. Both were recently re-enabled in the
+# libraries wheel and are runtime-linked, so they are guarded on their backing
+# shared library being loadable (see _have_runtime_library).
+python_examples += [
+    pytest.param("0_Basic_Usage/hipblaslt_gemm.py", marks=_hipblaslt_skipif),
+    pytest.param("0_Basic_Usage/hipsparselt_spmm.py", marks=_hipsparselt_skipif),
 ]
 
 if device_printf_works:
