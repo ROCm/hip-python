@@ -862,10 +862,65 @@ class hipblaslt:
             return node.name.startswith("HIPBLASLT_")
         return node.name.startswith("hipblasLt") or node.name.startswith("HIPBLASLT_")
 
-    # Reuse the hipblas LAPACK-style heuristics — same `handle`,
-    # `alpha`/`beta`, single-letter matrix-name conventions apply.
-    ptr_parm_intent = hipblas.ptr_parm_intent
-    ptr_rank = hipblas.ptr_rank
+    # Scalar OUT pointers (`T* out` — a single value the callee writes)
+    # that read most naturally as Python return values. hipBLASLt reuses
+    # hipblas's LAPACK-oriented `ptr_rank`, which leaves a plain `int*` /
+    # `size_t*` at the default rank 1, so a documented `@param[out]` scalar
+    # only refines to plain `OUT` (a `ListOf*` caller argument) and
+    # `hipblasLtGetVersion`'s untagged `version` isn't even seen as OUT.
+    # Pinning these to OUT_CALLEE_ALLOCATED + rank 0 makes the wrapper
+    # return the value, mirroring amdsmi's `_MISTAGGED_OUT` and hiprtc's
+    # `out_callee_parms`. Maps (funcname, parm_name).
+    #
+    # Deliberately excluded (stay caller-allocated):
+    #   * `hipblasLtMatmulAlgoGetHeuristic`'s `heuristicResultsArray[]` — a
+    #     caller-sized record array (only its sibling scalar count is here).
+    #   * the `*GetAttribute` `buf` slots — caller-sized attribute buffers.
+    _SCALAR_OUT_PARMS = frozenset((
+        # (funcname, parm_name)
+        ("hipblasLtGetVersion", "version"),               # @param tag missing upstream
+        ("hipblasLtGetSmCountTarget", "smCountTarget"),
+        ("hipblasLtCheckNumericsDrain", "first_nan_call_id"),
+        ("hipblasLtMatrixLayoutGetAttribute", "sizeWritten"),
+        ("hipblasLtMatmulDescGetAttribute", "sizeWritten"),
+        ("hipblasLtMatmulPreferenceGetAttribute", "sizeWritten"),
+        ("hipblasLtMatrixTransformDescGetAttribute", "sizeWritten"),
+        ("hipblasLtMatmulAlgoGetHeuristic", "returnAlgoCount"),
+    ))
+
+    @staticmethod
+    @fallback(*_NUMERICAL_INTENT_CHAIN)
+    def ptr_parm_intent(node: Parm):
+        """Intent classifier for hipBLASLt.
+
+        The `_SCALAR_OUT_PARMS` override runs first (before the doxygen
+        rule) so that both the untagged `hipblasLtGetVersion` `version`
+        and the documented-but-caller-buffer-shaped `sizeWritten` /
+        `returnAlgoCount` scalars become callee-allocated returns. The
+        tail delegates to hipblas's body — preserving the `void** handle`
+        creator heuristic — then to the shared numerical chain.
+        """
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS:
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+        return hipblas.ptr_parm_intent.__wrapped__(node)
+
+    @staticmethod
+    @fallback(*_NUMERICAL_RANK_CHAIN)
+    def ptr_rank(node: Node):
+        """Pointer-rank classifier for hipBLASLt.
+
+        Forces rank 0 for the `_SCALAR_OUT_PARMS` scalars so they render
+        as single returned values rather than rank-1 `ListOf*` buffers.
+        Everything else delegates to hipblas's LAPACK-letter / `handle`
+        rank body.
+        """
+        if isinstance(node, Parm):
+            parent = node.parent
+            if parent is not None and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS:
+                return 0
+        return hipblas.ptr_rank.__wrapped__(node)
+
     raw_comment_cleaner = hipblas.raw_comment_cleaner
 
 
