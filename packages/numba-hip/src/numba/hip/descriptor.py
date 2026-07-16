@@ -75,7 +75,7 @@ class HIPTarget(TargetDescriptor):
     @property
     def target_context(self):
         if self._targetctx is None:
-            self._targetctx = HIPTargetContext(self._typingctx)
+            self._targetctx = HIPTargetContext(self.typing_context)
         return self._targetctx
 
 
