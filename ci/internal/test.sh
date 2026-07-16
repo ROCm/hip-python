@@ -72,8 +72,13 @@ export NUMBA_HIP_FALLBACK_TO_AMDSMI_FOR_UUID=1
 ### -------------------------------------------------------------------
 ### Suite 1 — hip-python examples
 ### -------------------------------------------------------------------
+#
+# -rs makes pytest print the reason for every SKIPPED test in the summary
+# (e.g. "hipblaslt runtime library not available"). The examples suite
+# skips whole example tests when their backing ROCm runtime library is
+# absent, so surfacing those reasons keeps CI logs self-explanatory.
 
-pytest -v ${examples_build_dir}/examples
+pytest -v -rs ${examples_build_dir}/examples
 
 ### -------------------------------------------------------------------
 ### Suite 2 — hip-python-interop shim unit tests
@@ -84,7 +89,7 @@ pytest -v ${examples_build_dir}/examples
 # stub rocm.bindings.amdsmi, so they exercise the *installed* hip_python_interop
 # wheel without requiring a GPU.
 
-pytest -v ${src_dir}/tests/hip-python-interop
+pytest -v -rs ${src_dir}/tests/hip-python-interop
 
 ### -------------------------------------------------------------------
 ### Suite 3 — rocm-bindings unit tests (core + compiler)
@@ -96,8 +101,8 @@ pytest -v ${src_dir}/tests/hip-python-interop
 # importable packages (tests/, not under src/) and exercise the *installed*
 # wheels, so they only run once the bindings have been materialized/built.
 
-pytest -v ${src_dir}/tests/rocm-bindings-core
-pytest -v ${src_dir}/tests/rocm-bindings-compiler
+pytest -v -rs ${src_dir}/tests/rocm-bindings-core
+pytest -v -rs ${src_dir}/tests/rocm-bindings-compiler
 
 ### -------------------------------------------------------------------
 ### Suite 4 — numba-hip
@@ -110,7 +115,7 @@ pytest -v ${src_dir}/tests/rocm-bindings-compiler
 # installed package.
 
 cd ${examples_build_dir}
-pytest -v -s ${src_dir}/tests/numba-hip
+pytest -v -s -rs ${src_dir}/tests/numba-hip
 
 deactivate
 rm -rf ${test_venv} ${examples_build_dir}
