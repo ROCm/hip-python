@@ -203,10 +203,27 @@ def generate_hipsolver(
     from rocm.bindings.hipblas cimport *
     """
     )
+    # hipsolver aliases three hipblas enums at Python module scope
+    # (`hipsolverOperation_t = hipblasOperation_t`, `hipsolverFillMode_t
+    # = hipblasFillMode_t`, `hipsolverSideMode_t = hipblasSideMode_t`)
+    # and runtime-checks the corresponding args via `isinstance(arg,
+    # _hipblas<X>_t__Base)`. Import only those specific names (the enum
+    # classes plus their wrapper bases) rather than `import *`: a broad
+    # star-import pulls in `cdef class` wrappers (e.g. `hipblasBfloat16`)
+    # that collide with the ones cimport'd via the decl prolog and
+    # trigger `TypeError: Cannot overwrite C type hipblasBfloat16` at
+    # module init. Same shape as hipsparselt's prolog below.
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import _hipDataType__Base
-    from rocm.bindings.hipblas import *
+    from rocm.bindings.hipblas import (
+        hipblasOperation_t,
+        hipblasFillMode_t,
+        hipblasSideMode_t,
+        _hipblasOperation_t__Base,
+        _hipblasFillMode_t__Base,
+        _hipblasSideMode_t__Base,
+    )
     """
     )
     return generator
@@ -404,19 +421,28 @@ def generate_hipblaslt(
     from rocm.bindings.hipblas cimport *
     """
     )
-    # The hipblaslt API surface uses several hipblas enums directly
-    # (`hipblasComputeType_t`, `hipblasOperation_t`, etc.) — the
-    # generated `.pyx` does runtime `isinstance(arg,
-    # _<EnumName>__Base)` checks against those enums' Python wrapper
-    # base classes. Those wrapper classes live in `rocm.bindings.hipblas`
-    # at module scope; without the star-import they aren't visible to
-    # hipblaslt's `.pyx` and Cython compile fails with `undeclared
-    # name not builtin: _hipblasComputeType_t__Base`. Same shape as
-    # hipsolver's prolog above.
+    # The hipblaslt API surface uses a couple of hipblas types directly:
+    # its functions return `hipblasStatus_t` (wrapped in the `.pyx` as
+    # `hipblasStatus_t(retval)` and runtime-checked via `isinstance`),
+    # and `hipblasLtMatmulDescCreate`'s `computeType` arg is runtime-
+    # checked via `isinstance(arg, _hipblasComputeType_t__Base)`. Those
+    # Python wrapper classes live in `rocm.bindings.hipblas` at module
+    # scope; without the import Cython compile fails with `undeclared
+    # name not builtin: _hipblasComputeType_t__Base`.
+    #
+    # Import only the names actually needed (rather than `import *`):
+    # a broad star-import pulls in `cdef class` wrappers (e.g.
+    # `hipblasBfloat16`) that collide with the ones cimport'd via the
+    # decl prolog and trigger `TypeError: Cannot overwrite C type
+    # hipblasBfloat16` at module init. Same shape as hipsparselt's
+    # prolog below.
     generator.python_interface_impl_prolog += textwrap.dedent(
         """\
     from rocm.bindings.hip import _hipDataType__Base
-    from rocm.bindings.hipblas import *
+    from rocm.bindings.hipblas import (
+        hipblasStatus_t,
+        _hipblasComputeType_t__Base,
+    )
     """
     )
     return generator
