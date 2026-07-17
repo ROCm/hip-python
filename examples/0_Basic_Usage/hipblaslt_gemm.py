@@ -66,11 +66,13 @@ alpha = ctypes.c_float(1.0)
 beta = ctypes.c_float(1.0)
 max_workspace_size = 32 * 1024 * 1024  # 32 MiB
 
-# Host data (column-major, since hipBLASLt is column-major by default).
+# Host data. hipBLASLt is column-major, so the host buffers are stored in
+# Fortran order — their raw bytes then match the column-major layout the
+# device reads with leading dimensions lda=m, ldb=k, ldc=ldd=m.
 rng = np.random.default_rng(seed=0)
-a_h = rng.standard_normal((m, k), dtype=np.float32).astype(np.float16)
-b_h = rng.standard_normal((k, n), dtype=np.float32).astype(np.float16)
-c_h = rng.standard_normal((m, n), dtype=np.float32).astype(np.float16)
+a_h = np.asfortranarray(rng.standard_normal((m, k), dtype=np.float32).astype(np.float16))
+b_h = np.asfortranarray(rng.standard_normal((k, n), dtype=np.float32).astype(np.float16))
+c_h = np.asfortranarray(rng.standard_normal((m, n), dtype=np.float32).astype(np.float16))
 # Reference computed in fp32 for accuracy comparison.
 d_expected = (
     alpha.value * a_h.astype(np.float32) @ b_h.astype(np.float32)
@@ -134,15 +136,14 @@ hip_check(
     )
 )
 
-heuristic_results = (hipblaslt.hipblasLtMatmulHeuristicResult_t * 1)()
-returned = ctypes.c_int(0)
-hip_check(
+heuristic_results = hipblaslt.hipblasLtMatmulHeuristicResult_t.allocate(1)
+returned = hip_check(
     hipblaslt.hipblasLtMatmulAlgoGetHeuristic(
         handle, matmul, matA, matB, matC, matD, pref, 1,
-        heuristic_results, ctypes.addressof(returned),
+        heuristic_results,
     )
 )
-assert returned.value > 0, "hipBLASLt found no algorithm for this problem"
+assert returned > 0, "hipBLASLt found no algorithm for this problem"
 
 # Run the matmul on the default stream.
 hip_check(
@@ -152,8 +153,8 @@ hip_check(
         d_a, matA, d_b, matB,
         ctypes.addressof(beta),
         d_c, matC, d_d, matD,
-        ctypes.byref(heuristic_results[0].algo),
-        d_workspace, heuristic_results[0].workspaceSize,
+        heuristic_results.algo,
+        d_workspace, heuristic_results.workspaceSize,
         None,  # default stream
     )
 )
