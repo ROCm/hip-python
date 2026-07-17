@@ -95,9 +95,21 @@ _hipblaslt_skipif = pytest.mark.skipif(
     not have_hipblaslt,
     reason="requires the hipblaslt bindings with a loadable libhipblaslt.so",
 )
+# hipSPARSELt additionally needs its Tensile GEMM library and SPMM kernels,
+# which the libraries wheel does not bundle. Their locations are supplied via
+# ROCSPARSELT_TENSILE_LIBPATH / ROCSPARSELT_SPMM_LIBPATH; skip the test unless
+# both are set (a direct run of the example fails loudly instead).
+_hipsparselt_libs_configured = bool(
+    os.environ.get("ROCSPARSELT_TENSILE_LIBPATH")
+) and bool(os.environ.get("ROCSPARSELT_SPMM_LIBPATH"))
+
 _hipsparselt_skipif = pytest.mark.skipif(
-    not have_hipsparselt,
-    reason="requires the hipsparselt bindings with a loadable libhipsparselt.so",
+    not (have_hipsparselt and _hipsparselt_libs_configured),
+    reason=(
+        "requires the hipsparselt bindings with a loadable libhipsparselt.so "
+        "AND ROCSPARSELT_TENSILE_LIBPATH + ROCSPARSELT_SPMM_LIBPATH set (the "
+        "wheel does not bundle the Tensile/SPMM kernel libraries)"
+    ),
 )
 
 if have_amdsmi:

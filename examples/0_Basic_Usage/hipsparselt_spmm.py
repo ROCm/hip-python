@@ -33,8 +33,26 @@ Single-GPU; no batching.
 """
 
 import ctypes
+import os
+
 import numpy as np
 from rocm.bindings import hip, hipsparse, hipsparselt
+
+# hipSPARSELt loads its Tensile GEMM library and SPMM kernels at runtime from
+# the locations named by these env vars; they are not bundled with the wheel.
+# Fail loudly here rather than letting the C library abort later with a cryptic
+# "Could not initialize Tensile" error.
+_required_env = ("ROCSPARSELT_TENSILE_LIBPATH", "ROCSPARSELT_SPMM_LIBPATH")
+_missing_env = [name for name in _required_env if not os.environ.get(name)]
+if _missing_env:
+    raise RuntimeError(
+        "hipSPARSELt needs its Tensile/SPMM kernel libraries, which are not "
+        "bundled with the wheel. Set the following environment variable(s) to "
+        "their install locations before running this example: "
+        + ", ".join(_missing_env)
+        + " (e.g. ROCSPARSELT_TENSILE_LIBPATH=/opt/rocm/lib/hipblaslt/library/gfx90a"
+        " and ROCSPARSELT_SPMM_LIBPATH pointing at libspmm_kernels_<arch>.so)."
+    )
 
 
 def hip_check(call_result):
