@@ -1422,9 +1422,54 @@ class hipsparselt:
     # Reuse the hipsparse heuristics — opaque-handle and pointer-rank
     # conventions are identical for the sparse extension family.
     macro_type = hipsparse.macro_type
-    ptr_parm_intent = hipsparse.ptr_parm_intent
-    ptr_rank = hipsparse.ptr_rank
     raw_comment_cleaner = hipsparse.raw_comment_cleaner
+
+    # Scalar OUT pointers (`T* out` — a single value the callee writes) that
+    # read most naturally as Python return values. hipSPARSELt documents these
+    # as `@param[out]`, but ROCm's split doxygen style (`@param[out]` on one
+    # line, ` *  version` on the next) defeats `documented_param_intent`'s tag
+    # regex, so `hipsparseLtGetVersion`/`hipsparseLtGetProperty` otherwise stay
+    # caller-allocated `int*` arguments. Pinning them to OUT_CALLEE_ALLOCATED +
+    # rank 0 makes the wrapper return the value, mirroring hipBLASLt's
+    # `_SCALAR_OUT_PARMS`. Maps (funcname, parm_name).
+    #
+    # Deliberately excluded (stays caller-allocated): `hipsparseLtGetGitRevision`'s
+    # `rev` — a caller-sized `char*` string buffer, not a scalar.
+    _SCALAR_OUT_PARMS = frozenset((
+        # (funcname, parm_name)
+        ("hipsparseLtGetVersion", "version"),
+        ("hipsparseLtGetProperty", "value"),
+    ))
+
+    @staticmethod
+    @fallback(*_NUMERICAL_INTENT_CHAIN)
+    def ptr_parm_intent(node: Parm):
+        """Intent classifier for hipSPARSELt.
+
+        The `_SCALAR_OUT_PARMS` override runs first (before the doxygen
+        rule) so the version/property getters become callee-allocated
+        returns even though their split-style `@param[out]` tags aren't
+        machine-parseable. The tail delegates to hipsparse's body.
+        """
+        parent = node.parent
+        if parent is not None and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS:
+            return ParmIntent.OUT_CALLEE_ALLOCATED
+        return hipsparse.ptr_parm_intent.__wrapped__(node)
+
+    @staticmethod
+    @fallback(*_NUMERICAL_RANK_CHAIN)
+    def ptr_rank(node: Node):
+        """Pointer-rank classifier for hipSPARSELt.
+
+        Forces rank 0 for the `_SCALAR_OUT_PARMS` scalars so they render
+        as single returned values rather than rank-1 `ListOf*` buffers.
+        Everything else delegates to hipsparse's rank body.
+        """
+        if isinstance(node, Parm):
+            parent = node.parent
+            if parent is not None and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS:
+                return 0
+        return hipsparse.ptr_rank.__wrapped__(node)
 
 
 # ROCTX
