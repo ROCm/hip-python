@@ -946,11 +946,37 @@ class hipsolver:
         return False
 
     @staticmethod
+    def _is_buffersize_lwork(node: Node):
+        """A workspace-size out-pointer of a ``*_bufferSize`` query.
+
+        hipSOLVER's ``*_bufferSize`` functions write the required workspace
+        byte count to a host ``int*`` / ``size_t*`` named ``lwork`` (the
+        64-bit ``hipsolverDnX*`` variants split it into the host size outputs
+        ``lworkOnDevice`` + ``lworkOnHost``). These read most naturally as
+        Python return values, like hipblaslt's ``_SCALAR_OUT_PARMS``.
+
+        The scope guard (function name ends with ``_bufferSize``) is what
+        keeps this off the by-value ``int lwork`` *input* of the compute
+        calls and off the genuine device workspace buffer ``workOnDevice``
+        (named ``work*``, not ``lwork*``, and never in a ``*_bufferSize``).
+        """
+        parent = getattr(node, "parent", None)
+        return (
+            isinstance(node, Parm)
+            and parent is not None
+            and parent.name.endswith("_bufferSize")
+            and node.name.startswith("lwork")
+        )
+
+    @staticmethod
     @fallback(*_NUMERICAL_INTENT_CHAIN)
     def ptr_parm_intent(node: Parm):
         """Flags pointer parameters that are actually return values
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
+        if hipsolver._is_buffersize_lwork(node):
+            # `*_bufferSize` workspace size — callee-writes a host scalar.
+            return ParmIntent.OUT_CALLEE_ALLOCATED
         if node.is_pointer_to_void(degree=2) and node.name == "handle":
             # hipsolverCreate-style handle creator — callee-allocated.
             return ParmIntent.OUT_CALLEE_ALLOCATED
@@ -963,6 +989,9 @@ class hipsolver:
         Most of the parameter names follow LAPACK convention. Reuses
         ``hipblas.ptr_rank`` (already wired through the numerical chain).
         """
+        if hipsolver._is_buffersize_lwork(node):
+            # single returned scalar, not a rank-1 `ListOf*` buffer.
+            return 0
         return hipblas.ptr_rank(node)
 
     @staticmethod
