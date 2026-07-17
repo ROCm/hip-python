@@ -351,6 +351,63 @@ thus can be directly passed to those interfaces.
    8. We compare the expected host result with the downloaded device result
       (lines 68-71) and print ``"ok"`` if all is fine.
 
+Linear Algebra with hipSOLVER
+-----------------------------
+
+.. admonition:: What will I learn?
+
+   * How I can create a :py:obj:`~.hipsolver` handle via
+     :py:obj:`~.hipsolverCreate`.
+   * How I can query the workspace size and compute an LU factorization on
+     the GPU via :py:obj:`~.hipsolverDgetrf_bufferSize` and
+     :py:obj:`~.hipsolverDgetrf`.
+
+:ref:`This example <hipsolver_getrf>` computes the LU factorization of a
+small dense matrix on the GPU using HIP Python's :py:obj:`~.hipsolver`
+module. Like LAPACK, hipSOLVER expects **column-major** matrices, so the
+input is a Fortran-ordered :py:obj:`numpy` array that we pass directly to
+:py:obj:`~.hipMemcpy`. The factorization computes :math:`PA = LU`; the
+example reconstructs :math:`LU` on the host with :py:obj:`numpy` and checks
+it against the row-pivoted input, printing ``"ok"`` on success.
+
+Note that :py:obj:`~.hipsolverDgetrf_bufferSize` returns the required
+workspace size (``lwork``, in bytes) *directly* as a second return value
+next to the status --- HIP Python models such callee-written scalar output
+pointers as return values rather than as caller-supplied buffers.
+
+.. literalinclude:: ../../examples/0_Basic_Usage/hipsolver_getrf.py
+   :language: python
+   :start-after: [literalinclude-begin]
+   :emphasize-lines: 26-33, 37-39, 42-44, 48-50, 53-57, 60-75, 80-91
+   :linenos:
+   :name: hipsolver_getrf
+   :caption: Linear Algebra with hipSOLVER
+
+.. admonition:: What is happening?
+
+   1. We build the input matrix ``A`` as a Fortran-ordered (column-major)
+      ``float64`` :py:obj:`numpy` array and keep a copy ``A_orig`` for the
+      later check (lines 26-33).
+   2. We allocate device memory for the factored matrix ``dA``, the pivot
+      indices ``dIpiv`` and the info flag ``dInfo`` (lines 37-39), then copy
+      the input matrix over --- passing the :py:obj:`numpy` array directly to
+      :py:obj:`~.hipMemcpy` (lines 42-44).
+   3. We create a :py:obj:`~.hipsolver` handle via
+      :py:obj:`~.hipsolverCreate` (line 48) and query the workspace size via
+      :py:obj:`~.hipsolverDgetrf_bufferSize` (line 49). The size ``lwork`` is
+      *returned* by the call, so we allocate the workspace ``dWork`` from it
+      (line 50).
+   4. In lines 53-57 we compute the LU factorization in place with
+      :py:obj:`~.hipsolverDgetrf`, passing the handle, the matrix, the
+      workspace and its size, and the pivot / info outputs.
+   5. We download the factored matrix, the pivots and the info flag back to
+      the host (lines 60-75).
+   6. We rebuild the unit-lower ``L`` and upper ``U`` factors, replay the
+      LAPACK 1-based row pivots on a copy of the original matrix to form
+      ``PA``, and print ``"ok"`` if :math:`PA = LU` holds (lines 80-91).
+   7. Finally we free the device buffers and destroy the handle via
+      :py:obj:`~.hipsolverDestroy`.
+
 .. _sec_example_hip_python_device_arrays:
 
 HIP Python Device Arrays

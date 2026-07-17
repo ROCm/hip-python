@@ -90,6 +90,7 @@ have_roctx = _have_runtime_library("roctx", "roctxMarkA")
 have_hipfile = _have_runtime_library("hipfile", "hipFileGetVersion")
 have_hipblaslt = _have_runtime_library("hipblaslt", "hipblasLtCreate")
 have_hipsparselt = _have_runtime_library("hipsparselt", "hipsparseLtInit")
+have_hipsolver = _have_runtime_library("hipsolver", "hipsolverCreate")
 
 _hipblaslt_skipif = pytest.mark.skipif(
     not have_hipblaslt,
@@ -110,6 +111,11 @@ _hipsparselt_skipif = pytest.mark.skipif(
         "AND ROCSPARSELT_TENSILE_LIBPATH + ROCSPARSELT_SPMM_LIBPATH set (the "
         "wheel does not bundle the Tensile/SPMM kernel libraries)"
     ),
+)
+
+_hipsolver_skipif = pytest.mark.skipif(
+    not have_hipsolver,
+    reason="requires the hipsolver bindings with a loadable libhipsolver.so",
 )
 
 if have_amdsmi:
@@ -139,6 +145,7 @@ python_examples += [
 python_examples += [
     pytest.param("0_Basic_Usage/hipblaslt_gemm.py", marks=_hipblaslt_skipif),
     pytest.param("0_Basic_Usage/hipsparselt_spmm.py", marks=_hipsparselt_skipif),
+    pytest.param("0_Basic_Usage/hipsolver_getrf.py", marks=_hipsolver_skipif),
 ]
 
 if device_printf_works:
