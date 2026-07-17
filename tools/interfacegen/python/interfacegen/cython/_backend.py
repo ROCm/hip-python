@@ -477,9 +477,14 @@ class CythonBackend:
                 result.append(textwrap.indent(contrib, curr_indent))
         return result
 
-    def create_c_interface_impl_part(self, dll: str, util_pkg: str):
+    def create_c_interface_impl_part(self, dll: str, util_pkg: str, module_name: str):
         result = []
         lib_handle = "_lib_handle"
+        # Module-unique name for the only pxd-exported helper. Prevents the
+        # `cimport *` leak/collision that made derived modules' `has_symbol`
+        # bind to a parent module's `__has_symbol` (see design note in
+        # `render_c_interface_decl_part`).
+        has_symbol = f"__{module_name}_has_symbol"
         # The DLL stem used to resolve the path lazily via
         # rocm.bindings.util.paths.get_library_path. Strip a trailing ".so"/.dll
         # so e.g. "libamdhip64.so" becomes "amdhip64".
@@ -522,7 +527,7 @@ class CythonBackend:
                     return loader.load_symbol(result,{lib_handle}, name)
                 return 0
 
-            cdef bint __has_symbol(const char* name) noexcept nogil:
+            cdef bint {has_symbol}(const char* name) noexcept nogil:
                 # Non-raising symbol-presence probe. Lazy-loads the DLL
                 # the same way __init_symbol does, then asks the loader
                 # whether the symbol exists. Returns False on any DLL
@@ -552,7 +557,9 @@ class CythonBackend:
                     result.append("\n" + contrib)
         return result
 
-    def render_c_interface_decl_part(self, runtime_linking: bool = False):
+    def render_c_interface_decl_part(
+        self, runtime_linking: bool = False, module_name: str = None
+    ):
         """Returns the Cython bindings file content for the given headers."""
         nl = "\n\n"
         parts = list(self.create_c_interface_decl_part(runtime_linking))
@@ -560,14 +567,26 @@ class CythonBackend:
         # python module's `has_symbol(name)` wrapper cimports. Only
         # emitted under runtime_linking — the matching impl in
         # `create_c_interface_impl_part` is gated the same way (the
-        # `__init`/`__init_symbol`/`__has_symbol` helpers all live in
-        # the runtime-linking prologue).
+        # `__init`/`__init_symbol`/`__<module>_has_symbol` helpers all
+        # live in the runtime-linking prologue). The helper is given a
+        # module-unique name so it can never leak/collide through
+        # `cimport *`.
         if runtime_linking:
-            parts.append("cdef bint __has_symbol(const char* name) noexcept nogil")
+            if module_name is None:
+                raise ValueError(
+                    "argument 'module_name' must not be 'None' if 'runtime_linking' is set to 'True'"
+                )
+            parts.append(
+                f"cdef bint __{module_name}_has_symbol(const char* name) noexcept nogil"
+            )
         return nl.join(parts)
 
     def render_c_interface_impl_part(
-        self, util_pkg: str, runtime_linking: bool = False, dll: str = None
+        self,
+        util_pkg: str,
+        runtime_linking: bool = False,
+        dll: str = None,
+        module_name: str = None,
     ):
         """Returns the Cython bindings file content for the given headers."""
         nl = "\n"
@@ -576,7 +595,13 @@ class CythonBackend:
                 raise ValueError(
                     "argument 'dll' must not be 'None' if 'runtime_linking' is set to 'True'"
                 )
-            return nl.join(self.create_c_interface_impl_part(dll, util_pkg))
+            if module_name is None:
+                raise ValueError(
+                    "argument 'module_name' must not be 'None' if 'runtime_linking' is set to 'True'"
+                )
+            return nl.join(
+                self.create_c_interface_impl_part(dll, util_pkg, module_name)
+            )
         else:
             return ""
 
@@ -625,7 +650,10 @@ class CythonBackend:
 {nl.join(result)}"""
 
     def render_python_interface_impl_part(
-        self, cython_c_bindings_module: str, runtime_linking: bool = False
+        self,
+        cython_c_bindings_module: str,
+        module_name: str = None,
+        runtime_linking: bool = False,
     ):
         """Returns the Python interface file content for the given headers."""
         contribs, docstring_attributes, all = (
@@ -633,12 +661,16 @@ class CythonBackend:
         )
         prefix_parts = []
         if runtime_linking:
+            if module_name is None:
+                raise ValueError(
+                    "argument 'module_name' must not be 'None' if 'runtime_linking' is set to 'True'"
+                )
             # Python-visible `has_symbol(name)` wrapper. Probes whether
             # the runtime-linked DLL exports the named symbol — useful
             # for feature detection against libraries that ship in two
             # flavours (e.g. a stripped system libLLVM.so vs a
             # static-archive aggregate). Delegates to the cy*-level
-            # `__has_symbol` cdef helper (declared in the matching
+            # `__<module>_has_symbol` cdef helper (declared in the matching
             # cy*.pxd; see `render_c_interface_decl_part`) which
             # handles lazy DLL initialisation and never raises.
             prefix_parts.append(textwrap.dedent(
@@ -665,7 +697,7 @@ class CythonBackend:
                         name_bytes = bytes(name)
                     else:
                         raise TypeError("name must be str, bytes, or bytearray")
-                    return {cython_c_bindings_module}.__has_symbol(<const char*>name_bytes)
+                    return {cython_c_bindings_module}.__{module_name}_has_symbol(<const char*>name_bytes)
                 """
             ))
             all = list(all) + ["has_symbol"]
@@ -795,51 +827,56 @@ class CythonModuleGenerator:
         Args:
             module_name (str): Name of the module that should be generated. Influences filesnames.
         """
+        module_name = self.module_name
         # C-level wrappers use the `cy` prefix (modern hip-python convention,
         # plan §B.5). Disambiguates Cython-level pxd/pyx files from anything
         # `c` might collide with.
-        cmodule_name = f"cy{self.module_name}"
+        cy_module_name = f"cy{module_name}"
 
         python_interface_decl_prolog = (
             self.python_interface_decl_prolog
             + f"\ncimport {self.util_pkg}.types"
-            + f"\ncimport {self.pkg_name}.{cmodule_name} as {cmodule_name}\n\n"
+            + f"\ncimport {self.pkg_name}.{cy_module_name} as {cy_module_name}\n\n"
         )
 
-        with open(f"{output_dir}/{cmodule_name}.pxd", "w") as outfile:
+        with open(f"{output_dir}/{cy_module_name}.pxd", "w") as outfile:
             outfile.write(self.c_interface_decl_prolog)
             outfile.write(
                 self.backend.render_c_interface_decl_part(
-                    runtime_linking=self.runtime_linking
+                    runtime_linking=self.runtime_linking,
+                    module_name=module_name,
                 )
             )
             outfile.write(self.c_interface_decl_epilog)
-        with open(f"{output_dir}/{cmodule_name}.pyx", "w") as outfile:
+        with open(f"{output_dir}/{cy_module_name}.pyx", "w") as outfile:
             outfile.write(self.c_interface_impl_prolog)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
                     util_pkg=self.util_pkg,
                     runtime_linking=self.runtime_linking,
                     dll=self.dll,
+                    module_name=module_name,
                 )
             )
             outfile.write(self.c_interface_impl_epilog)
-        with open(f"{output_dir}/{self.module_name}.pxd", "w") as outfile:
+        with open(f"{output_dir}/{module_name}.pxd", "w") as outfile:
             outfile.write(python_interface_decl_prolog)
             outfile.write(
-                self.backend.render_python_interface_decl_part(cmodule_name)
+                self.backend.render_python_interface_decl_part(cy_module_name)
             )
             outfile.write(self.python_interface_decl_epilog)
 
-        with open(f"{output_dir}/{self.module_name}.pyx", "w") as outfile:
+        with open(f"{output_dir}/{module_name}.pyx", "w") as outfile:
             (
                 content,
                 docstring_attributes,
             ) = self.backend.render_python_interface_impl_part(
-                cmodule_name, runtime_linking=self.runtime_linking
+                cy_module_name,
+                module_name=module_name,
+                runtime_linking=self.runtime_linking,
             )
             MODULE_DOCSTRING = (
-                self.backend.root.render_python_docstring(cmodule_name)
+                self.backend.root.render_python_docstring(cy_module_name)
                 .lstrip('r"')
                 .strip('"')
                 + "\n"
@@ -862,8 +899,8 @@ class CythonModuleGenerator:
         # The cy<name> C-level wrapper is cimport-only and deliberately
         # not stubbed (mapping void*/const char*/function-pointer typedefs
         # to fake Python type signatures would mislead).
-        with open(f"{output_dir}/{self.module_name}.pyi", "w") as outfile:
-            outfile.write(self._render_pyi_stub(f"{cmodule_name}."))
+        with open(f"{output_dir}/{module_name}.pyi", "w") as outfile:
+            outfile.write(self._render_pyi_stub(f"{cy_module_name}."))
 
     def _render_pyi_stub(self, cprefix: str) -> str:
         """Render a `.pyi` type-stub for the high-level Python module.

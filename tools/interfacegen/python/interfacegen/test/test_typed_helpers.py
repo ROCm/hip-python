@@ -97,12 +97,14 @@ def test_field_decl_re_renders_valid_c_declarator():
 
 # ---------------------------------------------------------------------------
 # has_symbol codegen helper emission (Issue 4b in the typed-waddling-meteor
-# plan). When `runtime_linking=True`, the generator must emit:
-#   - in cy<mod>.pxd: a public `cdef bint __has_symbol(const char* name) noexcept nogil`
+# plan). When `runtime_linking=True`, the generator must emit (with the
+# helper given a module-unique name `__<mod>_has_symbol` so it can never
+# leak/collide through `cimport *`):
+#   - in cy<mod>.pxd: a public `cdef bint __<mod>_has_symbol(const char* name) noexcept nogil`
 #                     declaration so the high-level python module can cimport it.
 #   - in cy<mod>.pyx: the matching impl alongside `__init` / `__init_symbol`.
 #   - in <mod>.pyx:   a python-visible `def has_symbol(name) -> bool:` wrapper
-#                     that delegates to `cy<mod>.__has_symbol`.
+#                     that delegates to `cy<mod>.__<mod>_has_symbol`.
 # When `runtime_linking=False`, none of those should appear.
 # ---------------------------------------------------------------------------
 
@@ -137,13 +139,13 @@ def test_has_symbol_emitted_under_runtime_linking(tmp_path):
     files = _write_module(gen, tmp_path)
 
     pxd = files["cyhsmod.pxd"]
-    assert "cdef bint __has_symbol(const char* name) noexcept nogil" in pxd, (
-        f"expected `__has_symbol` declaration in cy*.pxd; full pxd:\n{pxd}"
+    assert "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil" in pxd, (
+        f"expected `__hsmod_has_symbol` declaration in cy*.pxd; full pxd:\n{pxd}"
     )
 
     cy_pyx = files["cyhsmod.pyx"]
-    assert "cdef bint __has_symbol(const char* name) noexcept nogil:" in cy_pyx, (
-        f"expected `__has_symbol` impl in cy*.pyx; full pyx:\n{cy_pyx}"
+    assert "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil:" in cy_pyx, (
+        f"expected `__hsmod_has_symbol` impl in cy*.pyx; full pyx:\n{cy_pyx}"
     )
     # Sanity: the impl actually delegates to loader.has_symbol.
     assert "loader.has_symbol(" in cy_pyx, (
@@ -154,9 +156,9 @@ def test_has_symbol_emitted_under_runtime_linking(tmp_path):
     assert "def has_symbol(name) -> bool" in py_pyx, (
         f"expected python-visible `has_symbol` def; full pyx:\n{py_pyx}"
     )
-    # And the python wrapper must call into the cy* helper.
-    assert "cyhsmod.__has_symbol" in py_pyx, (
-        f"expected python wrapper to call cyhsmod.__has_symbol; full pyx:\n{py_pyx}"
+    # And the python wrapper must call into the module-tagged cy* helper.
+    assert "cyhsmod.__hsmod_has_symbol" in py_pyx, (
+        f"expected python wrapper to call cyhsmod.__hsmod_has_symbol; full pyx:\n{py_pyx}"
     )
     # And `has_symbol` must show up in __all__.
     assert '"has_symbol"' in py_pyx, (
