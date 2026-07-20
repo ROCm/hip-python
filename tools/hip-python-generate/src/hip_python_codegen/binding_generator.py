@@ -903,7 +903,8 @@ AVAILABLE_GENERATORS = {
     "roctx":     (generators_systems.generate_roctx,       "systems",   "roctracer/roctx.h"),
     "hipfile":   (generators_systems.generate_hipfile,     "systems",   "hipfile.h"),
     "amdsmi":    (generators_systems.generate_amdsmi,      "systems",   "amd_smi/amdsmi.h"),
-    "hsa":       (generators_systems.generate_hsa,         "systems",   "hsa/hsa_ext_amd.h"),
+    # "hsa" binding disabled — excluded from codegen/build/docs.
+    # "hsa":       (generators_systems.generate_hsa,         "systems",   "hsa/hsa_ext_amd.h"),
     # rocm-bindings-libraries
     "hipblas":     (generators_libraries.generate_hipblas,     "libraries", "hipblas/hipblas.h"),
     "hipblaslt":   (generators_libraries.generate_hipblaslt,   "libraries", "hipblaslt/hipblaslt.h"),

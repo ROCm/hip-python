@@ -48,7 +48,7 @@ _AUTOGEN_RST_HEADER = (
 # (`write_toc_yml_in`) silently mis-route the docs.
 _HIP_CORE = {"hip", "hiprtc", "_hip_helpers", "_hiprtc_helpers"}
 _COMPILER_CORE = {"amd_comgr"}
-_SYSTEMS_CORE = {"rccl", "roctx", "hipfile", "amdsmi", "hsa"}
+_SYSTEMS_CORE = {"rccl", "roctx", "hipfile", "amdsmi"}  # "hsa" disabled
 
 
 _AUTOGEN_TOC_HEADER = (
