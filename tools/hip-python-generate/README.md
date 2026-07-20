@@ -53,7 +53,7 @@ or `--rocm-llvm-project-dir` must be provided.
 | Wheel (use with `--include` / `--exclude`) | Libraries it covers |
 |---|---|
 | `hip` | `hip`, `hiprtc` |
-| `systems` | `rccl`, `roctx`, `hipfile`, `amdsmi`, `hsa`† |
+| `systems` | `rccl`, `roctx`, `hipfile`, `amdsmi` |
 | `libraries` | `hipblas`, `hipblaslt`*†, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`†, `hipsolver`, `hiptensor`*†, `hipdnn_backend`*† |
 | `compiler` | `amd_comgr`, `llvm` (multi-module — every llvm-c/* header is emitted) |
 
@@ -68,8 +68,8 @@ or `--rocm-llvm-project-dir` must be provided.
 > `cimport rocm.bindings.cyhipblaslt` will need to compile their
 > extension as C++ until the upstream header is fixed.
 >
-> **†experimental** — `hipblaslt`, `hipsparselt`, `hiptensor`,
-> `hipdnn_backend`, and `hsa` are newly added and marked experimental for
+> **†experimental** — `hipblaslt`, `hipsparselt`, `hiptensor`, and
+> `hipdnn_backend` are newly added and marked experimental for
 > one release cycle. Pointer parameter classification (OUT vs INOUT)
 > is heuristic and subject to re-tuning based on user feedback;
 > other interface aspects (return values, opaque handles, scalar
@@ -81,8 +81,8 @@ or `--rocm-llvm-project-dir` must be provided.
 > only `libhsakmt.a` (a static archive). hip-python's runtime model
 > resolves shared libraries via `dlopen`, which can't consume `.a`.
 > Track upstream `ROCm/ROCT-Thunk-Interface` for a shared-library
-> variant. The `hsa` binding is unaffected — `libhsa-runtime64.so.1`
-> is present.
+> variant. The `hsa` binding is currently disabled (its codegen
+> registration is commented out in `AVAILABLE_GENERATORS`).
 >
 > **\*hiptensor / hipdnn_backend**: only available via the `rocm-libraries`
 > source repository (no shipped header in `/opt/rocm/include` for

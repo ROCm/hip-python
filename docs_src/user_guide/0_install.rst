@@ -220,9 +220,8 @@ deployments) install only the binding wheels you actually need:
    * - ``rocm-bindings-systems``
      - You call the system-level libraries: ``rccl`` (collective
        communication), ``roctx`` (profiling/tracing),
-       :py:obj:`rocm.hipfile` (accelerated file I/O), ``amdsmi``
-       (system management), or ``hsa`` (HSA runtime + AMD
-       extensions).
+       :py:obj:`rocm.hipfile` (accelerated file I/O), or ``amdsmi``
+       (system management).
    * - ``rocm-bindings-compiler``
      - You call AMD COMGR (``amd_comgr`` or the higher-level
        :py:obj:`rocm.comgr`) or the LLVM-C bindings

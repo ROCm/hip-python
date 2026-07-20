@@ -59,7 +59,7 @@ they need.
 
    * - ``rocm-bindings-systems``
      - System-level libraries: ``rccl``, ``roctx``, ``hipfile``,
-       ``amdsmi``, ``hsa``. Includes the high-level
+       ``amdsmi``. Includes the high-level
        :py:obj:`rocm.hipfile` Pythonic wrapper. Optional bundling of
        ``libhipfile.so``.
 
@@ -175,8 +175,7 @@ What this does in practice:
   shared libraries it depends on.
 - Libraries that match the ``manylinux`` allowlist (the C runtime
   and a small standard set) are left alone.
-- Libraries outside the allowlist (``libamdhip64.so``,
-  ``libhsa-runtime64.so.1``, the optional bundled ROCm math
+- Libraries outside the allowlist (the optional bundled ROCm math
   libraries when present, …) are explicitly excluded — hip-python
   ``dlopen``-resolves these at runtime via the
   :py:obj:`rocm.bindings.util.loader` shim, so they MUST NOT be
