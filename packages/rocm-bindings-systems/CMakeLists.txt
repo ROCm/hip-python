@@ -30,11 +30,10 @@ option(HIP_PYTHON_RUNTIME_LINKING "Whether libraries should resolve ROCm librari
 # (hipfile), and system management interface (amdsmi). Math/FFT/random/
 # sparse libraries live in the sibling rocm-bindings-libraries wheel.
 #
-# NOTE: the hsa binding is produced by the codegen but has a known
-# typedef-vs-tag resolution issue in its cython output. It is omitted
-# here until the codegen is fixed; same situation as the experimental
-# library bindings — see the comment in
-# packages/rocm-bindings-libraries/CMakeLists.txt.
+# NOTE: the hsa binding is intentionally disabled. Its codegen
+# registration is commented out (see AVAILABLE_GENERATORS in
+# tools/hip-python-generate/.../binding_generator.py), so it is no
+# longer produced by the codegen and is excluded from this build too.
 set(HIP_PYTHON_ALL_SYSTEMS rccl roctx hipfile amdsmi)
 
 # hipfile is conditional on the package being available — detect upfront so
