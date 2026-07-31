@@ -229,6 +229,7 @@ python_examples += [
     pytest.param("2_Advanced/list_targets.py", marks=_llvm_skipif),
     pytest.param("2_Advanced/parse_llvm_bitcode.py", marks=_llvm_skipif),
     pytest.param("2_Advanced/execution_engine_sum.py", marks=_llvm_skipif),
+    pytest.param("2_Advanced/llvm_optimize_module.py", marks=_llvm_skipif),
     "2_Advanced/amd_comgr_parse_amd_hsa_kernel_descriptor.py",
     "2_Advanced/amd_comgr_disassemble_amdgpu_program.py",
     "2_Advanced/amd_comgr_disassemble_amdgpu_code_obj.py",
