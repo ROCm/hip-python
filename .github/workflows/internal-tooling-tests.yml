@@ -1,0 +1,83 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The code generator's own test suite. It parses synthetic headers with
+# libclang and asserts on the Cython it renders, so it needs neither a GPU nor
+# a ROCm installation -- which is why it belongs here rather than in
+# ci/internal/test.sh, where every suite waits for a device to be attached.
+# The plain `python` container below is what keeps that honest.
+#
+# Being in neither place is what let the suite go red on amd-integration and
+# stay there: the assertion the parent commit repairs was invalidated by the
+# commit that changed the behaviour, and nothing ran to say so.
+#
+# It still runs on our own hardware, though, because a GitHub-hosted runner
+# cannot clone this repository at all: the organization's IP allow list rejects
+# the runner's egress address, and checkout fails with a 403 before any test
+# gets to run.
+
+name: tooling tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      # `amd-develop` and `develop` do not exist yet. Naming them here means
+      # the suite starts running the day they are created, rather than the day
+      # someone notices it is not.
+      - amd-integration
+      - amd-develop
+      - main
+      - develop
+
+# No `paths` filter. The suite is seconds long, and a filtered job reports
+# "skipped" rather than "success", which never satisfies a required check.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  interfacegen:
+    name: interfacegen (python ${{ matrix.python-version }})
+    # Skipped rather than failed on a mirror of this repository, which is the
+    # same trade-off the `paths` note above describes: a skip never satisfies a
+    # required check, and a mirror does not need one.
+    if: github.repository_owner == 'AMD-AIOSS'
+    # No GPU label. The suite needs no device, and staying unlabelled means it
+    # is not queued behind a multi-hour build once a second runner exists.
+    runs-on: [self-hosted, linux]
+    # A hung job holds the runner, and there is currently only one process to
+    # hold. Seconds of work, so twenty minutes is already generous.
+    timeout-minutes: 20
+    # The interpreter comes from the image rather than from a tool cache on the
+    # runner, so nothing this job pip-installs outlives it.
+    container: python:${{ matrix.python-version }}-bookworm
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor is hip-python-codegen's requires-python; the ceiling is
+        # what contributors actually run. Both legs report, since a failure
+        # confined to one version is the interesting case.
+        python-version: ["3.10", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # interfacegen is deliberately absent from hip-python-codegen's
+      # dependencies -- a PEP 508 path dependency does not survive being
+      # published -- so both are named here.
+      - name: Install the codegen tooling
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest ./tools/interfacegen ./tools/hip-python-generate
+
+      # -rs prints the reason for every skip, which is the point of running
+      # here at all: whatever wants a real ROCm tree under /opt/rocm cannot run
+      # in this container, and a skip nobody reads is indistinguishable from a
+      # test that stopped running for a worse reason.
+      - name: Run the interfacegen suite
+        run: pytest -v -rs tools/interfacegen/python/interfacegen/test
