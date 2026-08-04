@@ -1,0 +1,370 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The device-attached half of CI, on demand. `/full test` on a pull request
+# regenerates the bindings, builds every wheel from the freshly generated
+# sources and runs the suites in ci/internal/test.sh against them, on our own
+# hardware.
+#
+# The container is a stock manylinux image, the same one the release wheels are
+# built in, and ci/internal/prepare-container.sh installs the requested ROCm
+# into it. That keeps what is tested here close to what is shipped, and lets a
+# comment name any ROCm the specifier grammar allows instead of only the
+# versions that have a prebuilt image.
+#
+# A comment command rather than a `pull_request` trigger because it occupies
+# the one machine with a GPU for hours, which is not something every push
+# should do. The corollary is that the pull request's own code is compiled and
+# executed on that machine, so the command is restricted to people who already
+# have write access, the job that runs it holds nothing but a read-only token,
+# and it holds no secrets at all.
+#
+# Note that GitHub runs the copy of this file on the default branch, never the
+# copy in the pull request being tested. Changes here take effect once merged,
+# and cannot be tried out from a pull request.
+
+name: full test
+
+on:
+  issue_comment:
+    types: [created]
+
+# A second /full test on the same pull request supersedes the first, rather
+# than queueing behind it on the single runner.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+# Nothing by default. Each job asks for what it needs, and the job that
+# executes pull-request code asks only to read it.
+permissions: {}
+
+jobs:
+  dispatch:
+    name: dispatch
+    # Authorization comes from the event payload, so an unauthorized comment
+    # never reaches a runner. `MEMBER` is any AMD-AIOSS member; narrow this to
+    # an explicit list of logins if that is ever too broad.
+    #
+    # Every comment in the repository starts a run of this workflow, and all but
+    # these end here, having allocated nothing.
+    if: >-
+      github.repository_owner == 'AMD-AIOSS'
+      && github.event.issue.pull_request
+      && startsWith(github.event.comment.body, '/full test')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+                  github.event.comment.author_association)
+    # Self-hosted because the organization's IP allow list rejects a hosted
+    # runner's egress address for the API just as it does for a clone, but
+    # unlabelled: this job only talks to the API.
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      contents: read # expand a short sha
+      pull-requests: read # resolve the head sha
+      issues: write # react to the triggering comment
+      statuses: write # report "pending" on the commit
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      python: ${{ steps.parse.outputs.python }}
+      sabi: ${{ steps.parse.outputs.sabi }}
+      rocm: ${{ steps.parse.outputs.rocm }}
+      sources: ${{ steps.parse.outputs.sources }}
+      gpu: ${{ steps.parse.outputs.gpu }}
+
+    steps:
+      # /full test [python=3.10..3.14] [sabi=no|3.11..3.14] [gpu=gfx<arch>]
+      #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
+      - name: Parse the command
+        id: parse
+        env:
+          # Through the environment, never interpolated into the script body: a
+          # comment is untrusted text and ${{ }} inside `run` is an injection.
+          BODY: ${{ github.event.comment.body }}
+        run: |
+          # -f because the loop below splits the comment into words, and a body
+          # containing `*` would otherwise be expanded against the filesystem.
+          set -euf
+
+          # First line only, so a reply that quotes someone else's command
+          # cannot smuggle options past the allowlist below.
+          line=${BODY%%$'\n'*}
+          line=${line%$'\r'}
+
+          # The manylinux image carries every interpreter, so the default is a
+          # choice rather than the one that costs no install.
+          python=3.12
+          sabi=no
+          rocm=therock:7.14.0
+          sources=
+          sha=
+          # Both the runner label and the ROCm distribution that gets installed,
+          # so the machine and the build cannot disagree about the architecture.
+          gpu=gfx90a
+
+          for tok in ${line#*/full test}; do
+            case "${tok}" in
+              python=3.1[0-4])
+                python=${tok#python=} ;;
+              sabi=no|sabi=3.1[1-4])
+                sabi=${tok#sabi=} ;;
+              *)
+                # Anchored regexes rather than case globs for these four: two
+                # end up in a git ref, one drives an install, one becomes a
+                # runner label.
+                #
+                # The rocm pattern is the ROCM_SPECIFIER grammar of
+                # ci/internal/librocm.sh, minus the two forms that need the
+                # Jenkins nodes. Repeated here because this job has no
+                # checkout to source the library from.
+                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
+                  rocm=${tok#rocm=}
+                # Only an architecture name, never an arbitrary label: this one
+                # decides which machine the job is handed to, and the artifact
+                # groups librocm.sh also accepts (gfx90X-dcgpu) are not labels.
+                elif [[ ${tok} =~ ^gpu=gfx[0-9]{2,4}[a-z]?$ ]]; then
+                  gpu=${tok#gpu=}
+                elif [[ ${tok} =~ ^sources=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  sources=${tok#sources=}
+                elif [[ ${tok} =~ ^sha=[0-9a-fA-F]{7,40}$ ]]; then
+                  sha=${tok#sha=}
+                else
+                  # Failing beats silently running the default configuration,
+                  # which is what a typo would otherwise do.
+                  echo "::error::unknown /full test option '${tok}'"
+                  exit 1
+                fi ;;
+            esac
+          done
+
+          # build-wheels.sh validates the shape of USE_SABI but not its
+          # relation to the active interpreter, so an impossible floor would
+          # otherwise fail deep inside the build instead of here.
+          if [[ ${sabi} != no ]] && (( ${sabi#3.} > ${python#3.} )); then
+            echo "::error::sabi=${sabi} exceeds python=${python}; the abi3 floor cannot be newer than the interpreter building the wheels"
+            exit 1
+          fi
+
+          # The allowlist above is also what keeps a crafted comment from
+          # injecting extra keys here: none of these can contain a newline.
+          {
+            echo "python=${python}"
+            echo "sabi=${sabi}"
+            echo "rocm=${rocm}"
+            echo "sources=${sources}"
+            echo "gpu=${gpu}"
+            echo "sha=${sha}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Resolve the commit and acknowledge the command
+        id: resolve
+        uses: actions/github-script@v9
+        env:
+          REQUESTED_SHA: ${{ steps.parse.outputs.sha }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const requested = process.env.REQUESTED_SHA;
+            let sha;
+            if (requested) {
+              // Expand it: a commit status names the full forty characters.
+              // Any commit in the repository is accepted, so a sha that is not
+              // part of this pull request will report where nobody looks --
+              // hence the reply comment from the report job.
+              sha = (await github.rest.repos.getCommit(
+                { owner, repo, ref: requested })).data.sha;
+            } else {
+              // Resolved now, so a push between the comment and the build is
+              // what gets built. `sha=` is how to pin it.
+              sha = (await github.rest.pulls.get(
+                { owner, repo, pull_number: context.issue.number })).data.head.sha;
+            }
+            core.setOutput('sha', sha);
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: 'eyes',
+            });
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: 'pending',
+              context: 'full test',
+              description: 'queued on the internal runner',
+              target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
+            });
+
+      # A parameterized run is not reproducible from the pull request unless the
+      # parameters are written down somewhere.
+      - name: Record the resolved parameters
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+          PY: ${{ steps.parse.outputs.python }}
+          SABI: ${{ steps.parse.outputs.sabi }}
+          ROCM: ${{ steps.parse.outputs.rocm }}
+          SOURCES: ${{ steps.parse.outputs.sources }}
+          GPU: ${{ steps.parse.outputs.gpu }}
+        run: |
+          {
+            echo "### full test"
+            echo
+            echo "- commit: \`${SHA}\`"
+            echo "- python: ${PY}"
+            echo "- sabi: ${SABI}"
+            echo "- gpu: ${GPU}"
+            echo "- rocm: \`${ROCM}\`"
+            echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+  build-and-test:
+    name: build and test (python ${{ needs.dispatch.outputs.python }}, rocm ${{ needs.dispatch.outputs.rocm }}, ${{ needs.dispatch.outputs.gpu }})
+    needs: dispatch
+    # runs-on is evaluated before a machine is allocated, so it can read a
+    # parsed comment but nothing produced by a step. Runners are labelled with
+    # the architecture they carry, which is why the same token below also picks
+    # the ROCm distribution: label and build cannot then disagree.
+    runs-on: [self-hosted, linux, "${{ needs.dispatch.outputs.gpu }}"]
+    timeout-minutes: 300
+    # The only job that touches pull-request code, and all it may do is read it.
+    permissions:
+      contents: read
+    container:
+      # The image the release wheels are built in. ROCm is not in it; the
+      # prepare step below installs the requested one.
+      image: quay.io/pypa/manylinux_2_28_x86_64
+      # The device mapping the Jenkins node uses for this machine. Its
+      # --network=host is absent because container.options does not accept it.
+      options: >-
+        --device=/dev/kfd --device=/dev/dri
+        --group-add video --group-add render
+        --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+    env:
+      # ci/internal/build-wheels.sh hardcodes project_dir=hip_python and
+      # resolves everything below ${SRC_DIR}/hip_python, which is why the
+      # checkout lands in a directory of that exact name.
+      SRC_DIR: ${{ github.workspace }}
+      BUILD_DIR: ${{ github.workspace }}/build
+      BUILD_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+      ROCM_PATH: /opt/rocm
+      # Read by prepare-container.sh and fetch-rocm-sources.sh. ROCM_VERSION is
+      # not set here on purpose: prepare-container.sh reads it back from the
+      # installation and exports it.
+      ROCM_SPECIFIER: ${{ needs.dispatch.outputs.rocm }}
+      ROCM_SOURCES_REF: ${{ needs.dispatch.outputs.sources }}
+      # The label of the machine this landed on, which is the architecture it
+      # carries. All it does here is select which ROCm distribution is
+      # downloaded (gfx90a -> the gfx90X-dcgpu tarball): no device code is
+      # compiled while building the wheels, and the suites ask the device for
+      # its arch at runtime.
+      AMDGPU_TARGETS: ${{ needs.dispatch.outputs.gpu }}
+      MANYLINUX_DEFAULT_PYTHON_VERSION: ${{ needs.dispatch.outputs.python }}
+      # Named explicitly because build-wheels.sh only auto-discovers the
+      # dash-spelled names, while fetch-rocm-sources.sh writes the
+      # underscore-spelled ones that generate-bindings.sh defaults to.
+      ROCM_SYSTEMS_DIR: ${{ github.workspace }}/rocm_systems
+      ROCM_LIBRARIES_DIR: ${{ github.workspace }}/rocm_libraries
+      ROCM_LLVM_PROJECT_DIR: ${{ github.workspace }}/rocm_llvm_project
+      # What makes this a codegen test: the bindings are regenerated at cmake
+      # configure time and the build compiles that fresh output rather than the
+      # tree committed to the repository.
+      SKIP_CODEGEN: "false"
+      USE_SABI: ${{ needs.dispatch.outputs.sabi }}
+      MAX_JOBS: "16"
+      HIP_VISIBLE_DEVICES: "0"
+
+    steps:
+      # First, because everything below runs the pull request's own copy of the
+      # ci/internal scripts. The manylinux image ships git, so there is nothing
+      # to install before this and no tarball fallback to worry about.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.dispatch.outputs.sha }}
+          path: hip_python
+
+      # These outlive a job on a self-hosted runner, and a stale wheel left in
+      # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
+      - name: Clean the scratch directories
+        run: |
+          set -eu
+          rm -rf "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+          mkdir -p "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+
+      # Selects the interpreter, installs ROCm, and exports ROCM_VERSION and
+      # the HIP environment for the steps below. A job container is destroyed
+      # when the job ends, so this runs from scratch every time.
+      - name: Install ROCm and select the interpreter
+        run: bash hip_python/ci/internal/prepare-container.sh
+
+      # The codegen reads headers from the component trees, not only from the
+      # installation, so a codegen test needs them.
+      - name: Fetch the ROCm component sources
+        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
+
+      # Cheap, and it turns a device-mapping mistake into an immediate answer
+      # rather than one that surfaces after an hour of compiling.
+      - name: Show the visible devices
+        run: rocm-smi
+
+      - name: Generate the bindings and build the wheels
+        run: bash hip_python/ci/internal/build-wheels.sh
+
+      - name: Run the suites against the built wheels
+        run: bash hip_python/ci/internal/test.sh
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: wheels-${{ needs.dispatch.outputs.sha }}
+          path: artifacts/*.whl
+          if-no-files-found: ignore
+
+  report:
+    name: report
+    # Runs whatever the build did, but not when the command itself was rejected:
+    # a parse error has no commit to report against.
+    if: always() && needs.dispatch.result == 'success'
+    needs: [dispatch, build-and-test]
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      # An issue_comment run attaches its checks to the default branch, so
+      # without this the pull request shows nothing at all.
+      - uses: actions/github-script@v9
+        env:
+          RESULT: ${{ needs.build-and-test.result }}
+          SHA: ${{ needs.dispatch.outputs.sha }}
+          PY: ${{ needs.dispatch.outputs.python }}
+          SABI: ${{ needs.dispatch.outputs.sabi }}
+          ROCM: ${{ needs.dispatch.outputs.rocm }}
+          SOURCES: ${{ needs.dispatch.outputs.sources }}
+          GPU: ${{ needs.dispatch.outputs.gpu }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const { RESULT, SHA, PY, SABI, ROCM, SOURCES, GPU } = process.env;
+            const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha: SHA,
+              state,
+              context: 'full test',
+              description: `build and test ${RESULT}`,
+              target_url: url,
+            });
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: context.issue.number,
+              body: [
+                `**full test ${RESULT}** — [run](${url})`,
+                '',
+                `commit \`${SHA}\`, python ${PY}, sabi ${SABI}, ${GPU}, ` +
+                  `rocm \`${ROCM}\`` +
+                  (SOURCES ? `, component sources \`${SOURCES}\`` : ''),
+              ].join('\n'),
+            });

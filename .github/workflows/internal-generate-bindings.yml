@@ -1,0 +1,240 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Release code generation: build the generated tree from the ROCm component
+# sources and force-push it as a single commit onto a release branch. The
+# GitHub Actions counterpart of the `rocm_python_codegen` node in
+# aiss-3p-dev-pipelines, and it drives the same two scripts, so the two stay
+# interchangeable.
+#
+# Nothing here touches a GPU -- the Jenkins node sets MAP_GPUS: false -- so no
+# architecture label is asked for, unlike internal-full-test.yml. What it does
+# need is disk and cores, for a ROCm install and three component trees; any
+# internal linux runner has both. AMDGPU_TARGETS below only picks which ROCm
+# distribution is downloaded.
+#
+# The container is a stock manylinux image; ci/internal/prepare-container.sh
+# installs the ROCm named by the specifier and ci/internal/fetch-rocm-sources.sh
+# fetches the component trees the generators read.
+#
+# Not related to pull requests, and deliberately manual: it force-pushes.
+
+name: generate bindings
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination:
+        description: Organization whose hip-python the generated commit is pushed to
+        type: choice
+        options:
+          - AMD-AIOSS
+          - ROCm
+        default: AMD-AIOSS
+      rocm_specifier:
+        description: "ROCm to generate against: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
+        type: string
+        required: true
+        default: therock:7.14.0
+      sources_ref:
+        description: One ref for rocm-systems, rocm-libraries and llvm-project. Empty derives it from the specifier
+        type: string
+        default: ""
+      base_branch:
+        description: Branch to generate from, and whose generator-owned files are restored first
+        type: string
+        default: amd-integration
+      target_branch:
+        description: Branch to force-push to. Empty means develop/rocm-rel-<the installed ROCm version>
+        type: string
+        default: ""
+      git_author:
+        description: Author and committer of the generated commit, "Name <email>"
+        type: string
+        default: Dominic Etienne Charrier <DominicEtienne.Charrier@amd.com>
+      publish:
+        description: Push the commit. Unset to generate and commit locally only
+        type: boolean
+        default: true
+
+# Two dispatches would fight over the same working copy on the one runner.
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.destination }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  generate:
+    name: generate for ROCm ${{ inputs.rocm_specifier }} -> ${{ inputs.destination }}
+    if: github.repository_owner == 'AMD-AIOSS'
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 120
+    # What makes one file safe for two destinations: define publish-AMD-AIOSS and
+    # publish-ROCm, each holding its own PUBLISH_SSH_KEY, and only one key is
+    # ever present in a run. Put a required reviewer on publish-ROCm.
+    environment: publish-${{ inputs.destination }}
+    # All the token does is read the base branch; the push uses the SSH key.
+    permissions:
+      contents: read
+    # ROCm is not in the image; the prepare step below installs the requested
+    # one, exactly as the build-and-test job of the full test workflow does.
+    container: quay.io/pypa/manylinux_2_28_x86_64
+    env:
+      # generate-bindings.sh resolves ${SRC_DIR}/hip_python and the three
+      # component trees as its siblings, and writes the generated tree to
+      # ${BUILD_DIR}/hip_python for commit-bindings.sh to stage.
+      SRC_DIR: ${{ github.workspace }}
+      BUILD_DIR: ${{ github.workspace }}/build
+      ROCM_PATH: /opt/rocm
+      # ROCM_VERSION is deliberately absent: prepare-container.sh reads it back
+      # from the installation, which is the only way a wildcard specifier
+      # resolves to something the generator can be told.
+      ROCM_SPECIFIER: ${{ inputs.rocm_specifier }}
+      ROCM_SOURCES_REF: ${{ inputs.sources_ref }}
+      # No GPU is used here; this only selects the TheRock artifact group.
+      AMDGPU_TARGETS: gfx90a
+      MANYLINUX_DEFAULT_PYTHON_VERSION: "3.12"
+      HIP_PYTHON_CODEGEN_BASE_BRANCH: ${{ inputs.base_branch }}
+      HIP_PYTHON_CODEGEN_GIT_AUTHOR: ${{ inputs.git_author }}
+      DESTINATION: ${{ inputs.destination }}
+
+    steps:
+      # fetch-depth 0 because generate-bindings.sh restores the generator-owned
+      # files from origin/<base_branch> before regenerating, so that the commit
+      # contains only what the generator produced. The manylinux image ships
+      # git, so there is no tarball fallback to guard against.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.base_branch }}
+          path: hip_python
+          fetch-depth: 0
+
+      # Also installs rocm-llvm-devel when the specifier is not a TheRock one:
+      # the generator needs a clang to ask for its resource dir, and only the
+      # TheRock distribution bundles it.
+      - name: Install ROCm and select the interpreter
+        run: bash hip_python/ci/internal/prepare-container.sh
+
+      - name: Resolve the target branch
+        id: target
+        env:
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: |
+          set -eu
+          # ROCM_VERSION comes from the step above, so the branch names the ROCm
+          # that was installed rather than the specifier that asked for it.
+          branch=${TARGET_BRANCH:-develop/rocm-rel-${ROCM_VERSION}}
+          echo "HIP_PYTHON_CODEGEN_BRANCH=${branch}" >>"${GITHUB_ENV}"
+          echo "version=${ROCM_VERSION}" >>"${GITHUB_OUTPUT}"
+          echo "publishing to ${DESTINATION}/hip-python ${branch}"
+
+      # Before spending half an hour generating. A dry run exercises
+      # authentication, write permission and any branch protection on the target
+      # without touching a ref, so a missing or wrong key fails here.
+      #
+      # The remote and the key are configured on the checkout rather than on the
+      # copy: generate-bindings.sh copies the tree wholesale, .git/config
+      # included, so commit-bindings.sh can push from the copy without any of
+      # this being repeated there.
+      - name: Preflight the destination
+        env:
+          PUBLISH_SSH_KEY: ${{ secrets.PUBLISH_SSH_KEY }}
+        run: |
+          set -eu
+          if [ -z "${PUBLISH_SSH_KEY}" ]; then
+            echo "::error::the publish-${DESTINATION} environment has no PUBLISH_SSH_KEY"
+            exit 1
+          fi
+          umask 077
+          key=${RUNNER_TEMP}/publish_key
+          hosts=${RUNNER_TEMP}/known_hosts
+          printf '%s\n' "${PUBLISH_SSH_KEY}" >"${key}"
+          ssh-keyscan -t ed25519 github.com >"${hosts}" 2>/dev/null
+
+          cd hip_python
+          # The commit-bindings.sh that runs is this checkout's, never the one
+          # next to this workflow on the default branch. A base_branch whose
+          # copy predates HIP_PYTHON_CODEGEN_REMOTE ignores the variable and
+          # pushes to origin, putting the generated bindings in this repository
+          # instead of the destination -- and the dry run below would still pass,
+          # because it names the remote explicitly. So the mismatch has to be
+          # caught by looking at the script.
+          if ! grep -q HIP_PYTHON_CODEGEN_REMOTE ci/internal/commit-bindings.sh; then
+            echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries a commit-bindings.sh that ignores HIP_PYTHON_CODEGEN_REMOTE; it would push to origin instead of ${DESTINATION}"
+            exit 1
+          fi
+
+          # Lower-cased, as the Jenkins publish stage does it.
+          git remote add dest "git@github.com:${DESTINATION,,}/hip-python.git"
+          # IdentitiesOnly so a key from an agent cannot be offered instead.
+          git config core.sshCommand \
+              "ssh -i ${key} -o IdentitiesOnly=yes -o UserKnownHostsFile=${hosts}"
+          git push --dry-run --force dest "HEAD:refs/heads/${HIP_PYTHON_CODEGEN_BRANCH}"
+
+      # After the preflight, so a credential problem does not cost the fetch,
+      # and before the generator, which reads these trees. The ref comes from
+      # the ROCm specifier unless sources_ref names one.
+      - name: Fetch the ROCm component sources
+        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
+
+      # Exits with the generator's status while still leaving the most complete
+      # partial tree it can, so one failed library fails the run and nothing is
+      # pushed -- which is what a release branch wants.
+      - name: Generate the bindings
+        run: bash hip_python/ci/internal/generate-bindings.sh
+
+      - name: Collect the generator logs and the change list
+        if: always()
+        run: |
+          set -eu
+          out=${GITHUB_WORKSPACE}/codegen-report
+          rm -rf "${out}"
+          mkdir -p "${out}"
+          # The generator puts per-library logs in a fresh mkdtemp directory.
+          cp -r /tmp/hip_python_codegen_*/. "${out}/" 2>/dev/null || true
+          if [ -d "${BUILD_DIR}/hip_python/.git" ]; then
+            git -C "${BUILD_DIR}/hip_python" status --porcelain >"${out}/status.txt"
+            git -C "${BUILD_DIR}/hip_python" diff --stat >"${out}/diffstat.txt"
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          # The resolved version, not the specifier: 'therock:7.14.0' contains a
+          # colon, which an artifact name may not.
+          name: codegen-report-${{ steps.target.outputs.version }}-${{ inputs.destination }}
+          path: codegen-report
+          if-no-files-found: ignore
+
+      - name: Commit and publish
+        env:
+          HIP_PYTHON_CODEGEN_PUSH: ${{ inputs.publish }}
+          HIP_PYTHON_CODEGEN_REMOTE: dest
+        run: bash "${BUILD_DIR}/hip_python/ci/internal/commit-bindings.sh"
+
+      - name: Summarize the commit
+        env:
+          PUBLISHED: ${{ inputs.publish }}
+        run: |
+          set -eu
+          {
+            echo "### generated for ROCm ${ROCM_VERSION}"
+            echo
+            echo "- specifier: \`${ROCM_SPECIFIER}\`"
+            echo "- destination: ${DESTINATION}/hip-python"
+            echo "- branch: ${HIP_PYTHON_CODEGEN_BRANCH}"
+            echo "- pushed: ${PUBLISHED}"
+            echo
+            echo '```'
+            git -C "${BUILD_DIR}/hip_python" show --stat --oneline HEAD | head -n 40
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+      # The key lives in RUNNER_TEMP rather than ~/.ssh because a container job's
+      # home directory is a mount that outlives the container on a self-hosted
+      # runner. Removed either way.
+      - name: Remove the key
+        if: always()
+        run: rm -f "${RUNNER_TEMP}/publish_key"
