@@ -1,149 +1,145 @@
 # Changelog
 
-## Unreleased
+Entries are grouped by audience. **Bindings** is what changes in the
+generated output, and so in what a user of the bindings sees; **Codegen**
+is the generator itself, its recipes and its tooling. The build, runtime
+and docs machinery that consumes these artifacts lives in **hip-python**
+— see that repository's `CHANGELOG.md`.
 
-### Per-header `nogil` for the LLVM recipe
+## 0.3
 
-`llvm_c` in `support/recipes/rocm.py` gained `nogil_headers`,
-`is_nogil_header()` and a `nogil_node_init(header_relpath)` factory.
-The factory marks a header's functions `nogil` in
-`modifiers_lazy_loader` — which is what selects the with-nogil emitter
-— and picks the exception sentinel from the return type: `except? NULL`
-for pointers, `except? -1` for integral and boolean returns, `except?
-<Enum>-1` for enums, and `noexcept` where nothing is left out of band
-(`void`, records by value, floats). Functions taking a callback are
-skipped.
+The first version under the real version scheme, so it carries
+everything that came before it: the entries previously filed under
+`*.*.*.57.*` are folded in here, that slot having been a commit count
+standing in until this scheme landed.
 
-The enum sentinel is a cast rather than a named constant because
-`llvm-c` defines none: of its 43 named enums, not one declares a
-negative enumerator, and the constants that read like an error marker
-(`LLVMDSError`, `LLVMModuleFlagBehaviorError`, `LLVMCodeGenLevelNone`)
-are values their getter returns in normal operation, so naming one
-would put a GIL-taking `PyErr_Occurred` check on the common path. An
-enum that does declare -1 falls back to `noexcept nogil` instead of
-mistaking a valid return for a failed symbol load.
+The minor bump is a signal to consumers: bindings generated before and
+after this version differ in the integer widths they pin and in which
+LLVM wrappers release the GIL, so the two are not interchangeable.
 
-### `nogil` retval holder keeps a pointee's `const`
+### Added
 
-The with-nogil emitter declared the retval holder with all `const`
-stripped, so a `const char *` return produced `cdef char * _cy_..
-._retval` and Cython warned that the assignment inside the block
-discards the qualifier — 14 warnings in the LLVM bindings once those
-modules started releasing the GIL. The qualifier is now kept for
-pointer returns, where it belongs to the pointee and leaves the local
-assignable; a `const` *value* return still drops it, since Cython
-rejects the assignment into a `cdef const T` local.
+#### Bindings
 
-### Retired commit-count versioning
+- **Bindings for hipBLASLt, hipSPARSELt, hipTensor, hipDNN backend and
+  amdsmi**, the last including the ESMI CPU-monitoring block's 75
+  functions. Each came with its own set of prefix and case overrides,
+  header-include workarounds (`hipfftXt.h` is deliberately excluded) and
+  pointer-intent overrides for caller-allocated buffers that doxygen
+  mistags as `INOUT`.
+- **A `.pyi` type stub and a Sphinx `.rst` wrapper per module**, beside
+  the `.pxd` and `.pyx`. The stub carries argument names and the `.pyx`
+  docstrings, so the API renders without the compiled wheel on
+  `sys.path`. Both are marked generator-owned in their module docstring
+  so nobody mistakes them for hand-edited files.
+- **A non-raising `has_symbol` probe** in the generated output, so a
+  caller can test for a missing entry point without exception flow.
 
-Removed the commit-count machinery from `support/gitversion.py`
-(`version()`, `git_branch_rev_count()`, `__MAIN_BRANCH__`, and the
-upstream/local-distance helpers), keeping only `git_rev()`,
-`git_current_branch()`, `git_describe()`, and `git_is_clean()`. The
-`support._base.versions()` helper no longer appends a commit count,
-and `support.cython.write_version_py_in()` no longer emits the
-count-composed `LONG_VERSION`/`_CODEGEN_VERSION`.
+#### Codegen
 
-## \*.\*.\*.57.\* (2026-05-26)
+- **Freestanding `stddef.h`, `stdint.h` and `stdbool.h`**, reached for
+  only when the caller names no `-resource-dir` — which every production
+  path does. `stddef.h` comes from the compiler rather than the C
+  library and the PyPI libclang wheel ships no resource directory to
+  hold it, so a parse that mentioned `size_t` had clang quietly recover
+  it to `int`. They are spelled through clang predefines, so the widths
+  follow the parse target rather than the generating host.
+- **Per-header `nogil` opt-in for the LLVM recipe**, through
+  `llvm_c.nogil_headers` — per header rather than per library, which is
+  new for the generator. The recipe picks each function's exception
+  sentinel from its return type, so a missing libLLVM still surfaces at
+  the first call without the caller holding the GIL to find out, and a
+  function taking a callback keeps the GIL whatever it returns. An
+  enum's sentinel is a cast rather than a named constant because
+  `llvm-c` declares no negative enumerator in any of its 43 named enums.
+- **A recipe can alias a module's width-carrying typedefs** to the
+  `stdint` names. Both per-module maps are validated when the backend is
+  built.
+- **One pip-installable recipe.** The per-library recipe forest
+  collapsed into a single tool that emits straight into
+  `packages/<wheel>/src/`. Cross-module imports, prefix-case handling
+  and per-library status nodes are generator-managed rather than
+  recipe-managed.
+- **A `generated_versions.cmake` per package**, carrying the upstream
+  commit hashes (rocm-libraries, rocm-systems, llvm-project) and the
+  codegen date that the consumer's docs landing page substitutes from.
+  Header workarounds are persisted to disk for reproducibility, and
+  `docs_src/sphinx/_toc.yml.in` is rendered with per-subtree module
+  lists.
 
-**Scope.** Summarizes everything on
-`dev/docharri/codegen-consolidation-interfacegen` not yet on
-`origin/amd-integration` (57 commits). The 4th version slot is
-the commit-count vs `amd-integration`; the other slots are
-placeholders until the broader version scheme lands.
+### Changed
 
-### Unified hip-python recipe
+#### Bindings
 
-The per-library recipe forest collapsed into a single
-pip-installable `recipes/hip-python/` tool. It emits directly
-into `packages/<wheel>/src/` to match the new src-layout in
-the consumer repo (see `hip-python/CHANGELOG.md`). Cross-module
-imports, prefix-case handling, and per-library status nodes
-are now generator-managed instead of recipe-managed.
+- **Fixed-width typedefs keep their name instead of canonicalising.**
+  Canonicalising `uint64_t` yields `unsigned long` on an LP64 host and
+  `unsigned long long` on Windows, so generated bindings baked in the
+  data model of whichever machine ran the generator. Each such typedef
+  now carries its signedness and width in `FIXED_WIDTH_INT_SPECS`: the
+  renderer takes the spelling and the pointer handler takes the width,
+  so a `.pxd` declaration and the `.pyx` body can no longer disagree
+  about the width of a variable the callee writes to. The autoconversion
+  table knows these typedefs are integers, so stubs annotate `int`
+  rather than falling through to an opaque type.
+- **The generated `cy*` call sites emit `with nogil:`**, so they can be
+  called in parallel.
+- **Docstrings are considerably better.** `\copydoc` resolves
+  transitively, so chains finally produce content; `@ingroup` supports
+  multiple ids under a group-priority hierarchy; doc comments hidden
+  behind `#if` guards and inside `@{` blocks are recovered; a brief is
+  inferred from the first sentence and then elided from the details body
+  rather than duplicated; leaked tags are cleaned up; and orphaned items
+  fall back to their group. A C signature renders as a `.. rubric::`
+  with a `code-block:: c` instead of a plain backticked line, and C
+  `const` is stripped from `:py:obj:` type references.
 
-### New library bindings emitted
+#### Codegen
 
-The generator now produces wheels for **hipblaslt**,
-**hipsparselt**, **hiptensor**, **hipdnn_backend**, **hsa**, and
-**amdsmi** (including the ESMI CPU-monitoring block — 75
-functions). Each binding came with its own pile of fixes:
-prefix/case overrides, header-include workarounds (e.g.
-`hsa_ext_finalize.h` folded via an `-include` cflag,
-`hipfftXt.h` deliberately excluded), and hardcoded
-INOUT-mistag overrides for caller-allocated buffers (`rccl`,
-`hsa`, `hiptensor`, plus pointer-intent fixes for HIP and
-amdsmi doxygen mistags). The amdsmi recipe enables the ESMI
-block. The hipdnn_backend recipe was repaired to use the install-dir
-layout and map `constexpr`.
+- **A fatal clang diagnostic raises.** The danger in a failed include is
+  not the missing header; it is that clang recovers, hands back a
+  different type, and nothing has failed.
+- **The generator runs on Windows.**
+- **The 3859-line Cython monolith is a seven-file package**, and the
+  codebase was renamed `hip` → `rocm` end to end to match the target
+  namespace. Type rendering goes through a single `TypeHandler`, and the
+  `.pyi` renderer was refactored onto the node hierarchy.
+- **libclang 17+ AST shapes and pyparsing 3.0+ are tolerated**, both
+  previously pinned to older versions, and the Cython floor moved to
+  `>=3.1.0` for a 3.0.x `*const *` codegen bug. Upstream-bug notes were
+  recorded for the hipBLASLt and hipSPARSELt C-includability issues and
+  the HIP and amdsmi doxygen pointer-intent mistags; the workarounds
+  live in the per-library recipes. A source tree whose commit hash
+  cannot be recorded now produces a warning.
 
-### Cython generator features
+### Removed
 
-Per-module output expanded from `.pxd`+`.pyx` to also include a
-`.pyi` type-stub (with arg names and pyx docstrings, so
-sphinx-autoapi can render the API without the compiled wheel)
-and a Sphinx `.rst` wrapper. Generated `cy*` call sites now
-emit `with nogil:`. Other additions: transitive Record admit,
-structured `CallArgHoist`, transitive `AnonymousFunctionPointer`
-ctypedef emission, foreign-record pointer parameters routed
-through `Pointer`, C signature rendered as `.. rubric::` +
-`code-block:: c` instead of a plain backticked line, C `const`
-stripped from `:py:obj:` type references, `has_symbol` probe
-codegen, and a Cython-3.0.x `*const *` codegen workaround.
+#### Codegen
 
-### Doxygen / docstring quality
+- **Commit-count versioning.** `support/gitversion.py` keeps only
+  `git_rev()`, `git_current_branch()`, `git_describe()` and
+  `git_is_clean()`, and the count-composed `LONG_VERSION` and
+  `_CODEGEN_VERSION` are no longer emitted.
 
-Docstring rendering received a series of correctness passes:
-transitive `\copydoc` resolution at the cleaned-comment
-chokepoint (so chains of `\copydoc` finally produce content),
-group-priority hierarchy with multi-id `@ingroup` support,
-pattern-C recovery of doc comments hidden behind `#if` guards,
-per-file token walk that handles pattern A/B docs inside `@{`
-blocks, brief inference from the first sentence, leaked-tag
-cleanup, elision of the promoted brief from the details body
-to avoid duplication, and a group-fallback path for orphaned
-items.
+### Fixed
 
-### Generator refactor
+#### Bindings
 
-The 3859-line Cython monolith was split into a 7-file package
-(pure refactor — no behaviour change in that commit). The
-codebase was renamed `hip` → `rocm` end-to-end to match the
-target namespace. The `.pyi` renderer was refactored onto the
-node hierarchy. Type rendering was routed through a single
-`TypeHandler`, fixing inconsistent handling of typedef-of-typedef
-chains, `EXTVECTOR` / `UNEXPOSED` / unknown `TypeKind` ids, and
-header-tuple extraction edge cases.
+- **Every Python-derived call argument is bound to a local** before the
+  C call, in both emitters. The with-GIL emitter inlined the adapter
+  into the call expression on the theory that holding the GIL kept the
+  temporary alive; it does not, so a malloc'd array was freed before the
+  call ran and the callee read reclaimed memory.
+- **Type rendering agrees with itself** across typedef-of-typedef
+  chains, `EXTVECTOR`, `UNEXPOSED` and unknown `TypeKind` ids, and
+  header-tuple extraction edge cases. Foreign-record pointer parameters
+  route through `Pointer`, records admit transitively, and anonymous
+  function-pointer ctypedefs are emitted transitively.
 
-### Upstream compatibility
+#### Codegen
 
-The generator now tolerates libclang 17+ AST shapes and
-pyparsing 3.0+ APIs (previously pinned to older versions). The
-Cython floor moved to `>=3.1.0` for the 3.0.x `*const *` codegen
-bug (see `share/design/BUILDING.md` under "Cython version
-requirement"). Upstream-bug notes were recorded for hipblaslt +
-hipsparselt C-includability issues, HIP / amdsmi doxygen
-pointer-intent mistags, and the in-depth hipblaslt follow-up —
-the workarounds live in the per-library recipes.
-Always-consulted source trees
-(rocm-systems, llvm-project) now produce a generator warning
-when their commit hash can't be recorded.
-
-### Codegen artifact pipeline
-
-The generator now writes a `generated_versions.cmake` per
-package, capturing upstream commit hashes (rocm-libraries,
-rocm-systems, llvm-project) and the codegen date — this is
-what the consumer repo's docs landing page substitutes from.
-Header workarounds are persisted to disk for reproducibility.
-`docs_src/sphinx/_toc.yml.in.in` is rendered to
-`_toc.yml.in` with per-subtree module lists. `.pyi`/`.rst`
-files are registered as generator-owned in the module
-docstring so editors and reviewers don't mistake them for
-hand-edited.
-
----
-
-**Cross-reference.** The wheel build, runtime, and docs
-machinery that consumes the artifacts emitted by this
-generator lives in **hip-python** — see that repo's
-`CHANGELOG.md` for the build / runtime / docs changes.
+- **A `const` pointee survives on the `nogil` retval holder.** The
+  emitter stripped every `const`, so a `const char *` return produced an
+  assignment Cython warned discarded the qualifier — 14 warnings in the
+  LLVM bindings once those modules started releasing the GIL. A `const`
+  *value* return still drops it, since Cython rejects the assignment
+  into a `cdef const T` local.

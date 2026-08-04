@@ -246,9 +246,18 @@ Three changelogs, by what you touched:
 | [packages/numba-hip/CHANGELOG.md](packages/numba-hip/CHANGELOG.md) | `numba-hip`, which carries its own version |
 | [tools/interfacegen/CHANGELOG.md](tools/interfacegen/CHANGELOG.md) | The generator itself |
 
-Root-changelog entries go under `## Unreleased` as a `###` section with a
-descriptive title and a short prose paragraph explaining what changed and
-why — see the existing entries for the expected level of detail.
+Entries go under the topmost version heading (for example `## 0.1.0`),
+which is the version in progress until a date is added to it at release.
+Inside it, pick an `### Added`, `### Changed`, `### Removed` or
+`### Fixed` group, then `#### Bindings`, `#### Codegen` or
+`#### Building` — what someone importing `rocm.*` or `cuda.*` sees, the
+generator and the artifacts it emits, and the build, the packaging and
+the docs pipeline. The generator's own log has no `Building` group. Write
+each entry as one bullet opening with the change in bold: what a reader
+can now do, what behaves differently, and any step they have to take. A
+signature change is worth marking as one. Why the code had to change
+belongs in the commit message, and how it works belongs in the design
+docs — not here.
 Commits follow the conventional-commit style already in use:
 `type(scope): summary`, for example `fix(numba-hip): run LLVM passes in a
 child that needs no fork`.
