@@ -62,8 +62,12 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read # expand a short sha
-      pull-requests: read # resolve the head sha
-      issues: write # react to the triggering comment
+      # The eyes reaction goes on a comment that belongs to a pull request, and
+      # GitHub resolves the issues endpoints against the resource's own kind: a
+      # token with issues=write but pull-requests=read gets a 403 there. Write
+      # here also covers reading the head sha.
+      pull-requests: write # react to the triggering comment, resolve the head sha
+      issues: write # the same reaction, were the command ever run on an issue
       statuses: write # report "pending" on the commit
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
