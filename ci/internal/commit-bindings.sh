@@ -21,6 +21,11 @@ set -xeu
 #   HIP_PYTHON_CODEGEN_PUSH      "true" to push the commit. default false
 #   HIP_PYTHON_CODEGEN_BRANCH    target branch for the push (required when
 #                                HIP_PYTHON_CODEGEN_PUSH=true)
+#   HIP_PYTHON_CODEGEN_REMOTE    remote to push to. default origin. Set this
+#                                when the destination is not the repository the
+#                                working copy was cloned from — publishing the
+#                                same generated tree to another organization,
+#                                say — and add the remote before calling this.
 
 build_dir=${BUILD_DIR}/hip_python
 
@@ -47,6 +52,7 @@ cd ${build_dir}
       -m "[chore] generate bindings for ROCm ${ROCM_VERSION}"
 
   if [[ "${HIP_PYTHON_CODEGEN_PUSH:-false}" == "true" ]]; then
-    git fetch origin
-    git push -u origin HEAD:${HIP_PYTHON_CODEGEN_BRANCH} -f
+    remote=${HIP_PYTHON_CODEGEN_REMOTE:-origin}
+    git fetch ${remote}
+    git push -u ${remote} HEAD:${HIP_PYTHON_CODEGEN_BRANCH} -f
   fi
