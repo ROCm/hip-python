@@ -217,6 +217,14 @@ if [[ -n "${abi3_floor}" ]]; then
   cmake_args+=(-DHIP_PYTHON_ABI3_FLOOR=${abi3_floor})
 fi
 
+# Outside the codegen block below because rocm-bindings-compiler stages the
+# rocm.bindings.clang shim out of this checkout whether or not codegen runs;
+# only a tree that already carries the shim (a generated branch) can do without
+# it.
+if [[ -n "${rocm_llvm_project_dir}" ]]; then
+  cmake_args+=(-DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=${rocm_llvm_project_dir})
+fi
+
 # Add compiler launcher if sccache is enabled
 if [[ "${SCCACHE_ENABLE:-false}" == "true" ]]; then
   cmake_args+=(
@@ -236,9 +244,15 @@ if [[ "${run_codegen}" == "true" ]]; then
     -DHIP_PYTHON_ROCM_PATH=${rocm_path}
     -DHIP_PYTHON_ROCM_VERSION=${rocm_version}
   )
-  [[ -n "${rocm_systems_dir}"      ]] && cmake_args+=(-DHIP_PYTHON_ROCM_SYSTEMS_DIR=${rocm_systems_dir})
-  [[ -n "${rocm_libraries_dir}"    ]] && cmake_args+=(-DHIP_PYTHON_ROCM_LIBRARIES_DIR=${rocm_libraries_dir})
-  [[ -n "${rocm_llvm_project_dir}" ]] && cmake_args+=(-DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=${rocm_llvm_project_dir})
+  # Spelled as if-blocks rather than `[[ ... ]] && ...` because an unset path
+  # would make the last such line the failing final command of this block, and
+  # `set -e` would end the run there.
+  if [[ -n "${rocm_systems_dir}" ]]; then
+    cmake_args+=(-DHIP_PYTHON_ROCM_SYSTEMS_DIR=${rocm_systems_dir})
+  fi
+  if [[ -n "${rocm_libraries_dir}" ]]; then
+    cmake_args+=(-DHIP_PYTHON_ROCM_LIBRARIES_DIR=${rocm_libraries_dir})
+  fi
 fi
 
 cmake "${cmake_args[@]}"

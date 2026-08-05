@@ -52,6 +52,7 @@ install.components = ["rocm-bindings-compiler"]
 sdist.include = [
     "VERSION",
     "cmake/HipPythonBuild.cmake",
+    "cmake/libclang_resolver_fallback.py.in",
     "src/rocm/bindings/llvm/**/*.pxd",
     "src/rocm/bindings/llvm/**/*.pyx",
     "src/rocm/bindings/llvm/**/*.pyi",

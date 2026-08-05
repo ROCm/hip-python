@@ -136,29 +136,14 @@ cd ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/
   #     overrides already yield an absolute path and pass straight through, so
   #     their priority is preserved. Appending (rather than editing the
   #     get_filename body) keeps this robust to upstream LLVM changes.
+  #
+  #     The text lives in a file rather than a heredoc because the wheel build
+  #     appends the same fragment when it stages the shim itself (see
+  #     packages/rocm-bindings-compiler/CMakeLists.txt); one copy cannot drift
+  #     from the other.
   echo "append libclang resolver fallback to rocm.bindings.clang.cindex"
-  cat >> ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py <<'PYEOF'
-
-# === hip-python: libclang resolution fallback (appended at codegen time) ===
-def _hip_python_get_filename(self, _orig=Config.get_filename):
-    import os as _os
-
-    result = _orig(self)
-    if _os.path.isabs(result):
-        return result
-    try:
-        from rocm.bindings.util.paths import get_library_path
-
-        resolved = get_library_path("clang").decode("utf-8")
-        if _os.path.isabs(resolved) and _os.path.exists(resolved):
-            return resolved
-    except Exception:
-        pass
-    return result
-
-
-Config.get_filename = _hip_python_get_filename
-PYEOF
+  cat ${build_dir}/packages/rocm-bindings-compiler/cmake/libclang_resolver_fallback.py.in \
+    >> ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/cindex.py
 
   # 2) copy LLVM LICENSE.TXT next to the clang bindings.
   echo "copy LLVM LICENSE.TXT into rocm.bindings.clang package"

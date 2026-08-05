@@ -312,16 +312,78 @@ if(_compiler_pyi_top)
   )
 endif()
 
-# Install handcoded Python modules. The llvm subpackages are PEP 420 namespace
-# packages (markers installed by the recursive llvm rule above), so no
-# __init__.py is shipped for them; only the handcoded clang shim modules.
-install(
-  FILES
-    src/rocm/bindings/clang/__init__.py
-    src/rocm/bindings/clang/cindex.py
-  DESTINATION rocm/bindings/clang
-  COMPONENT rocm-bindings-compiler
-)
+# The `rocm.bindings.clang` shim is upstream LLVM's clang Python bindings with
+# two edits: the `clang.enumerations` import is repointed into this package, and
+# a libclang resolver fallback is appended to `cindex.py`.
+#
+# ci/internal/generate-bindings.sh writes them into the tree it commits, so a
+# generated branch carries them; a build that generates its own bindings finds
+# nothing but the directory's .gitkeep. Stage them here from the same
+# llvm-project checkout the codegen reads, so both routes ship the same shim.
+#
+# The llvm subpackages are PEP 420 namespace packages (markers installed by the
+# recursive llvm rule above), so no __init__.py is shipped for them.
+set(_hp_clang_upstream
+    "${HIP_PYTHON_ROCM_LLVM_PROJECT_DIR}/clang/bindings/python/clang")
+set(_hp_clang_staged "${CMAKE_CURRENT_BINARY_DIR}/clang_shim")
+set(_hp_clang_intree "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/clang")
+
+if(HIP_PYTHON_ROCM_LLVM_PROJECT_DIR AND EXISTS "${_hp_clang_upstream}")
+  message(STATUS "Staging the rocm.bindings.clang shim from ${_hp_clang_upstream}")
+
+  # Restaged from scratch on every configure: the resolver below is appended,
+  # so a surviving copy would carry it twice.
+  file(REMOVE_RECURSE "${_hp_clang_staged}")
+  file(MAKE_DIRECTORY "${_hp_clang_staged}")
+
+  # Whatever the checkout carries rather than a fixed list: enumerations.py,
+  # for one, exists only up to ROCm 6.x.
+  file(GLOB _hp_clang_files "${_hp_clang_upstream}/*")
+  file(COPY ${_hp_clang_files} DESTINATION "${_hp_clang_staged}")
+  if(EXISTS "${HIP_PYTHON_ROCM_LLVM_PROJECT_DIR}/LICENSE.TXT")
+    file(COPY "${HIP_PYTHON_ROCM_LLVM_PROJECT_DIR}/LICENSE.TXT"
+         DESTINATION "${_hp_clang_staged}")
+  endif()
+
+  if(NOT EXISTS "${_hp_clang_staged}/cindex.py")
+    message(FATAL_ERROR
+      "${_hp_clang_upstream} carries no cindex.py; rocm.bindings.clang cannot "
+      "be assembled from this llvm-project checkout.")
+  endif()
+
+  # enumerations moves with the module, and Config.get_filename has to resolve
+  # libclang out of a pip-only ROCm install; see the fragment for why it is
+  # appended rather than edited in place.
+  file(READ "${_hp_clang_staged}/cindex.py" _hp_cindex)
+  string(REPLACE "clang.enumerations" "rocm.bindings.clang.enumerations"
+         _hp_cindex "${_hp_cindex}")
+  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cmake/libclang_resolver_fallback.py.in"
+       _hp_clang_resolver)
+  file(WRITE "${_hp_clang_staged}/cindex.py" "${_hp_cindex}${_hp_clang_resolver}")
+
+  install(
+    DIRECTORY "${_hp_clang_staged}/"
+    DESTINATION rocm/bindings/clang
+    COMPONENT rocm-bindings-compiler
+  )
+elseif(EXISTS "${_hp_clang_intree}/cindex.py")
+  # A generated branch. Its cindex.py already carries both edits, so it is
+  # installed as it stands.
+  message(STATUS "Installing the in-tree rocm.bindings.clang shim")
+  install(
+    DIRECTORY "${_hp_clang_intree}/"
+    DESTINATION rocm/bindings/clang
+    COMPONENT rocm-bindings-compiler
+    FILES_MATCHING
+      PATTERN "*.py"
+      PATTERN "LICENSE.TXT"
+  )
+else()
+  message(FATAL_ERROR
+    "rocm.bindings.clang has no source: ${_hp_clang_intree} holds no cindex.py "
+    "and HIP_PYTHON_ROCM_LLVM_PROJECT_DIR names no llvm-project checkout to "
+    "stage it from. Pass -DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=<llvm-project>.")
+endif()
 
 # Install high-level comgr package
 install(
