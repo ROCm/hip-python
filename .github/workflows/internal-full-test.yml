@@ -2,16 +2,15 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# The device-attached half of CI, on demand. `/full test` on a pull request
-# regenerates the bindings, builds every wheel from the freshly generated
-# sources and runs the suites in ci/internal/test.sh against them, on our own
-# hardware.
+# The device-attached half of CI, on demand: the comment path into a full test.
+# `/full test` on a pull request regenerates the bindings, builds every wheel
+# from the freshly generated sources and runs the suites in ci/internal/test.sh
+# against them, on our own hardware.
 #
-# The container is a stock manylinux image, the same one the release wheels are
-# built in, and ci/internal/prepare-container.sh installs the requested ROCm
-# into it. That keeps what is tested here close to what is shipped, and lets a
-# comment name any ROCm the specifier grammar allows instead of only the
-# versions that have a prebuilt image.
+# This file turns a comment into the seven values that describe a run, and
+# reports the outcome back to the pull request. The run itself lives in
+# internal-full-test-run.yml, which internal-full-test-manual.yml calls with
+# the same seven values from the Actions tab.
 #
 # A comment command rather than a `pull_request` trigger because it occupies
 # the one machine with a GPU for hours, which is not something every push
@@ -231,141 +230,23 @@ jobs:
             echo "- missing headers: ${MISSING}"
           } >>"${GITHUB_STEP_SUMMARY}"
 
+  # The parsed comment, handed to the shared run. `sha` rather than the pull
+  # request's branch, so a push between the comment and the build cannot change
+  # what is tested, and no secrets are passed: the job that compiles this code
+  # gets the read-only token below and nothing else.
   build-and-test:
-    name: build and test (python ${{ needs.dispatch.outputs.python }}, rocm ${{ needs.dispatch.outputs.rocm }}, ${{ needs.dispatch.outputs.gpu }})
     needs: dispatch
-    # runs-on is evaluated before a machine is allocated, so it can read a
-    # parsed comment but nothing produced by a step. Runners are labelled with
-    # the architecture they carry, which is why the same token below also picks
-    # the ROCm distribution: label and build cannot then disagree.
-    runs-on: [self-hosted, linux, "${{ needs.dispatch.outputs.gpu }}"]
-    timeout-minutes: 300
-    # The only job that touches pull-request code, and all it may do is read it.
     permissions:
       contents: read
-    container:
-      # The image the release wheels are built in. ROCm is not in it; the
-      # prepare step below installs the requested one.
-      image: quay.io/pypa/manylinux_2_28_x86_64
-      # The device mapping the Jenkins node uses for this machine. Its
-      # --network=host is absent because container.options does not accept it.
-      options: >-
-        --device=/dev/kfd --device=/dev/dri
-        --group-add video --group-add render
-        --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
-    env:
-      # ci/internal/build-wheels.sh hardcodes project_dir=hip_python and
-      # resolves everything below ${SRC_DIR}/hip_python, which is why the
-      # checkout lands in a directory of that exact name.
-      SRC_DIR: ${{ github.workspace }}
-      BUILD_DIR: ${{ github.workspace }}/build
-      BUILD_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
-      ROCM_PATH: /opt/rocm
-      # Read by prepare-container.sh and fetch-rocm-sources.sh. ROCM_VERSION is
-      # not set here on purpose: prepare-container.sh reads it back from the
-      # installation and exports it.
-      ROCM_SPECIFIER: ${{ needs.dispatch.outputs.rocm }}
-      ROCM_SOURCES_REF: ${{ needs.dispatch.outputs.sources }}
-      # The label of the machine this landed on, which is the architecture it
-      # carries. All it does here is select which ROCm distribution is
-      # downloaded (gfx90a -> the gfx90X-dcgpu tarball): no device code is
-      # compiled while building the wheels, and the suites ask the device for
-      # its arch at runtime.
-      AMDGPU_TARGETS: ${{ needs.dispatch.outputs.gpu }}
-      MANYLINUX_DEFAULT_PYTHON_VERSION: ${{ needs.dispatch.outputs.python }}
-      # Named explicitly because build-wheels.sh only auto-discovers the
-      # dash-spelled names, while fetch-rocm-sources.sh writes the
-      # underscore-spelled ones that generate-bindings.sh defaults to.
-      ROCM_SYSTEMS_DIR: ${{ github.workspace }}/rocm_systems
-      ROCM_LIBRARIES_DIR: ${{ github.workspace }}/rocm_libraries
-      ROCM_LLVM_PROJECT_DIR: ${{ github.workspace }}/rocm_llvm_project
-      # What makes this a codegen test: the bindings are regenerated at cmake
-      # configure time and the build compiles that fresh output rather than the
-      # tree committed to the repository.
-      SKIP_CODEGEN: "false"
-      # `missing=skip` forgives a library whose header the requested ROCm never
-      # shipped, both in the codegen and in the module set the wheels build.
-      HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ needs.dispatch.outputs.missing == 'skip' }}
-      USE_SABI: ${{ needs.dispatch.outputs.sabi }}
-      MAX_JOBS: "16"
-      HIP_VISIBLE_DEVICES: "0"
-
-    steps:
-      # First, because everything below runs the pull request's own copy of the
-      # ci/internal scripts. The manylinux image ships git, so there is nothing
-      # to install before this and no tarball fallback to worry about.
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.dispatch.outputs.sha }}
-          path: hip_python
-
-      # The scripts that run are the pull request's, so a branch that predates
-      # the variable would ignore `missing=skip` and fail on the very header the
-      # request was meant to excuse -- half an hour in, and looking like a real
-      # failure. Cheaper to say so now.
-      - name: Check that this commit understands the requested tolerance
-        if: needs.dispatch.outputs.missing == 'skip'
-        run: |
-          set -eu
-          if ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS hip_python/ci/internal/build-wheels.sh; then
-            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; missing=skip has no effect until that change is on the branch"
-            exit 1
-          fi
-
-      # These outlive a job on a self-hosted runner, and a stale wheel left in
-      # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
-      - name: Clean the scratch directories
-        run: |
-          set -eu
-          rm -rf "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
-          mkdir -p "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
-
-      # Selects the interpreter, installs ROCm, and exports ROCM_VERSION and
-      # the HIP environment for the steps below. A job container is destroyed
-      # when the job ends, so this runs from scratch every time.
-      - name: Install ROCm and select the interpreter
-        run: bash hip_python/ci/internal/prepare-container.sh
-
-      # The codegen reads headers from the component trees, not only from the
-      # installation, so a codegen test needs them.
-      - name: Fetch the ROCm component sources
-        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
-
-      # Cheap, and it turns a device-mapping mistake into an immediate answer
-      # rather than one that surfaces after an hour of compiling.
-      - name: Show the visible devices
-        run: rocm-smi
-
-      - name: Generate the bindings and build the wheels
-        run: bash hip_python/ci/internal/build-wheels.sh
-
-      # Only written when the codegen actually forgave a missing header, so the
-      # summary states plainly that these wheels cover fewer libraries than a
-      # default run would -- otherwise a green run reads as a full one.
-      - name: Report the skipped libraries
-        if: always() && needs.dispatch.outputs.missing == 'skip'
-        run: |
-          set -eu
-          skipped=$(cat /tmp/hip_python_codegen_*/skipped.txt 2>/dev/null || true)
-          if [ -n "${skipped}" ]; then
-            {
-              echo "### libraries skipped (no header in this ROCm)"
-              echo
-              while IFS= read -r line; do
-                echo "- \`${line%%:*}\`"
-              done <<<"${skipped}"
-            } >>"${GITHUB_STEP_SUMMARY}"
-          fi
-
-      - name: Run the suites against the built wheels
-        run: bash hip_python/ci/internal/test.sh
-
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: wheels-${{ needs.dispatch.outputs.sha }}
-          path: artifacts/*.whl
-          if-no-files-found: ignore
+    uses: ./.github/workflows/internal-full-test-run.yml
+    with:
+      ref: ${{ needs.dispatch.outputs.sha }}
+      python: ${{ needs.dispatch.outputs.python }}
+      sabi: ${{ needs.dispatch.outputs.sabi }}
+      rocm: ${{ needs.dispatch.outputs.rocm }}
+      sources: ${{ needs.dispatch.outputs.sources }}
+      gpu: ${{ needs.dispatch.outputs.gpu }}
+      missing: ${{ needs.dispatch.outputs.missing }}
 
   report:
     name: report

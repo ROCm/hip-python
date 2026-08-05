@@ -1,0 +1,159 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# A full test started from the Actions tab, against any ref. The same run as a
+# `/full test` comment produces -- both callers hand the same seven values to
+# internal-full-test-run.yml -- so this file is only the parameter form and the
+# commit status.
+#
+# When to reach for this rather than the comment: to test a branch that has no
+# pull request, to re-run a configuration against an older release branch, or
+# to test a pull request head while keeping the noise out of its conversation.
+#
+# The `ref` input is what gets built, and it is not the same thing as the
+# branch chosen in the UI's "Use workflow from" selector. That selector decides
+# only which copy of these workflow files runs, and GitHub offers it here at
+# all only because this workflow lives on the default branch. Leaving the
+# selector on the default branch while pointing `ref` at a release branch is
+# the normal case: the newest reporting with any code under test.
+#
+# No author gate, unlike the comment path: dispatching a workflow already
+# requires write access, so the authorization the comment path has to check for
+# itself is GitHub's own here.
+
+name: full test (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: What to build and test. A branch, tag, sha, or refs/pull/<n>/head
+        type: string
+        required: true
+        default: amd-integration
+      python:
+        description: Interpreter that builds the wheels
+        type: choice
+        options: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        default: "3.12"
+      # Quoted, all of them: unquoted `no` is a YAML boolean, and this value has
+      # to reach build-wheels.sh as the string USE_SABI=no.
+      sabi:
+        description: abi3 floor. Must not be newer than the interpreter
+        type: choice
+        options: ["no", "3.11", "3.12", "3.13", "3.14"]
+        default: "no"
+      # A dropdown rather than the comment grammar's free-form gfx<arch>,
+      # because this value becomes a runner label: an architecture nobody has
+      # would leave the job queued until the timeout instead of failing. One
+      # option today, since the fleet is one MI210 machine; add a label here
+      # when a runner carrying another architecture joins it.
+      gpu:
+        description: Architecture. Both the runner label and the ROCm distribution
+        type: choice
+        options: [gfx90a]
+        default: gfx90a
+      rocm:
+        description: "ROCm to install: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
+        type: string
+        default: therock:7.14.0
+      sources:
+        description: One ref for rocm-systems, rocm-libraries and llvm-project. Empty derives it from the specifier
+        type: string
+        default: ""
+      missing:
+        description: A library whose header this ROCm never shipped. Skip it, or fail
+        type: choice
+        options: [fail, skip]
+        default: fail
+
+# Per ref, as the comment path is per pull request: a second run against the
+# same ref supersedes the first rather than queueing behind it on the single
+# runner. A run against a different ref is a different thing and waits its turn.
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    if: github.repository_owner == 'AMD-AIOSS'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/internal-full-test-run.yml
+    with:
+      ref: ${{ inputs.ref }}
+      python: ${{ inputs.python }}
+      sabi: ${{ inputs.sabi }}
+      rocm: ${{ inputs.rocm }}
+      sources: ${{ inputs.sources }}
+      gpu: ${{ inputs.gpu }}
+      missing: ${{ inputs.missing }}
+
+  report:
+    name: report
+    if: always() && github.repository_owner == 'AMD-AIOSS'
+    needs: build-and-test
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+      contents: read # resolve the ref when the build did not get that far
+
+    steps:
+      # The same `full test` status context the comment path writes, on purpose:
+      # a manual run against a pull request head then updates the very check a
+      # reviewer is already looking at. There is no comment to leave -- a
+      # dispatch has no pull request in context -- so the status and the step
+      # summary are the whole report.
+      - uses: actions/github-script@v9
+        env:
+          RESULT: ${{ needs.build-and-test.result }}
+          SHA: ${{ needs.build-and-test.outputs.sha }}
+          REF: ${{ inputs.ref }}
+          PY: ${{ inputs.python }}
+          SABI: ${{ inputs.sabi }}
+          ROCM: ${{ inputs.rocm }}
+          SOURCES: ${{ inputs.sources }}
+          GPU: ${{ inputs.gpu }}
+          MISSING: ${{ inputs.missing }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const { RESULT, REF, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
+            const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+
+            // The run reports what it checked out, which is the commit a status
+            // has to name. It is empty only when the build failed before the
+            // checkout, and a validation failure is still worth a status, so
+            // resolve the ref here in that case.
+            const sha = process.env.SHA
+              || (await github.rest.repos.getCommit({ owner, repo, ref: REF })).data.sha;
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state,
+              context: 'full test',
+              description: `build and test ${RESULT}`,
+              target_url: url,
+            });
+
+            // A dispatched run is not reproducible from anywhere else: the
+            // parameters exist only in the form that was submitted.
+            await core.summary
+              .addHeading('full test (manual)', 3)
+              .addList([
+                `result: ${RESULT}`,
+                `ref: ${REF}`,
+                `commit: ${sha}`,
+                `python: ${PY}`,
+                `sabi: ${SABI}`,
+                `gpu: ${GPU}`,
+                `rocm: ${ROCM}`,
+                `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
+                `missing headers: ${MISSING}`,
+              ])
+              .write();

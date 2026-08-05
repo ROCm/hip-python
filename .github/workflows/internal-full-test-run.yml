@@ -1,0 +1,247 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The work of a full test, with no trigger of its own: regenerate the bindings,
+# build every wheel from the freshly generated sources and run the suites in
+# ci/internal/test.sh against them, on our own hardware.
+#
+# Called, never dispatched. `workflow_call` does not put a workflow in the
+# Actions tab, so the two ways to start one of these are
+# internal-full-test.yml (a `/full test` comment on a pull request) and
+# internal-full-test-manual.yml (the Actions tab). Everything either of them
+# decides arrives here as an input, which is what lets one job serve both.
+#
+# The container is a stock manylinux image, the same one the release wheels are
+# built in, and ci/internal/prepare-container.sh installs the requested ROCm
+# into it. That keeps what is tested here close to what is shipped, and lets a
+# caller name any ROCm the specifier grammar allows instead of only the
+# versions that have a prebuilt image.
+#
+# This job compiles and executes the code at `ref` on a machine with a GPU, so
+# it takes no secrets and asks for nothing but a read-only token. Both callers
+# grant it `contents: read` and nothing else; a called workflow cannot widen
+# what it was granted.
+
+name: full test (run)
+
+on:
+  workflow_call:
+    inputs:
+      # A branch, tag or sha. The comment path always passes a full sha, the
+      # manual path passes whatever it was given, so the commit that was
+      # actually built is read back after the checkout rather than assumed.
+      ref:
+        description: What to build and test
+        type: string
+        required: true
+      python:
+        description: Interpreter, 3.10 to 3.14
+        type: string
+        required: true
+      sabi:
+        description: abi3 floor, "no" or 3.11 to 3.14
+        type: string
+        required: true
+      rocm:
+        description: ROCM_SPECIFIER for ci/internal/librocm.sh
+        type: string
+        required: true
+      sources:
+        description: One ref for the three component trees. Empty derives it from the specifier
+        type: string
+        required: true
+      gpu:
+        description: Architecture, which is both the runner label and the ROCm distribution
+        type: string
+        required: true
+      missing:
+        description: '"fail" or "skip" for a library whose header this ROCm never shipped'
+        type: string
+        required: true
+    outputs:
+      sha:
+        # `ref` may be a branch, while a commit status and the artifact name
+        # both need the forty characters. Reported even when the build fails,
+        # so a caller can still say what it was that failed.
+        description: The commit that was checked out
+        value: ${{ jobs.build-and-test.outputs.sha }}
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    name: build and test (python ${{ inputs.python }}, rocm ${{ inputs.rocm }}, ${{ inputs.gpu }})
+    # runs-on is evaluated before a machine is allocated, so it can read an
+    # input but nothing produced by a step. Runners are labelled with the
+    # architecture they carry, which is why the same token below also picks the
+    # ROCm distribution: label and build cannot then disagree.
+    runs-on: [self-hosted, linux, "${{ inputs.gpu }}"]
+    timeout-minutes: 300
+    # The only job that touches the code under test, and all it may do is read
+    # it.
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    container:
+      # The image the release wheels are built in. ROCm is not in it; the
+      # prepare step below installs the requested one.
+      image: quay.io/pypa/manylinux_2_28_x86_64
+      # The device mapping the Jenkins node uses for this machine. Its
+      # --network=host is absent because container.options does not accept it.
+      options: >-
+        --device=/dev/kfd --device=/dev/dri
+        --group-add video --group-add render
+        --ipc=host --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
+    env:
+      # ci/internal/build-wheels.sh hardcodes project_dir=hip_python and
+      # resolves everything below ${SRC_DIR}/hip_python, which is why the
+      # checkout lands in a directory of that exact name.
+      SRC_DIR: ${{ github.workspace }}
+      BUILD_DIR: ${{ github.workspace }}/build
+      BUILD_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+      ROCM_PATH: /opt/rocm
+      # Read by prepare-container.sh and fetch-rocm-sources.sh. ROCM_VERSION is
+      # not set here on purpose: prepare-container.sh reads it back from the
+      # installation and exports it.
+      ROCM_SPECIFIER: ${{ inputs.rocm }}
+      ROCM_SOURCES_REF: ${{ inputs.sources }}
+      # The label of the machine this landed on, which is the architecture it
+      # carries. All it does here is select which ROCm distribution is
+      # downloaded (gfx90a -> the gfx90X-dcgpu tarball): no device code is
+      # compiled while building the wheels, and the suites ask the device for
+      # its arch at runtime.
+      AMDGPU_TARGETS: ${{ inputs.gpu }}
+      MANYLINUX_DEFAULT_PYTHON_VERSION: ${{ inputs.python }}
+      # Named explicitly because build-wheels.sh only auto-discovers the
+      # dash-spelled names, while fetch-rocm-sources.sh writes the
+      # underscore-spelled ones that generate-bindings.sh defaults to.
+      ROCM_SYSTEMS_DIR: ${{ github.workspace }}/rocm_systems
+      ROCM_LIBRARIES_DIR: ${{ github.workspace }}/rocm_libraries
+      ROCM_LLVM_PROJECT_DIR: ${{ github.workspace }}/rocm_llvm_project
+      # What makes this a codegen test: the bindings are regenerated at cmake
+      # configure time and the build compiles that fresh output rather than the
+      # tree committed to the repository.
+      SKIP_CODEGEN: "false"
+      # `missing=skip` forgives a library whose header the requested ROCm never
+      # shipped, both in the codegen and in the module set the wheels build.
+      HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ inputs.missing == 'skip' }}
+      USE_SABI: ${{ inputs.sabi }}
+      MAX_JOBS: "16"
+      HIP_VISIBLE_DEVICES: "0"
+
+    steps:
+      # The comment grammar checks this while parsing, so this is here for the
+      # manual caller, whose dropdowns constrain each value on its own but
+      # cannot express the relation between two of them. build-wheels.sh
+      # validates the shape of USE_SABI but not its relation to the active
+      # interpreter, so an impossible floor would otherwise fail deep inside
+      # the build instead of before the machine is even claimed.
+      #
+      # The ROCm specifier is deliberately not re-validated: the comment path's
+      # regex is an allowlist for untrusted comment text, not a correctness
+      # check, and ci/internal/librocm.sh rejects a bad specifier a minute into
+      # a run anyway.
+      - name: Validate the abi3 floor against the interpreter
+        env:
+          PY: ${{ inputs.python }}
+          SABI: ${{ inputs.sabi }}
+        run: |
+          set -eu
+          # Shapes first, so the numeric comparison below cannot be handed
+          # something that is not a version.
+          case "${PY}" in
+            3.1[0-4]) ;;
+            *) echo "::error::python=${PY} is not one of 3.10 3.11 3.12 3.13 3.14"; exit 1 ;;
+          esac
+          case "${SABI}" in
+            no|3.1[1-4]) ;;
+            *) echo "::error::sabi=${SABI} is not 'no' or one of 3.11 3.12 3.13 3.14"; exit 1 ;;
+          esac
+          if [ "${SABI}" != no ] && [ "${SABI#3.}" -gt "${PY#3.}" ]; then
+            echo "::error::sabi=${SABI} exceeds python=${PY}; the abi3 floor cannot be newer than the interpreter building the wheels"
+            exit 1
+          fi
+
+      # First, because everything below runs the checked-out copy of the
+      # ci/internal scripts. The manylinux image ships git, so there is nothing
+      # to install before this and no tarball fallback to worry about.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          path: hip_python
+
+      # What `ref` resolved to. A branch name moves, and both the artifact name
+      # and the commit status a caller writes have to name a commit.
+      - name: Record the commit under test
+        id: commit
+        run: echo "sha=$(git -C hip_python rev-parse HEAD)" >>"${GITHUB_OUTPUT}"
+
+      # The scripts that run are the ones at `ref`, so a commit that predates
+      # the variable would ignore `missing=skip` and fail on the very header the
+      # request was meant to excuse -- half an hour in, and looking like a real
+      # failure. Cheaper to say so now.
+      - name: Check that this commit understands the requested tolerance
+        if: inputs.missing == 'skip'
+        run: |
+          set -eu
+          if ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS hip_python/ci/internal/build-wheels.sh; then
+            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; missing=skip has no effect until that change is on the branch"
+            exit 1
+          fi
+
+      # These outlive a job on a self-hosted runner, and a stale wheel left in
+      # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
+      - name: Clean the scratch directories
+        run: |
+          set -eu
+          rm -rf "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+          mkdir -p "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+
+      # Selects the interpreter, installs ROCm, and exports ROCM_VERSION and
+      # the HIP environment for the steps below. A job container is destroyed
+      # when the job ends, so this runs from scratch every time.
+      - name: Install ROCm and select the interpreter
+        run: bash hip_python/ci/internal/prepare-container.sh
+
+      # The codegen reads headers from the component trees, not only from the
+      # installation, so a codegen test needs them.
+      - name: Fetch the ROCm component sources
+        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
+
+      # Cheap, and it turns a device-mapping mistake into an immediate answer
+      # rather than one that surfaces after an hour of compiling.
+      - name: Show the visible devices
+        run: rocm-smi
+
+      - name: Generate the bindings and build the wheels
+        run: bash hip_python/ci/internal/build-wheels.sh
+
+      # Only written when the codegen actually forgave a missing header, so the
+      # summary states plainly that these wheels cover fewer libraries than a
+      # default run would -- otherwise a green run reads as a full one.
+      - name: Report the skipped libraries
+        if: always() && inputs.missing == 'skip'
+        run: |
+          set -eu
+          skipped=$(cat /tmp/hip_python_codegen_*/skipped.txt 2>/dev/null || true)
+          if [ -n "${skipped}" ]; then
+            {
+              echo "### libraries skipped (no header in this ROCm)"
+              echo
+              while IFS= read -r line; do
+                echo "- \`${line%%:*}\`"
+              done <<<"${skipped}"
+            } >>"${GITHUB_STEP_SUMMARY}"
+          fi
+
+      - name: Run the suites against the built wheels
+        run: bash hip_python/ci/internal/test.sh
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: wheels-${{ steps.commit.outputs.sha }}
+          path: artifacts/*.whl
+          if-no-files-found: ignore
