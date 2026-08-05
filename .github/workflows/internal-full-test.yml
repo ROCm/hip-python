@@ -29,11 +29,14 @@ on:
   issue_comment:
     types: [created]
 
-# A second /full test on the same pull request supersedes the first, rather
-# than queueing behind it on the single runner.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.issue.number }}
-  cancel-in-progress: true
+# No concurrency group. The single GPU machine already serializes the runs --
+# a second one waits for a free runner rather than running beside the first --
+# so all a group would add is cancellation, and with several configurations to
+# get through, one command killing the run before it is the wrong trade.
+# `cancel-in-progress: false` would not do either: a group holds one pending
+# slot, so a third command would still cancel the second. Nothing is cancelled
+# now except by hand from the Actions tab, and the cost is that a run made
+# pointless by a later push stays queued until someone does that.
 
 # Nothing by default. Each job asks for what it needs, and the job that
 # executes pull-request code asks only to read it.
