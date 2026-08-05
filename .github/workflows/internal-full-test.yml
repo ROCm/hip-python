@@ -292,8 +292,13 @@ jobs:
 
     steps:
       # An issue_comment run attaches its checks to the default branch, so
-      # without this the pull request shows nothing at all.
-      - uses: actions/github-script@v9
+      # without this the pull request shows nothing at all. Two reports, which
+      # answer different questions: the check says what was run against this
+      # commit, the table says what each configuration last did and which commit
+      # that was, so a row still pointing at an older commit is the visible
+      # reminder that the head has not been through it.
+      - name: Report the result on the commit and in the table
+        uses: actions/github-script@v9
         env:
           RESULT: ${{ needs.build-and-test.result }}
           SHA: ${{ needs.dispatch.outputs.sha }}
@@ -303,15 +308,21 @@ jobs:
           PY: ${{ needs.dispatch.outputs.python }}
           SABI: ${{ needs.dispatch.outputs.sabi }}
           ROCM: ${{ needs.dispatch.outputs.rocm }}
+          # What the installation reported, as against the ROCM specifier that
+          # asked for it. Empty when the run failed before installing anything.
+          INSTALLED: ${{ needs.build-and-test.outputs.rocm_version }}
           SOURCES: ${{ needs.dispatch.outputs.sources }}
           GPU: ${{ needs.dispatch.outputs.gpu }}
           MISSING: ${{ needs.dispatch.outputs.missing }}
         with:
           script: |
             const { owner, repo } = context.repo;
-            const { RESULT, SHA, STATUS, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
+            const {
+              RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED, SOURCES, GPU, MISSING,
+            } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
-            const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const server = `${context.serverUrl}/${owner}/${repo}`;
+            const url = `${server}/actions/runs/${context.runId}`;
 
             await github.rest.repos.createCommitStatus({
               owner, repo, sha: SHA,
@@ -321,14 +332,123 @@ jobs:
               target_url: url,
             });
 
-            await github.rest.issues.createComment({
-              owner, repo, issue_number: context.issue.number,
-              body: [
-                `**full test ${RESULT}** — [run](${url})`,
-                '',
-                `commit \`${SHA}\`, python ${PY}, sabi ${SABI}, ${GPU}, ` +
-                  `rocm \`${ROCM}\`` +
-                  (SOURCES ? `, component sources \`${SOURCES}\`` : '') +
-                  (MISSING === 'skip' ? ', missing headers skipped' : ''),
-              ].join('\n'),
-            });
+            // One comment per pull request, rewritten in place, rather than one
+            // per run -- which had a pull request collect a comment for every
+            // configuration anybody tried. The rendered table is for reading;
+            // the rows are read back out of the payload under it, so nothing
+            // has to parse markdown. Editing sends no notification, so a
+            // failure now reaches you through its red check rather than the
+            // inbox.
+            const MARKER = '<!-- full-test-overview -->';
+            const OPEN = '<!-- full-test-rows';
+            const CLOSE = '-->';
+            // Only to keep a pathological pull request under the 65 kB comment
+            // limit: the real bound is how many configurations anyone runs.
+            const LIMIT = 25;
+
+            // A row is a configuration, not a run. The commit and the version
+            // that was installed are results, so running a configuration again
+            // replaces its row wherever the pull request has moved to since --
+            // the table states what each configuration last did, and a
+            // superseded result survives in the check on the commit it ran
+            // against and in its own Actions run.
+            const key = (r) =>
+              [r.python, r.sabi, r.rocm, r.sources, r.gpu, r.missing].join('|');
+            const row = {
+              result: RESULT, sha: SHA, python: PY, sabi: SABI, rocm: ROCM,
+              installed: INSTALLED || '', gpu: GPU, sources: SOURCES || '',
+              missing: MISSING, run: String(context.runId),
+              at: new Date().toISOString(),
+            };
+
+            const rowsOf = (body) => {
+              const start = (body || '').indexOf(OPEN);
+              if (start < 0) return [];
+              const end = body.indexOf(CLOSE, start + OPEN.length);
+              if (end < 0) return [];
+              try {
+                const rows = JSON.parse(body.slice(start + OPEN.length, end));
+                // A hand-edited or truncated payload costs the history, not the
+                // run: reporting must not be what fails a build.
+                return Array.isArray(rows) ? rows.filter((r) => r && r.python) : [];
+              } catch {
+                return [];
+              }
+            };
+
+            const render = (rows) => [
+              MARKER,
+              '### full test',
+              '',
+              'One row per configuration, carrying its latest run. A commit that is not',
+              'the head is a configuration this pull request has not been through since.',
+              '',
+              '| result | commit | python | sabi | rocm | installed | gpu | flags | run | finished |',
+              '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+              ...rows.map((r) => {
+                const flags = [
+                  r.sources ? `sources=\`${r.sources}\`` : '',
+                  r.missing === 'skip' ? 'missing=skip' : '',
+                ].filter(Boolean).join(', ');
+                return '| ' + [
+                  r.result,
+                  `[\`${r.sha.slice(0, 7)}\`](${server}/commit/${r.sha})`,
+                  r.python,
+                  r.sabi,
+                  `\`${r.rocm}\``,
+                  r.installed ? `\`${r.installed}\`` : '—',
+                  r.gpu,
+                  flags,
+                  `[log](${server}/actions/runs/${r.run})`,
+                  `${r.at.slice(0, 16).replace('T', ' ')} UTC`,
+                ].join(' | ') + ' |';
+              }),
+              '',
+              OPEN,
+              JSON.stringify(rows),
+              CLOSE,
+            ].join('\n');
+
+            // Runs no longer take turns, so two report jobs can write between
+            // each other's read and write. Whoever loses notices that its row
+            // is gone and starts again from what the winner left behind.
+            for (let attempt = 1; attempt <= 3; attempt += 1) {
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner, repo, issue_number: context.issue.number, per_page: 100,
+              });
+              // The marker identifies the comment, and the author keeps a human
+              // who quoted it from being rewritten -- which the API would
+              // refuse anyway.
+              const [sticky, ...surplus] = comments.filter(
+                (c) => c.user?.type === 'Bot' && (c.body || '').startsWith(MARKER));
+
+              // Two jobs that both found none each created one. Keep the older,
+              // carry over what the others recorded, and drop them.
+              const carried = surplus.flatMap((c) => rowsOf(c.body));
+              const kept = [...rowsOf(sticky ? sticky.body : ''), ...carried]
+                .filter((r) => key(r) !== key(row));
+              const body = render([row, ...kept].slice(0, LIMIT));
+
+              const written = sticky
+                ? (await github.rest.issues.updateComment({
+                  owner, repo, comment_id: sticky.id, body,
+                })).data
+                : (await github.rest.issues.createComment({
+                  owner, repo, issue_number: context.issue.number, body,
+                })).data;
+              for (const c of surplus) {
+                await github.rest.issues.deleteComment({ owner, repo, comment_id: c.id });
+              }
+
+              const after = (await github.rest.issues.getComment({
+                owner, repo, comment_id: written.id,
+              })).data.body;
+              if (rowsOf(after).some((r) => key(r) === key(row) && r.run === row.run)) {
+                return;
+              }
+              core.info(`the table was written over on attempt ${attempt}; retrying`);
+            }
+
+            // The check on the commit and the run's own step summary still say
+            // what happened, which is why this is a warning and not a failure.
+            core.warning('could not record this run in the full test table');
