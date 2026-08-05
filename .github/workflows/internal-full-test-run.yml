@@ -66,6 +66,14 @@ on:
         # so a caller can still say what it was that failed.
         description: The commit that was checked out
         value: ${{ jobs.build-and-test.outputs.sha }}
+      rocm_version:
+        # `rocm` is a specifier, not a version: a wildcard has no version in it
+        # at all and even an exact one can unpack a tarball with a different
+        # patch level. This is what the installation reported, so a caller can
+        # say what was actually tested rather than what was asked for. Empty
+        # when the run failed before ROCm was installed.
+        description: The ROCm version the installation reported
+        value: ${{ jobs.build-and-test.outputs.rocm_version }}
 
 permissions: {}
 
@@ -84,6 +92,7 @@ jobs:
       contents: read
     outputs:
       sha: ${{ steps.commit.outputs.sha }}
+      rocm_version: ${{ steps.rocm.outputs.version }}
     container:
       # The image the release wheels are built in. ROCm is not in it; the
       # prepare step below installs the requested one.
@@ -204,6 +213,19 @@ jobs:
       # when the job ends, so this runs from scratch every time.
       - name: Install ROCm and select the interpreter
         run: bash hip_python/ci/internal/prepare-container.sh
+
+      # The version above is read back out of rocm_version.h rather than taken
+      # from the specifier, and is what the codegen and the wheels stamp
+      # themselves with, but it never left the job. Lifting it into an output is
+      # what lets a caller report the ROCm that was installed instead of the
+      # specifier that asked for it.
+      #
+      # Empty when the checked-out revision predates that export -- the script
+      # comes from the code under test, not from this workflow -- and skipped
+      # entirely when the install failed, which the caller has to tolerate.
+      - name: Report the installed ROCm version
+        id: rocm
+        run: echo "version=${ROCM_VERSION:-}" >>"${GITHUB_OUTPUT}"
 
       # The codegen reads headers from the component trees, not only from the
       # installation, so a codegen test needs them.
