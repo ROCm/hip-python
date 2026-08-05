@@ -3,7 +3,7 @@
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
 # A full test started from the Actions tab, against any ref. The same run as a
-# `/full test` comment produces -- both callers hand the same seven values to
+# `/full test` comment produces -- both callers hand the same eight values to
 # internal-full-test-run.yml -- so this file is only the parameter form and the
 # commit status.
 #
@@ -55,7 +55,10 @@ on:
         options: [gfx90a]
         default: gfx90a
       rocm:
-        description: "ROCm to install: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
+        # The `?` spellings mean the same as the `*` ones; they exist because a
+        # `/full test` comment renders `*a*` as emphasis. Named here too so the
+        # two entry points describe the same grammar.
+        description: "ROCm to install: therock:X.Y.Z, X.Y.Z, therock:* (or ?), therock:*rc* (or ?rc?), therock:*a* (or ?a?) or preinstalled"
         type: string
         default: therock:7.14.0
       sources:
@@ -67,6 +70,10 @@ on:
         type: choice
         options: [fail, skip]
         default: fail
+      skip:
+        description: "Libraries not to generate, by name and comma-separated, e.g. hiptensor,hipdnn_backend. Empty generates all of them"
+        type: string
+        default: ""
 
 # Per ref: a second run against the same ref supersedes the first rather than
 # queueing behind it on the single runner. A run against a different ref is a
@@ -97,6 +104,7 @@ jobs:
       sources: ${{ inputs.sources }}
       gpu: ${{ inputs.gpu }}
       missing: ${{ inputs.missing }}
+      skip: ${{ inputs.skip }}
 
   report:
     name: report
@@ -129,15 +137,19 @@ jobs:
           SOURCES: ${{ inputs.sources }}
           GPU: ${{ inputs.gpu }}
           MISSING: ${{ inputs.missing }}
+          SKIP: ${{ inputs.skip }}
         with:
           script: |
             const { owner, repo } = context.repo;
-            const { RESULT, REF, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
+            const {
+              RESULT, REF, PY, SABI, ROCM, SOURCES, GPU, MISSING, SKIP,
+            } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const status = `full test (py${PY}, sabi ${SABI}, ${ROCM}, ${GPU}`
               + (SOURCES ? `, sources ${SOURCES}` : '')
-              + (MISSING === 'skip' ? ', missing skipped' : '') + ')';
+              + (MISSING === 'skip' ? ', missing skipped' : '')
+              + (SKIP ? `, skip ${SKIP}` : '') + ')';
 
             // The run reports what it checked out, which is the commit a status
             // has to name. It is empty only when the build failed before the
@@ -168,5 +180,6 @@ jobs:
                 `rocm: ${ROCM}`,
                 `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
                 `missing headers: ${MISSING}`,
+                `skipped libraries: ${SKIP || 'none'}`,
               ])
               .write();

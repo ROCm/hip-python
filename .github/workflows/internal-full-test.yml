@@ -7,10 +7,10 @@
 # from the freshly generated sources and runs the suites in ci/internal/test.sh
 # against them, on our own hardware.
 #
-# This file turns a comment into the seven values that describe a run, and
+# This file turns a comment into the eight values that describe a run, and
 # reports the outcome back to the pull request. The run itself lives in
 # internal-full-test-run.yml, which internal-full-test-manual.yml calls with
-# the same seven values from the Actions tab.
+# the same eight values from the Actions tab.
 #
 # A comment command rather than a `pull_request` trigger because it occupies
 # the one machine with a GPU for hours, which is not something every push
@@ -79,6 +79,7 @@ jobs:
       sources: ${{ steps.parse.outputs.sources }}
       gpu: ${{ steps.parse.outputs.gpu }}
       missing: ${{ steps.parse.outputs.missing }}
+      skip: ${{ steps.parse.outputs.skip }}
       # The commit status context, which describes the configuration, so this
       # run's check does not overwrite another configuration's.
       status: ${{ steps.parse.outputs.status }}
@@ -86,7 +87,7 @@ jobs:
     steps:
       # /full test [python=3.10..3.14] [sabi=no|3.11..3.14] [gpu=gfx<arch>]
       #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
-      #            [missing=fail|skip]
+      #            [missing=fail|skip] [skip=<library>[,<library>...]]
       - name: Parse the command
         id: parse
         env:
@@ -117,6 +118,9 @@ jobs:
           # is what a test of the current ROCm should do. `skip` is for testing
           # against a release old enough to predate a library.
           missing=fail
+          # Libraries to leave out by name, comma-separated. Empty generates
+          # every library the selected wheels carry.
+          skip=
 
           for tok in ${line#*/full test}; do
             case "${tok}" in
@@ -135,7 +139,11 @@ jobs:
                 # ci/internal/librocm.sh, minus the two forms that need the
                 # Jenkins nodes. Repeated here because this job has no
                 # checkout to source the library from.
-                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
+                # The `?` spellings of the three wildcards are here because a
+                # comment is rendered markdown: `*a*` is emphasis, so the text
+                # a reader sees is not the specifier that ran. They are passed
+                # on as typed; librocm.sh rewrites them to the `*` forms.
+                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
                   rocm=${tok#rocm=}
                 # Only an architecture name, never an arbitrary label: this one
                 # decides which machine the job is handed to, and the artifact
@@ -146,6 +154,16 @@ jobs:
                   sources=${tok#sources=}
                 elif [[ ${tok} =~ ^sha=[0-9a-fA-F]{7,40}$ ]]; then
                   sha=${tok#sha=}
+                # A comma-separated list, because a space would read as a
+                # second option and a semicolon is cmake's list separator,
+                # which would not survive the trip to the codegen. The names
+                # themselves are not checked here -- this job has no checkout
+                # to read AVAILABLE_GENERATORS from -- so an unknown name is
+                # the generator's to reject. Repeats accumulate rather than
+                # overwrite, unlike the last-wins options above: two skips are
+                # a longer list, not a correction.
+                elif [[ ${tok} =~ ^skip=[a-z0-9_]+(,[a-z0-9_]+)*$ ]]; then
+                  skip=${skip:+${skip},}${tok#skip=}
                 else
                   # Failing beats silently running the default configuration,
                   # which is what a typo would otherwise do.
@@ -161,6 +179,14 @@ jobs:
           if [[ ${sabi} != no ]] && (( ${sabi#3.} > ${python#3.} )); then
             echo "::error::sabi=${sabi} exceeds python=${python}; the abi3 floor cannot be newer than the interpreter building the wheels"
             exit 1
+          fi
+
+          # Sorted and de-duplicated, so `skip=a,b`, `skip=b,a` and
+          # `skip=b skip=a` are one configuration rather than three checks and
+          # three rows in the table. Word-splitting on the commas is safe under
+          # the `set -f` above.
+          if [[ -n ${skip} ]]; then
+            skip=$(printf '%s\n' ${skip//,/ } | sort -u | paste -sd, -)
           fi
 
           # One check per configuration. The statuses API keys a status by
@@ -182,6 +208,12 @@ jobs:
           if [[ ${missing} == skip ]]; then
             status="${status}, missing skipped"
           fi
+          # Part of the configuration, because a run that left a library out
+          # tested less than one that did not, and the two should not share a
+          # check. A context is plain text, so the commas are safe here.
+          if [[ -n ${skip} ]]; then
+            status="${status}, skip ${skip}"
+          fi
           status="${status})"
 
           # The allowlist above is also what keeps a crafted comment from
@@ -194,6 +226,7 @@ jobs:
             echo "gpu=${gpu}"
             echo "sha=${sha}"
             echo "missing=${missing}"
+            echo "skip=${skip}"
             echo "status=${status}"
           } >>"${GITHUB_OUTPUT}"
 
@@ -246,6 +279,7 @@ jobs:
           SOURCES: ${{ steps.parse.outputs.sources }}
           GPU: ${{ steps.parse.outputs.gpu }}
           MISSING: ${{ steps.parse.outputs.missing }}
+          SKIP: ${{ steps.parse.outputs.skip }}
         run: |
           {
             echo "### full test"
@@ -257,6 +291,7 @@ jobs:
             echo "- rocm: \`${ROCM}\`"
             echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
             echo "- missing headers: ${MISSING}"
+            echo "- skipped libraries: ${SKIP:-none}"
           } >>"${GITHUB_STEP_SUMMARY}"
 
   # The parsed comment, handed to the shared run. `sha` rather than the pull
@@ -276,6 +311,7 @@ jobs:
       sources: ${{ needs.dispatch.outputs.sources }}
       gpu: ${{ needs.dispatch.outputs.gpu }}
       missing: ${{ needs.dispatch.outputs.missing }}
+      skip: ${{ needs.dispatch.outputs.skip }}
 
   report:
     name: report
@@ -314,11 +350,13 @@ jobs:
           SOURCES: ${{ needs.dispatch.outputs.sources }}
           GPU: ${{ needs.dispatch.outputs.gpu }}
           MISSING: ${{ needs.dispatch.outputs.missing }}
+          SKIP: ${{ needs.dispatch.outputs.skip }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
-              RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED, SOURCES, GPU, MISSING,
+              RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED, SOURCES, GPU,
+              MISSING, SKIP,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const server = `${context.serverUrl}/${owner}/${repo}`;
@@ -352,12 +390,19 @@ jobs:
             // the table states what each configuration last did, and a
             // superseded result survives in the check on the commit it ran
             // against and in its own Actions run.
+            //
+            // The skipped libraries are part of the configuration for the same
+            // reason: a run that left one out tested less than one that did
+            // not. A row written before the option existed has no `skip` at
+            // all, which joins as the empty string and so still matches a run
+            // that skipped nothing.
             const key = (r) =>
-              [r.python, r.sabi, r.rocm, r.sources, r.gpu, r.missing].join('|');
+              [r.python, r.sabi, r.rocm, r.sources, r.gpu, r.missing, r.skip || '']
+                .join('|');
             const row = {
               result: RESULT, sha: SHA, python: PY, sabi: SABI, rocm: ROCM,
               installed: INSTALLED || '', gpu: GPU, sources: SOURCES || '',
-              missing: MISSING, run: String(context.runId),
+              missing: MISSING, skip: SKIP || '', run: String(context.runId),
               at: new Date().toISOString(),
             };
 
@@ -389,6 +434,7 @@ jobs:
                 const flags = [
                   r.sources ? `sources=\`${r.sources}\`` : '',
                   r.missing === 'skip' ? 'missing=skip' : '',
+                  r.skip ? `skip=\`${r.skip}\`` : '',
                 ].filter(Boolean).join(', ');
                 return '| ' + [
                   r.result,

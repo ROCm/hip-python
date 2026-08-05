@@ -59,6 +59,10 @@ on:
         description: '"fail" or "skip" for a library whose header this ROCm never shipped'
         type: string
         required: true
+      skip:
+        description: Comma-separated libraries not to generate, by name. Empty generates all of them
+        type: string
+        required: true
     outputs:
       sha:
         # `ref` may be a branch, while a commit status and the artifact name
@@ -136,6 +140,10 @@ jobs:
       # `missing=skip` forgives a library whose header the requested ROCm never
       # shipped, both in the codegen and in the module set the wheels build.
       HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ inputs.missing == 'skip' }}
+      # Libraries left out by name, whatever the reason -- one that fails to
+      # parse from a source tree, say. Dropped from the codegen and from the
+      # module set the wheels build, the same way a missing header is.
+      HIP_PYTHON_SKIP_LIBRARIES: ${{ inputs.skip }}
       USE_SABI: ${{ inputs.sabi }}
       MAX_JOBS: "16"
       HIP_VISIBLE_DEVICES: "0"
@@ -200,6 +208,20 @@ jobs:
             exit 1
           fi
 
+      # The same argument for the same reason: a commit whose build-wheels.sh
+      # does not know the variable would generate the very library the request
+      # asked it to leave out, and report a run that tested more than it says.
+      - name: Check that this commit understands the requested library skips
+        if: inputs.skip != ''
+        env:
+          SKIP: ${{ inputs.skip }}
+        run: |
+          set -eu
+          if ! grep -q HIP_PYTHON_SKIP_LIBRARIES hip_python/ci/internal/build-wheels.sh; then
+            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_SKIP_LIBRARIES; skip=${SKIP} has no effect until that change is on the branch"
+            exit 1
+          fi
+
       # These outlive a job on a self-hosted runner, and a stale wheel left in
       # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
       - name: Clean the scratch directories
@@ -240,20 +262,33 @@ jobs:
       - name: Generate the bindings and build the wheels
         run: bash hip_python/ci/internal/build-wheels.sh
 
-      # Only written when the codegen actually forgave a missing header, so the
+      # Only written when the codegen actually left a library out, so the
       # summary states plainly that these wheels cover fewer libraries than a
-      # default run would -- otherwise a green run reads as a full one.
+      # default run would -- otherwise a green run reads as a full one. Each
+      # line of skipped.txt is `name: reason`, and the two reasons are worth
+      # telling apart: a library this ROCm has no header for is a fact about
+      # the installation, one that was named in the request is not.
       - name: Report the skipped libraries
-        if: always() && inputs.missing == 'skip'
+        if: always() && (inputs.missing == 'skip' || inputs.skip != '')
         run: |
           set -eu
           skipped=$(cat /tmp/hip_python_codegen_*/skipped.txt 2>/dev/null || true)
           if [ -n "${skipped}" ]; then
             {
-              echo "### libraries skipped (no header in this ROCm)"
+              echo "### libraries the codegen left out"
               echo
               while IFS= read -r line; do
-                echo "- \`${line%%:*}\`"
+                # An older commit wrote the exception text as it came, and a
+                # missing-header message lists the paths it searched one per
+                # line. A continuation line is not an entry.
+                case "${line}" in
+                  ''|[[:space:]]*) continue ;;
+                esac
+                name=${line%%:*}
+                case "${line#*: }" in
+                  "skipped by request") echo "- \`${name}\`: skipped by request" ;;
+                  *) echo "- \`${name}\`: no header in this ROCm" ;;
+                esac
               done <<<"${skipped}"
             } >>"${GITHUB_STEP_SUMMARY}"
           fi
