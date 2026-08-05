@@ -79,6 +79,9 @@ jobs:
       sources: ${{ steps.parse.outputs.sources }}
       gpu: ${{ steps.parse.outputs.gpu }}
       missing: ${{ steps.parse.outputs.missing }}
+      # The commit status context, which describes the configuration, so this
+      # run's check does not overwrite another configuration's.
+      status: ${{ steps.parse.outputs.status }}
 
     steps:
       # /full test [python=3.10..3.14] [sabi=no|3.11..3.14] [gpu=gfx<arch>]
@@ -160,6 +163,27 @@ jobs:
             exit 1
           fi
 
+          # One check per configuration. The statuses API keys a status by
+          # commit and context, so a context shared by every run had each run
+          # overwrite the one before it and the checks list showed a single
+          # line no matter how many configurations were tried. Built here,
+          # once, and reused by the report job: a context that differed
+          # between the pending status and the final one would leave two
+          # lines instead of updating one.
+          #
+          # The specifier rather than the version that ends up installed --
+          # nothing is installed yet at this point.
+          status="full test (py${python}, sabi ${sabi}, ${rocm}, ${gpu}"
+          # An if rather than `[[ ... ]] &&`, which under `set -e` would exit
+          # the step the moment the condition did not hold.
+          if [[ -n ${sources} ]]; then
+            status="${status}, sources ${sources}"
+          fi
+          if [[ ${missing} == skip ]]; then
+            status="${status}, missing skipped"
+          fi
+          status="${status})"
+
           # The allowlist above is also what keeps a crafted comment from
           # injecting extra keys here: none of these can contain a newline.
           {
@@ -170,6 +194,7 @@ jobs:
             echo "gpu=${gpu}"
             echo "sha=${sha}"
             echo "missing=${missing}"
+            echo "status=${status}"
           } >>"${GITHUB_OUTPUT}"
 
       - name: Resolve the commit and acknowledge the command
@@ -177,6 +202,7 @@ jobs:
         uses: actions/github-script@v9
         env:
           REQUESTED_SHA: ${{ steps.parse.outputs.sha }}
+          STATUS: ${{ steps.parse.outputs.status }}
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -204,7 +230,7 @@ jobs:
             await github.rest.repos.createCommitStatus({
               owner, repo, sha,
               state: 'pending',
-              context: 'full test',
+              context: process.env.STATUS,
               description: 'queued on the internal runner',
               target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
             });
@@ -271,6 +297,9 @@ jobs:
         env:
           RESULT: ${{ needs.build-and-test.result }}
           SHA: ${{ needs.dispatch.outputs.sha }}
+          # Rather than rebuilt here, so the pending line and this one cannot
+          # disagree and end up as two entries in the checks list.
+          STATUS: ${{ needs.dispatch.outputs.status }}
           PY: ${{ needs.dispatch.outputs.python }}
           SABI: ${{ needs.dispatch.outputs.sabi }}
           ROCM: ${{ needs.dispatch.outputs.rocm }}
@@ -280,14 +309,14 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const { RESULT, SHA, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
+            const { RESULT, SHA, STATUS, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
 
             await github.rest.repos.createCommitStatus({
               owner, repo, sha: SHA,
               state,
-              context: 'full test',
+              context: STATUS,
               description: `build and test ${RESULT}`,
               target_url: url,
             });

@@ -68,9 +68,15 @@ on:
         options: [fail, skip]
         default: fail
 
-# Per ref, as the comment path is per pull request: a second run against the
-# same ref supersedes the first rather than queueing behind it on the single
-# runner. A run against a different ref is a different thing and waits its turn.
+# Per ref: a second run against the same ref supersedes the first rather than
+# queueing behind it on the single runner. A run against a different ref is a
+# different thing and waits its turn.
+#
+# The comment path dropped its group so that testing several configurations in
+# a row does not cancel anything, and the same argument applies to two forms
+# submitted from the Actions tab. Left as it is here for now, because a
+# dispatch is a deliberate single action where re-submitting usually does mean
+# "not that, this"; drop it if that turns out to be wrong.
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.ref }}
   cancel-in-progress: true
@@ -103,11 +109,15 @@ jobs:
       contents: read # resolve the ref when the build did not get that far
 
     steps:
-      # The same `full test` status context the comment path writes, on purpose:
-      # a manual run against a pull request head then updates the very check a
-      # reviewer is already looking at. There is no comment to leave -- a
-      # dispatch has no pull request in context -- so the status and the step
-      # summary are the whole report.
+      # The same status context the comment path writes, on purpose: a manual
+      # run against a pull request head then updates the very check a reviewer
+      # is already looking at. That is only true while the two agree on how the
+      # context is spelled, so the format below mirrors the one the dispatch
+      # job of internal-full-test.yml builds -- a workflow cannot read another
+      # workflow's step outputs, which is why it is written twice.
+      #
+      # There is no comment to leave -- a dispatch has no pull request in
+      # context -- so the status and the step summary are the whole report.
       - uses: actions/github-script@v9
         env:
           RESULT: ${{ needs.build-and-test.result }}
@@ -125,6 +135,9 @@ jobs:
             const { RESULT, REF, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const status = `full test (py${PY}, sabi ${SABI}, ${ROCM}, ${GPU}`
+              + (SOURCES ? `, sources ${SOURCES}` : '')
+              + (MISSING === 'skip' ? ', missing skipped' : '') + ')';
 
             // The run reports what it checked out, which is the commit a status
             // has to name. It is empty only when the build failed before the
@@ -136,7 +149,7 @@ jobs:
             await github.rest.repos.createCommitStatus({
               owner, repo, sha,
               state,
-              context: 'full test',
+              context: status,
               description: `build and test ${RESULT}`,
               target_url: url,
             });
