@@ -53,6 +53,10 @@ on:
         description: Author and committer of the generated commit, "Name <email>"
         type: string
         default: Dominic Etienne Charrier <DominicEtienne.Charrier@amd.com>
+      allow_missing_headers:
+        description: Skip libraries whose headers this ROCm does not ship, instead of failing. For older ROCm
+        type: boolean
+        default: false
       publish:
         description: Push the commit. Unset to generate and commit locally only
         type: boolean
@@ -141,6 +145,7 @@ jobs:
       - name: Preflight the destination
         env:
           PUBLISH_SSH_KEY: ${{ secrets.PUBLISH_SSH_KEY }}
+          ALLOW_MISSING_HEADERS: ${{ inputs.allow_missing_headers }}
         run: |
           set -eu
           if [ -z "${PUBLISH_SSH_KEY}" ]; then
@@ -166,6 +171,17 @@ jobs:
             exit 1
           fi
 
+          # Same reasoning for the tolerance request: generate-bindings.sh comes
+          # from the base branch too, and one that predates the variable would
+          # generate with a missing header still fatal. Silently ignoring the
+          # request is the bad outcome here -- the run would fail half an hour
+          # later for the very reason the request was meant to excuse.
+          if [ "${ALLOW_MISSING_HEADERS}" = "true" ] \
+             && ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS ci/internal/generate-bindings.sh; then
+            echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries a generate-bindings.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; generate from a branch that has it, or leave allow_missing_headers unset"
+            exit 1
+          fi
+
           # Lower-cased, as the Jenkins publish stage does it.
           git remote add dest "git@github.com:${DESTINATION,,}/hip-python.git"
           # IdentitiesOnly so a key from an agent cannot be offered instead.
@@ -183,6 +199,8 @@ jobs:
       # partial tree it can, so one failed library fails the run and nothing is
       # pushed -- which is what a release branch wants.
       - name: Generate the bindings
+        env:
+          HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ inputs.allow_missing_headers }}
         run: bash hip_python/ci/internal/generate-bindings.sh
 
       - name: Collect the generator logs and the change list
@@ -226,6 +244,17 @@ jobs:
             echo "- destination: ${DESTINATION}/hip-python"
             echo "- branch: ${HIP_PYTHON_CODEGEN_BRANCH}"
             echo "- pushed: ${PUBLISHED}"
+            # Written by the generator when it forgave a missing header, and
+            # collected into the report above. Worth naming here: the commit
+            # that was just pushed carries bindings for fewer libraries than
+            # the branch it came from.
+            skipped=${GITHUB_WORKSPACE}/codegen-report/skipped.txt
+            if [ -s "${skipped}" ]; then
+              echo "- skipped (no header in this ROCm):"
+              while IFS= read -r line; do
+                echo "  - \`${line%%:*}\`"
+              done <"${skipped}"
+            fi
             echo
             echo '```'
             git -C "${BUILD_DIR}/hip_python" show --stat --oneline HEAD | head -n 40

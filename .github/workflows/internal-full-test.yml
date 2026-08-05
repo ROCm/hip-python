@@ -76,10 +76,12 @@ jobs:
       rocm: ${{ steps.parse.outputs.rocm }}
       sources: ${{ steps.parse.outputs.sources }}
       gpu: ${{ steps.parse.outputs.gpu }}
+      missing: ${{ steps.parse.outputs.missing }}
 
     steps:
       # /full test [python=3.10..3.14] [sabi=no|3.11..3.14] [gpu=gfx<arch>]
       #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
+      #            [missing=fail|skip]
       - name: Parse the command
         id: parse
         env:
@@ -106,6 +108,10 @@ jobs:
           # Both the runner label and the ROCm distribution that gets installed,
           # so the machine and the build cannot disagree about the architecture.
           gpu=gfx90a
+          # A header the requested ROCm never shipped fails the codegen, which
+          # is what a test of the current ROCm should do. `skip` is for testing
+          # against a release old enough to predate a library.
+          missing=fail
 
           for tok in ${line#*/full test}; do
             case "${tok}" in
@@ -113,6 +119,8 @@ jobs:
                 python=${tok#python=} ;;
               sabi=no|sabi=3.1[1-4])
                 sabi=${tok#sabi=} ;;
+              missing=fail|missing=skip)
+                missing=${tok#missing=} ;;
               *)
                 # Anchored regexes rather than case globs for these four: two
                 # end up in a git ref, one drives an install, one becomes a
@@ -159,6 +167,7 @@ jobs:
             echo "sources=${sources}"
             echo "gpu=${gpu}"
             echo "sha=${sha}"
+            echo "missing=${missing}"
           } >>"${GITHUB_OUTPUT}"
 
       - name: Resolve the commit and acknowledge the command
@@ -208,6 +217,7 @@ jobs:
           ROCM: ${{ steps.parse.outputs.rocm }}
           SOURCES: ${{ steps.parse.outputs.sources }}
           GPU: ${{ steps.parse.outputs.gpu }}
+          MISSING: ${{ steps.parse.outputs.missing }}
         run: |
           {
             echo "### full test"
@@ -218,6 +228,7 @@ jobs:
             echo "- gpu: ${GPU}"
             echo "- rocm: \`${ROCM}\`"
             echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            echo "- missing headers: ${MISSING}"
           } >>"${GITHUB_STEP_SUMMARY}"
 
   build-and-test:
@@ -272,6 +283,9 @@ jobs:
       # configure time and the build compiles that fresh output rather than the
       # tree committed to the repository.
       SKIP_CODEGEN: "false"
+      # `missing=skip` forgives a library whose header the requested ROCm never
+      # shipped, both in the codegen and in the module set the wheels build.
+      HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ needs.dispatch.outputs.missing == 'skip' }}
       USE_SABI: ${{ needs.dispatch.outputs.sabi }}
       MAX_JOBS: "16"
       HIP_VISIBLE_DEVICES: "0"
@@ -284,6 +298,19 @@ jobs:
         with:
           ref: ${{ needs.dispatch.outputs.sha }}
           path: hip_python
+
+      # The scripts that run are the pull request's, so a branch that predates
+      # the variable would ignore `missing=skip` and fail on the very header the
+      # request was meant to excuse -- half an hour in, and looking like a real
+      # failure. Cheaper to say so now.
+      - name: Check that this commit understands the requested tolerance
+        if: needs.dispatch.outputs.missing == 'skip'
+        run: |
+          set -eu
+          if ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS hip_python/ci/internal/build-wheels.sh; then
+            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; missing=skip has no effect until that change is on the branch"
+            exit 1
+          fi
 
       # These outlive a job on a self-hosted runner, and a stale wheel left in
       # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
@@ -311,6 +338,24 @@ jobs:
 
       - name: Generate the bindings and build the wheels
         run: bash hip_python/ci/internal/build-wheels.sh
+
+      # Only written when the codegen actually forgave a missing header, so the
+      # summary states plainly that these wheels cover fewer libraries than a
+      # default run would -- otherwise a green run reads as a full one.
+      - name: Report the skipped libraries
+        if: always() && needs.dispatch.outputs.missing == 'skip'
+        run: |
+          set -eu
+          skipped=$(cat /tmp/hip_python_codegen_*/skipped.txt 2>/dev/null || true)
+          if [ -n "${skipped}" ]; then
+            {
+              echo "### libraries skipped (no header in this ROCm)"
+              echo
+              while IFS= read -r line; do
+                echo "- \`${line%%:*}\`"
+              done <<<"${skipped}"
+            } >>"${GITHUB_STEP_SUMMARY}"
+          fi
 
       - name: Run the suites against the built wheels
         run: bash hip_python/ci/internal/test.sh
@@ -347,10 +392,11 @@ jobs:
           ROCM: ${{ needs.dispatch.outputs.rocm }}
           SOURCES: ${{ needs.dispatch.outputs.sources }}
           GPU: ${{ needs.dispatch.outputs.gpu }}
+          MISSING: ${{ needs.dispatch.outputs.missing }}
         with:
           script: |
             const { owner, repo } = context.repo;
-            const { RESULT, SHA, PY, SABI, ROCM, SOURCES, GPU } = process.env;
+            const { RESULT, SHA, PY, SABI, ROCM, SOURCES, GPU, MISSING } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
 
@@ -369,6 +415,7 @@ jobs:
                 '',
                 `commit \`${SHA}\`, python ${PY}, sabi ${SABI}, ${GPU}, ` +
                   `rocm \`${ROCM}\`` +
-                  (SOURCES ? `, component sources \`${SOURCES}\`` : ''),
+                  (SOURCES ? `, component sources \`${SOURCES}\`` : '') +
+                  (MISSING === 'skip' ? ', missing headers skipped' : ''),
               ].join('\n'),
             });
