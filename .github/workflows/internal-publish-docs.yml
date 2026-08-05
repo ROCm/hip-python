@@ -1,0 +1,226 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Render the Sphinx documentation from a release branch and force-push it to a
+# docs branch, from the Actions tab. The Actions counterpart of the "regenerate
+# docs and publish" step the rocm_python_release node in aiss-3p-dev-pipelines
+# still carries as a TODO, and it drives ci/docs/build.sh, the same script
+# Read the Docs and a local `cmake --build --target docs` run.
+#
+# `source_ref` is what gets rendered, and it is not the branch chosen in the
+# UI's "Use workflow from" selector -- that one decides only which copy of this
+# file runs. It has to name a branch that carries committed codegen output
+# (docs_src/sphinx/_toc.yml.in and the docs_src/python_api pages), which the
+# develop/rocm-rel-* branches do and amd-integration does not. The job checks
+# before it installs anything.
+#
+# `target_branch` defaults to docs/latest, one more branch in the namespace the
+# per-release docs/rocm-rel-X.Y.Z branches already occupy: Pages serves the
+# `docs/` directory of one branch, so a branch that always holds the newest
+# render is a branch Pages can be pointed at once instead of at every release.
+#
+# Nothing here needs a GPU, ROCm or the ROCm component trees: Sphinx reads the
+# committed .pyx and .pyi sources, which is why Read the Docs can build these
+# same docs with nothing but pip. That is the whole difference between this
+# workflow and the other two -- no runner label, no prepare-container.sh, and
+# an hour's timeout rather than five.
+
+name: publish docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Branch, tag or sha to render. Must carry committed codegen output
+        type: string
+        required: true
+        default: develop/rocm-rel-7.14.0
+      target_branch:
+        description: Branch the rendered HTML is force-pushed to. Created if absent
+        type: string
+        default: docs/latest
+      git_author:
+        description: Author and committer of the docs commit, "Name <email>"
+        type: string
+        default: Dominic Etienne Charrier <DominicEtienne.Charrier@amd.com>
+      publish:
+        description: Push the commit. Unset to render and keep only the artifact
+        type: boolean
+        default: true
+
+# Per target branch: two runs pushing to the same branch would race, and the
+# loser's render would be the one that survives. Not cancel-in-progress, for
+# the same reason.
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.target_branch }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  publish:
+    name: render ${{ inputs.source_ref }} -> ${{ inputs.target_branch }}
+    if: github.repository_owner == 'AMD-AIOSS'
+    # Self-hosted because the organization's IP allow list rejects a hosted
+    # runner's egress address for the clone, but unlabelled: no device is
+    # touched. Any internal linux runner will do.
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 60
+    # The push uses the token actions/checkout persisted, not an SSH key: this
+    # stays inside AMD-AIOSS/hip-python, and the key in
+    # internal-generate-bindings.yml exists only because that workflow pushes
+    # into another organization.
+    permissions:
+      contents: write
+    # A stock manylinux image, for the same reason the other workflows use it,
+    # and for its interpreters. ROCm is deliberately not installed.
+    container: quay.io/pypa/manylinux_2_28_x86_64
+    env:
+      # 3.12, as .readthedocs.yaml pins, and the version the requirements file
+      # was compiled against.
+      PYTHON_BIN_DIR: /opt/python/cp312-cp312/bin
+
+    steps:
+      # fetch-depth 0 because the commit below is pushed: GitHub rejects a push
+      # from a shallow clone. Nothing here reads history.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref }}
+          path: hip_python
+          fetch-depth: 0
+
+      # Before spending a pip install and a Sphinx run on a tree that cannot
+      # produce docs. The generator writes _toc.yml.in and the python_api pages
+      # into the release branch it generates, and conf.py sets
+      # external_toc_path to the rendered _toc.yml, so a branch without them
+      # gets a Sphinx failure several minutes in that says nothing about the
+      # actual mistake. ci/docs/build.sh itself is checked too: the older
+      # release branches predate it.
+      - name: Check that this ref can be rendered
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          set -eu
+          cd hip_python
+          missing=
+          [ -f ci/docs/build.sh ] || missing="${missing} ci/docs/build.sh"
+          [ -f docs_src/sphinx/_toc.yml.in ] || missing="${missing} docs_src/sphinx/_toc.yml.in"
+          ls docs_src/python_api/*.rst >/dev/null 2>&1 \
+            || missing="${missing} docs_src/python_api/*.rst"
+          if [ -n "${missing}" ]; then
+            echo "::error::${SOURCE_REF} cannot be rendered; it is missing:${missing}. Render a branch that carries committed codegen output, such as one of the develop/rocm-rel-* branches"
+            exit 1
+          fi
+
+      # The manylinux images ship every CPython under /opt/python and no default
+      # python3, and ci/docs/build.sh calls python3 and pip. The interpreter is
+      # selected here rather than by ci/internal/prepare-container.sh, which
+      # installs a ROCm and then reads its version back from the installation.
+      - name: Select the interpreter
+        run: |
+          set -eu
+          if [ ! -x "${PYTHON_BIN_DIR}/python3" ]; then
+            echo "::error::no interpreter at ${PYTHON_BIN_DIR}; the image changed its /opt/python layout"
+            exit 1
+          fi
+          echo "${PYTHON_BIN_DIR}" >>"${GITHUB_PATH}"
+
+      # What `source_ref` resolved to. The commit message and the artifact name
+      # both want the commit, and a branch name moves.
+      - name: Record the commit being rendered
+        id: commit
+        run: echo "sha=$(git -C hip_python rev-parse HEAD)" >>"${GITHUB_OUTPUT}"
+
+      # cmake from pip, as .readthedocs.yaml does it: ci/docs/build.sh drives
+      # the cmake docs target, and the image has no system cmake.
+      - name: Install cmake and the docs requirements
+        run: |
+          set -eu
+          cd hip_python
+          python3 -m pip install --no-cache-dir cmake
+          python3 -m pip install --no-cache-dir -r docs_src/sphinx/requirements.txt
+
+      # No output directory argument, so the HTML lands in the repository's own
+      # docs/, which is the path Pages serves on a docs branch.
+      #
+      # Sphinx fetches the ROCm intersphinx inventory from rocm.docs.amd.com
+      # while writing. A runner that cannot reach it still renders: unreachable
+      # inventories are a warning, and only cross-references into the ROCm docs
+      # are lost.
+      - name: Render the documentation
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: "8"
+        run: bash hip_python/ci/docs/build.sh
+
+      # Before the commit, so a rejected push or a run with publish unset still
+      # hands over what was rendered.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: docs-${{ steps.commit.outputs.sha }}
+          path: hip_python/docs
+          if-no-files-found: ignore
+
+      # Inline rather than a ci/docs/publish.sh, because the scripts that run
+      # come from the ref being rendered: every branch worth rendering today
+      # predates any script we could add, so it would not be there to call.
+      - name: Commit and publish
+        env:
+          GIT_AUTHOR: ${{ inputs.git_author }}
+          SOURCE_REF: ${{ inputs.source_ref }}
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+          PUBLISH: ${{ inputs.publish }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -eu
+          cd hip_python
+          author_name="${GIT_AUTHOR%% <*}"
+          author_email="${GIT_AUTHOR##*<}"
+          author_email="${author_email%>}"
+
+          # Pages skips directories whose names start with an underscore, which
+          # is most of what Sphinx writes, unless this file is there. It is
+          # committed on every branch that matters, so this only covers a tree
+          # where it is not.
+          [ -f docs/.nojekyll ] || touch docs/.nojekyll
+
+          # -f because /docs/ is git-ignored: it is a build output everywhere
+          # except on the docs branches, which is exactly what is being built
+          # here.
+          git add -f docs
+
+          git -c user.name="${author_name}" -c user.email="${author_email}" \
+              commit --author="${GIT_AUTHOR}" \
+              -m "[docs] render ${SOURCE_REF} at ${SHA}"
+
+          if [ "${PUBLISH}" = "true" ]; then
+            git push -f origin "HEAD:refs/heads/${TARGET_BRANCH}"
+          fi
+
+      - name: Summarize the render
+        if: always()
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+          PUBLISH: ${{ inputs.publish }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -eu
+          pages=$(find hip_python/docs -name '*.html' 2>/dev/null | wc -l)
+          {
+            echo "### docs rendered from ${SOURCE_REF}"
+            echo
+            echo "- commit: \`${SHA}\`"
+            echo "- pages: ${pages}"
+            echo "- branch: ${TARGET_BRANCH}"
+            echo "- pushed: ${PUBLISH}"
+            echo
+            # Changing the Pages source needs repository admin, which
+            # GITHUB_TOKEN does not have, so this is the one part of publishing
+            # a run cannot do for itself.
+            echo "Pages serves the \`docs/\` directory of one branch. If it is not"
+            echo "yet pointed at \`${TARGET_BRANCH}\`, set Settings -> Pages to that"
+            echo "branch with path \`/docs\` once; every later run then publishes by"
+            echo "pushing to it."
+          } >>"${GITHUB_STEP_SUMMARY}"
