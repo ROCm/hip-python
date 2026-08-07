@@ -415,6 +415,11 @@ jobs:
           # is not there instead of building the shim the rendered tree
           # carries. An empty value is a shape the harness already sees:
           # ROCM_SOURCES_REF is empty on most runs.
+          #
+          # Written as "not skip, and the path" rather than "skip, and
+          # nothing": an expression falls through to its `||` branch on any
+          # falsy value, and the empty string is one, so the obvious spelling
+          # yields the path in both cases.
           env: |
             ROCM_SPECIFIER=${{ inputs.rocm }}
             ROCM_SOURCES_REF=${{ inputs.sources }}
@@ -425,9 +430,9 @@ jobs:
             SKIP_CODEGEN=${{ inputs.codegen == 'skip' }}
             HIP_PYTHON_ALLOW_MISSING_HEADERS=${{ inputs.missing == 'skip' }}
             HIP_PYTHON_SKIP_LIBRARIES=${{ inputs.skip }}
-            ROCM_SYSTEMS_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_systems' }}
-            ROCM_LIBRARIES_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_libraries' }}
-            ROCM_LLVM_PROJECT_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_llvm_project' }}
+            ROCM_SYSTEMS_DIR=${{ inputs.codegen != 'skip' && '/workspace/rocm_systems' || '' }}
+            ROCM_LIBRARIES_DIR=${{ inputs.codegen != 'skip' && '/workspace/rocm_libraries' || '' }}
+            ROCM_LLVM_PROJECT_DIR=${{ inputs.codegen != 'skip' && '/workspace/rocm_llvm_project' || '' }}
             MAX_JOBS=32
           # The hpe job's steps, in order, as one script: the harness runs it
           # from /workspace inside the container, under `set -euo pipefail`,

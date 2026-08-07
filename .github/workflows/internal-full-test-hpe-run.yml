@@ -145,9 +145,14 @@ jobs:
       # name pointing at a directory that was never cloned is worse than no
       # name at all. Left empty, it looks for the trees, does not find them,
       # and builds the shim the rendered tree carries instead.
-      ROCM_SYSTEMS_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_systems', github.workspace) }}
-      ROCM_LIBRARIES_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_libraries', github.workspace) }}
-      ROCM_LLVM_PROJECT_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_llvm_project', github.workspace) }}
+      #
+      # Written as "not skip, and the path" rather than "skip, and nothing":
+      # an expression falls through to its `||` branch on any falsy value, and
+      # the empty string is one, so the obvious spelling yields the path in
+      # both cases.
+      ROCM_SYSTEMS_DIR: ${{ inputs.codegen != 'skip' && format('{0}/rocm_systems', github.workspace) || '' }}
+      ROCM_LIBRARIES_DIR: ${{ inputs.codegen != 'skip' && format('{0}/rocm_libraries', github.workspace) || '' }}
+      ROCM_LLVM_PROJECT_DIR: ${{ inputs.codegen != 'skip' && format('{0}/rocm_llvm_project', github.workspace) || '' }}
       # What makes this a codegen test: the bindings are regenerated at cmake
       # configure time and the build compiles that fresh output rather than the
       # tree committed to the repository. `codegen=skip` inverts that, which
