@@ -1,0 +1,500 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The work of a full test on alola, with no trigger of its own: regenerate the
+# bindings, build every wheel from the freshly generated sources and run the
+# suites in ci/internal/test.sh against them, as a SLURM batch job on the alola
+# GPU cluster.
+#
+# Called, never dispatched. `workflow_call` does not put a workflow in the
+# Actions tab, so the two ways to start one of these are
+# internal-full-test-alola.yml (a `/full test alola` comment on a pull request)
+# and internal-full-test-alola-manual.yml (the Actions tab).
+#
+# The same pipeline as internal-full-test-hpe-run.yml, from the same
+# ci/internal/*.sh scripts, in the same manylinux image, with the same requested
+# ROCm installed into it. Only the machine and how it is claimed differ, and
+# that difference is the whole of this file:
+#
+#   - the job runs on the ssh bridge, which has GitHub and no GPU, and hands the
+#     work to a compute node, which has the GPUs and -- by design -- needs
+#     nothing from GitHub. Anything that clones therefore happens here and
+#     travels in the staged workspace.
+#   - there are no steps on the compute node, only one script. It gets no
+#     GITHUB_ENV to pass an environment along with, so where the hpe job has
+#     prepare-container.sh export into the steps that follow, this sources the
+#     file that script also writes.
+#
+# This compiles and executes the code at `ref`, so it takes no secrets and asks
+# for nothing but a read-only token; a called workflow cannot widen what it was
+# granted.
+
+name: full test (alola, run)
+
+on:
+  workflow_call:
+    inputs:
+      # A branch, tag or sha. The comment path always passes a full sha, the
+      # manual path passes whatever it was given, so the commit that was
+      # actually built is read back after the checkout rather than assumed.
+      ref:
+        description: What to build and test
+        type: string
+        required: true
+      python:
+        description: Interpreter, 3.10 to 3.14
+        type: string
+        required: true
+      sabi:
+        description: abi3 floor, "no" or 3.11 to 3.14
+        type: string
+        required: true
+      rocm:
+        description: ROCM_SPECIFIER for ci/internal/librocm.sh
+        type: string
+        required: true
+      sources:
+        description: One ref for the three component trees. Empty derives it from the specifier
+        type: string
+        required: true
+      # The GPU variant to allocate: a model name such as mi300x, or a canonical
+      # SLURM GRES type such as gfx942-mi300x. The login node validates it
+      # against its own gpu-variant-mappings.yaml before anything is submitted,
+      # so an unknown card is refused there rather than guessed at here. What
+      # this workflow does with it is derive AMDGPU_TARGETS, which SLURM knows
+      # nothing about; see the step that does it.
+      arch:
+        description: GPU variant to allocate, e.g. mi300x
+        type: string
+        required: true
+      time:
+        description: SLURM wall clock limit for the batch job, e.g. 2h
+        type: string
+        required: true
+      # An input rather than a constant so the mirror can be stepped around from
+      # the Actions tab on a day it is down, without a commit to the default
+      # branch. It is the same image the release wheels are built in.
+      image:
+        description: Container image for the batch job
+        type: string
+        required: false
+        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+      missing:
+        description: '"fail" or "skip" for a library whose header this ROCm never shipped'
+        type: string
+        required: true
+      skip:
+        description: Comma-separated libraries not to generate, by name. Empty generates all of them
+        type: string
+        required: true
+    outputs:
+      sha:
+        description: The commit that was checked out
+        value: ${{ jobs.build-and-test.outputs.sha }}
+      rocm_version:
+        # `rocm` is a specifier, not a version: a wildcard has no version in it
+        # at all and even an exact one can unpack a tarball with a different
+        # patch level. This is what the installation on the compute node
+        # reported, carried back in the artifacts. Empty when the run failed
+        # before ROCm was installed.
+        description: The ROCm version the installation reported
+        value: ${{ jobs.build-and-test.outputs.rocm_version }}
+      node:
+        description: The compute node the batch job landed on
+        value: ${{ jobs.build-and-test.outputs.node }}
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    name: build and test (python ${{ inputs.python }}, rocm ${{ inputs.rocm }}, ${{ inputs.arch }})
+    # Only the alola pool carries this label, and those runners do nothing but
+    # hand work to SLURM over the ssh bridge: no GPU here, and no ROCm.
+    runs-on: [self-hosted, linux, x64, alola]
+    # This bounds the queue: a card can be busy for a long time and the job has
+    # not started yet. The `time` input bounds the job once it has.
+    timeout-minutes: 180
+    # The only job that touches the code under test, and all it may do is read
+    # it.
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+      rocm_version: ${{ steps.rocm.outputs.version }}
+      node: ${{ steps.gpu.outputs.node }}
+    env:
+      # Where the component trees are fetched to, next to hip_python/, which is
+      # what generate-bindings.sh defaults to. The same paths are handed to the
+      # container below, as /workspace/<name>.
+      SRC_DIR: ${{ github.workspace }}
+      ROCM_SPECIFIER: ${{ inputs.rocm }}
+      ROCM_SOURCES_REF: ${{ inputs.sources }}
+
+    steps:
+      # The comment grammar checks this while parsing, so this is here for the
+      # manual caller, whose fields constrain each value on its own but cannot
+      # express the relation between two of them. build-wheels.sh validates the
+      # shape of USE_SABI but not its relation to the active interpreter, so an
+      # impossible floor would otherwise fail deep inside the build instead of
+      # before a card is claimed.
+      - name: Validate the abi3 floor against the interpreter
+        env:
+          PY: ${{ inputs.python }}
+          SABI: ${{ inputs.sabi }}
+        run: |
+          set -eu
+          # Shapes first, so the numeric comparison below cannot be handed
+          # something that is not a version.
+          case "${PY}" in
+            3.1[0-4]) ;;
+            *) echo "::error::python=${PY} is not one of 3.10 3.11 3.12 3.13 3.14"; exit 1 ;;
+          esac
+          case "${SABI}" in
+            no|3.1[1-4]) ;;
+            *) echo "::error::sabi=${SABI} is not 'no' or one of 3.11 3.12 3.13 3.14"; exit 1 ;;
+          esac
+          if [ "${SABI}" != no ] && [ "${SABI#3.}" -gt "${PY#3.}" ]; then
+            echo "::error::sabi=${SABI} exceeds python=${PY}; the abi3 floor cannot be newer than the interpreter building the wheels"
+            exit 1
+          fi
+
+      # SLURM's variant name and the ROCm distribution's are two different
+      # things, and only the first is the cluster's business: `arch` is checked
+      # against gpu-variant-mappings.yaml on the login node, while
+      # AMDGPU_TARGETS picks which TheRock tarball is downloaded and has to be
+      # settled before there is any ROCm in the container to ask.
+      #
+      # This is the one map between them, so a card that runs here is added
+      # once. internal-full-test-alola.yml carries the same names as its comment
+      # grammar's allowlist, which only exists so that a typo is a parse error
+      # rather than a failure two minutes into a job; keep the two in step.
+      - name: Derive the ROCm architecture from the GPU variant
+        id: target
+        env:
+          ARCH: ${{ inputs.arch }}
+        run: |
+          set -eu
+          case "${ARCH,,}" in
+            mi300x|mi300a|mi308x|mi325x) target=gfx942 ;;
+            mi350x|mi355x) target=gfx950 ;;
+            mi210|mi210x|mi250) target=gfx90a ;;
+            # A canonical GRES name carries the architecture in front of the
+            # model, which is the one spelling that needs no map at all.
+            gfx*-*) target=${ARCH%%-*} ;;
+            gfx*) target=${ARCH,,} ;;
+            *)
+              echo "::error::arch='${ARCH}' has no known ROCm architecture; pass one of mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx<arch>-<model> name"
+              exit 1 ;;
+          esac
+          echo "target=${target}" >>"${GITHUB_OUTPUT}"
+
+      # First, because everything below runs the checked-out copy of the
+      # ci/internal scripts -- including the one that fetches the component
+      # trees, which happens here rather than on the compute node.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          path: hip_python
+
+      # What `ref` resolved to. A branch name moves, and both the artifact name
+      # and the commit status a caller writes have to name a commit.
+      - name: Record the commit under test
+        id: commit
+        run: echo "sha=$(git -C hip_python rev-parse HEAD)" >>"${GITHUB_OUTPUT}"
+
+      # These three arrived with the container work and are not on every branch.
+      # Without them the job would stage a workspace, wait for a card and fail
+      # in the container with "no such file", twenty minutes after the comment;
+      # naming the missing script and the branch that carries it takes ten
+      # seconds.
+      - name: Check that this commit carries the container scripts
+        run: |
+          set -eu
+          for script in prepare-container.sh fetch-rocm-sources.sh librocm.sh \
+                        build-wheels.sh test.sh; do
+            if [ ! -f "hip_python/ci/internal/${script}" ]; then
+              echo "::error::this commit has no ci/internal/${script}; a full test needs the container scripts, which are on ci/codegen-tolerance and its descendants"
+              exit 1
+            fi
+          done
+
+      # The scripts that run are the ones at `ref`, so a commit that predates
+      # the variable would ignore `missing=skip` and fail on the very header the
+      # request was meant to excuse -- and only after a card had been claimed.
+      - name: Check that this commit understands the requested tolerance
+        if: inputs.missing == 'skip'
+        run: |
+          set -eu
+          if ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS hip_python/ci/internal/build-wheels.sh; then
+            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; missing=skip has no effect until that change is on the branch"
+            exit 1
+          fi
+
+      # The same argument for the same reason: a commit whose build-wheels.sh
+      # does not know the variable would generate the very library the request
+      # asked it to leave out, and report a run that tested more than it says.
+      - name: Check that this commit understands the requested library skips
+        if: inputs.skip != ''
+        env:
+          SKIP: ${{ inputs.skip }}
+        run: |
+          set -eu
+          if ! grep -q HIP_PYTHON_SKIP_LIBRARIES hip_python/ci/internal/build-wheels.sh; then
+            echo "::error::this commit carries a build-wheels.sh that ignores HIP_PYTHON_SKIP_LIBRARIES; skip=${SKIP} has no effect until that change is on the branch"
+            exit 1
+          fi
+
+      # The workspace outlives a job on a self-hosted runner, and everything in
+      # it is staged to the cluster. A previous run's wheels would be uploaded
+      # again and its rocm-version.txt reported as this run's.
+      - name: Clean what the last run left in the workspace
+        run: rm -rf alola-artifacts
+
+      # fetch-rocm-sources.sh derives the component trees' git ref from the ROCm
+      # version, which on hpe it reads back out of the installation. Here it
+      # runs before there is one, so the version has to come from the specifier
+      # instead:
+      #
+      #   - an exact specifier carries it (`therock:7.13.0` -> 7.13.0, and a
+      #     package `7.2.1` or `7.2` likewise), and only its major and minor
+      #     reach the ref, so a nightly that moves within a minor is harmless.
+      #   - a wildcard carries nothing, and resolving one means asking the
+      #     nightly index -- which librocm.sh is already checked out to do and
+      #     the bridge may or may not be able to reach. Best-effort, and when it
+      #     fails the answer is to name the ref with `sources=` rather than to
+      #     generate against whichever headers happened to be guessed.
+      #
+      # The specifier itself is passed to the container unchanged, so a wildcard
+      # is resolved there as it is on hpe. What is derived here decides only
+      # which headers the codegen reads.
+      - name: Work out which ROCm version the component sources belong to
+        id: version
+        env:
+          ROCM: ${{ inputs.rocm }}
+          SOURCES: ${{ inputs.sources }}
+          # Which artifact group a wildcard is resolved against.
+          AMDGPU_TARGETS: ${{ steps.target.outputs.target }}
+        run: |
+          set -euo pipefail
+          version=
+          case "${ROCM}" in
+            # therock:7.13.0, therock:7.13.0rc2, therock:7.13.0a20260801
+            therock:[0-9]*)
+              version=${ROCM#therock:}
+              version=${version%%rc*}
+              version=${version%%a*} ;;
+            # A package release: 7.2.1, or 7.2 for a .0 patch level.
+            [0-9]*.[0-9]*)
+              version=${ROCM} ;;
+          esac
+
+          if [ -z "${version}" ]; then
+            # A wildcard or `preinstalled`. librocm.sh resolves the first
+            # against the same index the install will use; a venv and egress to
+            # it are what internal-alola-probe.yml reports on.
+            group=$(
+              set +u
+              . hip_python/ci/internal/librocm.sh
+              amdgpu_target_to_therock_artifact_group "${AMDGPU_TARGETS}" 2>/dev/null
+            ) || group=
+            list=
+            case "${ROCM}" in
+              *'rc*'|*'?rc?') list=prereleases ;;
+              *'a*'|*'?a?') list=nightlies ;;
+              'therock:*'|'therock:?') list=releases ;;
+            esac
+            if [ -n "${group}" ] && [ -n "${list}" ]; then
+              version=$(
+                set +u
+                . hip_python/ci/internal/librocm.sh
+                get_latest_therock_wheel_version "${list}" "${group}" 2>/dev/null
+              ) || version=
+              version=${version%%rc*}
+              version=${version%%a*}
+            fi
+          fi
+
+          if [ -z "${version}" ] && [ -z "${SOURCES}" ]; then
+            echo "::error::rocm='${ROCM}' names no version this runner could resolve, so the component sources' ref cannot be derived before the job is submitted; pass sources=<ref> (amd-staging, or a therock-X.Y branch) alongside it"
+            exit 1
+          fi
+
+          # Only the derived ref reads this, and `sources` overrides that ref
+          # entirely -- but fetch-rocm-sources.sh looks for an installed ROCm
+          # whenever ROCM_VERSION is empty, and there is none on the bridge.
+          echo "version=${version:-0.0.0}" >>"${GITHUB_OUTPUT}"
+
+      # On the bridge, so they travel in the staged workspace: a compute node is
+      # meant to need nothing but a container registry, and these are three git
+      # clones. They are sparse, blobless and header-only, and .git is not
+      # staged, so what crosses the wire is a few tens of megabytes of headers.
+      - name: Fetch the ROCm component sources
+        env:
+          ROCM_VERSION: ${{ steps.version.outputs.version }}
+        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
+
+      - name: Build and test on a GPU node
+        id: gpu
+        uses: AMD-AIOSS/gha-runner-alola@main
+        with:
+          profile: default
+          image: ${{ inputs.image }}
+          arch: ${{ inputs.arch }}
+          gpus: "1"
+          cpus: "32"
+          mem: 128G
+          time: ${{ inputs.time }}
+          # Fetched even when the command fails, which is what makes the
+          # skipped-library report and the wheels of a failed run available.
+          artifacts-dir: alola-artifacts
+          # One NAME=value per line. Every value here comes from an input the
+          # comment grammar allowlisted or a form field, and the login node
+          # validates the names against the set the harness owns before any of
+          # it reaches the job.
+          #
+          # This is the env: block of internal-full-test-hpe-run.yml, minus what
+          # only makes sense on a runner: the three directories the container
+          # sees at fixed paths, and ROCM_VERSION, which prepare-container.sh
+          # reads back out of the installation it makes.
+          env: |
+            ROCM_SPECIFIER=${{ inputs.rocm }}
+            ROCM_SOURCES_REF=${{ inputs.sources }}
+            ROCM_PATH=/opt/rocm
+            AMDGPU_TARGETS=${{ steps.target.outputs.target }}
+            MANYLINUX_DEFAULT_PYTHON_VERSION=${{ inputs.python }}
+            USE_SABI=${{ inputs.sabi }}
+            SKIP_CODEGEN=false
+            HIP_PYTHON_ALLOW_MISSING_HEADERS=${{ inputs.missing == 'skip' }}
+            HIP_PYTHON_SKIP_LIBRARIES=${{ inputs.skip }}
+            ROCM_SYSTEMS_DIR=/workspace/rocm_systems
+            ROCM_LIBRARIES_DIR=/workspace/rocm_libraries
+            ROCM_LLVM_PROJECT_DIR=/workspace/rocm_llvm_project
+            MAX_JOBS=32
+          # The hpe job's steps, in order, as one script: the harness runs it
+          # from /workspace inside the container, under `set -euo pipefail`,
+          # as the image's root.
+          command: |
+            # Not passed through the action's env input: the harness owns these
+            # names and rejects them, because they are how device visibility and
+            # the loader are pointed somewhere else.
+            #
+            # /dev/kfd is passed whole rather than per allocation, so a node's
+            # other cards are visible here; the suites use one, as they do on
+            # hpe.
+            export HIP_VISIBLE_DEVICES=0
+            export SRC_DIR=/workspace
+            # Node-local, rather than the session directory, which is shared
+            # storage and is tarred back at the end. Nothing in the build tree
+            # is wanted afterwards.
+            export BUILD_DIR=/tmp/build
+            # Only /artifacts comes back, so the wheels are built into it.
+            export BUILD_ARTIFACTS_DIR=/artifacts/wheels
+            # There are no later steps to inherit an environment, so
+            # prepare-container.sh writes it here and the script sources it.
+            export ROCM_ENV_FILE=/tmp/rocm-env.sh
+
+            # The session directory is written as root while the login account
+            # tars it back, and a failed run's artifacts are worth as much as a
+            # successful one's -- more, usually.
+            collect() {
+              cp -a /tmp/hip_python_codegen_*/skipped.txt /artifacts/ 2>/dev/null || true
+              chmod -R a+rX /artifacts 2>/dev/null || true
+            }
+            trap collect EXIT
+
+            # Installs the requested ROCm into the manylinux image, makes the
+            # requested interpreter python3, and exports the ROCm and HIP
+            # environment the scripts below expect.
+            bash hip_python/ci/internal/prepare-container.sh
+            . "${ROCM_ENV_FILE}"
+
+            # What the installation reported, as against the specifier that
+            # asked for it. Read back into a job output on the runner.
+            printf '%s\n' "${ROCM_VERSION}" >/artifacts/rocm-version.txt
+
+            # Cheap, and it turns a device-mapping mistake into an immediate
+            # answer rather than one that surfaces after twenty minutes of
+            # compiling.
+            rocm-smi
+
+            # No fetch-rocm-sources.sh here: the three trees came in with the
+            # workspace, which is why this needs nothing from GitHub. .git does
+            # not travel either, so generate-bindings.sh restores no baseline
+            # from the base branch -- which matters to a run that commits a
+            # delta, and not to one that only builds what it generated.
+            bash hip_python/ci/internal/build-wheels.sh
+            bash hip_python/ci/internal/test.sh
+
+      # A failure is when the node and the job id matter most, and without this
+      # the step is skipped exactly then.
+      - name: Where it ran
+        if: always()
+        env:
+          SESSION: ${{ steps.gpu.outputs.session }}
+          JOB_ID: ${{ steps.gpu.outputs.job-id }}
+          NODE: ${{ steps.gpu.outputs.node }}
+          IMAGE: ${{ inputs.image }}
+          ARCH: ${{ inputs.arch }}
+          TARGET: ${{ steps.target.outputs.target }}
+        run: |
+          {
+            echo "### the batch job"
+            echo
+            echo "- node: \`${NODE:-(never allocated)}\`, requested \`${ARCH}\` (\`${TARGET}\`)"
+            echo "- SLURM job: \`${JOB_ID:-(never submitted)}\`, session \`${SESSION:-(none opened)}\`"
+            echo "- image: \`${IMAGE}\`"
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+      # The version the container read back out of rocm_version.h, which is what
+      # the codegen and the wheels stamp themselves with. It travelled in the
+      # artifacts because a batch job has no step outputs to write.
+      #
+      # Empty when the install never happened, and when the checked-out revision
+      # predates that export -- the script comes from the code under test -- both
+      # of which a caller has to tolerate.
+      - name: Report the installed ROCm version
+        id: rocm
+        if: always()
+        run: |
+          set -eu
+          version=$(cat alola-artifacts/rocm-version.txt 2>/dev/null || true)
+          echo "version=${version//[^0-9.]/}" >>"${GITHUB_OUTPUT}"
+
+      # Only written when the codegen actually left a library out, so the
+      # summary states plainly that these wheels cover fewer libraries than a
+      # default run would -- otherwise a green run reads as a full one. Each
+      # line of skipped.txt is `name: reason`, and the two reasons are worth
+      # telling apart: a library this ROCm has no header for is a fact about the
+      # installation, one that was named in the request is not.
+      - name: Report the skipped libraries
+        if: always() && (inputs.missing == 'skip' || inputs.skip != '')
+        run: |
+          set -eu
+          skipped=$(cat alola-artifacts/skipped.txt 2>/dev/null || true)
+          if [ -n "${skipped}" ]; then
+            {
+              echo "### libraries the codegen left out"
+              echo
+              while IFS= read -r line; do
+                # An older commit wrote the exception text as it came, and a
+                # missing-header message lists the paths it searched one per
+                # line. A continuation line is not an entry.
+                case "${line}" in
+                  ''|[[:space:]]*) continue ;;
+                esac
+                name=${line%%:*}
+                case "${line#*: }" in
+                  "skipped by request") echo "- \`${name}\`: skipped by request" ;;
+                  *) echo "- \`${name}\`: no header in this ROCm" ;;
+                esac
+              done <<<"${skipped}"
+            } >>"${GITHUB_STEP_SUMMARY}"
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: wheels-${{ steps.commit.outputs.sha }}
+          path: alola-artifacts/wheels/*.whl
+          if-no-files-found: ignore
