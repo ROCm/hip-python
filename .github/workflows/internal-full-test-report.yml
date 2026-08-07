@@ -3,16 +3,18 @@
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
 # What a full test reports back, for either site: the check on the commit, and
-# the sticky table of one row per configuration on the pull request.
+# the sticky table of one row per configuration under the pull request or issue
+# the command was run from.
 #
 # Called by internal-full-test-hpe.yml and internal-full-test-alola.yml, which
-# differ in what a configuration is -- alola picks a card, hpe has one -- and so
-# in which columns the table has and which fields identify a row. Those are
+# differ in what a configuration is -- alola picks a card, hpe has one, and a
+# command run from an issue names a ref where a pull request has its head -- and
+# so in which columns the table has and which fields identify a row. Those are
 # inputs; everything else, including the read-modify-write that keeps two
 # concurrent runs from losing each other's rows, is the same code for both.
 #
 # One table per site, under its own `marker`, rather than one table for both.
-# The 25-row cap is per comment, so a week of alola runs in a shared table would
+# The size limit is per comment, so a week of alola runs in a shared table would
 # push the hpe history out of it, and separate tables let one grow a column the
 # other has no use for -- the node a job landed on, say -- without widening both.
 #
@@ -55,6 +57,17 @@ on:
         description: JSON array of the row's fields that identify a configuration
         type: string
         required: true
+      # The line between the heading and the table. An input because what a
+      # stale row means depends on what the table hangs off: a pull request has
+      # a head, and an issue tracking a release has a branch per row.
+      note:
+        description: The sentence under the heading
+        type: string
+        required: false
+        default: >-
+          One row per configuration, carrying its latest run. A commit that is
+          not the head is a configuration this pull request has not been
+          through since.
 
       # The result being reported.
       result:
@@ -65,6 +78,14 @@ on:
         description: The commit the check is written on
         type: string
         required: true
+      # What was asked for, where the commit above is what it resolved to. A
+      # pull request run leaves it empty: the head is the only thing it can
+      # mean, and a column of one repeated value is not worth its width.
+      ref:
+        description: The ref the run was asked for. Empty when the head of a pull request was
+        type: string
+        required: false
+        default: ""
       status:
         # Built by the dispatch job and passed through both here and to the
         # pending status, because a context that differed between the two would
@@ -129,6 +150,17 @@ jobs:
       statuses: write
       issues: write
       pull-requests: write
+    # One writer at a time per table. A matrix of configurations finishes in
+    # clumps, and the read-modify-write below is where two of them lose each
+    # other's rows; a group turns that race into a queue. Not cancelling,
+    # because the run that would be cancelled is the one carrying a result.
+    #
+    # The retry below stays as the backstop: this only orders the jobs a group
+    # can see, and the two sites' tables live under different markers on the
+    # same comment thread.
+    concurrency:
+      group: full-test-report-${{ inputs.marker }}-${{ github.event.issue.number }}
+      cancel-in-progress: false
 
     steps:
       # An issue_comment run attaches its checks to the default branch, so
@@ -142,10 +174,12 @@ jobs:
         env:
           MARKER: ${{ inputs.marker }}
           HEADING: ${{ inputs.heading }}
+          NOTE: ${{ inputs.note }}
           COLUMNS: ${{ inputs.columns }}
           KEY: ${{ inputs.key }}
           RESULT: ${{ inputs.result }}
           SHA: ${{ inputs.sha }}
+          REF: ${{ inputs.ref }}
           STATUS: ${{ inputs.status }}
           PY: ${{ inputs.python }}
           SABI: ${{ inputs.sabi }}
@@ -160,8 +194,8 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const {
-              MARKER, HEADING, RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED,
-              SOURCES, MISSING, SKIP, ARCH, CODEGEN,
+              MARKER, HEADING, NOTE, RESULT, SHA, REF, STATUS, PY, SABI, ROCM,
+              INSTALLED, SOURCES, MISSING, SKIP, ARCH, CODEGEN,
             } = process.env;
             const columns = JSON.parse(process.env.COLUMNS);
             const keyFields = JSON.parse(process.env.KEY);
@@ -186,9 +220,14 @@ jobs:
             // inbox.
             const OPEN = '<!-- full-test-rows';
             const CLOSE = '-->';
-            // Only to keep a pathological pull request under the 65 kB comment
-            // limit: the real bound is how many configurations anyone runs.
-            const LIMIT = 25;
+            // GitHub rejects a comment body over 65536 characters. What that
+            // is in rows depends on the schema the caller asked for and on the
+            // payload under the table, which costs about as much again, so the
+            // only honest measure is the body that would be posted -- see the
+            // trim below. The kilobyte of headroom covers the gap between
+            // JavaScript's UTF-16 length and the UTF-8 bytes the API counts,
+            // which the emoji in the result column make more than theoretical.
+            const BUDGET = 64 * 1024;
 
             // A row is a configuration, not a run. The commit and the version
             // that was installed are results, so running a configuration again
@@ -204,7 +243,7 @@ jobs:
             // has nothing there either.
             const key = (r) => keyFields.map((f) => r[f] || '').join('|');
             const row = {
-              result: RESULT, sha: SHA, python: PY, sabi: SABI, rocm: ROCM,
+              result: RESULT, sha: SHA, ref: REF || '', python: PY, sabi: SABI, rocm: ROCM,
               installed: INSTALLED || '', sources: SOURCES || '',
               missing: MISSING, skip: SKIP || '', arch: ARCH || '',
               codegen: CODEGEN || 'run',
@@ -257,6 +296,12 @@ jobs:
                   }[r.result] ?? r.result;
                 case 'sha':
                   return `[\`${r.sha.slice(0, 7)}\`](${server}/commit/${r.sha})`;
+                // What was asked for, linked to what it points at now: a row
+                // whose commit is not that is a branch that has moved since.
+                // A run pinned to a commit is filed under it, so the link is
+                // to the same place the commit column goes.
+                case 'ref':
+                  return r.ref ? `[\`${r.ref}\`](${server}/tree/${r.ref})` : '—';
                 case 'rocm':
                   return `\`${r.rocm}\``;
                 case 'installed':
@@ -284,8 +329,7 @@ jobs:
               MARKER,
               `### ${HEADING}`,
               '',
-              'One row per configuration, carrying its latest run. A commit that is not',
-              'the head is a configuration this pull request has not been through since.',
+              NOTE,
               '',
               `| ${columns.map((f) => label[f] || f).join(' | ')} |`,
               `| ${columns.map(() => '---').join(' | ')} |`,
@@ -314,7 +358,19 @@ jobs:
               const carried = surplus.flatMap((c) => rowsOf(c.body));
               const kept = [...rowsOf(sticky ? sticky.body : ''), ...carried]
                 .filter((r) => key(r) !== key(row));
-              const body = render([row, ...kept].slice(0, LIMIT));
+
+              // Drop the oldest row until what would be posted fits. The new
+              // row is never the one dropped: this run is why the comment is
+              // being written. At around 650 characters a row across the table
+              // and the payload, that is some hundred configurations before
+              // anything falls off, and a configuration that does fall off
+              // keeps its check on its commit and its own Actions run.
+              let keep = [row, ...kept];
+              let body = render(keep);
+              while (body.length > BUDGET && keep.length > 1) {
+                keep = keep.slice(0, -1);
+                body = render(keep);
+              }
 
               const written = sticky
                 ? (await github.rest.issues.updateComment({

@@ -9,6 +9,11 @@
 # `codegen=skip` builds the bindings a branch already carries instead, which is
 # what a release branch wants and what its own tree is.
 #
+# The command works on a plain issue too, where `ref=` says what to test in
+# place of the head there is not. That is what a release task issue is: one
+# comment thread whose table has a row per ref and configuration, so the state
+# of amd-integration and of the release branch can be read side by side.
+#
 # `hpe` is a site, and the other one is alola, the SLURM cluster reached over an
 # ssh bridge -- see internal-full-test-alola.yml. The two run the same pipeline
 # from the same scripts; only the machine and how it is claimed differ. Naming
@@ -63,9 +68,12 @@ jobs:
     # `/full test alola` is the other site's command and its own workflow, so it
     # is excluded here rather than parsed and rejected: both files match on a
     # prefix, and only the more specific one may claim that body.
+    #
+    # A comment on a plain issue counts too, which is what lets a release task
+    # carry its own table: `ref=` says what to test, and the rows collect under
+    # the issue rather than under any pull request.
     if: >-
       github.repository_owner == 'AMD-AIOSS'
-      && github.event.issue.pull_request
       && startsWith(github.event.comment.body, '/full test')
       && !startsWith(github.event.comment.body, '/full test alola')
       && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
@@ -82,10 +90,13 @@ jobs:
       # token with issues=write but pull-requests=read gets a 403 there. Write
       # here also covers reading the head sha.
       pull-requests: write # react to the triggering comment, resolve the head sha
-      issues: write # the same reaction, were the command ever run on an issue
+      issues: write # the same reaction, on a comment to a plain issue
       statuses: write # report "pending" on the commit
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
+      # What was asked for, which the sha above is the resolution of. Empty on
+      # a pull request, where the head is what a run means.
+      ref: ${{ steps.parse.outputs.ref }}
       python: ${{ steps.parse.outputs.python }}
       sabi: ${{ steps.parse.outputs.sabi }}
       rocm: ${{ steps.parse.outputs.rocm }}
@@ -96,18 +107,28 @@ jobs:
       # The commit status context, which describes the configuration, so this
       # run's check does not overwrite another configuration's.
       status: ${{ steps.parse.outputs.status }}
+      # The table's shape, decided here because it depends on what the command
+      # was run from: a pull request tests one branch, so naming it in every
+      # row would be a column of one repeated value, while an issue is where
+      # `amd-integration` and a release branch are compared side by side.
+      columns: ${{ steps.parse.outputs.columns }}
+      key: ${{ steps.parse.outputs.key }}
+      note: ${{ steps.parse.outputs.note }}
 
     steps:
-      # /full test [hpe] [python=3.10..3.14] [sabi=no|3.11..3.14]
-      #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
-      #            [missing=fail|skip] [skip=<library>[,<library>...]]
-      #            [codegen=run|skip]
+      # /full test [hpe] [ref=<branch|tag>] [python=3.10..3.14]
+      #            [sabi=no|3.11..3.14] [rocm=<specifier>] [sources=<ref>]
+      #            [sha=<7-40 hex>] [missing=fail|skip]
+      #            [skip=<library>[,<library>...]] [codegen=run|skip]
       - name: Parse the command
         id: parse
         env:
           # Through the environment, never interpolated into the script body: a
           # comment is untrusted text and ${{ }} inside `run` is an injection.
           BODY: ${{ github.event.comment.body }}
+          # Whether the comment is on a pull request. Decides what a command
+          # with no `ref=` means, and what shape the table takes.
+          IS_PR: ${{ github.event.issue.pull_request && 'true' || 'false' }}
         run: |
           # -f because the loop below splits the comment into words, and a body
           # containing `*` would otherwise be expanded against the filesystem.
@@ -125,6 +146,9 @@ jobs:
           rocm=therock:7.14.0
           sources=
           sha=
+          # What to test, when the comment is not on a pull request whose head
+          # answers that. A branch or a tag; `sha=` is how to pin a commit.
+          ref=
           # A header the requested ROCm never shipped fails the codegen, which
           # is what a test of the current ROCm should do. `skip` is for testing
           # against a release old enough to predate a library.
@@ -182,6 +206,11 @@ jobs:
                   sources=${tok#sources=}
                 elif [[ ${tok} =~ ^sha=[0-9a-fA-F]{7,40}$ ]]; then
                   sha=${tok#sha=}
+                # The same character set as `sources`, and for the same
+                # reason: it is a git ref, and the API is asked to resolve it
+                # rather than a shell being asked to interpolate it.
+                elif [[ ${tok} =~ ^ref=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  ref=${tok#ref=}
                 # A comma-separated list, because a space would read as a
                 # second option and a semicolon is cmake's list separator,
                 # which would not survive the trip to the codegen. The names
@@ -218,6 +247,21 @@ jobs:
           # regenerates it or consumes it as it stands.
           if [[ ${codegen} == skip && -n ${sources} ]]; then
             echo "::error::sources=${sources} names the component trees the codegen reads, and codegen=skip does not run one; drop one of the two"
+            exit 1
+          fi
+
+          # Both name what to test, and the answers can differ. Rather than
+          # pick one, say so: `ref=` follows a branch, `sha=` pins a commit.
+          if [[ -n ${ref} && -n ${sha} ]]; then
+            echo "::error::ref=${ref} and sha=${sha} both say what to test; keep the one you meant -- ref= follows a branch, sha= pins a commit"
+            exit 1
+          fi
+
+          # On a pull request, no ref means the head, which is what a full test
+          # has always meant. On an issue there is no head to mean, and the
+          # command has to be told.
+          if [[ ${IS_PR} != true && -z ${ref} && -z ${sha} ]]; then
+            echo "::error::this comment is on an issue, not a pull request, so there is no head to test; name what to test with ref=<branch> (or sha=<commit>)"
             exit 1
           fi
 
@@ -267,6 +311,32 @@ jobs:
           fi
           status="${status})"
 
+          # What the table looks like, which depends on what the command was
+          # run from. A pull request tests its own head and nothing else, so
+          # today's schema stands: a ref column would repeat one value down
+          # every row. An issue is the other case -- a release task spawns runs
+          # against amd-integration and against the release branch -- so the
+          # ref becomes a column, and the first field of what makes two runs
+          # the same configuration.
+          #
+          # Emitted from here rather than written into the report call, because
+          # only this step knows which event it is.
+          if [[ ${IS_PR} == true ]]; then
+            columns='["result", "sha", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
+            key='["python", "sabi", "rocm", "sources", "missing", "skip", "codegen"]'
+            note='One row per configuration, carrying its latest run. A commit that is not the head is a configuration this pull request has not been through since.'
+          else
+            columns='["result", "ref", "sha", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
+            key='["ref", "python", "sabi", "rocm", "sources", "missing", "skip", "codegen"]'
+            note='One row per ref and configuration, carrying its latest run. A commit that is not the tip of its ref is a configuration that branch has not been through since.'
+          fi
+
+          # What was named, which is what the row is filed under. A pinned
+          # commit stands in for a ref it was not given: two runs against two
+          # commits of the same branch are two answers about that release
+          # task, and a shared empty ref would file them as one.
+          named=${ref:-${sha}}
+
           # The allowlist above is also what keeps a crafted comment from
           # injecting extra keys here: none of these can contain a newline.
           {
@@ -274,34 +344,44 @@ jobs:
             echo "sabi=${sabi}"
             echo "rocm=${rocm}"
             echo "sources=${sources}"
-            echo "sha=${sha}"
+            echo "ref=${named}"
             echo "missing=${missing}"
             echo "skip=${skip}"
             echo "codegen=${codegen}"
             echo "status=${status}"
+            echo "columns=${columns}"
+            echo "key=${key}"
+            echo "note=${note}"
           } >>"${GITHUB_OUTPUT}"
 
       - name: Resolve the commit and acknowledge the command
         id: resolve
         uses: actions/github-script@v9
         env:
-          REQUESTED_SHA: ${{ steps.parse.outputs.sha }}
+          # Whichever of `sha=` and `ref=` was given, already refused as a
+          # pair by the parse step: one string for one lookup.
+          REQUESTED: ${{ steps.parse.outputs.ref }}
           STATUS: ${{ steps.parse.outputs.status }}
         with:
           script: |
             const { owner, repo } = context.repo;
-            const requested = process.env.REQUESTED_SHA;
+            const requested = process.env.REQUESTED;
             let sha;
             if (requested) {
-              // Expand it: a commit status names the full forty characters.
-              // Any commit in the repository is accepted, so a sha that is not
-              // part of this pull request will report where nobody looks --
-              // hence the reply comment from the report job.
+              // One call for both spellings: getCommit resolves a branch, a
+              // tag or a short sha, and answers with the full forty characters
+              // a commit status has to name. Any commit in the repository is
+              // accepted, so a sha that belongs to no pull request will report
+              // where nobody looks -- hence the reply comment from the report
+              // job. Resolved now, so a push between the comment and the build
+              // does not change what was tested; `sha=` is how to pin it
+              // against the branch moving under a queue.
               sha = (await github.rest.repos.getCommit(
                 { owner, repo, ref: requested })).data.sha;
             } else {
-              // Resolved now, so a push between the comment and the build is
-              // what gets built. `sha=` is how to pin it.
+              // No ref, so the pull request's head is what was meant. The
+              // parse step has already refused this on an issue, where
+              // context.issue.number is not a pull request to read.
               sha = (await github.rest.pulls.get(
                 { owner, repo, pull_number: context.issue.number })).data.head.sha;
             }
@@ -319,11 +399,12 @@ jobs:
               target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
             });
 
-      # A parameterized run is not reproducible from the pull request unless the
-      # parameters are written down somewhere.
+      # A parameterized run is not reproducible from the comment thread unless
+      # the parameters are written down somewhere.
       - name: Record the resolved parameters
         env:
           SHA: ${{ steps.resolve.outputs.sha }}
+          REF: ${{ steps.parse.outputs.ref }}
           PY: ${{ steps.parse.outputs.python }}
           SABI: ${{ steps.parse.outputs.sabi }}
           ROCM: ${{ steps.parse.outputs.rocm }}
@@ -335,6 +416,9 @@ jobs:
           {
             echo "### full test (hpe)"
             echo
+            if [ -n "${REF}" ]; then
+              echo "- ref: \`${REF}\`"
+            fi
             echo "- commit: \`${SHA}\`"
             echo "- python: ${PY}"
             echo "- sabi: ${SABI}"
@@ -388,10 +472,14 @@ jobs:
       # has already collected stay where they are.
       marker: <!-- full-test-overview -->
       heading: full test (hpe)
-      columns: '["result", "sha", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
-      key: '["python", "sabi", "rocm", "sources", "missing", "skip", "codegen"]'
+      # The shape the dispatch job worked out from the event: a pull request
+      # gets the schema it always had, an issue gets a ref column as well.
+      columns: ${{ needs.dispatch.outputs.columns }}
+      key: ${{ needs.dispatch.outputs.key }}
+      note: ${{ needs.dispatch.outputs.note }}
       result: ${{ needs.build-and-test.result }}
       sha: ${{ needs.dispatch.outputs.sha }}
+      ref: ${{ needs.dispatch.outputs.ref }}
       status: ${{ needs.dispatch.outputs.status }}
       python: ${{ needs.dispatch.outputs.python }}
       sabi: ${{ needs.dispatch.outputs.sabi }}
