@@ -357,9 +357,9 @@ jobs:
       time: ${{ needs.dispatch.outputs.time }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
-      # image is left at its default, the mkmhub mirror of the manylinux image.
-      # Naming another one is what the manual form is for, on a day the mirror
-      # is having one.
+      # image is left at its default, the manylinux image the wheels ship from.
+      # Naming another one is what the manual form is for, on a day quay.io is
+      # having a bad one.
 
   # The check on the commit and this site's table, written by the workflow both
   # sites share. What is site-specific is which comment it writes into and that

@@ -72,14 +72,16 @@ on:
         description: SLURM wall clock limit for the batch job, e.g. 2h
         type: string
         required: true
-      # An input rather than a constant so the mirror can be stepped around from
-      # the Actions tab on a day it is down, without a commit to the default
-      # branch. It is the same image the release wheels are built in.
+      # An input rather than a constant so another image can be named from the
+      # Actions tab on a day quay.io is down, without a commit to the default
+      # branch. It is the same image the release wheels are built in. The
+      # mkmhub mirror is not an alternative: its only proxy is Docker Hub, and
+      # pypa publishes the manylinux images to quay.io alone.
       image:
         description: Container image for the batch job
         type: string
         required: false
-        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+        default: quay.io/pypa/manylinux_2_28_x86_64
       missing:
         description: '"fail" or "skip" for a library whose header this ROCm never shipped'
         type: string

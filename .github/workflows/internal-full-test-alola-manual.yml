@@ -86,9 +86,9 @@ on:
       # configuration worth a row of its own. A form field means that day needs
       # no commit to the default branch.
       image:
-        description: Container image. The default is the mkmhub mirror of the manylinux image
+        description: Container image. The default is the manylinux image the wheels ship from
         type: string
-        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+        default: quay.io/pypa/manylinux_2_28_x86_64
 
 # Per ref, as on hpe: a second run against the same ref supersedes the first,
 # where a run against a different ref is a different thing. It cancels rather

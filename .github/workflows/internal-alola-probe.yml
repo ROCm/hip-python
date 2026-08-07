@@ -24,9 +24,10 @@
 #   - can the bridge reach the nightly index? That is where a wildcard ROCm
 #     specifier has to be resolved to a version before anything is staged.
 #
-# The image is an input with the mkmhub mirror as its default, so the first
-# thing this establishes is whether that path serves at all; quay.io/pypa is the
-# fallback, and finding out costs a form field rather than a commit.
+# The image is an input, so the first thing every run establishes is whether the
+# image a full test asks for pulls at all, and naming another one costs a form
+# field rather than a commit. The mkmhub mirror is not one of the choices: it
+# proxies Docker Hub only, and pypa publishes manylinux to quay.io alone.
 
 name: alola probe
 
@@ -36,7 +37,7 @@ on:
       image:
         description: Image to probe. The default is what a full test on alola uses
         type: string
-        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+        default: quay.io/pypa/manylinux_2_28_x86_64
       arch:
         description: GPU variant to allocate, e.g. mi300x. Validated by the login node
         type: string
@@ -89,7 +90,7 @@ jobs:
             echo "| python3 | \`$(python3 -V 2>&1 || echo absent)\` |"
             echo "| git | \`$(git --version 2>&1 || echo absent)\` |"
             for host in github.com rocm.nightlies.amd.com repo.radeon.com \
-                        pypi.org mkmhub.amd.com; do
+                        pypi.org quay.io; do
               # --max-time so an address that blackholes packets costs ten
               # seconds rather than the job's queue budget, and -o /dev/null -w
               # rather than -I because a HEAD is answered with 405 by some of
@@ -98,7 +99,7 @@ jobs:
                        "https://${host}/" 2>/dev/null || echo "unreachable")
               echo "| \`${host}\` | ${code} |"
             done
-          } >>"${GITHUB_STEP_SUMMARY}"
+          } | tee -a "${GITHUB_STEP_SUMMARY}"
           exit 0
 
       # The question this one really asks: `rocm=therock:?a?` names no version,
@@ -112,21 +113,32 @@ jobs:
           index=https://rocm.nightlies.amd.com/v2/gfx94X-dcgpu/
           pkg=rocm-sdk-libraries-gfx94x-dcgpu
           latest="(not attempted)"
+          # A venv would keep the query off the bridge's system site-packages,
+          # but Ubuntu ships ensurepip separately and the bridge lacks it, so
+          # fall back to whatever pip is on PATH: `index versions` reads the
+          # index and installs nothing.
           if python3 -m venv /tmp/probe-venv 2>/dev/null; then
-            latest=$(/tmp/probe-venv/bin/pip index versions --json --pre \
+            pip=/tmp/probe-venv/bin/pip
+          elif command -v pip3 >/dev/null 2>&1; then
+            pip=pip3
+          else
+            pip=
+          fi
+          if [ -n "${pip}" ]; then
+            latest=$("${pip}" index versions --json --pre \
                        --index-url "${index}" "${pkg}" 2>&1 \
                        | tail -n 2 | tr -d '\n' || true)
           else
-            latest="python3 -m venv failed"
+            latest="no pip on the bridge, and python3 -m venv failed"
           fi
           {
             echo
-            echo "Resolving a wildcard against \`${index}\`:"
+            echo "Resolving a wildcard against \`${index}\` with \`${pip:-none}\`:"
             echo
             echo '```'
             echo "${latest:-(no output)}"
             echo '```'
-          } >>"${GITHUB_STEP_SUMMARY}"
+          } | tee -a "${GITHUB_STEP_SUMMARY}"
           exit 0
 
       - name: What a compute node can reach
