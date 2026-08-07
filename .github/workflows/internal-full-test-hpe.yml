@@ -6,6 +6,8 @@
 # on hpe, the MI210 machine we own. `/full test hpe` on a pull request
 # regenerates the bindings, builds every wheel from the freshly generated
 # sources and runs the suites in ci/internal/test.sh against them there.
+# `codegen=skip` builds the bindings a branch already carries instead, which is
+# what a release branch wants and what its own tree is.
 #
 # `hpe` is a site, and the other one is alola, the SLURM cluster reached over an
 # ssh bridge -- see internal-full-test-alola.yml. The two run the same pipeline
@@ -90,6 +92,7 @@ jobs:
       sources: ${{ steps.parse.outputs.sources }}
       missing: ${{ steps.parse.outputs.missing }}
       skip: ${{ steps.parse.outputs.skip }}
+      codegen: ${{ steps.parse.outputs.codegen }}
       # The commit status context, which describes the configuration, so this
       # run's check does not overwrite another configuration's.
       status: ${{ steps.parse.outputs.status }}
@@ -98,6 +101,7 @@ jobs:
       # /full test [hpe] [python=3.10..3.14] [sabi=no|3.11..3.14]
       #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
       #            [missing=fail|skip] [skip=<library>[,<library>...]]
+      #            [codegen=run|skip]
       - name: Parse the command
         id: parse
         env:
@@ -128,6 +132,13 @@ jobs:
           # Libraries to leave out by name, comma-separated. Empty generates
           # every library the selected wheels carry.
           skip=
+          # Whether to regenerate the bindings or build the ones the branch
+          # already carries. `run` is what makes this a codegen test and is
+          # the only thing amd-integration and its pull requests can do, since
+          # that is the codegen base branch and carries no rendered bindings.
+          # `skip` is for a release branch, where the committed tree is what
+          # ships and regenerating it would test something else.
+          codegen=run
 
           # The site, optional and consumed before the options: this file is
           # hpe, and a bare `/full test` still means it. Written as positional
@@ -151,6 +162,8 @@ jobs:
                 sabi=${tok#sabi=} ;;
               missing=fail|missing=skip)
                 missing=${tok#missing=} ;;
+              codegen=run|codegen=skip)
+                codegen=${tok#codegen=} ;;
               *)
                 # Anchored regexes rather than case globs for these three: two
                 # end up in a git ref and one drives an install.
@@ -196,6 +209,18 @@ jobs:
             exit 1
           fi
 
+          # The component trees are read by the codegen and by nothing else
+          # this run would do, so their ref cannot mean anything here. Saying
+          # so beats accepting a request and quietly ignoring half of it.
+          # `missing` and `skip` are not in the same position: build-wheels.sh
+          # applies both outside its codegen block, because a tree generated
+          # with libraries left out is missing their sources whether this run
+          # regenerates it or consumes it as it stands.
+          if [[ ${codegen} == skip && -n ${sources} ]]; then
+            echo "::error::sources=${sources} names the component trees the codegen reads, and codegen=skip does not run one; drop one of the two"
+            exit 1
+          fi
+
           # Sorted and de-duplicated, so `skip=a,b`, `skip=b,a` and
           # `skip=b skip=a` are one configuration rather than three checks and
           # three rows in the table. Word-splitting on the commas is safe under
@@ -235,6 +260,11 @@ jobs:
           if [[ -n ${skip} ]]; then
             status="${status}, skip ${skip}"
           fi
+          # A run that built the committed bindings tested a different artifact
+          # from one that generated them, so the two want checks of their own.
+          if [[ ${codegen} == skip ]]; then
+            status="${status}, codegen skipped"
+          fi
           status="${status})"
 
           # The allowlist above is also what keeps a crafted comment from
@@ -247,6 +277,7 @@ jobs:
             echo "sha=${sha}"
             echo "missing=${missing}"
             echo "skip=${skip}"
+            echo "codegen=${codegen}"
             echo "status=${status}"
           } >>"${GITHUB_OUTPUT}"
 
@@ -299,6 +330,7 @@ jobs:
           SOURCES: ${{ steps.parse.outputs.sources }}
           MISSING: ${{ steps.parse.outputs.missing }}
           SKIP: ${{ steps.parse.outputs.skip }}
+          CODEGEN: ${{ steps.parse.outputs.codegen }}
         run: |
           {
             echo "### full test (hpe)"
@@ -308,7 +340,12 @@ jobs:
             echo "- sabi: ${SABI}"
             echo "- gpu: mi210"
             echo "- rocm: \`${ROCM}\`"
-            echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            echo "- codegen: ${CODEGEN}"
+            if [ "${CODEGEN}" = skip ]; then
+              echo "- component sources: not read; the committed bindings are what is built"
+            else
+              echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            fi
             echo "- missing headers: ${MISSING}"
             echo "- skipped libraries: ${SKIP:-none}"
           } >>"${GITHUB_STEP_SUMMARY}"
@@ -330,6 +367,7 @@ jobs:
       sources: ${{ needs.dispatch.outputs.sources }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
+      codegen: ${{ needs.dispatch.outputs.codegen }}
 
   # The check on the commit and this site's table, written by the workflow both
   # sites share. What is site-specific is which comment it writes into and what
@@ -351,7 +389,7 @@ jobs:
       marker: <!-- full-test-overview -->
       heading: full test (hpe)
       columns: '["result", "sha", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
-      key: '["python", "sabi", "rocm", "sources", "missing", "skip"]'
+      key: '["python", "sabi", "rocm", "sources", "missing", "skip", "codegen"]'
       result: ${{ needs.build-and-test.result }}
       sha: ${{ needs.dispatch.outputs.sha }}
       status: ${{ needs.dispatch.outputs.status }}
@@ -364,3 +402,4 @@ jobs:
       sources: ${{ needs.dispatch.outputs.sources }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
+      codegen: ${{ needs.dispatch.outputs.codegen }}

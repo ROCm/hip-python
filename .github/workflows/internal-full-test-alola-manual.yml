@@ -10,7 +10,7 @@
 # When to reach for this rather than the comment: to test a branch that has no
 # pull request, to re-run a configuration against an older release branch, to
 # test a pull request head while keeping the noise out of its conversation, or to
-# name a card or an image the comment grammar does not offer.
+# name a card the comment grammar does not offer.
 #
 # The `ref` input is what gets built, and it is not the same thing as the
 # branch chosen in the UI's "Use workflow from" selector. That selector decides
@@ -74,21 +74,21 @@ on:
         description: "Libraries not to generate, by name and comma-separated, e.g. hiptensor,hipdnn_backend. Empty generates all of them"
         type: string
         default: ""
-      # The two the cluster needs, and the comment grammar offers only the first
-      # of: a run is twenty minutes of work, so the profile's own 2h is ample and
-      # raising it is for a cold image pull or a queue that has gone strange.
-      time:
-        description: SLURM wall clock limit, e.g. 2h, 90m or 02:00:00. Capped by the profile
-        type: string
-        default: 2h
-      # Here rather than in the comment grammar because the reason to change it
-      # is that the default has stopped working, which is a bad day rather than a
-      # configuration worth a row of its own. A form field means that day needs
-      # no commit to the default branch.
-      image:
-        description: Container image. The default is the manylinux image the wheels ship from
-        type: string
-        default: quay.io/pypa/manylinux_2_28_x86_64
+      # `skip` needs a ref that carries rendered bindings, which means a release
+      # branch: amd-integration is the codegen base and the run rejects it by
+      # name. `sources` then names trees nothing reads.
+      #
+      # GitHub allows a dispatch no more than ten fields, and this form was at
+      # ten. `time` and `image` came off to make room: both keep defaults on
+      # internal-full-test-alola-run.yml, the comment grammar's `time=` still
+      # asks for a longer wall clock, and an image change is now a commit --
+      # which, for something reached for on a day quay.io is down, is a cost
+      # worth paying to keep a parameter that describes what was tested.
+      codegen:
+        description: Regenerate the bindings, or build the ones the ref already carries
+        type: choice
+        options: [run, skip]
+        default: run
 
 # Per ref, as on hpe: a second run against the same ref supersedes the first,
 # where a run against a different ref is a different thing. It cancels rather
@@ -113,10 +113,12 @@ jobs:
       rocm: ${{ inputs.rocm }}
       sources: ${{ inputs.sources }}
       arch: ${{ inputs.arch }}
-      time: ${{ inputs.time }}
-      image: ${{ inputs.image }}
       missing: ${{ inputs.missing }}
       skip: ${{ inputs.skip }}
+      codegen: ${{ inputs.codegen }}
+      # time and image are left at their defaults on the run workflow: the form
+      # is at GitHub's ten-input cap and these two were the fields that
+      # described the run least.
 
   report:
     name: report
@@ -151,16 +153,15 @@ jobs:
           ROCM: ${{ inputs.rocm }}
           SOURCES: ${{ inputs.sources }}
           ARCH: ${{ inputs.arch }}
-          TIME: ${{ inputs.time }}
-          IMAGE: ${{ inputs.image }}
           MISSING: ${{ inputs.missing }}
           SKIP: ${{ inputs.skip }}
+          CODEGEN: ${{ inputs.codegen }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
-              RESULT, REF, PY, SABI, ROCM, INSTALLED, SOURCES, ARCH, TIME,
-              IMAGE, MISSING, SKIP, NODE,
+              RESULT, REF, PY, SABI, ROCM, INSTALLED, SOURCES, ARCH,
+              MISSING, SKIP, CODEGEN, NODE,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             // The faces the table in internal-full-test-report.yml uses, so a
@@ -172,7 +173,8 @@ jobs:
             const status = `full test alola (py${PY}, sabi ${SABI}, ${ROCM}, ${ARCH}`
               + (SOURCES ? `, sources ${SOURCES}` : '')
               + (MISSING === 'skip' ? ', missing skipped' : '')
-              + (SKIP ? `, skip ${SKIP}` : '') + ')';
+              + (SKIP ? `, skip ${SKIP}` : '')
+              + (CODEGEN === 'skip' ? ', codegen skipped' : '') + ')';
 
             // The run reports what it checked out, which is the commit a status
             // has to name. It is empty only when the build failed before the
@@ -201,10 +203,11 @@ jobs:
                 `sabi: ${SABI}`,
                 `gpu: ${ARCH}${NODE ? ` on ${NODE}` : ''}`,
                 `rocm: ${ROCM}${INSTALLED ? ` (installed ${INSTALLED})` : ''}`,
-                `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
+                `codegen: ${CODEGEN}`,
+                CODEGEN === 'skip'
+                  ? 'component sources: not read; the committed bindings are what is built'
+                  : `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
                 `missing headers: ${MISSING}`,
                 `skipped libraries: ${SKIP || 'none'}`,
-                `wall clock: ${TIME}`,
-                `image: ${IMAGE}`,
               ])
               .write();

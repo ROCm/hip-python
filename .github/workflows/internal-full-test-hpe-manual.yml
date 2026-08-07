@@ -67,6 +67,14 @@ on:
         description: "Libraries not to generate, by name and comma-separated, e.g. hiptensor,hipdnn_backend. Empty generates all of them"
         type: string
         default: ""
+      # `skip` needs a ref that carries rendered bindings, which means a release
+      # branch: amd-integration is the codegen base and the run rejects it by
+      # name. `sources` then names trees nothing reads.
+      codegen:
+        description: Regenerate the bindings, or build the ones the ref already carries
+        type: choice
+        options: [run, skip]
+        default: run
 
 # Per ref: a second run against the same ref supersedes the first rather than
 # queueing behind it on the single runner. A run against a different ref is a
@@ -97,6 +105,7 @@ jobs:
       sources: ${{ inputs.sources }}
       missing: ${{ inputs.missing }}
       skip: ${{ inputs.skip }}
+      codegen: ${{ inputs.codegen }}
 
   report:
     name: report
@@ -129,11 +138,12 @@ jobs:
           SOURCES: ${{ inputs.sources }}
           MISSING: ${{ inputs.missing }}
           SKIP: ${{ inputs.skip }}
+          CODEGEN: ${{ inputs.codegen }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
-              RESULT, REF, PY, SABI, ROCM, SOURCES, MISSING, SKIP,
+              RESULT, REF, PY, SABI, ROCM, SOURCES, MISSING, SKIP, CODEGEN,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             // The faces the table in internal-full-test-report.yml uses, so a
@@ -145,7 +155,8 @@ jobs:
             const status = `full test hpe (py${PY}, sabi ${SABI}, ${ROCM}, mi210`
               + (SOURCES ? `, sources ${SOURCES}` : '')
               + (MISSING === 'skip' ? ', missing skipped' : '')
-              + (SKIP ? `, skip ${SKIP}` : '') + ')';
+              + (SKIP ? `, skip ${SKIP}` : '')
+              + (CODEGEN === 'skip' ? ', codegen skipped' : '') + ')';
 
             // The run reports what it checked out, which is the commit a status
             // has to name. It is empty only when the build failed before the
@@ -174,7 +185,10 @@ jobs:
                 `sabi: ${SABI}`,
                 `gpu: mi210`,
                 `rocm: ${ROCM}`,
-                `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
+                `codegen: ${CODEGEN}`,
+                CODEGEN === 'skip'
+                  ? 'component sources: not read; the committed bindings are what is built'
+                  : `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
                 `missing headers: ${MISSING}`,
                 `skipped libraries: ${SKIP || 'none'}`,
               ])

@@ -5,6 +5,9 @@
 # The work of a full test on hpe, with no trigger of its own: regenerate the
 # bindings, build every wheel from the freshly generated sources and run the
 # suites in ci/internal/test.sh against them, on the MI210 machine we own.
+# With `codegen: skip` the first of those goes away and the wheels are built
+# from the bindings the ref already carries, which is what a release branch is
+# and what a run against one should be testing.
 #
 # Called, never dispatched. `workflow_call` does not put a workflow in the
 # Actions tab, so the two ways to start one of these are
@@ -62,6 +65,13 @@ on:
         description: Comma-separated libraries not to generate, by name. Empty generates all of them
         type: string
         required: true
+      # Defaulted rather than required so that a caller written before this
+      # existed still asks for what a full test has always meant.
+      codegen:
+        description: '"run" regenerates the bindings, "skip" builds the ones the ref carries'
+        type: string
+        required: false
+        default: run
     outputs:
       sha:
         # `ref` may be a branch, while a commit status and the artifact name
@@ -129,13 +139,20 @@ jobs:
       # Named explicitly because build-wheels.sh only auto-discovers the
       # dash-spelled names, while fetch-rocm-sources.sh writes the
       # underscore-spelled ones that generate-bindings.sh defaults to.
-      ROCM_SYSTEMS_DIR: ${{ github.workspace }}/rocm_systems
-      ROCM_LIBRARIES_DIR: ${{ github.workspace }}/rocm_libraries
-      ROCM_LLVM_PROJECT_DIR: ${{ github.workspace }}/rocm_llvm_project
+      #
+      # Empty when no codegen runs, because then the step that fetches them is
+      # skipped too and build-wheels.sh takes an explicit path at its word: a
+      # name pointing at a directory that was never cloned is worse than no
+      # name at all. Left empty, it looks for the trees, does not find them,
+      # and builds the shim the rendered tree carries instead.
+      ROCM_SYSTEMS_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_systems', github.workspace) }}
+      ROCM_LIBRARIES_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_libraries', github.workspace) }}
+      ROCM_LLVM_PROJECT_DIR: ${{ inputs.codegen == 'skip' && '' || format('{0}/rocm_llvm_project', github.workspace) }}
       # What makes this a codegen test: the bindings are regenerated at cmake
       # configure time and the build compiles that fresh output rather than the
-      # tree committed to the repository.
-      SKIP_CODEGEN: "false"
+      # tree committed to the repository. `codegen=skip` inverts that, which
+      # only a branch carrying rendered bindings can do -- see the guard below.
+      SKIP_CODEGEN: ${{ inputs.codegen == 'skip' }}
       # `missing=skip` forgives a library whose header the requested ROCm never
       # shipped, both in the codegen and in the module set the wheels build.
       HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ inputs.missing == 'skip' }}
@@ -221,6 +238,21 @@ jobs:
             exit 1
           fi
 
+      # amd-integration is the codegen base branch: the generator's output is
+      # committed onto a release branch by ci/internal/commit-bindings.sh and
+      # exists nowhere else. Without it, cmake configures happily -- the module
+      # lists are hardcoded in the packages' CMakeLists.txt -- and the build
+      # dies at the first Cython target with "No rule to make target
+      # cyhip.pyx", well into the run and nowhere near the cause.
+      - name: Check that this commit carries rendered bindings
+        if: inputs.codegen == 'skip'
+        run: |
+          set -eu
+          if [ ! -f hip_python/packages/rocm-bindings-hip/src/rocm/bindings/cyhip.pyx ]; then
+            echo "::error::this commit carries no rendered bindings, so there is nothing for codegen=skip to build; that tree is committed onto release branches, while amd-integration and its pull requests are the codegen base"
+            exit 1
+          fi
+
       # These outlive a job on a self-hosted runner, and a stale wheel left in
       # BUILD_ARTIFACTS_DIR would be installed by test.sh, which globs.
       - name: Clean the scratch directories
@@ -249,8 +281,10 @@ jobs:
         run: echo "version=${ROCM_VERSION:-}" >>"${GITHUB_OUTPUT}"
 
       # The codegen reads headers from the component trees, not only from the
-      # installation, so a codegen test needs them.
+      # installation, so a codegen test needs them -- and a run that builds a
+      # rendered tree does not, which is most of what makes that run quick.
       - name: Fetch the ROCm component sources
+        if: inputs.codegen != 'skip'
         run: bash hip_python/ci/internal/fetch-rocm-sources.sh
 
       # Cheap, and it turns a device-mapping mistake into an immediate answer

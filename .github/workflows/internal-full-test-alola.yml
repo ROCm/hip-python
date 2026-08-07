@@ -6,6 +6,8 @@
 # alola, the SLURM GPU cluster. `/full test alola` on a pull request regenerates
 # the bindings, builds every wheel from the freshly generated sources and runs
 # the suites in ci/internal/test.sh against them, on a compute node there.
+# `codegen=skip` builds the bindings a branch already carries instead, which is
+# what a release branch wants and what its own tree is.
 #
 # The sibling of internal-full-test-hpe.yml, which does the same on the MI210
 # machine we own. Both run the same pipeline from the same scripts in the same
@@ -87,6 +89,7 @@ jobs:
       time: ${{ steps.parse.outputs.time }}
       missing: ${{ steps.parse.outputs.missing }}
       skip: ${{ steps.parse.outputs.skip }}
+      codegen: ${{ steps.parse.outputs.codegen }}
       # The commit status context, which describes the configuration, so this
       # run's check does not overwrite another configuration's -- including the
       # same configuration's on the other site.
@@ -96,7 +99,7 @@ jobs:
       # /full test alola [arch=mi300x] [time=2h] [python=3.10..3.14]
       #                  [sabi=no|3.11..3.14] [rocm=<specifier>] [sources=<ref>]
       #                  [sha=<7-40 hex>] [missing=fail|skip]
-      #                  [skip=<library>[,<library>...]]
+      #                  [skip=<library>[,<library>...]] [codegen=run|skip]
       - name: Parse the command
         id: parse
         env:
@@ -134,6 +137,13 @@ jobs:
           # Libraries to leave out by name, comma-separated. Empty generates
           # every library the selected wheels carry.
           skip=
+          # Whether to regenerate the bindings or build the ones the branch
+          # already carries. `run` is what makes this a codegen test and is
+          # the only thing amd-integration and its pull requests can do, since
+          # that is the codegen base branch and carries no rendered bindings.
+          # `skip` is for a release branch, where the committed tree is what
+          # ships and regenerating it would test something else.
+          codegen=run
 
           for tok in ${line#*/full test alola}; do
             case "${tok}" in
@@ -143,6 +153,8 @@ jobs:
                 sabi=${tok#sabi=} ;;
               missing=fail|missing=skip)
                 missing=${tok#missing=} ;;
+              codegen=run|codegen=skip)
+                codegen=${tok#codegen=} ;;
               # The cards internal-full-test-alola-run.yml can name a ROCm
               # architecture for; keep the two in step. Rejecting an unknown one
               # here rather than passing it on is what turns a name we do not
@@ -216,6 +228,18 @@ jobs:
             exit 1
           fi
 
+          # The component trees are read by the codegen and by nothing else
+          # this run would do, so their ref cannot mean anything here. Saying
+          # so beats accepting a request and quietly ignoring half of it.
+          # `missing` and `skip` are not in the same position: build-wheels.sh
+          # applies both outside its codegen block, because a tree generated
+          # with libraries left out is missing their sources whether this run
+          # regenerates it or consumes it as it stands.
+          if [[ ${codegen} == skip && -n ${sources} ]]; then
+            echo "::error::sources=${sources} names the component trees the codegen reads, and codegen=skip does not run one; drop one of the two"
+            exit 1
+          fi
+
           # Sorted and de-duplicated, so `skip=a,b`, `skip=b,a` and
           # `skip=b skip=a` are one configuration rather than three checks and
           # three rows in the table. Word-splitting on the commas is safe under
@@ -255,6 +279,11 @@ jobs:
           if [[ -n ${skip} ]]; then
             status="${status}, skip ${skip}"
           fi
+          # A run that built the committed bindings tested a different artifact
+          # from one that generated them, so the two want checks of their own.
+          if [[ ${codegen} == skip ]]; then
+            status="${status}, codegen skipped"
+          fi
           status="${status})"
 
           # The allowlist above is also what keeps a crafted comment from
@@ -269,6 +298,7 @@ jobs:
             echo "sha=${sha}"
             echo "missing=${missing}"
             echo "skip=${skip}"
+            echo "codegen=${codegen}"
             echo "status=${status}"
           } >>"${GITHUB_OUTPUT}"
 
@@ -323,6 +353,7 @@ jobs:
           TIME: ${{ steps.parse.outputs.time }}
           MISSING: ${{ steps.parse.outputs.missing }}
           SKIP: ${{ steps.parse.outputs.skip }}
+          CODEGEN: ${{ steps.parse.outputs.codegen }}
         run: |
           {
             echo "### full test (alola)"
@@ -332,7 +363,12 @@ jobs:
             echo "- sabi: ${SABI}"
             echo "- gpu: ${ARCH}"
             echo "- rocm: \`${ROCM}\`"
-            echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            echo "- codegen: ${CODEGEN}"
+            if [ "${CODEGEN}" = skip ]; then
+              echo "- component sources: not read; the committed bindings are what is built"
+            else
+              echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            fi
             echo "- missing headers: ${MISSING}"
             echo "- skipped libraries: ${SKIP:-none}"
             echo "- wall clock: ${TIME}"
@@ -357,6 +393,7 @@ jobs:
       time: ${{ needs.dispatch.outputs.time }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
+      codegen: ${{ needs.dispatch.outputs.codegen }}
       # image is left at its default, the manylinux image the wheels ship from.
       # Naming another one is what the manual form is for, on a day quay.io is
       # having a bad one.
@@ -379,7 +416,7 @@ jobs:
       marker: <!-- full-test-alola-overview -->
       heading: full test (alola)
       columns: '["result", "sha", "arch", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
-      key: '["arch", "python", "sabi", "rocm", "sources", "missing", "skip"]'
+      key: '["arch", "python", "sabi", "rocm", "sources", "missing", "skip", "codegen"]'
       result: ${{ needs.build-and-test.result }}
       sha: ${{ needs.dispatch.outputs.sha }}
       status: ${{ needs.dispatch.outputs.status }}
@@ -394,3 +431,4 @@ jobs:
       arch: ${{ needs.dispatch.outputs.arch }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
+      codegen: ${{ needs.dispatch.outputs.codegen }}

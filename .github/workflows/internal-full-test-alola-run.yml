@@ -5,7 +5,9 @@
 # The work of a full test on alola, with no trigger of its own: regenerate the
 # bindings, build every wheel from the freshly generated sources and run the
 # suites in ci/internal/test.sh against them, as a SLURM batch job on the alola
-# GPU cluster.
+# GPU cluster. With `codegen: skip` the first of those goes away, and with it
+# the component trees and the version derivation they need, leaving the wheels
+# to be built from the bindings the ref already carries.
 #
 # Called, never dispatched. `workflow_call` does not put a workflow in the
 # Actions tab, so the two ways to start one of these are
@@ -68,13 +70,20 @@ on:
         description: GPU variant to allocate, e.g. mi300x
         type: string
         required: true
+      # Defaulted to the profile's own limit, which a measured run -- three
+      # minutes of ROCm install, fourteen of codegen and wheels, one of suites
+      # -- leaves ample. Raising it is for a cold image pull or a queue that has
+      # gone strange, and the comment grammar's `time=` is where that is asked
+      # for: the manual form gave the option up to stay under GitHub's ten-input
+      # cap on a dispatch.
       time:
         description: SLURM wall clock limit for the batch job, e.g. 2h
         type: string
-        required: true
-      # An input rather than a constant so another image can be named from the
-      # Actions tab on a day quay.io is down, without a commit to the default
-      # branch. It is the same image the release wheels are built in. The
+        required: false
+        default: 2h
+      # An input rather than a constant so that naming another image on a day
+      # quay.io is down is a one-line change here rather than a hunt through
+      # the steps. It is the same image the release wheels are built in. The
       # mkmhub mirror is not an alternative: its only proxy is Docker Hub, and
       # pypa publishes the manylinux images to quay.io alone.
       image:
@@ -90,6 +99,13 @@ on:
         description: Comma-separated libraries not to generate, by name. Empty generates all of them
         type: string
         required: true
+      # Defaulted rather than required so that a caller written before this
+      # existed still asks for what a full test has always meant.
+      codegen:
+        description: '"run" regenerates the bindings, "skip" builds the ones the ref carries'
+        type: string
+        required: false
+        default: run
     outputs:
       sha:
         description: The commit that was checked out
@@ -219,10 +235,17 @@ jobs:
       # naming the missing script and the branch that carries it takes ten
       # seconds.
       - name: Check that this commit carries the container scripts
+        env:
+          CODEGEN: ${{ inputs.codegen }}
         run: |
           set -eu
-          for script in prepare-container.sh fetch-rocm-sources.sh librocm.sh \
-                        build-wheels.sh test.sh; do
+          scripts="prepare-container.sh librocm.sh build-wheels.sh test.sh"
+          # Only a codegen run reads the component trees, so only a codegen run
+          # needs the script that fetches them.
+          if [ "${CODEGEN}" != skip ]; then
+            scripts="${scripts} fetch-rocm-sources.sh"
+          fi
+          for script in ${scripts}; do
             if [ ! -f "hip_python/ci/internal/${script}" ]; then
               echo "::error::this commit has no ci/internal/${script}; a full test needs the container scripts, which are on ci/codegen-tolerance and its descendants"
               exit 1
@@ -255,6 +278,20 @@ jobs:
             exit 1
           fi
 
+      # amd-integration is the codegen base branch: the generator's output is
+      # committed onto a release branch by ci/internal/commit-bindings.sh and
+      # exists nowhere else. Without it, cmake configures happily -- the module
+      # lists are hardcoded in the packages' CMakeLists.txt -- and the build
+      # dies at the first Cython target, on a card that had to be waited for.
+      - name: Check that this commit carries rendered bindings
+        if: inputs.codegen == 'skip'
+        run: |
+          set -eu
+          if [ ! -f hip_python/packages/rocm-bindings-hip/src/rocm/bindings/cyhip.pyx ]; then
+            echo "::error::this commit carries no rendered bindings, so there is nothing for codegen=skip to build; that tree is committed onto release branches, while amd-integration and its pull requests are the codegen base"
+            exit 1
+          fi
+
       # The workspace outlives a job on a self-hosted runner, and everything in
       # it is staged to the cluster. A previous run's wheels would be uploaded
       # again and its rocm-version.txt reported as this run's.
@@ -280,6 +317,7 @@ jobs:
       # which headers the codegen reads.
       - name: Work out which ROCm version the component sources belong to
         id: version
+        if: inputs.codegen != 'skip'
         env:
           ROCM: ${{ inputs.rocm }}
           SOURCES: ${{ inputs.sources }}
@@ -339,7 +377,10 @@ jobs:
       # meant to need nothing but a container registry, and these are three git
       # clones. They are sparse, blobless and header-only, and .git is not
       # staged, so what crosses the wire is a few tens of megabytes of headers.
+      # A run that builds a rendered tree needs none of it, which is a large
+      # part of why that run is quick.
       - name: Fetch the ROCm component sources
+        if: inputs.codegen != 'skip'
         env:
           ROCM_VERSION: ${{ steps.version.outputs.version }}
         run: bash hip_python/ci/internal/fetch-rocm-sources.sh
@@ -367,6 +408,13 @@ jobs:
           # only makes sense on a runner: the three directories the container
           # sees at fixed paths, and ROCM_VERSION, which prepare-container.sh
           # reads back out of the installation it makes.
+          #
+          # Those three go empty when no codegen runs, because then nothing
+          # staged them into the workspace and build-wheels.sh takes an
+          # explicit path at its word -- it would hand cmake a directory that
+          # is not there instead of building the shim the rendered tree
+          # carries. An empty value is a shape the harness already sees:
+          # ROCM_SOURCES_REF is empty on most runs.
           env: |
             ROCM_SPECIFIER=${{ inputs.rocm }}
             ROCM_SOURCES_REF=${{ inputs.sources }}
@@ -374,12 +422,12 @@ jobs:
             AMDGPU_TARGETS=${{ steps.target.outputs.target }}
             MANYLINUX_DEFAULT_PYTHON_VERSION=${{ inputs.python }}
             USE_SABI=${{ inputs.sabi }}
-            SKIP_CODEGEN=false
+            SKIP_CODEGEN=${{ inputs.codegen == 'skip' }}
             HIP_PYTHON_ALLOW_MISSING_HEADERS=${{ inputs.missing == 'skip' }}
             HIP_PYTHON_SKIP_LIBRARIES=${{ inputs.skip }}
-            ROCM_SYSTEMS_DIR=/workspace/rocm_systems
-            ROCM_LIBRARIES_DIR=/workspace/rocm_libraries
-            ROCM_LLVM_PROJECT_DIR=/workspace/rocm_llvm_project
+            ROCM_SYSTEMS_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_systems' }}
+            ROCM_LIBRARIES_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_libraries' }}
+            ROCM_LLVM_PROJECT_DIR=${{ inputs.codegen == 'skip' && '' || '/workspace/rocm_llvm_project' }}
             MAX_JOBS=32
           # The hpe job's steps, in order, as one script: the harness runs it
           # from /workspace inside the container, under `set -euo pipefail`,

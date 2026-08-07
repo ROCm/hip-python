@@ -110,6 +110,11 @@ on:
         type: string
         required: false
         default: ""
+      codegen:
+        description: '"run" regenerated the bindings, "skip" built the ones the commit carried'
+        type: string
+        required: false
+        default: run
 
 permissions: {}
 
@@ -150,12 +155,13 @@ jobs:
           MISSING: ${{ inputs.missing }}
           SKIP: ${{ inputs.skip }}
           ARCH: ${{ inputs.arch }}
+          CODEGEN: ${{ inputs.codegen }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
               MARKER, HEADING, RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED,
-              SOURCES, MISSING, SKIP, ARCH,
+              SOURCES, MISSING, SKIP, ARCH, CODEGEN,
             } = process.env;
             const columns = JSON.parse(process.env.COLUMNS);
             const keyFields = JSON.parse(process.env.KEY);
@@ -201,6 +207,7 @@ jobs:
               result: RESULT, sha: SHA, python: PY, sabi: SABI, rocm: ROCM,
               installed: INSTALLED || '', sources: SOURCES || '',
               missing: MISSING, skip: SKIP || '', arch: ARCH || '',
+              codegen: CODEGEN || 'run',
               run: String(context.runId), at: new Date().toISOString(),
             };
 
@@ -214,7 +221,14 @@ jobs:
                 // A hand-edited or truncated payload costs the history, not the
                 // run: reporting must not be what fails a build. The commit is
                 // what every row has and every renderer below needs.
-                return Array.isArray(rows) ? rows.filter((r) => r && r.sha) : [];
+                if (!Array.isArray(rows)) return [];
+                return rows.filter((r) => r && r.sha).map((r) => (
+                  // Every row written before there was a choice was a codegen
+                  // run, and `codegen` is part of a configuration's identity:
+                  // read as anything else, such a row would never be replaced
+                  // and would sit in the table beside its own successor.
+                  { ...r, codegen: r.codegen || 'run' }
+                ));
               } catch {
                 return [];
               }
@@ -256,6 +270,10 @@ jobs:
                     r.sources ? `sources=\`${r.sources}\`` : '',
                     r.missing === 'skip' ? 'missing=skip' : '',
                     r.skip ? `skip=\`${r.skip}\`` : '',
+                    // The one flag that says the wheels were built from the
+                    // committed bindings rather than freshly generated ones,
+                    // which is a different artifact and so a different row.
+                    r.codegen === 'skip' ? 'codegen=skip' : '',
                   ].filter(Boolean).join(', ');
                 default:
                   return r[field] ?? '';
