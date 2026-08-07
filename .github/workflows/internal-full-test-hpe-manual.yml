@@ -136,6 +136,11 @@ jobs:
               RESULT, REF, PY, SABI, ROCM, SOURCES, MISSING, SKIP,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            // The faces the table in internal-full-test-report.yml uses, so a
+            // result reads the same wherever it is reported.
+            const face = {
+              success: '✅', failure: '❌', cancelled: '🚫', skipped: '⏭️',
+            }[RESULT] ?? '';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const status = `full test hpe (py${PY}, sabi ${SABI}, ${ROCM}, mi210`
               + (SOURCES ? `, sources ${SOURCES}` : '')
@@ -162,7 +167,7 @@ jobs:
             await core.summary
               .addHeading('full test (hpe, manual)', 3)
               .addList([
-                `result: ${RESULT}`,
+                `result: ${face ? `${face} ` : ''}${RESULT}`,
                 `ref: ${REF}`,
                 `commit: ${sha}`,
                 `python: ${PY}`,

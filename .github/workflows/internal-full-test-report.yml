@@ -227,6 +227,20 @@ jobs:
             const label = { sha: 'commit', at: 'finished' };
             const cell = (r, field) => {
               switch (field) {
+                // Emoji is all the colour a table cell can carry: markdown has
+                // no span to set one on, and a badge image would send every
+                // reader of every table through a service outside the
+                // organization. Failure takes the weight as well, because it
+                // is the one value a table of results is scanned for, and an
+                // unknown state is left as the word rather than given an emoji
+                // that would suggest this workflow understood it.
+                case 'result':
+                  return {
+                    success: '✅ success',
+                    failure: '❌ **failure**',
+                    cancelled: '🚫 cancelled',
+                    skipped: '⏭️ skipped',
+                  }[r.result] ?? r.result;
                 case 'sha':
                   return `[\`${r.sha.slice(0, 7)}\`](${server}/commit/${r.sha})`;
                 case 'rocm':

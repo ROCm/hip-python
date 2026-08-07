@@ -163,6 +163,11 @@ jobs:
               IMAGE, MISSING, SKIP, NODE,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            // The faces the table in internal-full-test-report.yml uses, so a
+            // result reads the same wherever it is reported.
+            const face = {
+              success: '✅', failure: '❌', cancelled: '🚫', skipped: '⏭️',
+            }[RESULT] ?? '';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const status = `full test alola (py${PY}, sabi ${SABI}, ${ROCM}, ${ARCH}`
               + (SOURCES ? `, sources ${SOURCES}` : '')
@@ -189,7 +194,7 @@ jobs:
             await core.summary
               .addHeading('full test (alola, manual)', 3)
               .addList([
-                `result: ${RESULT}`,
+                `result: ${face ? `${face} ` : ''}${RESULT}`,
                 `ref: ${REF}`,
                 `commit: ${sha}`,
                 `python: ${PY}`,
