@@ -2,15 +2,18 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# The work of a full test, with no trigger of its own: regenerate the bindings,
-# build every wheel from the freshly generated sources and run the suites in
-# ci/internal/test.sh against them, on our own hardware.
+# The work of a full test on hpe, with no trigger of its own: regenerate the
+# bindings, build every wheel from the freshly generated sources and run the
+# suites in ci/internal/test.sh against them, on the MI210 machine we own.
 #
 # Called, never dispatched. `workflow_call` does not put a workflow in the
 # Actions tab, so the two ways to start one of these are
-# internal-full-test.yml (a `/full test` comment on a pull request) and
-# internal-full-test-manual.yml (the Actions tab). Everything either of them
+# internal-full-test-hpe.yml (a `/full test hpe` comment on a pull request) and
+# internal-full-test-hpe-manual.yml (the Actions tab). Everything either of them
 # decides arrives here as an input, which is what lets one job serve both.
+#
+# The other site's copy of this is internal-full-test-alola-run.yml, which runs
+# the same scripts with the same inputs as a SLURM batch job.
 #
 # The container is a stock manylinux image, the same one the release wheels are
 # built in, and ci/internal/prepare-container.sh installs the requested ROCm
@@ -23,7 +26,7 @@
 # grant it `contents: read` and nothing else; a called workflow cannot widen
 # what it was granted.
 
-name: full test (run)
+name: full test (hpe, run)
 
 on:
   workflow_call:
@@ -49,10 +52,6 @@ on:
         required: true
       sources:
         description: One ref for the three component trees. Empty derives it from the specifier
-        type: string
-        required: true
-      gpu:
-        description: Architecture, which is both the runner label and the ROCm distribution
         type: string
         required: true
       missing:
@@ -83,12 +82,12 @@ permissions: {}
 
 jobs:
   build-and-test:
-    name: build and test (python ${{ inputs.python }}, rocm ${{ inputs.rocm }}, ${{ inputs.gpu }})
-    # runs-on is evaluated before a machine is allocated, so it can read an
-    # input but nothing produced by a step. Runners are labelled with the
-    # architecture they carry, which is why the same token below also picks the
-    # ROCm distribution: label and build cannot then disagree.
-    runs-on: [self-hosted, linux, "${{ inputs.gpu }}"]
+    name: build and test (python ${{ inputs.python }}, rocm ${{ inputs.rocm }}, mi210)
+    # The architecture is not an input: this site is one machine, and asking for
+    # its only card was a way to mistype a runner label. gfx90a here rather than
+    # mi210 because that is what the machine is labelled with -- relabelling it
+    # is the one thing that changes this line.
+    runs-on: [self-hosted, linux, gfx90a]
     timeout-minutes: 300
     # The only job that touches the code under test, and all it may do is read
     # it.
@@ -120,12 +119,12 @@ jobs:
       # installation and exports it.
       ROCM_SPECIFIER: ${{ inputs.rocm }}
       ROCM_SOURCES_REF: ${{ inputs.sources }}
-      # The label of the machine this landed on, which is the architecture it
-      # carries. All it does here is select which ROCm distribution is
-      # downloaded (gfx90a -> the gfx90X-dcgpu tarball): no device code is
-      # compiled while building the wheels, and the suites ask the device for
-      # its arch at runtime.
-      AMDGPU_TARGETS: ${{ inputs.gpu }}
+      # The architecture the machine above carries, which is what selects the
+      # ROCm distribution that gets downloaded (gfx90a -> the gfx90X-dcgpu
+      # tarball). Nothing else reads it: no device code is compiled while
+      # building the wheels, and the suites ask the device for its arch at
+      # runtime.
+      AMDGPU_TARGETS: gfx90a
       MANYLINUX_DEFAULT_PYTHON_VERSION: ${{ inputs.python }}
       # Named explicitly because build-wheels.sh only auto-discovers the
       # dash-spelled names, while fetch-rocm-sources.sh writes the

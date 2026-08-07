@@ -9,10 +9,10 @@
 # interchangeable.
 #
 # Nothing here touches a GPU -- the Jenkins node sets MAP_GPUS: false -- so no
-# architecture label is asked for, unlike internal-full-test.yml. What it does
-# need is disk and cores, for a ROCm install and three component trees; any
-# internal linux runner has both. AMDGPU_TARGETS below only picks which ROCm
-# distribution is downloaded.
+# architecture label is asked for, unlike internal-full-test-hpe-run.yml. What
+# it does need is disk and cores, for a ROCm install and three component trees;
+# any internal linux runner has both. AMDGPU_TARGETS below only picks which
+# ROCm distribution is downloaded.
 #
 # The container is a stock manylinux image; ci/internal/prepare-container.sh
 # installs the ROCm named by the specifier and ci/internal/fetch-rocm-sources.sh

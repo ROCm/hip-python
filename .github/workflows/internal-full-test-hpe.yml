@@ -2,15 +2,21 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# The device-attached half of CI, on demand: the comment path into a full test.
-# `/full test` on a pull request regenerates the bindings, builds every wheel
-# from the freshly generated sources and runs the suites in ci/internal/test.sh
-# against them, on our own hardware.
+# The device-attached half of CI, on demand: the comment path into a full test
+# on hpe, the MI210 machine we own. `/full test hpe` on a pull request
+# regenerates the bindings, builds every wheel from the freshly generated
+# sources and runs the suites in ci/internal/test.sh against them there.
 #
-# This file turns a comment into the eight values that describe a run, and
-# reports the outcome back to the pull request. The run itself lives in
-# internal-full-test-run.yml, which internal-full-test-manual.yml calls with
-# the same eight values from the Actions tab.
+# `hpe` is a site, and the other one is alola, the SLURM cluster reached over an
+# ssh bridge -- see internal-full-test-alola.yml. The two run the same pipeline
+# from the same scripts; only the machine and how it is claimed differ. Naming
+# the site is what keeps their checks and their tables apart. A bare
+# `/full test` still means this one, since it did before there was a choice.
+#
+# This file turns a comment into the values that describe a run, and reports the
+# outcome back to the pull request. The run itself lives in
+# internal-full-test-hpe-run.yml, which internal-full-test-hpe-manual.yml calls
+# with the same values from the Actions tab.
 #
 # A comment command rather than a `pull_request` trigger because it occupies
 # the one machine with a GPU for hours, which is not something every push
@@ -23,7 +29,7 @@
 # copy in the pull request being tested. Changes here take effect once merged,
 # and cannot be tried out from a pull request.
 
-name: full test
+name: full test (hpe)
 
 on:
   issue_comment:
@@ -51,10 +57,15 @@ jobs:
     #
     # Every comment in the repository starts a run of this workflow, and all but
     # these end here, having allocated nothing.
+    #
+    # `/full test alola` is the other site's command and its own workflow, so it
+    # is excluded here rather than parsed and rejected: both files match on a
+    # prefix, and only the more specific one may claim that body.
     if: >-
       github.repository_owner == 'AMD-AIOSS'
       && github.event.issue.pull_request
       && startsWith(github.event.comment.body, '/full test')
+      && !startsWith(github.event.comment.body, '/full test alola')
       && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
                   github.event.comment.author_association)
     # Self-hosted because the organization's IP allow list rejects a hosted
@@ -77,7 +88,6 @@ jobs:
       sabi: ${{ steps.parse.outputs.sabi }}
       rocm: ${{ steps.parse.outputs.rocm }}
       sources: ${{ steps.parse.outputs.sources }}
-      gpu: ${{ steps.parse.outputs.gpu }}
       missing: ${{ steps.parse.outputs.missing }}
       skip: ${{ steps.parse.outputs.skip }}
       # The commit status context, which describes the configuration, so this
@@ -85,7 +95,7 @@ jobs:
       status: ${{ steps.parse.outputs.status }}
 
     steps:
-      # /full test [python=3.10..3.14] [sabi=no|3.11..3.14] [gpu=gfx<arch>]
+      # /full test [hpe] [python=3.10..3.14] [sabi=no|3.11..3.14]
       #            [rocm=<specifier>] [sources=<ref>] [sha=<7-40 hex>]
       #            [missing=fail|skip] [skip=<library>[,<library>...]]
       - name: Parse the command
@@ -111,9 +121,6 @@ jobs:
           rocm=therock:7.14.0
           sources=
           sha=
-          # Both the runner label and the ROCm distribution that gets installed,
-          # so the machine and the build cannot disagree about the architecture.
-          gpu=gfx90a
           # A header the requested ROCm never shipped fails the codegen, which
           # is what a test of the current ROCm should do. `skip` is for testing
           # against a release old enough to predate a library.
@@ -122,7 +129,21 @@ jobs:
           # every library the selected wheels carry.
           skip=
 
-          for tok in ${line#*/full test}; do
+          # The site, optional and consumed before the options: this file is
+          # hpe, and a bare `/full test` still means it. Written as positional
+          # parameters so the token can be shifted off the front.
+          set -- ${line#*/full test}
+          case "${1:-}" in
+            hpe) shift ;;
+            # `/full test  alola`, with two spaces, does not match the prefix
+            # the alola workflow triggers on and so arrives here instead, where
+            # "unknown option 'alola'" would be a puzzle worth avoiding.
+            alola)
+              echo "::error::write '/full test alola' with a single space"
+              exit 1 ;;
+          esac
+
+          for tok in "$@"; do
             case "${tok}" in
               python=3.1[0-4])
                 python=${tok#python=} ;;
@@ -131,9 +152,8 @@ jobs:
               missing=fail|missing=skip)
                 missing=${tok#missing=} ;;
               *)
-                # Anchored regexes rather than case globs for these four: two
-                # end up in a git ref, one drives an install, one becomes a
-                # runner label.
+                # Anchored regexes rather than case globs for these three: two
+                # end up in a git ref and one drives an install.
                 #
                 # The rocm pattern is the ROCM_SPECIFIER grammar of
                 # ci/internal/librocm.sh, minus the two forms that need the
@@ -145,11 +165,6 @@ jobs:
                 # on as typed; librocm.sh rewrites them to the `*` forms.
                 if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
                   rocm=${tok#rocm=}
-                # Only an architecture name, never an arbitrary label: this one
-                # decides which machine the job is handed to, and the artifact
-                # groups librocm.sh also accepts (gfx90X-dcgpu) are not labels.
-                elif [[ ${tok} =~ ^gpu=gfx[0-9]{2,4}[a-z]?$ ]]; then
-                  gpu=${tok#gpu=}
                 elif [[ ${tok} =~ ^sources=[A-Za-z0-9._/-]{1,100}$ ]]; then
                   sources=${tok#sources=}
                 elif [[ ${tok} =~ ^sha=[0-9a-fA-F]{7,40}$ ]]; then
@@ -199,7 +214,13 @@ jobs:
           #
           # The specifier rather than the version that ends up installed --
           # nothing is installed yet at this point.
-          status="full test (py${python}, sabi ${sabi}, ${rocm}, ${gpu}"
+          #
+          # The site is in there because alola tests the same configurations on
+          # other cards, and a context it shared would have one site's run
+          # overwrite the other's check. `mi210` is what this site's one machine
+          # is, spelled the way a reader recognises rather than as the gfx90a
+          # runner label; it is constant here and the request on alola.
+          status="full test hpe (py${python}, sabi ${sabi}, ${rocm}, mi210"
           # An if rather than `[[ ... ]] &&`, which under `set -e` would exit
           # the step the moment the condition did not hold.
           if [[ -n ${sources} ]]; then
@@ -223,7 +244,6 @@ jobs:
             echo "sabi=${sabi}"
             echo "rocm=${rocm}"
             echo "sources=${sources}"
-            echo "gpu=${gpu}"
             echo "sha=${sha}"
             echo "missing=${missing}"
             echo "skip=${skip}"
@@ -277,17 +297,16 @@ jobs:
           SABI: ${{ steps.parse.outputs.sabi }}
           ROCM: ${{ steps.parse.outputs.rocm }}
           SOURCES: ${{ steps.parse.outputs.sources }}
-          GPU: ${{ steps.parse.outputs.gpu }}
           MISSING: ${{ steps.parse.outputs.missing }}
           SKIP: ${{ steps.parse.outputs.skip }}
         run: |
           {
-            echo "### full test"
+            echo "### full test (hpe)"
             echo
             echo "- commit: \`${SHA}\`"
             echo "- python: ${PY}"
             echo "- sabi: ${SABI}"
-            echo "- gpu: ${GPU}"
+            echo "- gpu: mi210"
             echo "- rocm: \`${ROCM}\`"
             echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
             echo "- missing headers: ${MISSING}"
@@ -302,14 +321,13 @@ jobs:
     needs: dispatch
     permissions:
       contents: read
-    uses: ./.github/workflows/internal-full-test-run.yml
+    uses: ./.github/workflows/internal-full-test-hpe-run.yml
     with:
       ref: ${{ needs.dispatch.outputs.sha }}
       python: ${{ needs.dispatch.outputs.python }}
       sabi: ${{ needs.dispatch.outputs.sabi }}
       rocm: ${{ needs.dispatch.outputs.rocm }}
       sources: ${{ needs.dispatch.outputs.sources }}
-      gpu: ${{ needs.dispatch.outputs.gpu }}
       missing: ${{ needs.dispatch.outputs.missing }}
       skip: ${{ needs.dispatch.outputs.skip }}
 
@@ -348,14 +366,13 @@ jobs:
           # asked for it. Empty when the run failed before installing anything.
           INSTALLED: ${{ needs.build-and-test.outputs.rocm_version }}
           SOURCES: ${{ needs.dispatch.outputs.sources }}
-          GPU: ${{ needs.dispatch.outputs.gpu }}
           MISSING: ${{ needs.dispatch.outputs.missing }}
           SKIP: ${{ needs.dispatch.outputs.skip }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
-              RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED, SOURCES, GPU,
+              RESULT, SHA, STATUS, PY, SABI, ROCM, INSTALLED, SOURCES,
               MISSING, SKIP,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
@@ -396,12 +413,18 @@ jobs:
             // not. A row written before the option existed has no `skip` at
             // all, which joins as the empty string and so still matches a run
             // that skipped nothing.
+            //
+            // The architecture is not in here, though rows written before this
+            // site had a name carry a `gpu` of gfx90a: there is one machine, so
+            // it was never a choice, and leaving the field out of the key rather
+            // than matching on it is what keeps those rows matching a run made
+            // today. It stays in their payload, ignored.
             const key = (r) =>
-              [r.python, r.sabi, r.rocm, r.sources, r.gpu, r.missing, r.skip || '']
+              [r.python, r.sabi, r.rocm, r.sources, r.missing, r.skip || '']
                 .join('|');
             const row = {
               result: RESULT, sha: SHA, python: PY, sabi: SABI, rocm: ROCM,
-              installed: INSTALLED || '', gpu: GPU, sources: SOURCES || '',
+              installed: INSTALLED || '', sources: SOURCES || '',
               missing: MISSING, skip: SKIP || '', run: String(context.runId),
               at: new Date().toISOString(),
             };
@@ -423,13 +446,13 @@ jobs:
 
             const render = (rows) => [
               MARKER,
-              '### full test',
+              '### full test (hpe)',
               '',
               'One row per configuration, carrying its latest run. A commit that is not',
               'the head is a configuration this pull request has not been through since.',
               '',
-              '| result | commit | python | sabi | rocm | installed | gpu | flags | run | finished |',
-              '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+              '| result | commit | python | sabi | rocm | installed | flags | run | finished |',
+              '| --- | --- | --- | --- | --- | --- | --- | --- | --- |',
               ...rows.map((r) => {
                 const flags = [
                   r.sources ? `sources=\`${r.sources}\`` : '',
@@ -443,7 +466,6 @@ jobs:
                   r.sabi,
                   `\`${r.rocm}\``,
                   r.installed ? `\`${r.installed}\`` : '—',
-                  r.gpu,
                   flags,
                   `[log](${server}/actions/runs/${r.run})`,
                   `${r.at.slice(0, 16).replace('T', ' ')} UTC`,

@@ -2,10 +2,10 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# A full test started from the Actions tab, against any ref. The same run as a
-# `/full test` comment produces -- both callers hand the same eight values to
-# internal-full-test-run.yml -- so this file is only the parameter form and the
-# commit status.
+# A full test on hpe started from the Actions tab, against any ref. The same run
+# as a `/full test hpe` comment produces -- both callers hand the same values to
+# internal-full-test-hpe-run.yml -- so this file is only the parameter form and
+# the commit status.
 #
 # When to reach for this rather than the comment: to test a branch that has no
 # pull request, to re-run a configuration against an older release branch, or
@@ -22,7 +22,7 @@
 # requires write access, so the authorization the comment path has to check for
 # itself is GitHub's own here.
 
-name: full test (manual)
+name: full test (hpe, manual)
 
 on:
   workflow_dispatch:
@@ -44,16 +44,9 @@ on:
         type: choice
         options: ["no", "3.11", "3.12", "3.13", "3.14"]
         default: "no"
-      # A dropdown rather than the comment grammar's free-form gfx<arch>,
-      # because this value becomes a runner label: an architecture nobody has
-      # would leave the job queued until the timeout instead of failing. One
-      # option today, since the fleet is one MI210 machine; add a label here
-      # when a runner carrying another architecture joins it.
-      gpu:
-        description: Architecture. Both the runner label and the ROCm distribution
-        type: choice
-        options: [gfx90a]
-        default: gfx90a
+      # No architecture: this site is one MI210 machine, so a dropdown with one
+      # option was a question with one answer. internal-full-test-alola-manual.yml
+      # is where an architecture is a choice.
       rocm:
         # The `?` spellings mean the same as the `*` ones; they exist because a
         # `/full test` comment renders `*a*` as emphasis. Named here too so the
@@ -95,14 +88,13 @@ jobs:
     if: github.repository_owner == 'AMD-AIOSS'
     permissions:
       contents: read
-    uses: ./.github/workflows/internal-full-test-run.yml
+    uses: ./.github/workflows/internal-full-test-hpe-run.yml
     with:
       ref: ${{ inputs.ref }}
       python: ${{ inputs.python }}
       sabi: ${{ inputs.sabi }}
       rocm: ${{ inputs.rocm }}
       sources: ${{ inputs.sources }}
-      gpu: ${{ inputs.gpu }}
       missing: ${{ inputs.missing }}
       skip: ${{ inputs.skip }}
 
@@ -121,8 +113,8 @@ jobs:
       # run against a pull request head then updates the very check a reviewer
       # is already looking at. That is only true while the two agree on how the
       # context is spelled, so the format below mirrors the one the dispatch
-      # job of internal-full-test.yml builds -- a workflow cannot read another
-      # workflow's step outputs, which is why it is written twice.
+      # job of internal-full-test-hpe.yml builds -- a workflow cannot read
+      # another workflow's step outputs, which is why it is written twice.
       #
       # There is no comment to leave -- a dispatch has no pull request in
       # context -- so the status and the step summary are the whole report.
@@ -135,18 +127,17 @@ jobs:
           SABI: ${{ inputs.sabi }}
           ROCM: ${{ inputs.rocm }}
           SOURCES: ${{ inputs.sources }}
-          GPU: ${{ inputs.gpu }}
           MISSING: ${{ inputs.missing }}
           SKIP: ${{ inputs.skip }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
-              RESULT, REF, PY, SABI, ROCM, SOURCES, GPU, MISSING, SKIP,
+              RESULT, REF, PY, SABI, ROCM, SOURCES, MISSING, SKIP,
             } = process.env;
             const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
             const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-            const status = `full test (py${PY}, sabi ${SABI}, ${ROCM}, ${GPU}`
+            const status = `full test hpe (py${PY}, sabi ${SABI}, ${ROCM}, mi210`
               + (SOURCES ? `, sources ${SOURCES}` : '')
               + (MISSING === 'skip' ? ', missing skipped' : '')
               + (SKIP ? `, skip ${SKIP}` : '') + ')';
@@ -169,14 +160,14 @@ jobs:
             // A dispatched run is not reproducible from anywhere else: the
             // parameters exist only in the form that was submitted.
             await core.summary
-              .addHeading('full test (manual)', 3)
+              .addHeading('full test (hpe, manual)', 3)
               .addList([
                 `result: ${RESULT}`,
                 `ref: ${REF}`,
                 `commit: ${sha}`,
                 `python: ${PY}`,
                 `sabi: ${SABI}`,
-                `gpu: ${GPU}`,
+                `gpu: mi210`,
                 `rocm: ${ROCM}`,
                 `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
                 `missing headers: ${MISSING}`,
