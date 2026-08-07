@@ -177,10 +177,18 @@ jobs:
           set -eu
           case "${ARCH,,}" in
             mi300x|mi300a|mi308x|mi325x) target=gfx942 ;;
-            mi350x|mi355x) target=gfx950 ;;
+            # The artifact group rather than gfx950, and the one card here that
+            # needs it: librocm.sh derives a group by replacing the target's last
+            # character with X, which turns gfx90a into gfx90X-dcgpu and gfx942
+            # into gfx94X-dcgpu but gfx950 into a gfx95X-dcgpu that does not
+            # exist. Naming the group works because install_therock_from_tarball
+            # tries the value verbatim first.
+            mi350x|mi355x) target=gfx950-dcgpu ;;
             mi210|mi210x|mi250) target=gfx90a ;;
             # A canonical GRES name carries the architecture in front of the
-            # model, which is the one spelling that needs no map at all.
+            # model, which is the one spelling that needs no map at all -- with
+            # the same caveat about gfx950 as above, so gfx950-mi355x is better
+            # asked for as mi355x.
             gfx*-*) target=${ARCH%%-*} ;;
             gfx*) target=${ARCH,,} ;;
             *)
