@@ -1,0 +1,265 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# What a full test on alola will find, in two minutes instead of twenty.
+#
+# A `/full test alola` puts a manylinux container on a SLURM GPU node and has
+# ci/internal/prepare-container.sh install ROCm into it, so it needs rather more
+# of that node than a GPU: an image that pulls, a package mirror for the few
+# tools the image lacks, PyPI for the build's own dependencies, and whichever of
+# rocm.nightlies.amd.com and repo.radeon.com the requested ROCm comes from.
+# Every one of those is a property of the cluster rather than of this
+# repository, and each fails a long way into a run when it is absent.
+#
+# So this asks all of it up front, reports every answer instead of stopping at
+# the first no, and stays afterwards as the first thing to run when alola
+# misbehaves. It also answers the two questions that decide how
+# internal-full-test-alola-run.yml has to be built:
+#
+#   - can a compute node reach github.com? If it can, the component sources
+#     could be cloned in the container; if it cannot, the bridge has to fetch
+#     them and let them travel in the staged workspace, which is what the run
+#     workflow does.
+#   - can the bridge reach the nightly index? That is where a wildcard ROCm
+#     specifier has to be resolved to a version before anything is staged.
+#
+# The image is an input with the mkmhub mirror as its default, so the first
+# thing this establishes is whether that path serves at all; quay.io/pypa is the
+# fallback, and finding out costs a form field rather than a commit.
+
+name: alola probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: Image to probe. The default is what a full test on alola uses
+        type: string
+        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+      arch:
+        description: GPU variant to allocate, e.g. mi300x. Validated by the login node
+        type: string
+        default: mi300x
+      gpus:
+        description: GPUs to request. 0 gets a CPU-only allocation and no /dev/kfd
+        type: choice
+        options: ["1", "0"]
+        default: "1"
+      time:
+        description: Wall clock limit for the batch job
+        type: string
+        default: 30m
+
+# One at a time: this is a diagnostic, and two of them in the queue for the same
+# card only make each other wait.
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  probe:
+    if: github.repository_owner == 'AMD-AIOSS'
+    name: probe
+    # Only the alola pool carries this label, and those runners do nothing but
+    # hand work to SLURM over the ssh bridge: no GPU here, and no ROCm.
+    runs-on: [self-hosted, linux, x64, alola]
+    # Bounds how long we sit in the queue. The SLURM `time` input above bounds
+    # the job once it starts.
+    timeout-minutes: 60
+    permissions:
+      contents: read
+
+    steps:
+      # Everything in this job reports rather than fails, so that one closed
+      # port does not hide the answer to the next question. The `exit 0` at the
+      # end of each step is what makes that hold under the runner's `set -e`.
+      - name: What the bridge can reach
+        run: |
+          set -u
+          {
+            echo "### the bridge"
+            echo
+            echo "| question | answer |"
+            echo "| --- | --- |"
+            echo "| host | \`$(hostname)\` |"
+            echo "| user | \`$(id -un)\` (uid $(id -u)) |"
+            echo "| python3 | \`$(python3 -V 2>&1 || echo absent)\` |"
+            echo "| git | \`$(git --version 2>&1 || echo absent)\` |"
+            for host in github.com rocm.nightlies.amd.com repo.radeon.com \
+                        pypi.org mkmhub.amd.com; do
+              # --max-time so an address that blackholes packets costs ten
+              # seconds rather than the job's queue budget, and -o /dev/null -w
+              # rather than -I because a HEAD is answered with 405 by some of
+              # these while a GET works.
+              code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \
+                       "https://${host}/" 2>/dev/null || echo "unreachable")
+              echo "| \`${host}\` | ${code} |"
+            done
+          } >>"${GITHUB_STEP_SUMMARY}"
+          exit 0
+
+      # The question this one really asks: `rocm=therock:?a?` names no version,
+      # and the run workflow has to know the version on the bridge -- before the
+      # container exists -- to derive the component sources' git ref. Resolving
+      # it is `pip index versions` against the nightly index, exactly as
+      # ci/internal/librocm.sh does it, so this is that call and nothing else.
+      - name: Whether the bridge can resolve a wildcard ROCm specifier
+        run: |
+          set -u
+          index=https://rocm.nightlies.amd.com/v2/gfx94X-dcgpu/
+          pkg=rocm-sdk-libraries-gfx94x-dcgpu
+          latest="(not attempted)"
+          if python3 -m venv /tmp/probe-venv 2>/dev/null; then
+            latest=$(/tmp/probe-venv/bin/pip index versions --json --pre \
+                       --index-url "${index}" "${pkg}" 2>&1 \
+                       | tail -n 2 | tr -d '\n' || true)
+          else
+            latest="python3 -m venv failed"
+          fi
+          {
+            echo
+            echo "Resolving a wildcard against \`${index}\`:"
+            echo
+            echo '```'
+            echo "${latest:-(no output)}"
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"
+          exit 0
+
+      - name: What a compute node can reach
+        id: compute
+        # `always()` so the summary above is still joined by this one when the
+        # bridge steps found something broken.
+        if: always()
+        uses: AMD-AIOSS/gha-runner-alola@main
+        with:
+          profile: default
+          image: ${{ inputs.image }}
+          arch: ${{ inputs.arch }}
+          gpus: ${{ inputs.gpus }}
+          cpus: "8"
+          mem: 32G
+          time: ${{ inputs.time }}
+          artifacts-dir: alola-probe
+          # Nothing from the repository is read in there, so nothing is staged.
+          # It also makes this the cheapest possible test of the image itself.
+          stage-in: false
+          # The harness wraps this in `set -euo pipefail`, which is the opposite
+          # of what a probe wants: the first missing tool would end the script
+          # and every question after it would go unanswered.
+          command: |
+            set +e +o pipefail
+            mkdir -p /artifacts
+            exec > >(tee /artifacts/probe.txt) 2>&1
+
+            say() { printf '%-28s %s\n' "${1}" "${2}"; }
+            # A command's own output is the answer, so failure is reported as
+            # the word rather than as an exit code nobody sees.
+            ask() { out=$("${@}" 2>&1) && echo "${out}" || echo "(failed: ${out})"; }
+
+            echo "=== the node and the container ==="
+            say "node"      "$(hostname)"
+            say "user"      "$(id -un 2>/dev/null || echo '?') (uid $(id -u), $(id -Gn 2>/dev/null))"
+            say "image"     "$(grep -m1 '^PRETTY_NAME=' /etc/os-release | cut -d'"' -f2)"
+            say "cpus"      "$(nproc)"
+            say "memory"    "$(free -g | awk '/^Mem:/ {print $2 " GiB"}')"
+            # BUILD_DIR is node-local /tmp rather than the shared session
+            # directory, so this is the number that decides whether a build fits.
+            say "/tmp"      "$(df -h --output=avail /tmp | tail -n1 | tr -d ' ') free"
+            say "/workspace" "$(df -h --output=avail /workspace | tail -n1 | tr -d ' ') free"
+            say "/artifacts" "$(df -h --output=avail /artifacts | tail -n1 | tr -d ' ') free"
+
+            echo
+            echo "=== the GPUs ==="
+            # A manylinux image has no ROCm in it, so there is no rocm-smi to
+            # ask: the device nodes are the whole answer at this stage, and
+            # their absence means the allocation rather than the image.
+            say "/dev/kfd" "$(test -e /dev/kfd && echo present || echo absent)"
+            say "/dev/dri" "$(ls /dev/dri 2>/dev/null | tr '\n' ' ' || echo absent)"
+
+            echo
+            echo "=== the tools prepare-container.sh needs ==="
+            # It installs wget, git and openssh-clients when they are absent,
+            # which is what makes the package manager load-bearing rather than
+            # convenient.
+            for tool in bash git wget curl tar dnf python3; do
+              say "${tool}" "$(command -v ${tool} 2>/dev/null || echo absent)"
+            done
+            # The interpreters the wheels are built with. No default python3 is
+            # normal on manylinux; prepare-container.sh selects one of these.
+            say "/opt/python" "$(ls /opt/python 2>/dev/null | tr '\n' ' ' || echo absent)"
+
+            echo
+            echo "=== egress, from inside the container ==="
+            # --network=host, so this is the node's own reachability. The three
+            # that matter: a package mirror for the tools above, PyPI for the
+            # build, and the ROCm distribution itself.
+            for host in github.com rocm.nightlies.amd.com repo.radeon.com \
+                        repo.amd.com pypi.org files.pythonhosted.org; do
+              if command -v curl >/dev/null 2>&1; then
+                code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \
+                         "https://${host}/" 2>/dev/null)
+                say "${host}" "${code:-unreachable}"
+              else
+                say "${host}" "(no curl to ask with)"
+              fi
+            done
+
+            echo
+            echo "=== the package mirror ==="
+            # The real test of it, rather than a port check: prepare-container.sh
+            # runs `dnf install`, which needs metadata from every enabled repo.
+            if command -v dnf >/dev/null 2>&1; then
+              ask dnf -q makecache
+            else
+              echo "no dnf on this image"
+            fi
+
+            echo
+            echo "=== PyPI, with the interpreter a build would use ==="
+            pip=$(ls -d /opt/python/cp312-cp312/bin/pip 2>/dev/null || command -v pip3)
+            if [ -n "${pip}" ]; then
+              ask "${pip}" download --no-deps --dest /tmp/probe-wheel wheel
+            else
+              echo "no pip to ask with"
+            fi
+
+            echo
+            echo "=== done ==="
+            # The session directory is written as root while the login account
+            # tars it back, so the fetch needs these readable.
+            chmod -R a+rX /artifacts
+            # A probe that answered every question succeeded, whatever the
+            # answers were. A red run here would mean the job never started.
+            exit 0
+
+      - name: Report what the node said
+        if: always()
+        run: |
+          set -u
+          {
+            echo
+            echo "### the compute node"
+            echo
+            echo "- image: \`${IMAGE}\`"
+            echo "- node: \`${NODE:-(never allocated)}\`, SLURM job \`${JOB_ID:-(never submitted)}\`"
+            echo
+            echo '```'
+            cat alola-probe/probe.txt 2>/dev/null || echo "(the job produced no probe.txt)"
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"
+          exit 0
+        env:
+          IMAGE: ${{ inputs.image }}
+          NODE: ${{ steps.compute.outputs.node }}
+          JOB_ID: ${{ steps.compute.outputs.job-id }}
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: alola-probe
+          path: alola-probe/
+          if-no-files-found: warn
