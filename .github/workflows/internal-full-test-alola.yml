@@ -1,0 +1,396 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The device-attached half of CI, on demand: the comment path into a full test on
+# alola, the SLURM GPU cluster. `/full test alola` on a pull request regenerates
+# the bindings, builds every wheel from the freshly generated sources and runs
+# the suites in ci/internal/test.sh against them, on a compute node there.
+#
+# The sibling of internal-full-test-hpe.yml, which does the same on the MI210
+# machine we own. Both run the same pipeline from the same scripts in the same
+# image, so the options mean the same things; what alola alone has is a choice of
+# card, and a wall clock limit for the batch job. Naming the site is what keeps
+# the two sites' checks and tables apart.
+#
+# This file turns a comment into the values that describe a run. The run itself
+# lives in internal-full-test-alola-run.yml, which
+# internal-full-test-alola-manual.yml calls with the same values from the
+# Actions tab, and the reporting in internal-full-test-report.yml, which both
+# sites share.
+#
+# A comment command rather than a `pull_request` trigger because it occupies a
+# GPU for the better part of half an hour, which is not something every push
+# should do. The corollary is that the pull request's own code is compiled and
+# executed on the cluster, so the command is restricted to people who already
+# have write access, the job that runs it holds nothing but a read-only token,
+# and it holds no secrets at all.
+#
+# Note that GitHub runs the copy of this file on the default branch, never the
+# copy in the pull request being tested. Changes here take effect once merged,
+# and cannot be tried out from a pull request.
+
+name: full test (alola)
+
+on:
+  issue_comment:
+    types: [created]
+
+# No concurrency group, for the reason internal-full-test-hpe.yml gives: with
+# several configurations to get through, one command cancelling the run before it
+# is the wrong trade, and a group holds one pending slot so a third command would
+# cancel the second anyway. Unlike hpe, nothing serializes these either -- the
+# cluster has more than one card -- so several alola runs really do proceed at
+# once, and each waits only for SLURM.
+
+# Nothing by default. Each job asks for what it needs, and the job that
+# executes pull-request code asks only to read it.
+permissions: {}
+
+jobs:
+  dispatch:
+    name: dispatch
+    # Authorization comes from the event payload, so an unauthorized comment
+    # never reaches a runner. `MEMBER` is any AMD-AIOSS member; narrow this to
+    # an explicit list of logins if that is ever too broad.
+    #
+    # Every comment in the repository starts a run of this workflow, and all but
+    # these end here, having allocated nothing.
+    if: >-
+      github.repository_owner == 'AMD-AIOSS'
+      && github.event.issue.pull_request
+      && startsWith(github.event.comment.body, '/full test alola')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+                  github.event.comment.author_association)
+    # Self-hosted because the organization's IP allow list rejects a hosted
+    # runner's egress address for the API just as it does for a clone, but
+    # unlabelled: this job only talks to the API, and in particular it is not the
+    # `alola` label, which belongs to the bridge that submits the batch job.
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      contents: read # expand a short sha
+      # The eyes reaction goes on a comment that belongs to a pull request, and
+      # GitHub resolves the issues endpoints against the resource's own kind: a
+      # token with issues=write but pull-requests=read gets a 403 there. Write
+      # here also covers reading the head sha.
+      pull-requests: write # react to the triggering comment, resolve the head sha
+      issues: write # the same reaction, were the command ever run on an issue
+      statuses: write # report "pending" on the commit
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      python: ${{ steps.parse.outputs.python }}
+      sabi: ${{ steps.parse.outputs.sabi }}
+      rocm: ${{ steps.parse.outputs.rocm }}
+      sources: ${{ steps.parse.outputs.sources }}
+      arch: ${{ steps.parse.outputs.arch }}
+      time: ${{ steps.parse.outputs.time }}
+      missing: ${{ steps.parse.outputs.missing }}
+      skip: ${{ steps.parse.outputs.skip }}
+      # The commit status context, which describes the configuration, so this
+      # run's check does not overwrite another configuration's -- including the
+      # same configuration's on the other site.
+      status: ${{ steps.parse.outputs.status }}
+
+    steps:
+      # /full test alola [arch=mi300x] [time=2h] [python=3.10..3.14]
+      #                  [sabi=no|3.11..3.14] [rocm=<specifier>] [sources=<ref>]
+      #                  [sha=<7-40 hex>] [missing=fail|skip]
+      #                  [skip=<library>[,<library>...]]
+      - name: Parse the command
+        id: parse
+        env:
+          # Through the environment, never interpolated into the script body: a
+          # comment is untrusted text and ${{ }} inside `run` is an injection.
+          BODY: ${{ github.event.comment.body }}
+        run: |
+          # -f because the loop below splits the comment into words, and a body
+          # containing `*` would otherwise be expanded against the filesystem.
+          set -euf
+
+          # First line only, so a reply that quotes someone else's command
+          # cannot smuggle options past the allowlist below.
+          line=${BODY%%$'\n'*}
+          line=${line%$'\r'}
+
+          # The manylinux image carries every interpreter, so the default is a
+          # choice rather than the one that costs no install.
+          python=3.12
+          sabi=no
+          rocm=therock:7.14.0
+          sources=
+          sha=
+          # The card to allocate. mi300x because it is what the cluster has most
+          # of, so it is the one that queues shortest.
+          arch=mi300x
+          # The SLURM wall clock, which is the profile's own default: a measured
+          # run is three minutes of ROCm install, fourteen of codegen and wheels
+          # and one of suites, so this is ample rather than tight.
+          time=2h
+          # A header the requested ROCm never shipped fails the codegen, which
+          # is what a test of the current ROCm should do. `skip` is for testing
+          # against a release old enough to predate a library.
+          missing=fail
+          # Libraries to leave out by name, comma-separated. Empty generates
+          # every library the selected wheels carry.
+          skip=
+
+          for tok in ${line#*/full test alola}; do
+            case "${tok}" in
+              python=3.1[0-4])
+                python=${tok#python=} ;;
+              sabi=no|sabi=3.1[1-4])
+                sabi=${tok#sabi=} ;;
+              missing=fail|missing=skip)
+                missing=${tok#missing=} ;;
+              # The cards internal-full-test-alola-run.yml can name a ROCm
+              # architecture for; keep the two in step. Rejecting an unknown one
+              # here rather than passing it on is what turns a name we do not
+              # have a gfx target for into an immediate answer -- the cluster
+              # would accept, say, an H100 variant quite happily.
+              arch=mi300x|arch=mi300a|arch=mi308x|arch=mi325x)
+                arch=${tok#arch=} ;;
+              arch=mi350x|arch=mi355x)
+                arch=${tok#arch=} ;;
+              arch=mi210|arch=mi210x|arch=mi250)
+                arch=${tok#arch=} ;;
+              *)
+                # Anchored regexes rather than case globs for these five: two
+                # end up in a git ref, one drives an install, and two are
+                # validated again by the login node against policy this
+                # repository cannot see.
+                #
+                # The rocm pattern is the ROCM_SPECIFIER grammar of
+                # ci/internal/librocm.sh, minus the two forms that need the
+                # Jenkins nodes. Repeated here because this job has no
+                # checkout to source the library from.
+                # The `?` spellings of the three wildcards are here because a
+                # comment is rendered markdown: `*a*` is emphasis, so the text
+                # a reader sees is not the specifier that ran. They are passed
+                # on as typed; librocm.sh rewrites them to the `*` forms.
+                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
+                  rocm=${tok#rocm=}
+                # The canonical SLURM GRES spelling of a card, which carries the
+                # architecture in front of the model and so needs no map at all.
+                # The model-name spellings are the case arms above.
+                elif [[ ${tok} =~ ^arch=gfx[0-9a-z]{3,5}-[a-z0-9]{2,10}$ ]]; then
+                  arch=${tok#arch=}
+                # The SLURM wall clock: 2h, 90m, 1h30m or 02:00:00. The profile
+                # caps it, and the login node is what enforces that cap.
+                elif [[ ${tok} =~ ^time=([0-9]{1,2}h([0-9]{1,2}m)?|[0-9]{1,4}m|[0-9]{1,2}:[0-9]{2}:[0-9]{2})$ ]]; then
+                  time=${tok#time=}
+                elif [[ ${tok} =~ ^sources=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  sources=${tok#sources=}
+                elif [[ ${tok} =~ ^sha=[0-9a-fA-F]{7,40}$ ]]; then
+                  sha=${tok#sha=}
+                # A comma-separated list, because a space would read as a
+                # second option and a semicolon is cmake's list separator,
+                # which would not survive the trip to the codegen. The names
+                # themselves are not checked here -- this job has no checkout
+                # to read AVAILABLE_GENERATORS from -- so an unknown name is
+                # the generator's to reject. Repeats accumulate rather than
+                # overwrite, unlike the last-wins options above: two skips are
+                # a longer list, not a correction.
+                elif [[ ${tok} =~ ^skip=[a-z0-9_]+(,[a-z0-9_]+)*$ ]]; then
+                  skip=${skip:+${skip},}${tok#skip=}
+                elif [[ ${tok} =~ ^arch= ]]; then
+                  # Named separately from the catch-all below, because "unknown
+                  # option" for a card that exists but has no gfx target here is
+                  # not the answer to the question that was asked.
+                  echo "::error::unknown arch '${tok#arch=}'; the cards this workflow knows are mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx<arch>-<model> name"
+                  exit 1
+                else
+                  # Failing beats silently running the default configuration,
+                  # which is what a typo would otherwise do.
+                  echo "::error::unknown /full test alola option '${tok}'"
+                  exit 1
+                fi ;;
+            esac
+          done
+
+          # build-wheels.sh validates the shape of USE_SABI but not its
+          # relation to the active interpreter, so an impossible floor would
+          # otherwise fail deep inside the build instead of here.
+          if [[ ${sabi} != no ]] && (( ${sabi#3.} > ${python#3.} )); then
+            echo "::error::sabi=${sabi} exceeds python=${python}; the abi3 floor cannot be newer than the interpreter building the wheels"
+            exit 1
+          fi
+
+          # Sorted and de-duplicated, so `skip=a,b`, `skip=b,a` and
+          # `skip=b skip=a` are one configuration rather than three checks and
+          # three rows in the table. Word-splitting on the commas is safe under
+          # the `set -f` above.
+          if [[ -n ${skip} ]]; then
+            skip=$(printf '%s\n' ${skip//,/ } | sort -u | paste -sd, -)
+          fi
+
+          # One check per configuration. The statuses API keys a status by
+          # commit and context, so a context shared by every run had each run
+          # overwrite the one before it and the checks list showed a single
+          # line no matter how many configurations were tried. Built here,
+          # once, and reused by the report job: a context that differed
+          # between the pending status and the final one would leave two
+          # lines instead of updating one.
+          #
+          # The site is in there because hpe tests the same configurations on
+          # its own card, and a context the two shared would have one site's run
+          # overwrite the other's check. The wall clock is not: it bounds a run
+          # rather than describing one, and a configuration that needed longer
+          # is the same configuration.
+          #
+          # The specifier rather than the version that ends up installed --
+          # nothing is installed yet at this point.
+          status="full test alola (py${python}, sabi ${sabi}, ${rocm}, ${arch}"
+          # An if rather than `[[ ... ]] &&`, which under `set -e` would exit
+          # the step the moment the condition did not hold.
+          if [[ -n ${sources} ]]; then
+            status="${status}, sources ${sources}"
+          fi
+          if [[ ${missing} == skip ]]; then
+            status="${status}, missing skipped"
+          fi
+          # Part of the configuration, because a run that left a library out
+          # tested less than one that did not, and the two should not share a
+          # check. A context is plain text, so the commas are safe here.
+          if [[ -n ${skip} ]]; then
+            status="${status}, skip ${skip}"
+          fi
+          status="${status})"
+
+          # The allowlist above is also what keeps a crafted comment from
+          # injecting extra keys here: none of these can contain a newline.
+          {
+            echo "python=${python}"
+            echo "sabi=${sabi}"
+            echo "rocm=${rocm}"
+            echo "sources=${sources}"
+            echo "arch=${arch}"
+            echo "time=${time}"
+            echo "sha=${sha}"
+            echo "missing=${missing}"
+            echo "skip=${skip}"
+            echo "status=${status}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Resolve the commit and acknowledge the command
+        id: resolve
+        uses: actions/github-script@v9
+        env:
+          REQUESTED_SHA: ${{ steps.parse.outputs.sha }}
+          STATUS: ${{ steps.parse.outputs.status }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const requested = process.env.REQUESTED_SHA;
+            let sha;
+            if (requested) {
+              // Expand it: a commit status names the full forty characters.
+              // Any commit in the repository is accepted, so a sha that is not
+              // part of this pull request will report where nobody looks --
+              // hence the reply comment from the report job.
+              sha = (await github.rest.repos.getCommit(
+                { owner, repo, ref: requested })).data.sha;
+            } else {
+              // Resolved now, so a push between the comment and the build is
+              // what gets built. `sha=` is how to pin it.
+              sha = (await github.rest.pulls.get(
+                { owner, repo, pull_number: context.issue.number })).data.head.sha;
+            }
+            core.setOutput('sha', sha);
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: 'eyes',
+            });
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: 'pending',
+              context: process.env.STATUS,
+              description: 'queued on the alola cluster',
+              target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
+            });
+
+      # A parameterized run is not reproducible from the pull request unless the
+      # parameters are written down somewhere.
+      - name: Record the resolved parameters
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+          PY: ${{ steps.parse.outputs.python }}
+          SABI: ${{ steps.parse.outputs.sabi }}
+          ROCM: ${{ steps.parse.outputs.rocm }}
+          SOURCES: ${{ steps.parse.outputs.sources }}
+          ARCH: ${{ steps.parse.outputs.arch }}
+          TIME: ${{ steps.parse.outputs.time }}
+          MISSING: ${{ steps.parse.outputs.missing }}
+          SKIP: ${{ steps.parse.outputs.skip }}
+        run: |
+          {
+            echo "### full test (alola)"
+            echo
+            echo "- commit: \`${SHA}\`"
+            echo "- python: ${PY}"
+            echo "- sabi: ${SABI}"
+            echo "- gpu: ${ARCH}"
+            echo "- rocm: \`${ROCM}\`"
+            echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            echo "- missing headers: ${MISSING}"
+            echo "- skipped libraries: ${SKIP:-none}"
+            echo "- wall clock: ${TIME}"
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+  # The parsed comment, handed to the shared run. `sha` rather than the pull
+  # request's branch, so a push between the comment and the build cannot change
+  # what is tested, and no secrets are passed: the job that compiles this code
+  # gets the read-only token below and nothing else.
+  build-and-test:
+    needs: dispatch
+    permissions:
+      contents: read
+    uses: ./.github/workflows/internal-full-test-alola-run.yml
+    with:
+      ref: ${{ needs.dispatch.outputs.sha }}
+      python: ${{ needs.dispatch.outputs.python }}
+      sabi: ${{ needs.dispatch.outputs.sabi }}
+      rocm: ${{ needs.dispatch.outputs.rocm }}
+      sources: ${{ needs.dispatch.outputs.sources }}
+      arch: ${{ needs.dispatch.outputs.arch }}
+      time: ${{ needs.dispatch.outputs.time }}
+      missing: ${{ needs.dispatch.outputs.missing }}
+      skip: ${{ needs.dispatch.outputs.skip }}
+      # image is left at its default, the mkmhub mirror of the manylinux image.
+      # Naming another one is what the manual form is for, on a day the mirror
+      # is having one.
+
+  # The check on the commit and this site's table, written by the workflow both
+  # sites share. What is site-specific is which comment it writes into and that
+  # the card is part of what identifies a configuration here.
+  report:
+    name: report
+    # Runs whatever the build did, but not when the command itself was rejected:
+    # a parse error has no commit to report against.
+    if: always() && needs.dispatch.result == 'success'
+    needs: [dispatch, build-and-test]
+    permissions:
+      statuses: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/internal-full-test-report.yml
+    with:
+      marker: <!-- full-test-alola-overview -->
+      heading: full test (alola)
+      columns: '["result", "sha", "arch", "python", "sabi", "rocm", "installed", "flags", "run", "at"]'
+      key: '["arch", "python", "sabi", "rocm", "sources", "missing", "skip"]'
+      result: ${{ needs.build-and-test.result }}
+      sha: ${{ needs.dispatch.outputs.sha }}
+      status: ${{ needs.dispatch.outputs.status }}
+      python: ${{ needs.dispatch.outputs.python }}
+      sabi: ${{ needs.dispatch.outputs.sabi }}
+      rocm: ${{ needs.dispatch.outputs.rocm }}
+      # What the installation on the compute node reported, as against the
+      # specifier that asked for it. Empty when the run failed before installing
+      # anything.
+      installed: ${{ needs.build-and-test.outputs.rocm_version }}
+      sources: ${{ needs.dispatch.outputs.sources }}
+      arch: ${{ needs.dispatch.outputs.arch }}
+      missing: ${{ needs.dispatch.outputs.missing }}
+      skip: ${{ needs.dispatch.outputs.skip }}
