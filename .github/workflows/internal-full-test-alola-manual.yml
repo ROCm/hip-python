@@ -1,0 +1,205 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# A full test on alola started from the Actions tab, against any ref. The same
+# run as a `/full test alola` comment produces -- both callers hand the same
+# values to internal-full-test-alola-run.yml -- so this file is only the
+# parameter form and the commit status.
+#
+# When to reach for this rather than the comment: to test a branch that has no
+# pull request, to re-run a configuration against an older release branch, to
+# test a pull request head while keeping the noise out of its conversation, or to
+# name a card or an image the comment grammar does not offer.
+#
+# The `ref` input is what gets built, and it is not the same thing as the
+# branch chosen in the UI's "Use workflow from" selector. That selector decides
+# only which copy of these workflow files runs, and GitHub offers it here at
+# all only because this workflow lives on the default branch. Leaving the
+# selector on the default branch while pointing `ref` at a release branch is
+# the normal case: the newest reporting with any code under test.
+#
+# No author gate, unlike the comment path: dispatching a workflow already
+# requires write access, so the authorization the comment path has to check for
+# itself is GitHub's own here.
+
+name: full test (alola, manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: What to build and test. A branch, tag, sha, or refs/pull/<n>/head
+        type: string
+        required: true
+        default: amd-integration
+      # Free text rather than a dropdown, unlike the comment grammar's
+      # allowlist: this form is also how a card the workflows have never heard of
+      # gets tried, and both ends of the trip answer for a name that turns out
+      # not to work -- the login node validates it against the cluster's own
+      # variants, and the run workflow needs a ROCm architecture for it.
+      arch:
+        description: "GPU variant to allocate: mi300x, mi325x, mi350x, mi355x, mi210, mi250, or a gfx<arch>-<model> name"
+        type: string
+        default: mi300x
+      python:
+        description: Interpreter that builds the wheels
+        type: choice
+        options: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        default: "3.12"
+      # Quoted, all of them: unquoted `no` is a YAML boolean, and this value has
+      # to reach build-wheels.sh as the string USE_SABI=no.
+      sabi:
+        description: abi3 floor. Must not be newer than the interpreter
+        type: choice
+        options: ["no", "3.11", "3.12", "3.13", "3.14"]
+        default: "no"
+      rocm:
+        # The `?` spellings mean the same as the `*` ones; they exist because a
+        # `/full test alola` comment renders `*a*` as emphasis. Named here too so
+        # the two entry points describe the same grammar.
+        description: "ROCm to install: therock:X.Y.Z, X.Y.Z, therock:* (or ?), therock:*rc* (or ?rc?), therock:*a* (or ?a?) or preinstalled"
+        type: string
+        default: therock:7.14.0
+      sources:
+        description: One ref for rocm-systems, rocm-libraries and llvm-project. Empty derives it from the specifier
+        type: string
+        default: ""
+      missing:
+        description: A library whose header this ROCm never shipped. Skip it, or fail
+        type: choice
+        options: [fail, skip]
+        default: fail
+      skip:
+        description: "Libraries not to generate, by name and comma-separated, e.g. hiptensor,hipdnn_backend. Empty generates all of them"
+        type: string
+        default: ""
+      # The two the cluster needs, and the comment grammar offers only the first
+      # of: a run is twenty minutes of work, so the profile's own 2h is ample and
+      # raising it is for a cold image pull or a queue that has gone strange.
+      time:
+        description: SLURM wall clock limit, e.g. 2h, 90m or 02:00:00. Capped by the profile
+        type: string
+        default: 2h
+      # Here rather than in the comment grammar because the reason to change it
+      # is that the default has stopped working, which is a bad day rather than a
+      # configuration worth a row of its own. A form field means that day needs
+      # no commit to the default branch.
+      image:
+        description: Container image. The default is the mkmhub mirror of the manylinux image
+        type: string
+        default: mkmhub.amd.com/quay.io/pypa/manylinux_2_28_x86_64
+
+# Per ref, as on hpe: a second run against the same ref supersedes the first,
+# where a run against a different ref is a different thing. It cancels rather
+# than queues even though the cluster could run both, because re-submitting a
+# form usually does mean "not that, this".
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    if: github.repository_owner == 'AMD-AIOSS'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/internal-full-test-alola-run.yml
+    with:
+      ref: ${{ inputs.ref }}
+      python: ${{ inputs.python }}
+      sabi: ${{ inputs.sabi }}
+      rocm: ${{ inputs.rocm }}
+      sources: ${{ inputs.sources }}
+      arch: ${{ inputs.arch }}
+      time: ${{ inputs.time }}
+      image: ${{ inputs.image }}
+      missing: ${{ inputs.missing }}
+      skip: ${{ inputs.skip }}
+
+  report:
+    name: report
+    if: always() && github.repository_owner == 'AMD-AIOSS'
+    needs: build-and-test
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+      contents: read # resolve the ref when the build did not get that far
+
+    steps:
+      # The same status context the comment path writes, on purpose: a manual
+      # run against a pull request head then updates the very check a reviewer
+      # is already looking at. That is only true while the two agree on how the
+      # context is spelled, so the format below mirrors the one the dispatch
+      # job of internal-full-test-alola.yml builds -- a workflow cannot read
+      # another workflow's step outputs, which is why it is written twice.
+      #
+      # The table is not written here, and internal-full-test-report.yml is not
+      # called: a dispatch has no pull request in context, so there is no comment
+      # to write into. The status and the step summary are the whole report.
+      - uses: actions/github-script@v9
+        env:
+          RESULT: ${{ needs.build-and-test.result }}
+          SHA: ${{ needs.build-and-test.outputs.sha }}
+          NODE: ${{ needs.build-and-test.outputs.node }}
+          INSTALLED: ${{ needs.build-and-test.outputs.rocm_version }}
+          REF: ${{ inputs.ref }}
+          PY: ${{ inputs.python }}
+          SABI: ${{ inputs.sabi }}
+          ROCM: ${{ inputs.rocm }}
+          SOURCES: ${{ inputs.sources }}
+          ARCH: ${{ inputs.arch }}
+          TIME: ${{ inputs.time }}
+          IMAGE: ${{ inputs.image }}
+          MISSING: ${{ inputs.missing }}
+          SKIP: ${{ inputs.skip }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const {
+              RESULT, REF, PY, SABI, ROCM, INSTALLED, SOURCES, ARCH, TIME,
+              IMAGE, MISSING, SKIP, NODE,
+            } = process.env;
+            const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const status = `full test alola (py${PY}, sabi ${SABI}, ${ROCM}, ${ARCH}`
+              + (SOURCES ? `, sources ${SOURCES}` : '')
+              + (MISSING === 'skip' ? ', missing skipped' : '')
+              + (SKIP ? `, skip ${SKIP}` : '') + ')';
+
+            // The run reports what it checked out, which is the commit a status
+            // has to name. It is empty only when the build failed before the
+            // checkout, and a validation failure is still worth a status, so
+            // resolve the ref here in that case.
+            const sha = process.env.SHA
+              || (await github.rest.repos.getCommit({ owner, repo, ref: REF })).data.sha;
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state,
+              context: status,
+              description: `build and test ${RESULT}`,
+              target_url: url,
+            });
+
+            // A dispatched run is not reproducible from anywhere else: the
+            // parameters exist only in the form that was submitted.
+            await core.summary
+              .addHeading('full test (alola, manual)', 3)
+              .addList([
+                `result: ${RESULT}`,
+                `ref: ${REF}`,
+                `commit: ${sha}`,
+                `python: ${PY}`,
+                `sabi: ${SABI}`,
+                `gpu: ${ARCH}${NODE ? ` on ${NODE}` : ''}`,
+                `rocm: ${ROCM}${INSTALLED ? ` (installed ${INSTALLED})` : ''}`,
+                `component sources: ${SOURCES || 'derived from the rocm specifier'}`,
+                `missing headers: ${MISSING}`,
+                `skipped libraries: ${SKIP || 'none'}`,
+                `wall clock: ${TIME}`,
+                `image: ${IMAGE}`,
+              ])
+              .write();
