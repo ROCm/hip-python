@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# What a full test reports back, for either site: the check on the commit, and
+# What a run started from a comment reports back: the check on the commit, and
 # the sticky table of one row per configuration under the pull request or issue
 # the command was run from.
 #
@@ -12,6 +12,12 @@
 # so in which columns the table has and which fields identify a row. Those are
 # inputs; everything else, including the read-modify-write that keeps two
 # concurrent runs from losing each other's rows, is the same code for both.
+#
+# internal-generate-bindings.yml calls it too, for a table whose rows are
+# codegen runs rather than tests: same machinery, other columns. That is what
+# the row fields below are -- a superset, of which `columns` picks what a
+# caller renders -- and why several of them are optional. A codegen row has no
+# interpreter; a test row has no branch it pushed to.
 #
 # One table per site, under its own `marker`, rather than one table for both.
 # The size limit is per comment, so a week of alola runs in a shared table would
@@ -93,16 +99,26 @@ on:
         description: Status context describing the configuration
         type: string
         required: true
+      activity:
+        # The check's description reads "<activity> <result>". A codegen run
+        # neither builds nor tests, and a check that said it did would be the
+        # one line a reader sees on the commit.
+        description: What the run did, for the commit status description
+        type: string
+        required: false
+        default: build and test
 
       # The configuration, one input per field.
       python:
-        description: Interpreter the wheels were built with
+        description: Interpreter the wheels were built with. Empty for a codegen run
         type: string
-        required: true
+        required: false
+        default: ""
       sabi:
-        description: abi3 floor
+        description: abi3 floor. Empty for a codegen run
         type: string
-        required: true
+        required: false
+        default: ""
       rocm:
         description: The ROCm specifier that was asked for
         type: string
@@ -136,6 +152,34 @@ on:
         type: string
         required: false
         default: run
+
+      # A codegen run's own three fields. It has a direction a test does not:
+      # from the branch the generator read to the branch its output goes to.
+      base:
+        description: The branch the bindings were generated from
+        type: string
+        required: false
+        default: ""
+      target:
+        description: The branch the generated commit goes to
+        type: string
+        required: false
+        default: ""
+      pushed:
+        description: '"true" when the generated commit was pushed, "false" when it stayed on the runner'
+        type: string
+        required: false
+        default: ""
+      dest:
+        # Left empty for the usual destination, so that it costs nothing in the
+        # flags cell and the rows written before this existed still match a run
+        # made today. A caller that fills it in gets a row of its own, which is
+        # the point: the same generation aimed at another organization is not
+        # the same run.
+        description: The organization the commit is pushed to, when it is not the usual one
+        type: string
+        required: false
+        default: ""
 
 permissions: {}
 
@@ -190,12 +234,18 @@ jobs:
           SKIP: ${{ inputs.skip }}
           ARCH: ${{ inputs.arch }}
           CODEGEN: ${{ inputs.codegen }}
+          BASE: ${{ inputs.base }}
+          TARGET: ${{ inputs.target }}
+          PUSHED: ${{ inputs.pushed }}
+          DEST: ${{ inputs.dest }}
+          ACTIVITY: ${{ inputs.activity }}
         with:
           script: |
             const { owner, repo } = context.repo;
             const {
               MARKER, HEADING, NOTE, RESULT, SHA, REF, STATUS, PY, SABI, ROCM,
-              INSTALLED, SOURCES, MISSING, SKIP, ARCH, CODEGEN,
+              INSTALLED, SOURCES, MISSING, SKIP, ARCH, CODEGEN, BASE, TARGET,
+              PUSHED, DEST, ACTIVITY,
             } = process.env;
             const columns = JSON.parse(process.env.COLUMNS);
             const keyFields = JSON.parse(process.env.KEY);
@@ -207,7 +257,7 @@ jobs:
               owner, repo, sha: SHA,
               state,
               context: STATUS,
-              description: `build and test ${RESULT}`,
+              description: `${ACTIVITY} ${RESULT}`,
               target_url: url,
             });
 
@@ -247,6 +297,8 @@ jobs:
               installed: INSTALLED || '', sources: SOURCES || '',
               missing: MISSING, skip: SKIP || '', arch: ARCH || '',
               codegen: CODEGEN || 'run',
+              base: BASE || '', target: TARGET || '', pushed: PUSHED || '',
+              dest: DEST || '',
               run: String(context.runId), at: new Date().toISOString(),
             };
 
@@ -302,6 +354,19 @@ jobs:
                 // to the same place the commit column goes.
                 case 'ref':
                   return r.ref ? `[\`${r.ref}\`](${server}/tree/${r.ref})` : '—';
+                // The two branches a codegen run names, linked the same way as
+                // `ref` above. The target may not exist yet -- the first run
+                // for a ROCm version is what creates it, and a run that did not
+                // push never will -- so the link can point at nothing, which is
+                // itself the answer to whether that branch is there.
+                case 'base':
+                  return r.base ? `[\`${r.base}\`](${server}/tree/${r.base})` : '—';
+                case 'target':
+                  return r.target ? `[\`${r.target}\`](${server}/tree/${r.target})` : '—';
+                // A run that generated without pushing is a preview of what the
+                // generator would produce, and reads as one.
+                case 'pushed':
+                  return { true: 'yes', false: 'no' }[r.pushed] ?? '—';
                 case 'rocm':
                   return `\`${r.rocm}\``;
                 case 'installed':
@@ -319,6 +384,9 @@ jobs:
                     // committed bindings rather than freshly generated ones,
                     // which is a different artifact and so a different row.
                     r.codegen === 'skip' ? 'codegen=skip' : '',
+                    // Only a codegen row carries this, and only when it was
+                    // aimed somewhere other than the usual organization.
+                    r.dest ? `dest=\`${r.dest}\`` : '',
                   ].filter(Boolean).join(', ');
                 default:
                   return r[field] ?? '';

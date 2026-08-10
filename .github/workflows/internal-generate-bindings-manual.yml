@@ -1,0 +1,94 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# A release code generation started from the Actions tab. The same run a
+# `/generate bindings` comment produces -- both callers hand the same values to
+# internal-generate-bindings-run.yml -- so this file is only the parameter form.
+#
+# It differs from the comment path in one value: `publish` defaults on here.
+# Filling in a form is a deliberate act, and publishing is what this job is for;
+# a comment is a line of text somebody can type in passing, so there the push
+# has to be asked for. Unset it here to generate and commit on the runner only,
+# which is how to see what the generator would produce.
+#
+# No author gate, unlike the comment path: dispatching a workflow already
+# requires write access, so the authorization the comment path has to check for
+# itself is GitHub's own here.
+#
+# No commit status either, unlike internal-full-test-hpe-manual.yml. A full test
+# reports onto a pull request head somebody is reviewing; this reports onto the
+# tip of the codegen base branch, where nobody is looking, and the run's own
+# step summary says what happened.
+
+name: generate bindings (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination:
+        description: Organization whose hip-python the generated commit is pushed to
+        type: choice
+        options:
+          - AMD-AIOSS
+          - ROCm
+        default: AMD-AIOSS
+      rocm_specifier:
+        description: "ROCm to generate against: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
+        type: string
+        required: true
+        default: therock:7.14.0
+      sources_ref:
+        description: One ref for rocm-systems, rocm-libraries and llvm-project. Empty derives it from the specifier
+        type: string
+        default: ""
+      base_branch:
+        description: Branch to generate from, and whose generator-owned files are restored first
+        type: string
+        default: amd-integration
+      target_branch:
+        description: Branch to push to. Empty means develop/rocm-rel-<the installed ROCm version>
+        type: string
+        default: ""
+      git_author:
+        description: Author and committer of the generated commit, "Name <email>"
+        type: string
+        default: Dominic Etienne Charrier <DominicEtienne.Charrier@amd.com>
+      allow_missing_headers:
+        description: Skip libraries whose headers this ROCm does not ship, instead of failing. For older ROCm
+        type: boolean
+        default: false
+      skip_libraries:
+        description: "Libraries not to generate, by name and comma-separated, e.g. hiptensor,hipdnn_backend. Empty generates all of them"
+        type: string
+        default: ""
+      publish:
+        description: Push the commit. Unset to generate and commit locally only
+        type: boolean
+        default: true
+
+# Nine inputs, one under GitHub's cap of ten on a dispatch form. Anything else
+# this grows wants one of these to go first.
+
+permissions: {}
+
+jobs:
+  generate:
+    if: github.repository_owner == 'AMD-AIOSS'
+    permissions:
+      contents: read
+    # `secrets: inherit` because the run's job names a publish-<destination>
+    # environment and reads the PUBLISH_SSH_KEY held there; a called workflow
+    # gets no secrets otherwise.
+    uses: ./.github/workflows/internal-generate-bindings-run.yml
+    secrets: inherit
+    with:
+      destination: ${{ inputs.destination }}
+      rocm_specifier: ${{ inputs.rocm_specifier }}
+      sources_ref: ${{ inputs.sources_ref }}
+      base_branch: ${{ inputs.base_branch }}
+      target_branch: ${{ inputs.target_branch }}
+      git_author: ${{ inputs.git_author }}
+      allow_missing_headers: ${{ inputs.allow_missing_headers }}
+      skip_libraries: ${{ inputs.skip_libraries }}
+      publish: ${{ inputs.publish }}

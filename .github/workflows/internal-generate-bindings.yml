@@ -2,268 +2,366 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# Release code generation: build the generated tree from the ROCm component
-# sources and force-push it as a single commit onto a release branch. The
-# GitHub Actions counterpart of the `rocm_python_codegen` node in
-# aiss-3p-dev-pipelines, and it drives the same two scripts, so the two stay
-# interchangeable.
+# The comment path into a release code generation: `/generate bindings
+# rocm=<specifier>` builds the generated tree from the ROCm component sources
+# and commits it, and with `publish=yes` force-pushes that commit onto the
+# release branch for the ROCm that was installed.
 #
-# Nothing here touches a GPU -- the Jenkins node sets MAP_GPUS: false -- so no
-# architecture label is asked for, unlike internal-full-test-hpe-run.yml. What
-# it does need is disk and cores, for a ROCm install and three component trees;
-# any internal linux runner has both. AMDGPU_TARGETS below only picks which
-# ROCm distribution is downloaded.
+# Where the command belongs is a release task issue: one comment thread that
+# generates the release branch and then tests it, with a table under each. The
+# command works on a pull request too, which is how a change to the generator
+# gets tried before it is merged -- `base=` is the branch the generator runs
+# from, so a pull request against amd-integration names its own branch there.
 #
-# The container is a stock manylinux image; ci/internal/prepare-container.sh
-# installs the ROCm named by the specifier and ci/internal/fetch-rocm-sources.sh
-# fetches the component trees the generators read.
+# Publishing is off unless the comment says so. A comment is cheap to type and
+# the push is a force-push onto a release branch, so the ordinary run generates,
+# commits on the runner and reports the diffstat; `publish=yes` is how to mean
+# the other thing. The Actions-tab form in internal-generate-bindings-manual.yml
+# defaults the other way, because filling in a form is not something anybody
+# does by accident.
 #
-# Not related to pull requests, and deliberately manual: it force-pushes.
+# This file turns a comment into the values that describe a run. The run itself
+# lives in internal-generate-bindings-run.yml, and the reporting in
+# internal-full-test-report.yml, which the full tests share.
+#
+# Note that GitHub runs the copy of this file on the default branch, never the
+# copy in a pull request. Changes here take effect once merged.
 
 name: generate bindings
 
 on:
-  workflow_dispatch:
-    inputs:
-      destination:
-        description: Organization whose hip-python the generated commit is pushed to
-        type: choice
-        options:
-          - AMD-AIOSS
-          - ROCm
-        default: AMD-AIOSS
-      rocm_specifier:
-        description: "ROCm to generate against: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
-        type: string
-        required: true
-        default: therock:7.14.0
-      sources_ref:
-        description: One ref for rocm-systems, rocm-libraries and llvm-project. Empty derives it from the specifier
-        type: string
-        default: ""
-      base_branch:
-        description: Branch to generate from, and whose generator-owned files are restored first
-        type: string
-        default: amd-integration
-      target_branch:
-        description: Branch to force-push to. Empty means develop/rocm-rel-<the installed ROCm version>
-        type: string
-        default: ""
-      git_author:
-        description: Author and committer of the generated commit, "Name <email>"
-        type: string
-        default: Dominic Etienne Charrier <DominicEtienne.Charrier@amd.com>
-      allow_missing_headers:
-        description: Skip libraries whose headers this ROCm does not ship, instead of failing. For older ROCm
-        type: boolean
-        default: false
-      publish:
-        description: Push the commit. Unset to generate and commit locally only
-        type: boolean
-        default: true
+  issue_comment:
+    types: [created]
 
-# Two dispatches would fight over the same working copy on the one runner.
-concurrency:
-  group: ${{ github.workflow }}-${{ inputs.destination }}
-  cancel-in-progress: false
+# No concurrency group here. The run workflow has one, keyed by destination, so
+# that a comment and a dispatch queue against each other rather than fighting
+# over the one runner's working copy; a group on this file would only add
+# cancellation, and cancelling a codegen that is halfway through its push is
+# the one thing not to do.
 
+# Nothing by default. Each job asks for what it needs.
 permissions: {}
 
 jobs:
-  generate:
-    name: generate for ROCm ${{ inputs.rocm_specifier }} -> ${{ inputs.destination }}
-    if: github.repository_owner == 'AMD-AIOSS'
+  dispatch:
+    name: dispatch
+    # Authorization comes from the event payload, so an unauthorized comment
+    # never reaches a runner. `MEMBER` is any AMD-AIOSS member; narrow this to
+    # an explicit list of logins if that is ever too broad -- this command can
+    # write to a release branch, which no other comment command can.
+    if: >-
+      github.repository_owner == 'AMD-AIOSS'
+      && startsWith(github.event.comment.body, '/generate bindings')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+                  github.event.comment.author_association)
+    # Self-hosted because the organization's IP allow list rejects a hosted
+    # runner's egress address for the API, but unlabelled: this job only talks
+    # to the API.
     runs-on: [self-hosted, linux]
-    timeout-minutes: 120
-    # What makes one file safe for two destinations: define publish-AMD-AIOSS and
-    # publish-ROCm, each holding its own PUBLISH_SSH_KEY, and only one key is
-    # ever present in a run. Put a required reviewer on publish-ROCm.
-    environment: publish-${{ inputs.destination }}
-    # All the token does is read the base branch; the push uses the SSH key.
+    timeout-minutes: 5
     permissions:
-      contents: read
-    # ROCm is not in the image; the prepare step below installs the requested
-    # one, exactly as the build-and-test job of the full test workflow does.
-    container: quay.io/pypa/manylinux_2_28_x86_64
-    env:
-      # generate-bindings.sh resolves ${SRC_DIR}/hip_python and the three
-      # component trees as its siblings, and writes the generated tree to
-      # ${BUILD_DIR}/hip_python for commit-bindings.sh to stage.
-      SRC_DIR: ${{ github.workspace }}
-      BUILD_DIR: ${{ github.workspace }}/build
-      ROCM_PATH: /opt/rocm
-      # ROCM_VERSION is deliberately absent: prepare-container.sh reads it back
-      # from the installation, which is the only way a wildcard specifier
-      # resolves to something the generator can be told.
-      ROCM_SPECIFIER: ${{ inputs.rocm_specifier }}
-      ROCM_SOURCES_REF: ${{ inputs.sources_ref }}
-      # No GPU is used here; this only selects the TheRock artifact group.
-      AMDGPU_TARGETS: gfx90a
-      MANYLINUX_DEFAULT_PYTHON_VERSION: "3.12"
-      HIP_PYTHON_CODEGEN_BASE_BRANCH: ${{ inputs.base_branch }}
-      HIP_PYTHON_CODEGEN_GIT_AUTHOR: ${{ inputs.git_author }}
-      DESTINATION: ${{ inputs.destination }}
+      contents: read # resolve the base branch to a commit
+      pull-requests: write # react to the triggering comment
+      issues: write # the same reaction, on a comment to a plain issue
+      statuses: write # report "pending" on the base branch commit
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      rocm: ${{ steps.parse.outputs.rocm }}
+      base: ${{ steps.parse.outputs.base }}
+      target: ${{ steps.parse.outputs.target }}
+      dest: ${{ steps.parse.outputs.dest }}
+      # Empty unless the command named another organization, which is what
+      # keeps it out of the flags cell and out of the row's identity in the
+      # ordinary case. The run workflow gets `dest` above, always filled in.
+      dest_flag: ${{ steps.parse.outputs.dest_flag }}
+      sources: ${{ steps.parse.outputs.sources }}
+      missing: ${{ steps.parse.outputs.missing }}
+      skip: ${{ steps.parse.outputs.skip }}
+      publish: ${{ steps.parse.outputs.publish }}
+      status: ${{ steps.parse.outputs.status }}
 
     steps:
-      # fetch-depth 0 because generate-bindings.sh restores the generator-owned
-      # files from origin/<base_branch> before regenerating, so that the commit
-      # contains only what the generator produced. The manylinux image ships
-      # git, so there is no tarball fallback to guard against.
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ inputs.base_branch }}
-          path: hip_python
-          fetch-depth: 0
-
-      # Also installs rocm-llvm-devel when the specifier is not a TheRock one:
-      # the generator needs a clang to ask for its resource dir, and only the
-      # TheRock distribution bundles it.
-      - name: Install ROCm and select the interpreter
-        run: bash hip_python/ci/internal/prepare-container.sh
-
-      - name: Resolve the target branch
-        id: target
+      # /generate bindings rocm=<specifier> [base=<branch>] [target=<branch>]
+      #                    [sources=<ref>] [missing=fail|skip]
+      #                    [skip=<library>[,<library>...]]
+      #                    [dest=AMD-AIOSS|ROCm] [publish=yes|no]
+      - name: Parse the command
+        id: parse
         env:
-          TARGET_BRANCH: ${{ inputs.target_branch }}
+          # Through the environment, never interpolated into the script body: a
+          # comment is untrusted text and ${{ }} inside `run` is an injection.
+          BODY: ${{ github.event.comment.body }}
         run: |
-          set -eu
-          # ROCM_VERSION comes from the step above, so the branch names the ROCm
-          # that was installed rather than the specifier that asked for it.
-          branch=${TARGET_BRANCH:-develop/rocm-rel-${ROCM_VERSION}}
-          echo "HIP_PYTHON_CODEGEN_BRANCH=${branch}" >>"${GITHUB_ENV}"
-          echo "version=${ROCM_VERSION}" >>"${GITHUB_OUTPUT}"
-          echo "publishing to ${DESTINATION}/hip-python ${branch}"
+          # -f because the loop below splits the comment into words, and a body
+          # containing `*` would otherwise be expanded against the filesystem.
+          set -euf
 
-      # Before spending half an hour generating. A dry run exercises
-      # authentication, write permission and any branch protection on the target
-      # without touching a ref, so a missing or wrong key fails here.
-      #
-      # The remote and the key are configured on the checkout rather than on the
-      # copy: generate-bindings.sh copies the tree wholesale, .git/config
-      # included, so commit-bindings.sh can push from the copy without any of
-      # this being repeated there.
-      - name: Preflight the destination
-        env:
-          PUBLISH_SSH_KEY: ${{ secrets.PUBLISH_SSH_KEY }}
-          ALLOW_MISSING_HEADERS: ${{ inputs.allow_missing_headers }}
-        run: |
-          set -eu
-          if [ -z "${PUBLISH_SSH_KEY}" ]; then
-            echo "::error::the publish-${DESTINATION} environment has no PUBLISH_SSH_KEY"
+          # First line only, so a reply that quotes someone else's command
+          # cannot smuggle options past the allowlist below.
+          line=${BODY%%$'\n'*}
+          line=${line%$'\r'}
+
+          # No default: the branch this generates onto is named after the ROCm
+          # that gets installed, so a specifier nobody typed would quietly
+          # write a release branch nobody asked for. The manual form defaults
+          # it, where the value is visible in the form before it is submitted.
+          rocm=
+          # The codegen base branch. Its generator-owned files are restored
+          # before regenerating, so that the commit carries only what the
+          # generator produced.
+          base=amd-integration
+          # Empty means develop/rocm-rel-<the installed ROCm version>, which
+          # only the run can work out: a wildcard specifier has no version in
+          # it until something is installed.
+          target=
+          sources=
+          # A header the requested ROCm never shipped fails the codegen. `skip`
+          # is for generating against a release old enough to predate a library.
+          missing=fail
+          # Libraries to leave out by name, comma-separated.
+          skip=
+          dest=AMD-AIOSS
+          # Off unless asked for. See the file header.
+          publish=false
+
+          set -- ${line#*/generate bindings}
+
+          for tok in "$@"; do
+            case "${tok}" in
+              missing=fail|missing=skip)
+                missing=${tok#missing=} ;;
+              dest=AMD-AIOSS|dest=ROCm)
+                dest=${tok#dest=} ;;
+              publish=yes|publish=true)
+                publish=true ;;
+              publish=no|publish=false)
+                publish=false ;;
+              *)
+                # Anchored regexes rather than case globs for these four:
+                # three end up in a git ref and one drives an install.
+                #
+                # The rocm pattern is the ROCM_SPECIFIER grammar of
+                # ci/internal/librocm.sh, minus the two forms that need the
+                # Jenkins nodes. Repeated here because this job has no
+                # checkout to source the library from. The `?` spellings of
+                # the wildcards are here because a comment is rendered
+                # markdown: `*a*` is emphasis, so the text a reader sees is
+                # not the specifier that ran. They are passed on as typed;
+                # librocm.sh rewrites them to the `*` forms.
+                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
+                  rocm=${tok#rocm=}
+                elif [[ ${tok} =~ ^base=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  base=${tok#base=}
+                elif [[ ${tok} =~ ^target=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  target=${tok#target=}
+                elif [[ ${tok} =~ ^sources=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  sources=${tok#sources=}
+                # A comma-separated list, because a space would read as a
+                # second option and a semicolon is cmake's list separator,
+                # which would not survive the trip to the codegen. The names
+                # themselves are not checked here -- this job has no checkout
+                # to read AVAILABLE_GENERATORS from -- so an unknown name is
+                # the generator's to reject. Repeats accumulate rather than
+                # overwrite, unlike the last-wins options above.
+                elif [[ ${tok} =~ ^skip=[a-z0-9_]+(,[a-z0-9_]+)*$ ]]; then
+                  skip=${skip:+${skip},}${tok#skip=}
+                else
+                  # Failing beats silently generating something else, which is
+                  # what a typo in a target branch would otherwise do.
+                  echo "::error::unknown /generate bindings option '${tok}'"
+                  exit 1
+                fi ;;
+            esac
+          done
+
+          if [[ -z ${rocm} ]]; then
+            echo "::error::name the ROCm to generate against with rocm=<specifier>, for instance rocm=therock:7.14.0; the release branch is named after the version it installs, so there is no sensible default"
             exit 1
           fi
-          umask 077
-          key=${RUNNER_TEMP}/publish_key
-          hosts=${RUNNER_TEMP}/known_hosts
-          printf '%s\n' "${PUBLISH_SSH_KEY}" >"${key}"
-          ssh-keyscan -t ed25519 github.com >"${hosts}" 2>/dev/null
 
-          cd hip_python
-          # The commit-bindings.sh that runs is this checkout's, never the one
-          # next to this workflow on the default branch. A base_branch whose
-          # copy predates HIP_PYTHON_CODEGEN_REMOTE ignores the variable and
-          # pushes to origin, putting the generated bindings in this repository
-          # instead of the destination -- and the dry run below would still pass,
-          # because it names the remote explicitly. So the mismatch has to be
-          # caught by looking at the script.
-          if ! grep -q HIP_PYTHON_CODEGEN_REMOTE ci/internal/commit-bindings.sh; then
-            echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries a commit-bindings.sh that ignores HIP_PYTHON_CODEGEN_REMOTE; it would push to origin instead of ${DESTINATION}"
-            exit 1
+          # Sorted and de-duplicated, so `skip=a,b`, `skip=b,a` and
+          # `skip=b skip=a` are one configuration rather than three checks and
+          # three rows in the table. Word-splitting on the commas is safe under
+          # the `set -f` above.
+          if [[ -n ${skip} ]]; then
+            skip=$(printf '%s\n' ${skip//,/ } | sort -u | paste -sd, -)
           fi
 
-          # Same reasoning for the tolerance request: generate-bindings.sh comes
-          # from the base branch too, and one that predates the variable would
-          # generate with a missing header still fatal. Silently ignoring the
-          # request is the bad outcome here -- the run would fail half an hour
-          # later for the very reason the request was meant to excuse.
-          if [ "${ALLOW_MISSING_HEADERS}" = "true" ] \
-             && ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS ci/internal/generate-bindings.sh; then
-            echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries a generate-bindings.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; generate from a branch that has it, or leave allow_missing_headers unset"
-            exit 1
+          # One check per configuration, built here once and reused by the
+          # report job: a context that differed between the pending status and
+          # the final one would leave two entries in the checks list instead of
+          # updating one.
+          #
+          # Neither the target branch nor `publish` is in it. The target is a
+          # function of the specifier, and a run that pushed and a run that did
+          # not are the same question -- can this be generated -- with the same
+          # answer; the table's `pushed` column is where they differ.
+          status="generate bindings (${rocm}, base ${base}"
+          # An if rather than `[[ ... ]] &&`, which under `set -e` would exit
+          # the step the moment the condition did not hold.
+          if [[ ${dest} != AMD-AIOSS ]]; then
+            status="${status}, dest ${dest}"
+          fi
+          if [[ ${missing} == skip ]]; then
+            status="${status}, missing skipped"
+          fi
+          if [[ -n ${skip} ]]; then
+            status="${status}, skip ${skip}"
+          fi
+          status="${status})"
+
+          # Only a destination worth mentioning reaches the table, so the usual
+          # one costs nothing in the flags cell.
+          dest_flag=
+          if [[ ${dest} != AMD-AIOSS ]]; then
+            dest_flag=${dest}
           fi
 
-          # Lower-cased, as the Jenkins publish stage does it.
-          git remote add dest "git@github.com:${DESTINATION,,}/hip-python.git"
-          # IdentitiesOnly so a key from an agent cannot be offered instead.
-          git config core.sshCommand \
-              "ssh -i ${key} -o IdentitiesOnly=yes -o UserKnownHostsFile=${hosts}"
-          git push --dry-run --force dest "HEAD:refs/heads/${HIP_PYTHON_CODEGEN_BRANCH}"
-
-      # After the preflight, so a credential problem does not cost the fetch,
-      # and before the generator, which reads these trees. The ref comes from
-      # the ROCm specifier unless sources_ref names one.
-      - name: Fetch the ROCm component sources
-        run: bash hip_python/ci/internal/fetch-rocm-sources.sh
-
-      # Exits with the generator's status while still leaving the most complete
-      # partial tree it can, so one failed library fails the run and nothing is
-      # pushed -- which is what a release branch wants.
-      - name: Generate the bindings
-        env:
-          HIP_PYTHON_ALLOW_MISSING_HEADERS: ${{ inputs.allow_missing_headers }}
-        run: bash hip_python/ci/internal/generate-bindings.sh
-
-      - name: Collect the generator logs and the change list
-        if: always()
-        run: |
-          set -eu
-          out=${GITHUB_WORKSPACE}/codegen-report
-          rm -rf "${out}"
-          mkdir -p "${out}"
-          # The generator puts per-library logs in a fresh mkdtemp directory.
-          cp -r /tmp/hip_python_codegen_*/. "${out}/" 2>/dev/null || true
-          if [ -d "${BUILD_DIR}/hip_python/.git" ]; then
-            git -C "${BUILD_DIR}/hip_python" status --porcelain >"${out}/status.txt"
-            git -C "${BUILD_DIR}/hip_python" diff --stat >"${out}/diffstat.txt"
-          fi
-
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          # The resolved version, not the specifier: 'therock:7.14.0' contains a
-          # colon, which an artifact name may not.
-          name: codegen-report-${{ steps.target.outputs.version }}-${{ inputs.destination }}
-          path: codegen-report
-          if-no-files-found: ignore
-
-      - name: Commit and publish
-        env:
-          HIP_PYTHON_CODEGEN_PUSH: ${{ inputs.publish }}
-          HIP_PYTHON_CODEGEN_REMOTE: dest
-        run: bash "${BUILD_DIR}/hip_python/ci/internal/commit-bindings.sh"
-
-      - name: Summarize the commit
-        env:
-          PUBLISHED: ${{ inputs.publish }}
-        run: |
-          set -eu
+          # The allowlist above is also what keeps a crafted comment from
+          # injecting extra keys here: none of these can contain a newline.
           {
-            echo "### generated for ROCm ${ROCM_VERSION}"
+            echo "rocm=${rocm}"
+            echo "base=${base}"
+            echo "target=${target}"
+            echo "dest=${dest}"
+            echo "dest_flag=${dest_flag}"
+            echo "sources=${sources}"
+            echo "missing=${missing}"
+            echo "skip=${skip}"
+            echo "publish=${publish}"
+            echo "status=${status}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Resolve the commit and acknowledge the command
+        id: resolve
+        uses: actions/github-script@v9
+        env:
+          BASE: ${{ steps.parse.outputs.base }}
+          STATUS: ${{ steps.parse.outputs.status }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            // The base branch tip, which is what the run will check out and
+            // what a commit status has to name. The run reports the commit it
+            // actually got, and the report job prefers that; this is what the
+            // pending status hangs off, and the fallback when the run failed
+            // before its checkout.
+            const sha = (await github.rest.repos.getCommit(
+              { owner, repo, ref: process.env.BASE })).data.sha;
+            core.setOutput('sha', sha);
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: 'eyes',
+            });
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: 'pending',
+              context: process.env.STATUS,
+              description: 'queued on the internal runner',
+              target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
+            });
+
+      # A parameterized run is not reproducible from the comment thread unless
+      # the parameters are written down somewhere.
+      - name: Record the resolved parameters
+        env:
+          # Through the environment like everything else that came from the
+          # event, even a login the API would never have let contain anything
+          # but letters, digits and a hyphen.
+          WHO: ${{ github.event.comment.user.login }}
+          SHA: ${{ steps.resolve.outputs.sha }}
+          ROCM: ${{ steps.parse.outputs.rocm }}
+          BASE: ${{ steps.parse.outputs.base }}
+          TARGET: ${{ steps.parse.outputs.target }}
+          DEST: ${{ steps.parse.outputs.dest }}
+          SOURCES: ${{ steps.parse.outputs.sources }}
+          MISSING: ${{ steps.parse.outputs.missing }}
+          SKIP: ${{ steps.parse.outputs.skip }}
+          PUBLISH: ${{ steps.parse.outputs.publish }}
+        run: |
+          {
+            echo "### generate bindings"
             echo
-            echo "- specifier: \`${ROCM_SPECIFIER}\`"
-            echo "- destination: ${DESTINATION}/hip-python"
-            echo "- branch: ${HIP_PYTHON_CODEGEN_BRANCH}"
-            echo "- pushed: ${PUBLISHED}"
-            # Written by the generator when it forgave a missing header, and
-            # collected into the report above. Worth naming here: the commit
-            # that was just pushed carries bindings for fewer libraries than
-            # the branch it came from.
-            skipped=${GITHUB_WORKSPACE}/codegen-report/skipped.txt
-            if [ -s "${skipped}" ]; then
-              echo "- skipped (no header in this ROCm):"
-              while IFS= read -r line; do
-                echo "  - \`${line%%:*}\`"
-              done <"${skipped}"
+            echo "- requested by: @${WHO}"
+            echo "- rocm: \`${ROCM}\`"
+            echo "- base: \`${BASE}\` at \`${SHA}\`"
+            echo "- target: ${TARGET:-develop/rocm-rel-<the installed version>}"
+            echo "- destination: ${DEST}/hip-python"
+            echo "- component sources: ${SOURCES:-derived from the rocm specifier}"
+            echo "- missing headers: ${MISSING}"
+            echo "- skipped libraries: ${SKIP:-none}"
+            if [ "${PUBLISH}" = true ]; then
+              echo "- publish: yes, force-pushed onto the target branch"
+            else
+              echo "- publish: no, the commit stays on the runner"
             fi
-            echo
-            echo '```'
-            git -C "${BUILD_DIR}/hip_python" show --stat --oneline HEAD | head -n 40
-            echo '```'
           } >>"${GITHUB_STEP_SUMMARY}"
 
-      # The key lives in RUNNER_TEMP rather than ~/.ssh because a container job's
-      # home directory is a mount that outlives the container on a self-hosted
-      # runner. Removed either way.
-      - name: Remove the key
-        if: always()
-        run: rm -f "${RUNNER_TEMP}/publish_key"
+  # The parsed comment, handed to the shared run. `secrets: inherit` because the
+  # run's job names a publish-<destination> environment and reads the
+  # PUBLISH_SSH_KEY held there; a called workflow gets no secrets otherwise.
+  generate:
+    needs: dispatch
+    permissions:
+      contents: read
+    uses: ./.github/workflows/internal-generate-bindings-run.yml
+    secrets: inherit
+    with:
+      destination: ${{ needs.dispatch.outputs.dest }}
+      rocm_specifier: ${{ needs.dispatch.outputs.rocm }}
+      sources_ref: ${{ needs.dispatch.outputs.sources }}
+      base_branch: ${{ needs.dispatch.outputs.base }}
+      target_branch: ${{ needs.dispatch.outputs.target }}
+      allow_missing_headers: ${{ needs.dispatch.outputs.missing == 'skip' }}
+      skip_libraries: ${{ needs.dispatch.outputs.skip }}
+      publish: ${{ needs.dispatch.outputs.publish == 'true' }}
+      requested_by: ${{ github.event.comment.user.login }}
+
+  # The check on the base branch commit and the codegen table, written by the
+  # workflow the full tests share. A row here is a configuration of the
+  # generator rather than of a test, so the columns are its own.
+  report:
+    name: report
+    # Runs whatever the generate job did, but not when the command itself was
+    # rejected: a parse error has no commit to report against.
+    if: always() && needs.dispatch.result == 'success'
+    needs: [dispatch, generate]
+    permissions:
+      statuses: write
+      issues: write
+      pull-requests: write
+    uses: ./.github/workflows/internal-full-test-report.yml
+    with:
+      marker: <!-- generate-bindings-overview -->
+      heading: generate bindings
+      note: >-
+        One row per configuration, carrying its latest run. The commit is the
+        base branch tip it generated from, and the target is where that
+        generated commit goes -- `pushed` says whether it got there.
+      columns: '["result", "rocm", "installed", "base", "sha", "target", "pushed", "flags", "run", "at"]'
+      # Not the target: it is a function of the specifier, so including it
+      # would file a run that resolved it against the installed version apart
+      # from one that was told it. Not `pushed` either -- a dry run and a push
+      # are the same configuration, and the column says which happened.
+      key: '["rocm", "base", "dest", "missing", "skip"]'
+      activity: generate bindings
+      result: ${{ needs.generate.result }}
+      # What the run checked out, falling back to what the dispatch resolved
+      # when the run never got that far.
+      sha: ${{ needs.generate.outputs.sha || needs.dispatch.outputs.sha }}
+      status: ${{ needs.dispatch.outputs.status }}
+      rocm: ${{ needs.dispatch.outputs.rocm }}
+      # What the installation reported, which is what the target branch is
+      # named after. Empty when the run failed before installing anything.
+      installed: ${{ needs.generate.outputs.rocm_version }}
+      sources: ${{ needs.dispatch.outputs.sources }}
+      missing: ${{ needs.dispatch.outputs.missing }}
+      skip: ${{ needs.dispatch.outputs.skip }}
+      base: ${{ needs.dispatch.outputs.base }}
+      # The branch the run resolved, falling back to whatever was asked for.
+      target: ${{ needs.generate.outputs.target || needs.dispatch.outputs.target }}
+      # What the run was asked to do, not what it managed: a failed push is a
+      # failed run, and the result column already says so.
+      pushed: ${{ needs.dispatch.outputs.publish }}
+      dest: ${{ needs.dispatch.outputs.dest_flag }}
