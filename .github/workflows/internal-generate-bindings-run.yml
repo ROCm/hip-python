@@ -209,6 +209,17 @@ jobs:
         run: |
           set -eu
           cd hip_python
+          # Every step below runs one of these, and a branch that predates them
+          # would fail on the first with nothing but a path that does not
+          # exist. Worth naming, because the default base is one of those
+          # branches until this work is merged there.
+          for script in prepare-container.sh fetch-rocm-sources.sh \
+                        generate-bindings.sh commit-bindings.sh; do
+            if [ ! -f "ci/internal/${script}" ]; then
+              echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries no ci/internal/${script}, so it predates the scripts this workflow drives; generate from a branch that has them"
+              exit 1
+            fi
+          done
           if [ "${ALLOW_MISSING_HEADERS}" = "true" ] \
              && ! grep -q HIP_PYTHON_ALLOW_MISSING_HEADERS ci/internal/generate-bindings.sh; then
             echo "::error::${HIP_PYTHON_CODEGEN_BASE_BRANCH} carries a generate-bindings.sh that ignores HIP_PYTHON_ALLOW_MISSING_HEADERS; generate from a branch that has it, or leave allow_missing_headers unset"
