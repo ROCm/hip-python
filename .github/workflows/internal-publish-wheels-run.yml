@@ -1,0 +1,394 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The work of a wheel release, with no trigger of its own: build the fixed set
+# of wheels from the bindings a release branch already carries, then upload them
+# to TestPyPI or PyPI.
+#
+# Called, never dispatched. `workflow_call` does not put a workflow in the
+# Actions tab, so the two ways to start one of these are
+# internal-publish-wheels.yml (a `/publish wheels` comment) and
+# internal-publish-wheels-manual.yml (the Actions tab).
+#
+# No codegen and no suites. What is published has to be what was tested, so the
+# bindings come from the ref as committed -- `/full test hpe ref=<branch>
+# codegen=skip` is the run that says they work, and this one turns that same
+# tree into wheels. A ref carrying no rendered bindings is refused below rather
+# than generated on the spot.
+#
+# The three legs are fixed rather than an input: Python 3.12 with an abi3 floor
+# of 3.12, then 3.11 and 3.10 without one. The abi3 leg's wheels install on 3.12
+# through 3.14, so three passes cover five interpreters, and there is nothing to
+# choose per run -- a release is all of them or none.
+#
+# One job for all three, because `[self-hosted, linux]` is one machine: a matrix
+# would serialize on it anyway and pay the ROCm install three times over. ROCm
+# is installed once and each pass re-runs prepare-container.sh with
+# ROCM_SPECIFIER=preinstalled, which keeps that installation and only switches
+# the interpreter `python3` points at.
+
+name: publish wheels (run)
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: What to build. A release branch, tag or sha carrying rendered bindings
+        type: string
+        required: true
+      index:
+        description: '"testpypi" or "pypi"'
+        type: string
+        required: true
+      rocm:
+        description: ROCM_SPECIFIER for ci/internal/librocm.sh
+        type: string
+        required: true
+      publish:
+        description: Upload the wheels. Left off, the run builds them and stops
+        type: boolean
+        required: false
+        default: true
+      requested_by:
+        description: Who asked for this run, when a comment did. Empty for a dispatch
+        type: string
+        required: false
+        default: ""
+    outputs:
+      sha:
+        description: The commit the wheels were built from
+        value: ${{ jobs.build.outputs.sha }}
+      rocm_version:
+        description: The ROCm version the installation reported
+        value: ${{ jobs.build.outputs.rocm_version }}
+      version:
+        description: The version the compiled wheels carry
+        value: ${{ jobs.build.outputs.version }}
+
+permissions: {}
+
+jobs:
+  build:
+    name: build the wheels (${{ inputs.ref }})
+    # No architecture label: no device code is compiled -- AMDGPU_TARGETS below
+    # only picks which ROCm distribution is downloaded, and
+    # cmake/HipPythonBuild.cmake runs auditwheel repair with --exclude '*' so
+    # nothing arch-specific is grafted in either -- and no suite is run, so this
+    # does not need one of the cards.
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 240
+    # The wheels are built from the ref as committed and nothing here writes
+    # anywhere; the upload is the next job's, with the token.
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+      rocm_version: ${{ steps.rocm.outputs.version }}
+      version: ${{ steps.collect.outputs.version }}
+    container:
+      # The image the release wheels have always been built in, and the reason
+      # the platform tag below is hardcoded: ROCm is not in it, and the prepare
+      # step installs the requested one.
+      image: quay.io/pypa/manylinux_2_28_x86_64
+    env:
+      # ci/internal/build-wheels.sh hardcodes project_dir=hip_python and
+      # resolves everything below ${SRC_DIR}/hip_python, which is why the
+      # checkout lands in a directory of that exact name.
+      SRC_DIR: ${{ github.workspace }}
+      BUILD_DIR: ${{ github.workspace }}/build
+      BUILD_ARTIFACTS_DIR: ${{ github.workspace }}/artifacts
+      ROCM_PATH: /opt/rocm
+      ROCM_SPECIFIER: ${{ inputs.rocm }}
+      AMDGPU_TARGETS: gfx90a
+      # The bindings this builds are the ones the ref carries. Regenerating
+      # them would publish something no test run ever saw.
+      SKIP_CODEGEN: "true"
+      MAX_JOBS: "16"
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+          path: hip_python
+
+      - name: Record the commit built from
+        id: commit
+        run: echo "sha=$(git -C hip_python rev-parse HEAD)" >>"${GITHUB_OUTPUT}"
+
+      # Both guards are about publishing the wrong thing rather than about the
+      # build failing, which is why they are worth a step of their own.
+      - name: Check that this commit is one to publish from
+        run: |
+          set -eu
+          # Without rendered bindings there is nothing for a codegen-free build
+          # to compile: cmake configures happily, since the module lists are
+          # hardcoded in the packages' CMakeLists.txt, and the build dies at the
+          # first Cython target with "No rule to make target cyhip.pyx", well
+          # into the run and nowhere near the cause. This tree is committed onto
+          # release branches; amd-integration is the codegen base and carries
+          # none.
+          if [ ! -f hip_python/packages/rocm-bindings-hip/src/rocm/bindings/cyhip.pyx ]; then
+            echo "::error::this commit carries no rendered bindings, so there is nothing to build; publish from a release branch, and generate one first with /generate bindings if it does not exist yet"
+            exit 1
+          fi
+          # A release branch commits VERSION.in and cmake renders the version
+          # from it. Without one, build-wheels.sh writes a throwaway template
+          # from whatever ROCm this run happens to install -- fine for a test,
+          # not for a file that goes to an index under a version and stays
+          # there.
+          if [ ! -f hip_python/VERSION.in ]; then
+            echo "::error::this commit carries no VERSION.in, so the wheels would be versioned from whatever ROCm this run installs rather than by the branch; publish from a release branch"
+            exit 1
+          fi
+
+      # These outlive a job on a self-hosted runner, and a wheel left over from
+      # an earlier run would be uploaded by the next job, which globs.
+      - name: Clean the scratch directories
+        run: |
+          set -eu
+          rm -rf "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+          mkdir -p "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
+
+      # Once. The three passes below reuse this installation, which is what
+      # makes them cost a build each rather than a build and an install each.
+      - name: Install ROCm and select the first interpreter
+        env:
+          MANYLINUX_DEFAULT_PYTHON_VERSION: "3.12"
+        run: bash hip_python/ci/internal/prepare-container.sh
+
+      - name: Report the installed ROCm version
+        id: rocm
+        run: echo "version=${ROCM_VERSION:-}" >>"${GITHUB_OUTPUT}"
+
+      # The legs are a list in one place rather than three near-identical pairs
+      # of steps. Each pass:
+      #
+      # * re-runs prepare-container.sh with ROCM_SPECIFIER=preinstalled, which
+      #   its header documents as keeping whatever is already there, so only its
+      #   interpreter selection does anything. That selection is an
+      #   `alternatives --set python3`, a change to the image rather than to
+      #   this shell's PATH, which is why it takes effect for the build that
+      #   follows it inside the same step;
+      # * builds with the leg's abi3 floor into the shared artifacts directory.
+      #   build-wheels.sh removes its own working copy and not that directory,
+      #   so each pass adds to what the last one left. The two pure-Python
+      #   wheels are byte-identical across the legs and simply overwrite
+      #   themselves.
+      - name: Build the wheels for each interpreter
+        run: |
+          set -eu
+          for leg in 3.12:3.12 3.11:no 3.10:no; do
+            python=${leg%%:*}
+            sabi=${leg##*:}
+            echo "::group::python ${python}, sabi ${sabi}"
+            MANYLINUX_DEFAULT_PYTHON_VERSION="${python}" \
+            ROCM_SPECIFIER=preinstalled \
+              bash hip_python/ci/internal/prepare-container.sh
+            USE_SABI="${sabi}" \
+              bash hip_python/ci/internal/build-wheels.sh
+            echo "::endgroup::"
+          done
+
+      # What came out, said plainly, because the next job uploads exactly this
+      # and a reader should be able to see the set before it goes anywhere.
+      - name: List the wheels
+        id: collect
+        env:
+          REF: ${{ inputs.ref }}
+          SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          set -eu
+          cd "${BUILD_ARTIFACTS_DIR}"
+          # A build that reported success and produced nothing would otherwise
+          # be found out by the next job, as an artifact that does not exist.
+          ls -1 *.whl >/dev/null
+          # The metapackage is the one wheel whose version is the release's and
+          # whose name is fixed, so it is what a caller can report.
+          version=$(ls hip_python-*.whl 2>/dev/null | head -n1 | cut -d- -f2)
+          echo "version=${version:-}" >>"${GITHUB_OUTPUT}"
+          {
+            echo "### wheels built from \`${REF}\`"
+            echo
+            echo "- commit: \`${SHA}\`"
+            echo "- rocm: \`${ROCM_VERSION}\`"
+            echo "- version: ${version:-unknown}"
+            echo
+            echo '```'
+            ls -1
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"
+
+      # Uploaded even when a leg failed, because the legs that did finish are
+      # what says which one broke. `ignore` rather than `error` for the same
+      # reason: a build that failed early has nothing to upload, and that is
+      # already reported.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: wheels
+          path: artifacts/*.whl
+          if-no-files-found: ignore
+
+  publish:
+    name: publish to ${{ inputs.index }}
+    needs: build
+    if: inputs.publish
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 30
+    # Where the token lives: define publish-testpypi and publish-pypi, each with
+    # a PYPI_API_TOKEN, and only one of them is ever readable in a run. Put a
+    # required reviewer on publish-pypi -- an upload cannot be taken back, only
+    # yanked.
+    environment: publish-${{ inputs.index }}
+    permissions:
+      # Reading this run's own artifact.
+      actions: read
+    container: quay.io/pypa/manylinux_2_28_x86_64
+    env:
+      # The manylinux image has no default python3 -- prepare-container.sh is
+      # what selects one, and this job does not run it -- so the interpreter is
+      # named. Any of them would do; nothing here is version-specific.
+      PY: /opt/python/cp312-cp312/bin/python
+      # Hardcoded next to the image it belongs to. Both are the same decision.
+      PLAT: manylinux_2_28_x86_64
+
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          name: wheels
+          path: wheels
+
+      - name: Resolve the index
+        id: index
+        env:
+          INDEX: ${{ inputs.index }}
+        run: |
+          set -eu
+          case "${INDEX}" in
+            testpypi) url=https://test.pypi.org/legacy/ ;;
+            pypi) url=https://upload.pypi.org/legacy/ ;;
+            *) echo "::error::index must be testpypi or pypi, not '${INDEX}'"; exit 1 ;;
+          esac
+          echo "url=${url}" >>"${GITHUB_OUTPUT}"
+
+      # Nothing in this repository has ever uploaded to an index -- every path
+      # on record is a download -- so whether this runner can reach the upload
+      # endpoint at all is unproven, and a blocked one would otherwise show up
+      # as twine hanging until the job times out. An unauthenticated POST is
+      # answered with 403 by both indexes; any answer at all is what is being
+      # checked for.
+      - name: Check that the index is reachable
+        env:
+          URL: ${{ steps.index.outputs.url }}
+        run: |
+          set -eu
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 \
+                      -X POST "${URL}" || echo 000)
+          echo "POST ${URL} -> ${code}"
+          if [ "${code}" = 000 ]; then
+            echo "::error::no answer from ${URL}; this runner's egress does not reach the upload endpoint, which nothing here has needed before. Ask for it to be opened, or run this from a machine that has it"
+            exit 1
+          fi
+
+      # An index rejects a bad platform tag on arrival, but only after the first
+      # file has been uploaded and the rest cannot be taken back, so the set is
+      # checked here as a whole.
+      - name: Check the wheels before uploading any of them
+        run: |
+          set -eu
+          cd wheels
+          # `ls *.whl` under set -e is the emptiness check as well.
+          names=$(ls -1 *.whl)
+
+          bad=
+          for f in ${names}; do
+            # dist-version-python-abi-platform.whl, so the platform is what
+            # follows the last dash.
+            plat=${f%.whl}
+            plat=${plat##*-}
+            # `any` is the pure-Python metapackage, which is portable and says
+            # so. Anything else has to be the tag this image builds for --
+            # a bare linux_x86_64 is what an unrepaired wheel carries, and no
+            # index accepts one.
+            case "${plat}" in
+              any|"${PLAT}") ;;
+              *) bad="${bad} ${f}" ;;
+            esac
+          done
+          if [ -n "${bad}" ]; then
+            echo "::error::these wheels are not tagged ${PLAT} or any:${bad}"
+            exit 1
+          fi
+
+          # One version per distribution. Two versions of the same distribution
+          # in one upload is what a set built from two different refs looks
+          # like, and it would leave the index carrying half of each.
+          #
+          # Not one version across all of them: numba-hip is versioned on its
+          # own, independently of the release.
+          dupes=$(for f in ${names}; do
+                    rest=${f#*-}
+                    printf '%s %s\n' "${f%%-*}" "${rest%%-*}"
+                  done | sort -u | awk '{ print $1 }' | uniq -d)
+          if [ -n "${dupes}" ]; then
+            echo "::error::more than one version of: ${dupes}; that is a set built from more than one commit"
+            exit 1
+          fi
+
+          ls -1
+
+      - name: Check the metadata
+        run: |
+          set -eu
+          "${PY}" -m pip install --quiet --upgrade twine
+          "${PY}" -m twine check wheels/*.whl
+
+      # --skip-existing because the two pure-Python wheels are built once per
+      # leg and are the same file each time, and because a re-run after a
+      # partial upload should finish the job rather than fail on what already
+      # arrived. An index never lets a file be replaced, only skipped.
+      - name: Upload
+        id: upload
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_REPOSITORY_URL: ${{ steps.index.outputs.url }}
+          INDEX: ${{ inputs.index }}
+        run: |
+          set -eu
+          if [ -z "${TWINE_PASSWORD}" ]; then
+            echo "::error::the publish-${INDEX} environment has no PYPI_API_TOKEN"
+            exit 1
+          fi
+          "${PY}" -m twine upload --non-interactive --skip-existing \
+                  --disable-progress-bar wheels/*.whl | tee upload.log
+
+      - name: Say what went up
+        if: always() && steps.upload.conclusion != 'skipped'
+        env:
+          INDEX: ${{ inputs.index }}
+          URL: ${{ steps.index.outputs.url }}
+          WHO: ${{ inputs.requested_by }}
+          REF: ${{ inputs.ref }}
+          SHA: ${{ needs.build.outputs.sha }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          set -eu
+          {
+            echo "### uploaded to ${INDEX}"
+            echo
+            if [ -n "${WHO}" ]; then
+              echo "- requested by: @${WHO}"
+            fi
+            echo "- ref: \`${REF}\` at \`${SHA}\`"
+            echo "- version: ${VERSION}"
+            echo "- endpoint: ${URL}"
+            echo
+            # twine names each file as it goes and says so when it skips one
+            # that the index already has, which is the distinction worth
+            # keeping: a skipped file is not a file this run published.
+            echo '```'
+            cat upload.log
+            echo '```'
+          } >>"${GITHUB_STEP_SUMMARY}"

@@ -1,0 +1,266 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# The comment path into a wheel release: `/publish wheels ref=<branch>` builds
+# the fixed three-leg set from the bindings that branch carries and uploads it
+# to TestPyPI, or to PyPI when the comment says `index=pypi`.
+#
+# Where the command belongs is a release task issue, after the branch has been
+# generated and tested: `/generate bindings` makes it, `/full test hpe
+# ref=<branch> codegen=skip` says it works, and this puts it on an index. `ref=`
+# is required there, as it is for a full test, because an issue has no head to
+# mean. On a pull request the head is what is meant, which is how a change to
+# the packaging gets to TestPyPI before it is merged.
+#
+# `index` defaults to testpypi. The two differ in one way that matters: an
+# upload to PyPI can be yanked but never replaced or removed, so the default is
+# the index where a mistake costs nothing. Put a required reviewer on the
+# publish-pypi environment and the other one costs a click.
+#
+# The run itself lives in internal-publish-wheels-run.yml, which
+# internal-publish-wheels-manual.yml calls with the same values from the Actions
+# tab.
+#
+# Note that GitHub runs the copy of this file on the default branch, never the
+# copy in a pull request. Changes here take effect once merged.
+
+name: publish wheels
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+jobs:
+  dispatch:
+    name: dispatch
+    # Authorization comes from the event payload, so an unauthorized comment
+    # never reaches a runner. This command can put a file on PyPI under the
+    # organization's name, so narrowing `MEMBER` to a list of logins is more
+    # obviously worth it here than anywhere else.
+    if: >-
+      github.repository_owner == 'AMD-AIOSS'
+      && startsWith(github.event.comment.body, '/publish wheels')
+      && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'),
+                  github.event.comment.author_association)
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      contents: read # expand the ref into a commit
+      pull-requests: write # react to the triggering comment, resolve the head sha
+      issues: write # the same reaction, on a comment to a plain issue
+      statuses: write # report "pending" on the commit
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      ref: ${{ steps.parse.outputs.ref }}
+      index: ${{ steps.parse.outputs.index }}
+      rocm: ${{ steps.parse.outputs.rocm }}
+      publish: ${{ steps.parse.outputs.publish }}
+      status: ${{ steps.parse.outputs.status }}
+
+    steps:
+      # /publish wheels [ref=<branch|tag>] [index=testpypi|pypi]
+      #                 [rocm=<specifier>] [publish=yes|no]
+      - name: Parse the command
+        id: parse
+        env:
+          # Through the environment, never interpolated into the script body: a
+          # comment is untrusted text and ${{ }} inside `run` is an injection.
+          BODY: ${{ github.event.comment.body }}
+          IS_PR: ${{ github.event.issue.pull_request && 'true' || 'false' }}
+        run: |
+          set -euf
+
+          # First line only, so a reply that quotes someone else's command
+          # cannot smuggle options past the allowlist below.
+          line=${BODY%%$'\n'*}
+          line=${line%$'\r'}
+
+          # What to publish, when the comment is not on a pull request whose
+          # head answers that.
+          ref=
+          index=testpypi
+          # Which ROCm the wheels are built against. It decides what the
+          # compiled bindings link to, and it should be the one the branch was
+          # generated from -- a release branch names it, which is why this
+          # defaults to the same version the rest of CI does rather than
+          # asking every caller to repeat it.
+          rocm=therock:7.14.0
+          # Off is how to build the set and look at it without uploading, which
+          # is what a first run after a packaging change wants.
+          publish=true
+
+          set -- ${line#*/publish wheels}
+
+          for tok in "$@"; do
+            case "${tok}" in
+              index=testpypi|index=pypi)
+                index=${tok#index=} ;;
+              publish=yes|publish=true)
+                publish=true ;;
+              publish=no|publish=false)
+                publish=false ;;
+              *)
+                # The rocm pattern is the ROCM_SPECIFIER grammar of
+                # ci/internal/librocm.sh, minus the two forms that need the
+                # Jenkins nodes, and the `?` spellings of its wildcards, which
+                # exist because a comment is rendered markdown and `*a*` is
+                # emphasis. Repeated here because this job has no checkout to
+                # source the library from.
+                if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
+                  rocm=${tok#rocm=}
+                # A git ref, and the API is asked to resolve it rather than a
+                # shell being asked to interpolate it.
+                elif [[ ${tok} =~ ^ref=[A-Za-z0-9._/-]{1,100}$ ]]; then
+                  ref=${tok#ref=}
+                else
+                  echo "::error::unknown /publish wheels option '${tok}'"
+                  exit 1
+                fi ;;
+            esac
+          done
+
+          # On a pull request, no ref means the head. On an issue there is no
+          # head to mean, and the command has to be told -- which is the usual
+          # case here, since a release task issue is where this belongs.
+          if [[ ${IS_PR} != true && -z ${ref} ]]; then
+            echo "::error::this comment is on an issue, not a pull request, so there is no head to publish; name the release branch with ref=<branch>"
+            exit 1
+          fi
+
+          # One check per index, so a run to TestPyPI and a run to PyPI from
+          # the same commit are two lines rather than one overwriting the
+          # other. Built here once and reused by the report job below: a
+          # context that differed between the pending status and the final one
+          # would leave two entries instead of updating one.
+          status="publish wheels (${index}, ${rocm}"
+          if [[ ${publish} != true ]]; then
+            status="${status}, build only"
+          fi
+          status="${status})"
+
+          {
+            echo "ref=${ref}"
+            echo "index=${index}"
+            echo "rocm=${rocm}"
+            echo "publish=${publish}"
+            echo "status=${status}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Resolve the commit and acknowledge the command
+        id: resolve
+        uses: actions/github-script@v9
+        env:
+          REQUESTED: ${{ steps.parse.outputs.ref }}
+          STATUS: ${{ steps.parse.outputs.status }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const requested = process.env.REQUESTED;
+            // Resolved now, so a push between the comment and the build cannot
+            // change what is published. getCommit takes a branch, a tag or a
+            // sha and answers with the forty characters a commit status needs.
+            const sha = requested
+              ? (await github.rest.repos.getCommit(
+                { owner, repo, ref: requested })).data.sha
+              : (await github.rest.pulls.get(
+                { owner, repo, pull_number: context.issue.number })).data.head.sha;
+            core.setOutput('sha', sha);
+
+            await github.rest.reactions.createForIssueComment({
+              owner, repo, comment_id: context.payload.comment.id, content: 'eyes',
+            });
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha,
+              state: 'pending',
+              context: process.env.STATUS,
+              description: 'queued on the internal runner',
+              target_url: `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`,
+            });
+
+  # `secrets: inherit` because the run's publish job names a publish-<index>
+  # environment and reads the PYPI_API_TOKEN held there; a called workflow gets
+  # no secrets otherwise.
+  wheels:
+    needs: dispatch
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/internal-publish-wheels-run.yml
+    secrets: inherit
+    with:
+      # The commit, not the branch: a branch that moved between the comment and
+      # the runner picking it up would publish something nobody asked for.
+      ref: ${{ needs.dispatch.outputs.sha }}
+      index: ${{ needs.dispatch.outputs.index }}
+      rocm: ${{ needs.dispatch.outputs.rocm }}
+      publish: ${{ needs.dispatch.outputs.publish == 'true' }}
+      requested_by: ${{ github.event.comment.user.login }}
+
+  # No table, unlike the full test: a publish is a rare and deliberate act, not
+  # a matrix of configurations to compare, so the answer is the check on the
+  # commit and one reply in the thread the command came from.
+  report:
+    name: report
+    if: always() && needs.dispatch.result == 'success'
+    needs: [dispatch, wheels]
+    runs-on: [self-hosted, linux]
+    timeout-minutes: 5
+    permissions:
+      statuses: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/github-script@v9
+        env:
+          RESULT: ${{ needs.wheels.result }}
+          SHA: ${{ needs.dispatch.outputs.sha }}
+          REF: ${{ needs.dispatch.outputs.ref }}
+          INDEX: ${{ needs.dispatch.outputs.index }}
+          ROCM: ${{ needs.dispatch.outputs.rocm }}
+          PUBLISH: ${{ needs.dispatch.outputs.publish }}
+          STATUS: ${{ needs.dispatch.outputs.status }}
+          VERSION: ${{ needs.wheels.outputs.version }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const {
+              RESULT, SHA, REF, INDEX, ROCM, PUBLISH, STATUS, VERSION,
+            } = process.env;
+            const state = { success: 'success', cancelled: 'error' }[RESULT] ?? 'failure';
+            // The faces the full test's table uses, so a result reads the same
+            // wherever it is reported.
+            const face = {
+              success: '✅', failure: '❌', cancelled: '🚫', skipped: '⏭️',
+            }[RESULT] ?? '';
+            const url = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const did = PUBLISH === 'true' ? `publish to ${INDEX}` : 'build the wheels';
+
+            await github.rest.repos.createCommitStatus({
+              owner, repo, sha: SHA,
+              state,
+              context: STATUS,
+              description: `${did} ${RESULT}`,
+              target_url: url,
+            });
+
+            const where = PUBLISH === 'true'
+              ? `[${INDEX}](${INDEX === 'pypi'
+                ? 'https://pypi.org/project/hip-python/'
+                : 'https://test.pypi.org/project/hip-python/'})`
+              : 'nowhere; this was a build-only run';
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: context.issue.number,
+              body: [
+                `${face} **${did}** ${RESULT} — [log](${url})`,
+                '',
+                `- ref: \`${REF || 'the pull request head'}\` at \`${SHA.slice(0, 7)}\``,
+                `- rocm: \`${ROCM}\``,
+                `- version: ${VERSION || 'not built'}`,
+                `- index: ${where}`,
+              ].join('\n'),
+            });

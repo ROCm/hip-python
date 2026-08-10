@@ -1,0 +1,70 @@
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# A wheel release started from the Actions tab. The same run a `/publish wheels`
+# comment produces -- both callers hand the same values to
+# internal-publish-wheels-run.yml -- so this file is only the parameter form.
+#
+# When to reach for this rather than the comment: to publish a release branch
+# that has no issue or pull request to comment on, or to build the set without
+# uploading it, which is what unsetting `publish` does.
+#
+# The `ref` input is what gets built, and it is not the branch chosen in the
+# UI's "Use workflow from" selector. That selector decides only which copy of
+# these workflow files runs. Leaving it on the default branch while pointing
+# `ref` at a release branch is the normal case.
+#
+# No author gate, unlike the comment path: dispatching a workflow already
+# requires write access.
+
+name: publish wheels (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: What to build. A release branch, tag or sha carrying rendered bindings
+        type: string
+        required: true
+      index:
+        description: Where to upload. TestPyPI is the one where a mistake costs nothing
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+      rocm:
+        description: "ROCm to build against: therock:X.Y.Z, X.Y.Z, therock:*, therock:*rc*, therock:*a* or preinstalled"
+        type: string
+        default: therock:7.14.0
+      publish:
+        description: Upload the wheels. Unset to build the set and stop
+        type: boolean
+        default: true
+
+# Per ref: a second dispatch against the same ref supersedes the first rather
+# than queueing behind it on the single runner. Not cancel-in-progress once the
+# upload has started, which is the one moment cancelling would hurt -- but that
+# is minutes at the end of an hour, and twine's --skip-existing makes the re-run
+# finish what the cancelled one began.
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  wheels:
+    if: github.repository_owner == 'AMD-AIOSS'
+    permissions:
+      contents: read
+      actions: read
+    # `secrets: inherit` because the run's publish job names a publish-<index>
+    # environment and reads the PYPI_API_TOKEN held there; a called workflow
+    # gets no secrets otherwise.
+    uses: ./.github/workflows/internal-publish-wheels-run.yml
+    secrets: inherit
+    with:
+      ref: ${{ inputs.ref }}
+      index: ${{ inputs.index }}
+      rocm: ${{ inputs.rocm }}
+      publish: ${{ inputs.publish }}
