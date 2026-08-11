@@ -225,10 +225,17 @@ jobs:
                 # on as typed; librocm.sh rewrites them to the `*` forms.
                 if [[ ${tok} =~ ^rocm=(preinstalled|[0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?|therock:(\*|\*(a|rc)\*|\?|\?(a|rc)\?|[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}((a|rc)[0-9]{1,8})?))$ ]]; then
                   rocm=${tok#rocm=}
-                # The canonical SLURM GRES spelling of a card, which carries the
-                # architecture in front of the model and so needs no map at all.
+                # The canonical SLURM GRES spellings of a card, which carry the
+                # architecture in front of the model and so need no map at all:
+                # gfx942-mi300x, gfx1100p where the model is one letter, and
+                # gfx1151 where the card and the architecture are the same thing.
                 # The model-name spellings are the case arms above.
-                elif [[ ${tok} =~ ^arch=gfx[0-9a-z]{3,5}-[a-z0-9]{2,10}$ ]]; then
+                #
+                # Which cards exist is the cluster's to say, and it does say so,
+                # one gate later: this only has to recognise the shape of a name,
+                # so that `arch=gfx11oo` is a parse error here rather than a
+                # rejected job submission two steps in.
+                elif [[ ${tok} =~ ^arch=gfx[0-9a-f]{3,4}[a-z]?(-[a-z0-9]{2,10})?$ ]]; then
                   arch=${tok#arch=}
                 # The SLURM wall clock: 2h, 90m, 1h30m or 02:00:00. The profile
                 # caps it, and the login node is what enforces that cap.
@@ -257,7 +264,7 @@ jobs:
                   # Named separately from the catch-all below, because "unknown
                   # option" for a card that exists but has no gfx target here is
                   # not the answer to the question that was asked.
-                  echo "::error::unknown arch '${tok#arch=}'; the cards this workflow knows are mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx<arch>-<model> name"
+                  echo "::error::unknown arch '${tok#arch=}'; the cards this workflow knows are mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx name such as gfx942-mi300x, gfx1100p or gfx1151"
                   exit 1
                 else
                   # Failing beats silently running the default configuration,

@@ -57,7 +57,7 @@ on:
       # not to work -- the login node validates it against the cluster's own
       # variants, and the run workflow needs a ROCm architecture for it.
       arch:
-        description: "GPU variant to allocate: mi300x, mi325x, mi350x, mi355x, mi210, mi250, or a gfx<arch>-<model> name"
+        description: "GPU variant to allocate: mi300x, mi325x, mi350x, mi355x, mi210, mi250, or a GRES name such as gfx942-mi300x, gfx1100p or gfx1151"
         type: string
         default: mi300x
       python:

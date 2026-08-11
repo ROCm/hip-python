@@ -79,13 +79,15 @@ on:
         type: string
         required: true
       # The GPU variant to allocate: a model name such as mi300x, or a canonical
-      # SLURM GRES type such as gfx942-mi300x. The login node validates it
-      # against its own gpu-variant-mappings.yaml before anything is submitted,
-      # so an unknown card is refused there rather than guessed at here. What
-      # this workflow does with it is derive AMDGPU_TARGETS, which SLURM knows
-      # nothing about; see the step that does it.
+      # SLURM GRES type, in either the CDNA spelling gfx942-mi300x or an RDNA
+      # one -- gfx1100p, where the model is a single letter, or gfx1151, where
+      # there is no model to name. The login node validates it against its own
+      # gpu-variant-mappings.yaml before anything is submitted, so an unknown
+      # card is refused there rather than guessed at here. What this workflow
+      # does with it is derive AMDGPU_TARGETS, which SLURM knows nothing about;
+      # see the step that does it.
       arch:
-        description: GPU variant to allocate, e.g. mi300x
+        description: GPU variant to allocate, e.g. mi300x or gfx1151
         type: string
         required: true
       # Defaulted to the profile's own limit, which a measured run -- three
@@ -218,7 +220,10 @@ jobs:
             # character with X, which turns gfx90a into gfx90X-dcgpu and gfx942
             # into gfx94X-dcgpu but gfx950 into a gfx95X-dcgpu that does not
             # exist. Naming the group works because install_therock_from_tarball
-            # tries the value verbatim first.
+            # tries the value verbatim first. The Strix APUs are in the same
+            # position and are answered the other way round, by a table entry in
+            # librocm.sh, gfx1150 and gfx1151 being what the index itself calls
+            # them; so nothing here needs to know about them.
             mi350x|mi355x) target=gfx950-dcgpu ;;
             mi210|mi210x|mi250) target=gfx90a ;;
             # A canonical GRES name carries the architecture in front of the
@@ -228,9 +233,20 @@ jobs:
             gfx*-*) target=${ARCH%%-*} ;;
             gfx*) target=${ARCH,,} ;;
             *)
-              echo "::error::arch='${ARCH}' has no known ROCm architecture; pass one of mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx<arch>-<model> name"
+              echo "::error::arch='${ARCH}' has no known ROCm architecture; pass one of mi300x mi300a mi308x mi325x mi350x mi355x mi210 mi250, or a gfx name such as gfx942-mi300x, gfx1100p or gfx1151"
               exit 1 ;;
           esac
+
+          # The RDNA variants put the model in a single trailing letter instead
+          # of behind a dash: gfx1100p and gfx1100w are two cards of gfx1100 and
+          # gfx1101v is one of gfx1101. Four digits are asked for in front of the
+          # letter so that gfx90a, whose letter belongs to the architecture, is
+          # left as it is. librocm.sh reduces the same spelling for a caller that
+          # reaches it without coming through here.
+          if [[ ${target} =~ ^gfx[0-9]{4}[a-z]$ ]]; then
+            target=${target:0:-1}
+          fi
+
           echo "target=${target}" >>"${GITHUB_OUTPUT}"
 
       # First, because everything below runs the checked-out copy of the
