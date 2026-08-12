@@ -26,10 +26,15 @@
 # the wheels produced by ci\internal\build-wheels.ps1, and deviates from the bash
 # script only where Linux assumptions do not hold:
 #
-#   * No numba-hip suite. build-wheels.ps1 configures with
-#     -DHIP_PYTHON_BUILD_NUMBA_HIP=OFF by default, so no numba_hip wheel exists
-#     to test. numba.hip itself runs on Windows as long as the compiler wheel
-#     was built with -DHIP_PYTHON_BUNDLE_LIBLLVM=ON; its suite passes there.
+#   * The numba-hip suite runs only when a numba_hip wheel was actually built.
+#     build-wheels.ps1 builds one by default, but -NoBundleLibLLVM, -NoNumbaHip,
+#     -NoCompiler and -Light each suppress it, and a run against such a build
+#     should report the remaining suites rather than fail on a missing wheel.
+#   * NUMBA_HIP_FALLBACK_TO_AMDSMI_FOR_UUID is deliberately not set, though
+#     test.sh sets it. It routes GPU UUID retrieval through AMD SMI when the HIP
+#     runtime's answer is malformed, and ROCm ships no AMD SMI on Windows, so
+#     taking that branch would replace a clear diagnostic about the UUID with an
+#     ImportError about rocm.bindings.amdsmi.
 #   * Suites are not fatal individually. On Linux every ROCm component is
 #     present, so any failure is a real defect; on Windows ROCm ships no AMD SMI,
 #     RCCL, ROCTX, hipFile, hipSPARSELt or hipTensor, and the suites skip the
@@ -142,8 +147,6 @@ $venvPython = Join-Path $TestVenv "Scripts\python.exe"
 Invoke-Native $venvPython -m pip install --upgrade pip pytest cffi
 Invoke-Native $venvPython -m pip install -r (Join-Path $examplesBuildDir "examples\requirements.txt")
 
-# numba_hip is deliberately absent from the wheels installed here (see the
-# header).
 $wheels = @(
     Get-ChildItem -Path $BuildArtifactsDir -Filter "rocm_bindings_*.whl"
     Get-ChildItem -Path $BuildArtifactsDir -Filter "hip_python_interop*.whl"
@@ -156,6 +159,17 @@ if ($wheels.Count -eq 0) {
 Write-Host "Installing $($wheels.Count) wheel(s):"
 $wheels | ForEach-Object { Write-Host "  $(Split-Path $_ -Leaf)" }
 Invoke-Native $venvPython -m pip install @wheels
+
+# numba-hip goes in separately, after the compiler bindings it is built on, so
+# that a resolution failure names numba-hip rather than the whole set.
+$numbaHipWheel = (Get-ChildItem -Path $BuildArtifactsDir -Filter "numba_hip*.whl" |
+                  Select-Object -First 1)
+if ($numbaHipWheel) {
+    Write-Host "Installing $($numbaHipWheel.Name)"
+    Invoke-Native $venvPython -m pip install $numbaHipWheel.FullName
+} else {
+    Write-Host "No numba_hip wheel under $BuildArtifactsDir - skipping that suite."
+}
 
 ### ROCm from wheels (optional)
 
@@ -264,8 +278,10 @@ $env:HIP_PYTHON_cudaError_t_HALLUCINATE = "1"
 # Suite 3 - rocm-bindings unit tests (core + compiler), GPU-free.
 # Suite 4 - handcoded-Cython stubs: checks that the hand-maintained
 #           cuda.bindings.cufile stub still covers the installed module.
+# Suite 5 - numba-hip, which compiles and launches real kernels through the
+#           bundled LLVM. Present only when its wheel was built.
 #
-# Suites 2 to 4 live outside the importable packages (tests/, not under src/) so
+# Suites 2 to 5 live outside the importable packages (tests/, not under src/) so
 # they exercise the *installed* wheels.
 $suites = [ordered] @{
     "examples"                = Join-Path $examplesBuildDir "examples"
@@ -273,6 +289,9 @@ $suites = [ordered] @{
     "rocm-bindings-core"      = Join-Path $repoRoot "tests\rocm-bindings-core"
     "rocm-bindings-compiler"  = Join-Path $repoRoot "tests\rocm-bindings-compiler"
     "stubs"                   = Join-Path $repoRoot "tests\stubs"
+}
+if ($numbaHipWheel) {
+    $suites["numba-hip"] = Join-Path $repoRoot "tests\numba-hip"
 }
 
 # pytest exits 5 when it collected nothing to run. On Windows that is the
@@ -287,8 +306,21 @@ foreach ($name in $suites.Keys) {
     Write-Host ""
     Write-Host "=== suite: $name ==="
     $ErrorActionPreference = "Continue"
-    & $venvPython -m pytest -v -rs $suites[$name]
-    $results[$name] = $LASTEXITCODE
+    if ($name -eq "numba-hip") {
+        # Run from a directory with no numba/ parent so the source tree cannot
+        # shadow the installed numba.hip -- the suite uses absolute imports on
+        # purpose. -s keeps the compiler's own output in the log, which is the
+        # only way to tell a kernel that failed to build from one that ran.
+        Push-Location $examplesBuildDir
+        try {
+            & $venvPython -m pytest -v -s -rs $suites[$name]
+            $results[$name] = $LASTEXITCODE
+        }
+        finally { Pop-Location }
+    } else {
+        & $venvPython -m pytest -v -rs $suites[$name]
+        $results[$name] = $LASTEXITCODE
+    }
     $ErrorActionPreference = "Stop"
 }
 

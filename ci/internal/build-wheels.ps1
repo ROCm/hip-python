@@ -32,15 +32,12 @@
 #   * Ninja instead of "Unix Makefiles". The bash script forces make purely to
 #     dodge a GCC jobserver bug on the largest generated .c files; that does not
 #     apply here, and scikit-build-core expects ninja.
-#   * numba-hip is off, because it is only usable next to a wheel that bundles
-#     LLVM, which is not what this script builds by default (see below). Ask
-#     for both together to get a working numba.hip:
-#       -ExtraCMakeArgs '-DHIP_PYTHON_BUNDLE_LIBLLVM=ON','-DHIP_PYTHON_BUILD_NUMBA_HIP=ON'
-#   * libLLVM bundling is not requested. ROCm ships no shared LLVM on Windows,
-#     so it has to be linked from the static archives, which works but adds
-#     ~75 MB to the compiler wheel. Pass
-#     -ExtraCMakeArgs '-DHIP_PYTHON_BUNDLE_LIBLLVM=ON' to get it, which is what
-#     the rocm.bindings.llvm.* bindings and numba-hip need.
+#
+# libLLVM bundling and numba-hip are both on, as they are on Linux. ROCm ships no
+# shared LLVM on Windows, so bundling links one from the static archives and adds
+# ~75 MB to the compiler wheel; that is the price of rocm.bindings.llvm.* working
+# at all, and numba.hip needs those bindings, so the two travel together. Decline
+# them with -NoBundleLibLLVM (which implies -NoNumbaHip) or -NoNumbaHip alone.
 #
 # The MSVC environment is imported automatically when the script is not already
 # running inside a Developer shell, so it behaves the same from a plain
@@ -55,6 +52,7 @@
 #   ci\internal\build-wheels.ps1 -Light               # core + hip + compiler only
 #   ci\internal\build-wheels.ps1 -UseRocmClang        # amdclang-cl instead of MSVC
 #   ci\internal\build-wheels.ps1 -UseSabi 3.11        # one cp311-abi3 wheel set
+#   ci\internal\build-wheels.ps1 -NoBundleLibLLVM     # smaller wheel, no numba.hip
 
 [CmdletBinding()]
 param(
@@ -63,10 +61,21 @@ param(
     [string] $RocmPath = $(if ($env:ROCM_PATH) { $env:ROCM_PATH } else { $env:ROCM_HOME }),
 
     # Build only core + hip + compiler, mirroring LIGHT_MODE in the bash script.
+    # Chooses which packages are built, not how the compiler wheel is
+    # configured, so pair it with -NoBundleLibLLVM for the quickest build of
+    # all: linking the shared LLVM is the longest single step here.
     [switch] $Light,
 
     # Skip rocm-bindings-compiler, which needs a usable LLVM CMake package.
     [switch] $NoCompiler,
+
+    # Do not link a shared LLVM into the compiler wheel. Saves ~75 MB, at the
+    # cost of rocm.bindings.llvm.*, which then imports but raises on first use.
+    # numba.hip is built on those bindings, so this implies -NoNumbaHip.
+    [switch] $NoBundleLibLLVM,
+
+    # Skip the pure-Python numba-hip wheel.
+    [switch] $NoNumbaHip,
 
     # Compile with ROCm's clang (amdclang-cl, the MSVC-compatible driver)
     # instead of MSVC. Useful if ROCm headers need clang extensions.
@@ -211,6 +220,23 @@ $buildSystems   = if ($Light) { "OFF" } else { "ON" }
 $buildInterop   = if ($Light) { "OFF" } else { "ON" }
 $buildCompiler  = if ($NoCompiler) { "OFF" } else { "ON" }
 
+# Bundling and numba-hip travel together. numba.hip is built on the
+# rocm.bindings.llvm.* modules, and those only work against a bundled shared
+# LLVM, so anything that removes the bundle removes numba-hip too: -NoCompiler
+# drops the wheel that carries the bindings, and -Light drops
+# hip-python-interop, which numba-hip declares as a dependency and so cannot be
+# installed without.
+$bundleLibLLVM = if ($NoBundleLibLLVM) { "OFF" } else { "ON" }
+$buildNumbaHip = if ($NoNumbaHip -or $NoBundleLibLLVM -or $NoCompiler -or $Light) {
+    "OFF"
+} else {
+    "ON"
+}
+if ($buildNumbaHip -eq "OFF" -and -not $NoNumbaHip) {
+    Write-Host ("Not building numba-hip: it needs the bundled shared LLVM and " +
+                "hip-python-interop, which this configuration leaves out.")
+}
+
 # Pin the host compiler explicitly. ROCm's own clang.exe sits in
 # $RocmPath\lib\llvm\bin, which env-rocm.ps1 prepends to PATH so the bindings
 # can find the version-suffixed ROCm DLLs at import time. CMake's Ninja
@@ -248,8 +274,8 @@ $cmakeArgs = @(
     "-DHIP_PYTHON_BUILD_SYSTEMS=$buildSystems",
     "-DHIP_PYTHON_BUILD_COMPILER=$buildCompiler",
     "-DHIP_PYTHON_BUILD_INTEROP=$buildInterop",
-    # numba.hip needs the shared LLVM this script does not bundle by default.
-    "-DHIP_PYTHON_BUILD_NUMBA_HIP=OFF",
+    "-DHIP_PYTHON_BUNDLE_LIBLLVM=$bundleLibLLVM",
+    "-DHIP_PYTHON_BUILD_NUMBA_HIP=$buildNumbaHip",
     # auditwheel is Linux-only; wheels already carry a win_amd64 tag.
     "-DHIP_PYTHON_AUDITWHEEL_REPAIR=OFF",
     "-DHIP_PYTHON_WHEEL_OUTPUT_DIR=$WheelOutputDir"

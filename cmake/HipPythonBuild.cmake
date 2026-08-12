@@ -224,17 +224,19 @@ endfunction()
 # Default for the HIP_PYTHON_BUNDLE_LIBLLVM option, which is declared both by
 # packages/CMakeLists.txt and by the standalone rocm-bindings-compiler build.
 #
-# Off on Windows. ROCm ships no shared LLVM there, so bundling means linking one
-# from the static archives; that works (see
-# packages/rocm-bindings-compiler/bundled/libllvm/CMakeLists.txt) but adds ~75 MB
-# to the wheel, so it is left to the caller to ask for. Without it the
-# rocm.bindings.llvm.* bindings import and raise on first use, while everything
-# else, amd_comgr included, is unaffected.
-if(WIN32)
-  set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT OFF)
-else()
-  set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT ON)
-endif()
+# On everywhere, Windows included. ROCm ships no shared LLVM on Windows, so
+# bundling there means linking one from the static archives (see
+# packages/rocm-bindings-compiler/bundled/libllvm/CMakeLists.txt), which adds
+# ~75 MB to the wheel. That cost used to make it opt-in, but the default was the
+# wrong way round: without bundling the rocm.bindings.llvm.* modules import and
+# then raise on first use, numba.hip cannot work at all, and the published
+# Windows wheel is built with bundling on -- so a default source build produced
+# something strictly less capable than the artifact it was meant to reproduce.
+#
+# Pass -DHIP_PYTHON_BUNDLE_LIBLLVM=OFF to decline the 75 MB; everything outside
+# rocm.bindings.llvm.* and numba.hip, amd_comgr included, is unaffected either
+# way.
+set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT ON)
 
 # Put the ROCm install on CMake's config-package search path.
 #

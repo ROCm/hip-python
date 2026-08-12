@@ -98,13 +98,13 @@ check that a library is there.
 .. note::
 
    **On Windows**, ROCm\ |trade| ships only static LLVM archives, so a shared
-   LLVM has to be linked from them at build time. The published
-   ``rocm-bindings-compiler`` wheel carries one, and Numba HIP works there out
-   of the box: its test suite passes. A ``rocm-bindings-compiler`` you build
-   yourself has to be configured with ``HIP_PYTHON_BUNDLE_LIBLLVM=ON``, since
-   the default Windows build leaves that off -- it adds about 75 MB to the
-   wheel. See :ref:`building_from_source` for the flag, and
-   ``HIP_PYTHON_BUILD_NUMBA_HIP`` for building the ``numba-hip`` wheel itself
+   LLVM has to be linked from them at build time. Both the published
+   ``rocm-bindings-compiler`` wheel and a default source build carry one, so
+   Numba HIP works out of the box either way: its test suite passes. Only a
+   build that opts out with ``HIP_PYTHON_BUNDLE_LIBLLVM=OFF`` -- which saves
+   about 75 MB in the wheel -- leaves ``numba.hip`` unable to compile a kernel.
+   See :ref:`building_from_source` for that flag and for
+   ``HIP_PYTHON_BUILD_NUMBA_HIP``, which builds the ``numba-hip`` wheel itself
    from source.
 
 Vector addition

@@ -132,28 +132,28 @@ binding wheels:
      - Default
      - Effect
    * - ``HIP_PYTHON_BUNDLE_LIBLLVM``
-     - ``ON`` (Linux), ``OFF`` (Windows)
+     - ``ON``
      - Bundles a shared LLVM into the ``rocm-bindings-compiler`` wheel.
        The ``rocm.bindings.llvm.*`` modules resolve a shared LLVM on
        their first call; ROCm ships one on Linux but only static
        archives on Windows, where the build links an ``LLVM.dll`` from
-       them. Off by default there because it adds about 75 MB to the
-       wheel — without it those modules import but raise on first use.
-       The published Windows wheel *is* built with it on, so switch it
-       on to match: a plain source build is a downgrade.
+       them and the wheel grows by about 75 MB. Switch it off to save
+       that space, and those modules will import but raise on first
+       use.
    * - ``HIP_PYTHON_BUILD_NUMBA_HIP``
      - ``ON``
      - Builds the pure-Python ``numba-hip`` wheel. It carries its own
-       version and depends on the compiler bindings, so on Windows pair
-       it with ``HIP_PYTHON_BUNDLE_LIBLLVM=ON`` — otherwise the
-       ``numba.hip`` you build is less capable than the published one.
+       version and is built on the compiler bindings, so it needs
+       ``HIP_PYTHON_BUNDLE_LIBLLVM=ON`` — turning the bundle off
+       leaves ``numba.hip`` unable to compile a kernel.
 
-For example, a Windows build with both:
+For example, a Windows build that declines the bundled LLVM, and with it
+``numba.hip``:
 
 .. code-block:: powershell
 
    cd packages
-   cmake -B build -DHIP_PYTHON_BUNDLE_LIBLLVM=ON -DHIP_PYTHON_BUILD_NUMBA_HIP=ON
+   cmake -B build -DHIP_PYTHON_BUNDLE_LIBLLVM=OFF -DHIP_PYTHON_BUILD_NUMBA_HIP=OFF
    cmake --build build --target all_wheels
 
 The full option list — build type, ROCm path, ``auditwheel`` repair,
@@ -228,7 +228,7 @@ Linux ``ci/internal/build-wheels.sh`` and drives the same ``all_wheels`` target:
    . ci\internal\env-rocm.ps1            # sets ROCM_PATH and PATH
    python -m pip install -r ci\internal\requirements-build.txt
    ci\internal\build-wheels.ps1          # add -Light for core + hip + compiler
-   ci\internal\test.ps1                  # examples + unit-test suites
+   ci\internal\test.ps1                  # examples, unit tests and numba-hip
 
 The MSVC environment is imported automatically, so the script behaves the same
 from a plain PowerShell prompt, a CI runner, or a Developer shell.

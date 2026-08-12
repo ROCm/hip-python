@@ -245,8 +245,8 @@ package with its own independent version (not mirrored from the repo-root
 `HIP_PYTHON_BUILD_NUMBA_HIP`. Its test suite lives in the repo-root
 `tests/numba-hip/` (outside any importable package, so it exercises the
 *installed* `numba.hip`), and is run by the unified `ci/internal/test.sh`
-alongside the hip-python example suite — numba-hip no longer carries its
-own `ci/` scripts.
+and `ci/internal/test.ps1` alongside the hip-python example suite —
+numba-hip no longer carries its own `ci/` scripts.
 
 The unified build is shell-free outside `ci/`: wheel/sdist artifacts are
 copied with `cmake -E copy_directory` (no `cp`/`sh` glob), so the build
@@ -566,7 +566,7 @@ nvrtc) are stable across releases.
 
 | Option | Default | Effect |
 |---|---|---|
-| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON`, `OFF` on Windows | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `packages/rocm-bindings-compiler/src/`). Windows has no system one to reuse, so bundling there means a ~75 MB `LLVM.dll` linked from the static archives; it is opt-in for that reason, and without it the `rocm.bindings.llvm.*` bindings import but raise on first use. |
+| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `packages/rocm-bindings-compiler/src/`). Windows has no system one to reuse, so bundling there means a ~75 MB `LLVM.dll` linked from the static archives. Turn it off to save that space, at the cost of the `rocm.bindings.llvm.*` bindings, which then import but raise on first use, and of `numba.hip`, which is built on them. |
 | `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Force-build `libLLVM.so` from sources even if a system one is present. Implies BUNDLE. |
 
 ## Cython namespace markers and install layout
