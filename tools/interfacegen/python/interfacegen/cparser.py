@@ -39,6 +39,22 @@ README for why the PyPI ``libclang`` wheel needs it.
 """
 
 
+def _names_a_resource_dir(args: list) -> bool:
+    """Whether ``args`` already points clang at a resource directory.
+
+    Both spellings have to count. ``-resource-dir=DIR`` is as valid as
+    ``-resource-dir DIR``, and a caller using the joined form would still
+    get :data:`BUILTIN_INCLUDE_DIR` appended as ``-isystem``, which is
+    searched ahead of the directory the caller named -- so the fallback
+    would shadow a real toolchain rather than stand aside for it.
+    """
+    return any(
+        arg in ("-resource-dir", "--resource-dir")
+        or arg.startswith(("-resource-dir=", "--resource-dir="))
+        for arg in args
+    )
+
+
 def walk_cursors(root: clang.cindex.Cursor, postorder=False):
     """Yields a triple of cursor, level, parents per traversed cursor.
 
@@ -93,7 +109,7 @@ class CParser:
     def parse(self):
         """Parse the specified file."""
         args = ["-x", "c"] + self.append_cflags
-        if "-resource-dir" not in args:
+        if not _names_a_resource_dir(args):
             args += ["-isystem", BUILTIN_INCLUDE_DIR]
         try:
             self.translation_unit = clang.cindex.TranslationUnit.from_source(

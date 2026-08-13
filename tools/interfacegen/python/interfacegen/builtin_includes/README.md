@@ -17,6 +17,16 @@ supplied, so the fallback is invisible to any caller that has a real toolchain
 files. `CParser` also raises on fatal diagnostics now, so a gap this set does
 not cover fails loudly rather than silently changing a width.
 
+Two notes for a Windows host. The fallback still wins there, since `-isystem`
+is searched ahead of the platform's own headers: `stdint.h` resolves here
+rather than in the UCRT. What cannot be demonstrated on such a host is the
+*absence* of these headers, because clang targeting MSVC finds `stddef.h` in
+the Windows SDK by detecting the Visual Studio installation, and predeclares
+`size_t` in MS-compatibility mode. Neither `-nostdsysteminc` nor an empty
+`INCLUDE` suppresses that, so the tests that assert the miss name
+`--target=x86_64-unknown-linux-gnu` rather than leaving the target to the
+host.
+
 Every type here is spelled through a clang predefine (`__SIZE_TYPE__`,
 `__INT64_TYPE__`, ...) rather than a concrete C type. The predefines follow the
 parse target, so a Windows target gets Windows' widths; writing

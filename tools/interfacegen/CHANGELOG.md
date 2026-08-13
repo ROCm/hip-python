@@ -143,3 +143,10 @@ LLVM wrappers release the GIL, so the two are not interchangeable.
   LLVM bindings once those modules started releasing the GIL. A `const`
   *value* return still drops it, since Cython rejects the assignment
   into a `cdef const T` local.
+- **The builtin-include fallback stands aside for either spelling of
+  `-resource-dir`.** Only `-resource-dir DIR` was recognised, so a caller
+  writing the equally valid `-resource-dir=DIR` had the fallback appended
+  anyway — as `-isystem`, which is searched first, so the three shipped
+  headers shadowed the toolchain that caller had just named. Every
+  production path uses the separated form, so no binding was generated
+  from the wrong `stddef.h`.

@@ -21,6 +21,18 @@ import clang.cindex
 import pytest
 from interfacegen.cparser import BUILTIN_INCLUDE_DIR, CParser
 
+NO_TOOLCHAIN_TARGET = "--target=x86_64-unknown-linux-gnu"
+"""Target for the tests that assert what clang does with a header it cannot find.
+
+Whether a header can be found is a property of the target rather than of
+the suite. Clang defaults to ``x86_64-pc-windows-msvc`` on a Windows host,
+where it finds the UCRT's ``stddef.h`` by detecting the Visual Studio
+installation, and predeclares ``size_t`` in MS-compatibility mode -- so
+there is no miss left to assert. Neither ``-nostdsysteminc`` nor an empty
+``INCLUDE`` suppresses that detection; naming a target with no toolchain to
+find does, and follows what the data-model test below already does.
+"""
+
 
 def _parse(header_text: str, append_cflags=None):
     parser = CParser(
@@ -193,8 +205,14 @@ def test_the_escape_hatch_permits_the_recovered_ast(monkeypatch):
         """\
         #include <no_such_header.h>
         void probe(size_t *a);
-        """
+        """,
+        [NO_TOOLCHAIN_TARGET],
     )
+    assert [
+        d
+        for d in parser.translation_unit.diagnostics
+        if d.severity >= clang.cindex.Diagnostic.Fatal
+    ], "the hatch is only interesting for a parse the gate would have rejected"
     assert _parm_types(parser) == {"a": "int"}
 
 
@@ -220,13 +238,24 @@ def test_deliberately_malformed_declarations_still_parse():
 # ---------------------------------------------------------------------------
 
 
-def test_an_explicit_resource_dir_suppresses_the_fallback(tmp_path):
+@pytest.mark.parametrize("joined", [False, True], ids=["separated", "joined"])
+def test_an_explicit_resource_dir_suppresses_the_fallback(tmp_path, joined):
     """A caller with a toolchain gets it, untouched.
 
     Every production path passes ``-resource-dir``; pointing it at an empty
     directory is how this asserts the fallback stood aside, since the headers
     then resolve from nowhere.
+
+    Both spellings clang accepts are checked. The fallback goes on as
+    ``-isystem``, which is searched ahead of the named resource directory, so
+    a spelling the check does not recognise does not merely add the fallback
+    -- it lets the fallback win over the caller's own headers.
     """
+    resource_dir = (
+        [f"-resource-dir={tmp_path}"]
+        if joined
+        else ["-resource-dir", str(tmp_path)]
+    )
     with pytest.raises(
         clang.cindex.TranslationUnitLoadError, match="stddef.h"
     ):
@@ -235,7 +264,7 @@ def test_an_explicit_resource_dir_suppresses_the_fallback(tmp_path):
             #include <stddef.h>
             void probe(size_t *a);
             """,
-            ["-resource-dir", str(tmp_path)],
+            resource_dir + [NO_TOOLCHAIN_TARGET],
         )
 
 
