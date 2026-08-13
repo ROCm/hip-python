@@ -34,9 +34,10 @@ of .h.in templates without requiring CMake configure.
 
 import textwrap
 
-import interfacegen.tree
 from interfacegen.cython import CythonModuleGenerator
 from interfacegen.support.recipes import rocm as controls
+
+from .node_init import make_status_node_init
 
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
@@ -44,67 +45,6 @@ def _make_header_arg(header_relpath: str, header_content: str = None):
     if header_content is not None:
         return (header_relpath, header_content)
     return header_relpath
-
-
-def _make_status_node_init(prefix, status_type: str, success_const: str):
-    """Per-Function override: drop ``except? <STATUS> nogil`` for functions
-    whose return type is NOT ``<status_type>``, and prepend the status
-    enum's success value as their first Python return value.
-
-    ``prefix`` is either a single string or a tuple of strings (matched
-    via ``startswith``); pass a tuple when the library uses several name
-    prefixes (e.g. RCCL has ``ncclX`` AND ``pncclX`` profiling variants).
-
-    The module-level ``modifiers_lazy_loader=" except? <STATUS_INTERNAL_ERROR>
-    nogil"`` only type-checks for functions that actually return the status
-    enum. Three families of functions need the override:
-
-    1. **Non-enum returns** — ``hipblasStatusToString`` returns ``const char
-       *``, ``hipfftMakePlan`` helpers may return ``int`` / ``size_t``, etc.
-       Cython rejects ``except?`` because the sentinel value type doesn't
-       match the return type.
-    2. **Different-enum returns** — ``hipsparseGetMatType`` returns
-       ``hipsparseMatrixType_t`` (NOT ``hipsparseStatus_t``). Same
-       type-mismatch problem; ``is_enum`` alone wouldn't catch this.
-    3. **void returns** — ``noexcept`` is the only valid modifier.
-
-    For all of these, ``noexcept nogil`` is the right modifier — the
-    ``nogil`` declaration still applies (so ``with nogil:`` blocks at call
-    sites are valid) but no exception-translation watcher is inserted.
-
-    In addition, because the module opts into
-    ``python_interface_always_return_tuple`` (status-first-tuple contract),
-    these non-status functions get ``<status_type>.<success_const>``
-    prepended as their first return value via
-    ``prepend_python_return_value`` so callers can always unpack
-    ``status, *rest = fn(...)``. ``<status_type>`` resolves to the Python
-    IntEnum class (either named directly or aliased from its tag name).
-
-    Same overall pattern as ``hip_node_init`` / ``hiprtc_node_init`` in
-    ``generators_hip.py``.
-    """
-    prefixes = (prefix,) if isinstance(prefix, str) else tuple(prefix)
-
-    def _init(node):
-        if isinstance(node, interfacegen.tree.Function):
-            if not node.name.startswith(prefixes):
-                return
-            # Check the function's return-type cython spelling; if it is
-            # not the status enum we need ``noexcept`` instead of
-            # ``except? <STATUS>``.
-            try:
-                return_typename = node.cython_global_typename
-            except Exception:
-                return_typename = ""
-            if return_typename != status_type:
-                node.error_return_value_lazy_loader = None
-                node.modifiers_lazy_loader = " noexcept nogil"
-                node.prepend_python_return_value(
-                    f"{status_type}.{success_const}",
-                    status_type,
-                    f"Always returns `~.{status_type}.{success_const}`.",
-                )
-    return _init
 
 
 def generate_hipblas(
@@ -126,7 +66,7 @@ def generate_hipblas(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPBLAS_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPBLAS_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipblas", "hipblasStatus_t", "HIPBLAS_STATUS_SUCCESS"
         ),
         node_filter=controls.hipblas.node_filter,
@@ -173,7 +113,7 @@ def generate_hipsolver(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPSOLVER_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPSOLVER_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipsolver", "hipsolverStatus_t", "HIPSOLVER_STATUS_SUCCESS"
         ),
         node_filter=controls.hipsolver.node_filter,
@@ -250,8 +190,8 @@ def generate_hiprand(
         error_return_value_lazy_loader="HIPRAND_STATUS_INTERNAL_ERROR",
         # note: hipRAND defines named enum via `typedef enum hiprandStatus {..} hiprandStatus_t`
         #       while other libraries define anonymous enums via `typedef enum {..} <status_type>_t`.
-        #       So the _make_status_node_init call passes the non-`_t` status type as 2nd argument.
-        node_init=_make_status_node_init(
+        #       So the make_status_node_init call passes the non-`_t` status type as 2nd argument.
+        node_init=make_status_node_init(
             "hiprand", "hiprandStatus", "HIPRAND_STATUS_SUCCESS"
         ),
         node_filter=controls.hiprand.node_filter,
@@ -301,7 +241,7 @@ def generate_hipfft(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPFFT_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPFFT_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipfft", "hipfftResult_t", "HIPFFT_SUCCESS"
         ),
         node_filter=controls.hipfft.node_filter,
@@ -343,7 +283,7 @@ def generate_hipsparse(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPSPARSE_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPSPARSE_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipsparse", "hipsparseStatus_t", "HIPSPARSE_STATUS_SUCCESS"
         ),
         node_filter=controls.hipsparse.node_filter,
@@ -395,11 +335,11 @@ def generate_hipblaslt(
         error_return_value_lazy_loader="HIPBLAS_STATUS_INTERNAL_ERROR",
         # NOTE: prefix is camelCase "hipblasLt" — the C functions
         # spell it that way (hipblasLtCreate, hipblasLtInitialize,
-        # ...) and the prefix match in `_make_status_node_init` is
+        # ...) and the prefix match in `make_status_node_init` is
         # case-sensitive. A lowercase "hipblaslt" prefix never
         # matches and the void-return / non-status-return fixup
         # silently doesn't fire.
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipblasLt", "hipblasStatus_t", "HIPBLAS_STATUS_SUCCESS"
         ),
         node_filter=controls.hipblaslt.node_filter,
@@ -467,7 +407,7 @@ def generate_hiptensor(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPTENSOR_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPTENSOR_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hiptensor", "hiptensorStatus_t", "HIPTENSOR_STATUS_SUCCESS"
         ),
         node_filter=controls.hiptensor.node_filter,
@@ -535,7 +475,7 @@ def generate_hipdnn_backend(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPDNN_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPDNN_STATUS_INTERNAL_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipdnn", "hipdnnStatus_t", "HIPDNN_STATUS_SUCCESS"
         ),
         node_filter=controls.hipdnn_backend.node_filter,
@@ -583,7 +523,7 @@ def generate_hipsparselt(
         # functions spell it that way (hipsparseLtInitialize,
         # hipsparseLtMatmulPlanInit, ...) and a lowercase prefix
         # would silently skip the void-return fixup.
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hipsparseLt", "hipsparseStatus_t", "HIPSPARSE_STATUS_SUCCESS"
         ),
         node_filter=controls.hipsparselt.node_filter,

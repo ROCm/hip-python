@@ -81,8 +81,8 @@ from `tools/hip-python-generate/`) writes:
 | Path | Content |
 |---|---|
 | `packages/rocm-bindings-hip/src/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
-| `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipblaslt, hipsolver, hiprand, hipfft, hipsparse, hipsparselt |
-| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx, hipfile, amdsmi |
+| `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
+| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx, hipfile, amdsmi, hsa |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
 | `packages/hip-python-interop/src/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
@@ -251,6 +251,7 @@ tools/hip-python-generate/
     ├── generators_libraries.py hipblas/hipsolver/hiprand/hipfft/hipsparse generators
     ├── generators_systems.py   rccl/roctx/hipfile/amdsmi generators
     ├── generators_compiler.py  amd_comgr + llvm generators
+    ├── node_init.py            per-node hooks shared by the generators
     ├── cuda_interop.py         CUDA interop (driver/runtime/nvrtc) subgenerator
     └── hipify.py               hipify-perl substitution parser
 ```
@@ -274,15 +275,15 @@ settings. Three options are decided that way today — `node_filter`
 `llvm-config.h`), and `node_init` (the per-declaration hook).
 
 The `node_init` case is the one that changes generated semantics: for
-the ten headers whose calls block, the recipe's
-`llvm_c.nogil_node_init(relpath)` marks each function's
-`modifiers_lazy_loader` with `nogil`, which is what selects the
-with-nogil emitter downstream. The header list and the choice of
-exception sentinel per return type live in the recipe
-(`llvm_c.nogil_headers`, `support/recipes/rocm.py`), not in the
-generator; the generator only asks `llvm_c.is_nogil_header(relpath)`
-and passes the factory through. See the "Per-module `nogil` in the
-LLVM bindings" section of `BINDINGS.md` for the semantics.
+the ten headers whose calls block, `nogil_node_init(relpath)` marks
+each function's `modifiers_lazy_loader` with `nogil`, which is what
+selects the with-nogil emitter downstream. Which headers those are is
+a fact about LLVM and stays in the recipe
+(`llvm_c.nogil_headers`, `support/recipes/rocm.py`); the factory and
+the choice of exception sentinel per return type are Cython emitter
+wiring and live in `generators_compiler.py`. See the "Per-module
+`nogil` in the LLVM bindings" section of `BINDINGS.md` for the
+semantics.
 
 ## Reproducing a release locally
 

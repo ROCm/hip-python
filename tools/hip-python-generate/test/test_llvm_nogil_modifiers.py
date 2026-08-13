@@ -20,24 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Tests for the per-header nogil opt-in of the LLVM-C recipe.
+"""Tests for the per-header nogil opt-in of the LLVM modules.
 
-`llvm_c.nogil_node_init` marks the lazy-loader shims of one header as
-`nogil`-callable, which is what moves the C call into a `with nogil:`
-block. libLLVM is optional at runtime, so the shims must keep raising
-when a symbol cannot be resolved -- these tests pin the exception
+`generators_compiler.nogil_node_init` marks the lazy-loader shims of one
+header as `nogil`-callable, which is what moves the C call into a `with
+nogil:` block. libLLVM is optional at runtime, so the shims must keep
+raising when a symbol cannot be resolved -- these tests pin the exception
 sentinel picked for each return shape, since a wrong one either fails to
 compile or silently swallows the load error.
 """
 
-import os
 import re
-import sys
 
-sys.path.insert(0, os.path.dirname(__file__))
-
-from _codegen_helpers import make_generator, write_module  # noqa: E402
-from interfacegen.support.recipes.rocm import llvm_c  # noqa: E402
+from _codegen_helpers import make_generator, write_module
+from hip_python_codegen import generators_compiler
 
 _HEADER = """
 typedef struct OpaqueModule_st * ModuleRef;
@@ -92,7 +88,9 @@ def _emit(tmp_path, *, nogil: bool):
         module_name="mod",
         runtime_linking=True,
         dll="libLLVM.so",
-        node_init=llvm_c.nogil_node_init("input.h") if nogil else None,
+        node_init=(
+            generators_compiler.nogil_node_init("input.h") if nogil else None
+        ),
     )
     return write_module(gen, tmp_path)
 
@@ -128,14 +126,14 @@ def test_nogil_headers_are_the_heavyweight_ones():
         "llvm-c/Transforms/PassBuilder.h",
         "llvm-c/lto.h",
     ):
-        assert llvm_c.is_nogil_header(relpath), relpath
+        assert generators_compiler.is_nogil_header(relpath), relpath
     for relpath in (
         "llvm-c/Core.h",
         "llvm-c/Orc.h",
         "llvm-c/DebugInfo.h",
         "llvm-c/Object.h",
     ):
-        assert not llvm_c.is_nogil_header(relpath), relpath
+        assert not generators_compiler.is_nogil_header(relpath), relpath
 
 
 def test_shim_modifiers_follow_the_return_type(tmp_path):

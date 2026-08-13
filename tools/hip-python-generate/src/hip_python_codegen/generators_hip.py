@@ -151,6 +151,11 @@ def generate_hip(
         elif isinstance(node, interfacegen.tree.Field):
             if (node.parent.name, node.name) in _TEXT_CHAR_ARRAYS:
                 node.is_text_char_array = True
+        elif isinstance(node, interfacegen.tree.Record):
+            if node.name == "dim3":
+                # A dim3 is a launch geometry, so an omitted dimension
+                # means 1, not 0.
+                node.set_defaults(x=1, y=1, z=1)
 
     def renamer(name: str):
         return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))

@@ -39,6 +39,8 @@ from interfacegen.cython import CythonModuleGenerator
 from interfacegen.support.recipes import rocm as controls
 from interfacegen.support.recipes.control import ParmIntent
 
+from .node_init import chain_node_init, make_status_node_init
+
 
 def _make_header_arg(header_relpath: str, header_content: str = None):
     """Build the header argument for CythonModuleGenerator.
@@ -50,58 +52,6 @@ def _make_header_arg(header_relpath: str, header_content: str = None):
     if header_content is not None:
         return (header_relpath, header_content)
     return header_relpath
-
-
-def _make_status_node_init(prefix, status_type: str, success_const: str):
-    """Per-Function override: drop ``except? <STATUS> nogil`` for functions
-    whose return type is NOT ``<status_type>``, and prepend the status
-    enum's success value as their first Python return value.
-
-    ``prefix`` is either a single string or a tuple of strings (matched
-    via ``startswith``); pass a tuple for libs with multiple name
-    prefixes (e.g. RCCL has ``ncclX`` AND ``pncclX`` profiling variants).
-
-    See ``generators_libraries._make_status_node_init`` for the full
-    rationale (handles non-enum returns, different-enum returns, and
-    void returns; ``noexcept nogil`` is the right modifier for all of
-    them, and the ``<status_type>.<success_const>`` prepend keeps the
-    status-first-tuple contract uniform under
-    ``python_interface_always_return_tuple``).
-    """
-    prefixes = (prefix,) if isinstance(prefix, str) else tuple(prefix)
-
-    def _init(node):
-        if isinstance(node, interfacegen.tree.Function):
-            if not node.name.startswith(prefixes):
-                return
-            try:
-                return_typename = node.cython_global_typename
-            except Exception:
-                return_typename = ""
-            if return_typename != status_type:
-                node.error_return_value_lazy_loader = None
-                node.modifiers_lazy_loader = " noexcept nogil"
-                node.prepend_python_return_value(
-                    f"{status_type}.{success_const}",
-                    status_type,
-                    f"Always returns `~.{status_type}.{success_const}`.",
-                )
-
-    return _init
-
-
-def _chain_node_init(*inits):
-    """Run several ``node_init`` callbacks over every node, in order.
-
-    A module gets one ``node_init``, so a generator that already overrides
-    function modifiers cannot also flag fields without composing the two.
-    """
-
-    def _init(node):
-        for init in inits:
-            init(node)
-
-    return _init
 
 
 # AMD SMI's fixed-size char fields that hold text, and so are returned as
@@ -221,9 +171,7 @@ def generate_rccl(
         # ``ncclGetErrorString`` (returns ``const char *``) and
         # ``ncclResetDebugInit`` (returns ``void``) need ``noexcept
         # nogil`` instead of ``except? ncclInternalError``.
-        node_init=_make_status_node_init(
-            "nccl", "ncclResult_t", "ncclSuccess"
-        ),
+        node_init=make_status_node_init("nccl", "ncclResult_t", "ncclSuccess"),
         node_filter=controls.rccl.node_filter,
         macro_type=controls.rccl.macro_type,
         ptr_parm_intent=controls.rccl.ptr_parm_intent,
@@ -645,8 +593,8 @@ def generate_amdsmi(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? AMDSMI_STATUS_INTERNAL_EXCEPTION nogil",
         error_return_value_lazy_loader="AMDSMI_STATUS_INTERNAL_EXCEPTION",
-        node_init=_chain_node_init(
-            _make_status_node_init(
+        node_init=chain_node_init(
+            make_status_node_init(
                 "amdsmi", "amdsmi_status_t", "AMDSMI_STATUS_SUCCESS"
             ),
             _make_text_char_array_node_init(_AMDSMI_TEXT_CHAR_ARRAYS),
@@ -709,7 +657,7 @@ def generate_hsa(
         # propagation.
         modifiers_lazy_loader=" except? HSA_STATUS_ERROR nogil",
         error_return_value_lazy_loader="HSA_STATUS_ERROR",
-        node_init=_make_status_node_init(
+        node_init=make_status_node_init(
             "hsa", "hsa_status_t", "HSA_STATUS_SUCCESS"
         ),
         node_filter=controls.hsa.node_filter,
