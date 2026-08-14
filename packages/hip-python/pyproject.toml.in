@@ -1,5 +1,8 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+# 77.0.0, not 61.0: the PEP 639 `license` string plus `license-files` below is
+# only accepted from there on, and setuptools rejects the pair outright before
+# that. numba-hip's pyproject asks for the same floor.
+requires = ["setuptools>=77.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]

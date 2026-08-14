@@ -33,10 +33,19 @@
 #
 # pyproject-metadata is used by cmake/hip_python_assemble_wheel.py to
 # generate each wheel's core metadata from its pyproject.toml.
+#
+# The setuptools floor is the one that decides whether the pure-Python
+# hip-python wheel builds at all. Its pyproject declares the same floor, but
+# nothing enforces that one: the wheel is built with `python -m build --wheel
+# --no-isolation`, so whatever setuptools the interpreter already has is used.
+# A 3.10 or 3.11 venv gets 65.5.0 from ensurepip and pip leaves an unpinned
+# entry alone, which is too old for that pyproject's PEP 639 license metadata;
+# 3.12 and later bundle none, so pip fetches a current one and the floor never
+# shows up there.
 build
 scikit-build-core>=0.11.2
 cmake>=3.26
 ninja>=1.5
 cython>=3.1.0
-setuptools
+setuptools>=77.0.0
 pyproject-metadata>=0.9
