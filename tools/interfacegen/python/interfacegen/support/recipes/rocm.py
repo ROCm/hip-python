@@ -23,7 +23,6 @@
 import re
 
 import pyparsing as pyp
-
 from interfacegen.cparser import TypeHandler
 from interfacegen.support.recipes import generic
 from interfacegen.support.recipes.control import (
@@ -384,91 +383,97 @@ class hip:
     # from matching the like-named `void*` destinations (e.g.
     # `hipMemcpyAtoH`'s `void* dst`) or the `record*` *source* arrays
     # (`srcArray`).
-    _HIPMEMCPY_RECORD_DST_NAMES = frozenset((
-        "dst",
-        "dstArray",
-    ))
+    _HIPMEMCPY_RECORD_DST_NAMES = frozenset(
+        (
+            "dst",
+            "dstArray",
+        )
+    )
 
     # Opaque-handle creators — function name + parm 0 -> OUT.
     # Sourced by enumerating the pre-regen committed `hip.pyi` for
     # functions whose old high-level signature dropped parm 0 entirely
     # (i.e. it was always returned, never an input).
-    _HIP_HANDLE_CREATOR_OUT_PARM0 = frozenset((
-        # streams + events
-        "hipStreamCreate",
-        "hipStreamCreateWithFlags",
-        "hipStreamCreateWithPriority",
-        "hipExtStreamCreateWithCUMask",
-        "hipEventCreate",
-        "hipEventCreateWithFlags",
-        # memory allocators (return ptr/devPtr)
-        "hipMalloc",
-        "hipExtMallocWithFlags",
-        "hipMallocHost",
-        "hipMemAllocHost",
-        "hipHostMalloc",
-        "hipHostAlloc",
-        "hipMallocManaged",
-        "hipMallocAsync",
-        "hipMallocFromPoolAsync",
-        "hipMallocArray",
-        "hipMalloc3DArray",
-        "hipMemAlloc",
-        # mempool handle creators / importers
-        "hipMemPoolCreate",
-        "hipMemPoolImportFromShareableHandle",
-        "hipMemPoolImportPointer",
-        # module loaders
-        "hipModuleLoad",
-        "hipModuleLoadData",
-        "hipModuleLoadDataEx",
-        "hipModuleLoadFatBinary",
-        # symbol / function / global lookups
-        "hipModuleGetFunction",
-        "hipModuleGetGlobal",
-        "hipModuleGetTexRef",
-        "hipGetSymbolAddress",
-        "hipGetSymbolSize",
-        # graph creators + node adders (parm 0 is pGraphNode/pGraph OUT)
-        "hipGraphCreate",
-        "hipGraphClone",
-        "hipGraphInstantiate",
-        "hipGraphInstantiateWithFlags",
-        "hipGraphInstantiateWithParams",
-        "hipGraphAddNode",
-        "hipGraphAddKernelNode",
-        "hipGraphAddMemcpyNode",
-        "hipGraphAddMemcpyNode1D",
-        "hipGraphAddMemcpyNodeFromSymbol",
-        "hipGraphAddMemcpyNodeToSymbol",
-        "hipGraphAddMemsetNode",
-        "hipGraphAddHostNode",
-        "hipGraphAddChildGraphNode",
-        "hipGraphAddEmptyNode",
-        "hipGraphAddEventRecordNode",
-        "hipGraphAddEventWaitNode",
-        "hipGraphAddMemAllocNode",
-        "hipGraphAddMemFreeNode",
-        "hipGraphAddBatchMemOpNode",
-        "hipGraphAddExternalSemaphoresWaitNode",
-        "hipGraphAddExternalSemaphoresSignalNode",
-        # external resource importers
-        "hipImportExternalMemory",
-        "hipImportExternalSemaphore",
-        "hipExternalMemoryGetMappedBuffer",
-        # contexts
-        "hipCtxCreate",
-        "hipDevicePrimaryCtxRetain",
-        # texture / surface objects
-        "hipCreateTextureObject",
-        "hipCreateSurfaceObject",
-        "hipUserObjectCreate",
-    ))
+    _HIP_HANDLE_CREATOR_OUT_PARM0 = frozenset(
+        (
+            # streams + events
+            "hipStreamCreate",
+            "hipStreamCreateWithFlags",
+            "hipStreamCreateWithPriority",
+            "hipExtStreamCreateWithCUMask",
+            "hipEventCreate",
+            "hipEventCreateWithFlags",
+            # memory allocators (return ptr/devPtr)
+            "hipMalloc",
+            "hipExtMallocWithFlags",
+            "hipMallocHost",
+            "hipMemAllocHost",
+            "hipHostMalloc",
+            "hipHostAlloc",
+            "hipMallocManaged",
+            "hipMallocAsync",
+            "hipMallocFromPoolAsync",
+            "hipMallocArray",
+            "hipMalloc3DArray",
+            "hipMemAlloc",
+            # mempool handle creators / importers
+            "hipMemPoolCreate",
+            "hipMemPoolImportFromShareableHandle",
+            "hipMemPoolImportPointer",
+            # module loaders
+            "hipModuleLoad",
+            "hipModuleLoadData",
+            "hipModuleLoadDataEx",
+            "hipModuleLoadFatBinary",
+            # symbol / function / global lookups
+            "hipModuleGetFunction",
+            "hipModuleGetGlobal",
+            "hipModuleGetTexRef",
+            "hipGetSymbolAddress",
+            "hipGetSymbolSize",
+            # graph creators + node adders (parm 0 is pGraphNode/pGraph OUT)
+            "hipGraphCreate",
+            "hipGraphClone",
+            "hipGraphInstantiate",
+            "hipGraphInstantiateWithFlags",
+            "hipGraphInstantiateWithParams",
+            "hipGraphAddNode",
+            "hipGraphAddKernelNode",
+            "hipGraphAddMemcpyNode",
+            "hipGraphAddMemcpyNode1D",
+            "hipGraphAddMemcpyNodeFromSymbol",
+            "hipGraphAddMemcpyNodeToSymbol",
+            "hipGraphAddMemsetNode",
+            "hipGraphAddHostNode",
+            "hipGraphAddChildGraphNode",
+            "hipGraphAddEmptyNode",
+            "hipGraphAddEventRecordNode",
+            "hipGraphAddEventWaitNode",
+            "hipGraphAddMemAllocNode",
+            "hipGraphAddMemFreeNode",
+            "hipGraphAddBatchMemOpNode",
+            "hipGraphAddExternalSemaphoresWaitNode",
+            "hipGraphAddExternalSemaphoresSignalNode",
+            # external resource importers
+            "hipImportExternalMemory",
+            "hipImportExternalSemaphore",
+            "hipExternalMemoryGetMappedBuffer",
+            # contexts
+            "hipCtxCreate",
+            "hipDevicePrimaryCtxRetain",
+            # texture / surface objects
+            "hipCreateTextureObject",
+            "hipCreateSurfaceObject",
+            "hipUserObjectCreate",
+        )
+    )
     # Pitch-style allocators write parm 0 (dev ptr) AND parm 1 (pitch).
-    _HIP_HANDLE_CREATOR_OUT_PARM01 = frozenset((
-        "hipMallocPitch",
-        "hipMemAllocPitch",
-    ))
+    _HIP_HANDLE_CREATOR_OUT_PARM01 = frozenset(
+        (
+            "hipMallocPitch",
+            "hipMemAllocPitch",
+        )
+    )
 
     @staticmethod
     @fallback(*_RUNTIME_INTENT_CHAIN)
@@ -492,9 +497,14 @@ class hip:
         # are rank-1 buffers via the generic rule and need no override; the
         # `is_pointer_to_record(degree=1)` gate excludes them (and the
         # `record*` source arrays). See UPSTREAM_BUGS Family 1.
-        if (func_name.startswith("hipMemcpy") or func_name.startswith("hipMemset")) \
-                and parm.name in hip._HIPMEMCPY_RECORD_DST_NAMES \
-                and parm.is_pointer_to_record(degree=1):
+        if (
+            (
+                func_name.startswith("hipMemcpy")
+                or func_name.startswith("hipMemset")
+            )
+            and parm.name in hip._HIPMEMCPY_RECORD_DST_NAMES
+            and parm.is_pointer_to_record(degree=1)
+        ):
             return ParmIntent.OUT
 
         # Opaque-handle creators: parm 0 (or parm 0+1 for pitch
@@ -504,7 +514,10 @@ class hip:
         # comment block above.
         if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM0 and parm_idx == 0:
             return ParmIntent.OUT_CALLEE_ALLOCATED
-        if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM01 and parm_idx in (0, 1):
+        if func_name in hip._HIP_HANDLE_CREATOR_OUT_PARM01 and parm_idx in (
+            0,
+            1,
+        ):
             return ParmIntent.OUT_CALLEE_ALLOCATED
 
         # Callee-produced OUT slots the callee writes a fresh value into: rank-0
@@ -513,9 +526,9 @@ class hip:
         # rank-0 consumer fallback is gone (`const char**` is skipped by both
         # `string_z` and `double_indirection_out`, so it cannot be deferred).
         if (func_name, parm_idx) in (
-            ("hipIpcGetMemHandle", 0),   # hipIpcMemHandle_t* — rank-0 struct
-            ("hipDeviceGetUuid", 0),     # hipUUID*          — rank-0 struct
-            ("hipDrvGetErrorName", 1),   # const char**      — internal string
+            ("hipIpcGetMemHandle", 0),  # hipIpcMemHandle_t* — rank-0 struct
+            ("hipDeviceGetUuid", 0),  # hipUUID*          — rank-0 struct
+            ("hipDrvGetErrorName", 1),  # const char**      — internal string
             ("hipDrvGetErrorString", 1),
         ):
             return ParmIntent.OUT_CALLEE_ALLOCATED
@@ -546,8 +559,8 @@ class hip:
             # overrides `documented_param_intent` trusts the `[out]` tag and
             # the generated binding drops the arg (`hipHostRegister`) or
             # passes NULL (`hipMemcpyToSymbol*`).
-            ("hipHostRegister", 0),         # void* hostPtr   (caller-allocated)
-            ("hipMemcpyToSymbol", 0),       # const void* symbol
+            ("hipHostRegister", 0),  # void* hostPtr   (caller-allocated)
+            ("hipMemcpyToSymbol", 0),  # const void* symbol
             ("hipMemcpyToSymbolAsync", 0),  # const void* symbol
         ):
             return ParmIntent.IN
@@ -566,9 +579,9 @@ class hip:
         # HIP runtime convention: scalar-via-pointer OUT for non-string
         # basic-type pointers (callee writes a fresh scalar). Subsumed by
         # `status_return_out_pointer` once that relational rule lands.
-        if parm.is_pointer_to_basic_type(degree=1) and not parm.is_pointer_to_char(
+        if parm.is_pointer_to_basic_type(
             degree=1
-        ):
+        ) and not parm.is_pointer_to_char(degree=1):
             return ParmIntent.OUT_CALLEE_ALLOCATED
         return None  # defer to chain
 
@@ -588,7 +601,10 @@ class hip:
             # UPSTREAM_BUGS Family 1. The `is_pointer_to_record(degree=1)`
             # gate excludes the `void*` destinations and `record*` sources.
             if (
-                (func_name.startswith("hipMemcpy") or func_name.startswith("hipMemset"))
+                (
+                    func_name.startswith("hipMemcpy")
+                    or func_name.startswith("hipMemset")
+                )
                 and node.name in hip._HIPMEMCPY_RECORD_DST_NAMES
                 and node.is_pointer_to_record(degree=1)
             ):
@@ -653,7 +669,7 @@ class hiprtc:
     @staticmethod
     def node_filter(node: Node):
         if isinstance(node, MacroDefinition):
-            return False # NOTE: node.file is None for macros
+            return False  # NOTE: node.file is None for macros
         elif node.file is None:
             print(f"node.file is None: {node.cursor.kind}")
             return False
@@ -843,14 +859,16 @@ class hipblaslt:
     #   * *_INVALID     — `static_cast<T>(v)` (C++ only, no C fallback).
     #   * *_VEC_EXT     — `static_assert(false, "…deprecated…")` traps for
     #                     removed enum values.
-    _CODEGEN_BLOCKLIST = frozenset({
-        "HIPBLASLT_VERSION_TWEAK",                       # bare git-hash token
-        "HIPBLASLT_DATATYPE_INVALID",                    # static_cast<...>
-        "HIPBLASLT_COMPUTE_TYPE_INVALID",                # static_cast<...>
-        "HIPBLASLT_OPERATION_INVALID",                   # static_cast<...>
-        "HIPBLASLT_MATMUL_DESC_A_SCALE_POINTER_VEC_EXT", # static_assert(false, ...)
-        "HIPBLASLT_MATMUL_DESC_B_SCALE_POINTER_VEC_EXT", # static_assert(false, ...)
-    })
+    _CODEGEN_BLOCKLIST = frozenset(
+        {
+            "HIPBLASLT_VERSION_TWEAK",  # bare git-hash token
+            "HIPBLASLT_DATATYPE_INVALID",  # static_cast<...>
+            "HIPBLASLT_COMPUTE_TYPE_INVALID",  # static_cast<...>
+            "HIPBLASLT_OPERATION_INVALID",  # static_cast<...>
+            "HIPBLASLT_MATMUL_DESC_A_SCALE_POINTER_VEC_EXT",  # static_assert(false, ...)
+            "HIPBLASLT_MATMUL_DESC_B_SCALE_POINTER_VEC_EXT",  # static_assert(false, ...)
+        }
+    )
 
     @staticmethod
     def node_filter(node: Node):
@@ -860,7 +878,9 @@ class hipblaslt:
             if node.name in hipblaslt._CODEGEN_BLOCKLIST:
                 return False
             return node.name.startswith("HIPBLASLT_")
-        return node.name.startswith("hipblasLt") or node.name.startswith("HIPBLASLT_")
+        return node.name.startswith("hipblasLt") or node.name.startswith(
+            "HIPBLASLT_"
+        )
 
     # Scalar OUT pointers (`T* out` — a single value the callee writes)
     # that read most naturally as Python return values. hipBLASLt reuses
@@ -876,17 +896,19 @@ class hipblaslt:
     #   * `hipblasLtMatmulAlgoGetHeuristic`'s `heuristicResultsArray[]` — a
     #     caller-sized record array (only its sibling scalar count is here).
     #   * the `*GetAttribute` `buf` slots — caller-sized attribute buffers.
-    _SCALAR_OUT_PARMS = frozenset((
-        # (funcname, parm_name)
-        ("hipblasLtGetVersion", "version"),               # @param tag missing upstream
-        ("hipblasLtGetSmCountTarget", "smCountTarget"),
-        ("hipblasLtCheckNumericsDrain", "first_nan_call_id"),
-        ("hipblasLtMatrixLayoutGetAttribute", "sizeWritten"),
-        ("hipblasLtMatmulDescGetAttribute", "sizeWritten"),
-        ("hipblasLtMatmulPreferenceGetAttribute", "sizeWritten"),
-        ("hipblasLtMatrixTransformDescGetAttribute", "sizeWritten"),
-        ("hipblasLtMatmulAlgoGetHeuristic", "returnAlgoCount"),
-    ))
+    _SCALAR_OUT_PARMS = frozenset(
+        (
+            # (funcname, parm_name)
+            ("hipblasLtGetVersion", "version"),  # @param tag missing upstream
+            ("hipblasLtGetSmCountTarget", "smCountTarget"),
+            ("hipblasLtCheckNumericsDrain", "first_nan_call_id"),
+            ("hipblasLtMatrixLayoutGetAttribute", "sizeWritten"),
+            ("hipblasLtMatmulDescGetAttribute", "sizeWritten"),
+            ("hipblasLtMatmulPreferenceGetAttribute", "sizeWritten"),
+            ("hipblasLtMatrixTransformDescGetAttribute", "sizeWritten"),
+            ("hipblasLtMatmulAlgoGetHeuristic", "returnAlgoCount"),
+        )
+    )
 
     @staticmethod
     @fallback(*_NUMERICAL_INTENT_CHAIN)
@@ -901,7 +923,10 @@ class hipblaslt:
         creator heuristic — then to the shared numerical chain.
         """
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS:
+        if (
+            parent is not None
+            and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS
+        ):
             return ParmIntent.OUT_CALLEE_ALLOCATED
         return hipblas.ptr_parm_intent.__wrapped__(node)
 
@@ -917,7 +942,10 @@ class hipblaslt:
         """
         if isinstance(node, Parm):
             parent = node.parent
-            if parent is not None and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS:
+            if (
+                parent is not None
+                and (parent.name, node.name) in hipblaslt._SCALAR_OUT_PARMS
+            ):
                 return 0
         return hipblas.ptr_rank.__wrapped__(node)
 
@@ -1040,11 +1068,13 @@ class rccl:
     # the tag would push the buffer into the python return tuple,
     # silently dropping it from the function signature so the user
     # has no way to pass their own pre-allocated buffer.
-    _MISTAGGED_INOUT = frozenset((
-        # (funcname, parm_name)
-        ("ncclReduce",  "recvbuff"),
-        ("pncclReduce", "recvbuff"),
-    ))
+    _MISTAGGED_INOUT = frozenset(
+        (
+            # (funcname, parm_name)
+            ("ncclReduce", "recvbuff"),
+            ("pncclReduce", "recvbuff"),
+        )
+    )
 
     @staticmethod
     @fallback(*_INPLACE_NUMERICAL_INTENT_CHAIN)
@@ -1053,7 +1083,10 @@ class rccl:
         that are passed as C-style reference, i.e. `<type>* <param>`.
         """
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in rccl._MISTAGGED_INOUT:
+        if (
+            parent is not None
+            and (parent.name, node.name) in rccl._MISTAGGED_INOUT
+        ):
             return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
             if (node.parent.name, node.name) in (
@@ -1199,9 +1232,11 @@ class hipfft:
         # stays in args. Same upstream-doxygen issue as hipMemcpy /
         # hipStreamCreate (see the upstream bug report filed against
         # ROCm/HIP for the mistagged intent annotations).
-        if node.parent is not None and node.parent.name.startswith(
-            "hipfftExec"
-        ) and node.name == "odata":
+        if (
+            node.parent is not None
+            and node.parent.name.startswith("hipfftExec")
+            and node.name == "odata"
+        ):
             return ParmIntent.INOUT
         if node.is_pointer_to_record(degree=2):
             # `hipfftHandle* plan` creator — defer to the chained
@@ -1323,7 +1358,9 @@ class hiptensor:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPTENSOR_")
-        return node.name.startswith("hiptensor") or node.name.startswith("HIPTENSOR_")
+        return node.name.startswith("hiptensor") or node.name.startswith(
+            "HIPTENSOR_"
+        )
 
     # Hardcoded overrides for hiptensor functions whose upstream doxygen
     # `@param[out]` tag is wrong: the parm is actually INOUT — the
@@ -1334,25 +1371,27 @@ class hiptensor:
     # still needs to control allocation/lifetime/sizing. Filed
     # upstream against ROCm/rocm-libraries (hipTensor) as
     # /tmp/hiptensor_doxygen_param_intent_mistags.md.
-    _MISTAGGED_INOUT = frozenset((
-        # (funcname, parm_name)
-        ("hiptensorOperationDescriptorGetAttribute", "buf"),
-        ("hiptensorPlanGetAttribute",                "buf"),
-        ("hiptensorContract",                        "D"),
-        ("hiptensorContract",                        "workspace"),
-        ("hiptensorContractTrinary",                 "E"),
-        ("hiptensorContractTrinary",                 "workspace"),
-        ("hiptensorElementwiseBinaryExecute",        "D"),
-        ("hiptensorElementwiseTrinaryExecute",       "D"),
-        ("hiptensorReduce",                          "D"),
-        ("hiptensorReduce",                          "workspace"),
-        # Bonus: hiptensorDestroy(handle) is also doxygen-mistagged
-        # (`@param[out] handle` on the destructor). Treat as IN.
-        # IN is the doxygen-rule default for non-pointer-to-pointer
-        # handles, so we don't need an explicit override here — the
-        # by-value `hiptensorHandle_t handle` parm doesn't even hit
-        # ptr_parm_intent.
-    ))
+    _MISTAGGED_INOUT = frozenset(
+        (
+            # (funcname, parm_name)
+            ("hiptensorOperationDescriptorGetAttribute", "buf"),
+            ("hiptensorPlanGetAttribute", "buf"),
+            ("hiptensorContract", "D"),
+            ("hiptensorContract", "workspace"),
+            ("hiptensorContractTrinary", "E"),
+            ("hiptensorContractTrinary", "workspace"),
+            ("hiptensorElementwiseBinaryExecute", "D"),
+            ("hiptensorElementwiseTrinaryExecute", "D"),
+            ("hiptensorReduce", "D"),
+            ("hiptensorReduce", "workspace"),
+            # Bonus: hiptensorDestroy(handle) is also doxygen-mistagged
+            # (`@param[out] handle` on the destructor). Treat as IN.
+            # IN is the doxygen-rule default for non-pointer-to-pointer
+            # handles, so we don't need an explicit override here — the
+            # by-value `hiptensorHandle_t handle` parm doesn't even hit
+            # ptr_parm_intent.
+        )
+    )
 
     @staticmethod
     @fallback(*_NUMERICAL_INTENT_CHAIN)
@@ -1366,7 +1405,10 @@ class hiptensor:
         the chain.
         """
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in hiptensor._MISTAGGED_INOUT:
+        if (
+            parent is not None
+            and (parent.name, node.name) in hiptensor._MISTAGGED_INOUT
+        ):
             return ParmIntent.INOUT
         # Delegate the tail to hipblas's body — preserves the
         # `pointer-to-void degree=2 named handle → OUT` heuristic.
@@ -1408,9 +1450,7 @@ class hipdnn_backend:
     # as int and emit `__Pyx_PyLong_From_int(HIPDNN_CALLBACK_TYPES_DEFINED)`
     # which expands to `__Pyx_PyLong_From_int()` ("too few arguments").
     # Same shape as HSA's HSA_LARGE_MODEL — see the hsa class.
-    _CODEGEN_BLOCKLIST = frozenset((
-        "HIPDNN_CALLBACK_TYPES_DEFINED",
-    ))
+    _CODEGEN_BLOCKLIST = frozenset(("HIPDNN_CALLBACK_TYPES_DEFINED",))
 
     @staticmethod
     def node_filter(node: Node):
@@ -1420,7 +1460,9 @@ class hipdnn_backend:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPDNN_")
-        return node.name.startswith("hipdnn") or node.name.startswith("HIPDNN_")
+        return node.name.startswith("hipdnn") or node.name.startswith(
+            "HIPDNN_"
+        )
 
     # Reuse generic numerical heuristics — hipdnn uses opaque
     # descriptor handles + per-attribute getter/setter functions
@@ -1446,7 +1488,9 @@ class hipsparselt:
             return False
         if isinstance(node, MacroDefinition):
             return node.name.startswith("HIPSPARSELT_")
-        return node.name.startswith("hipsparseLt") or node.name.startswith("HIPSPARSELT_")
+        return node.name.startswith("hipsparseLt") or node.name.startswith(
+            "HIPSPARSELT_"
+        )
 
     # Reuse the hipsparse heuristics — opaque-handle and pointer-rank
     # conventions are identical for the sparse extension family.
@@ -1464,11 +1508,13 @@ class hipsparselt:
     #
     # Deliberately excluded (stays caller-allocated): `hipsparseLtGetGitRevision`'s
     # `rev` — a caller-sized `char*` string buffer, not a scalar.
-    _SCALAR_OUT_PARMS = frozenset((
-        # (funcname, parm_name)
-        ("hipsparseLtGetVersion", "version"),
-        ("hipsparseLtGetProperty", "value"),
-    ))
+    _SCALAR_OUT_PARMS = frozenset(
+        (
+            # (funcname, parm_name)
+            ("hipsparseLtGetVersion", "version"),
+            ("hipsparseLtGetProperty", "value"),
+        )
+    )
 
     @staticmethod
     @fallback(*_NUMERICAL_INTENT_CHAIN)
@@ -1481,7 +1527,10 @@ class hipsparselt:
         machine-parseable. The tail delegates to hipsparse's body.
         """
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS:
+        if (
+            parent is not None
+            and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS
+        ):
             return ParmIntent.OUT_CALLEE_ALLOCATED
         return hipsparse.ptr_parm_intent.__wrapped__(node)
 
@@ -1496,7 +1545,10 @@ class hipsparselt:
         """
         if isinstance(node, Parm):
             parent = node.parent
-            if parent is not None and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS:
+            if (
+                parent is not None
+                and (parent.name, node.name) in hipsparselt._SCALAR_OUT_PARMS
+            ):
                 return 0
         return hipsparse.ptr_rank.__wrapped__(node)
 
@@ -1546,29 +1598,44 @@ class roctx:
 # tags (60% [in], 14% [out], 25% [in,out]). The verb-prefix and parameter-
 # name rules below cover ~90% of the API; per-function carve-outs (the rccl
 # pattern at lines 522-535 above) handle the remaining edge cases.
-_AMDSMI_INOUT_PARM_NAMES = frozenset({
-    # Documented as @param[in,out]: input as buffer-capacity, output as
-    # actual count. Always paired with an array out-param sibling.
-    "count", "num_pages", "len", "size", "num_afids",
-    "processor_count", "sensor_count",
-    # Caller-allocated array; callee fills counter values per element.
-    # `amdsmi_get_utilization_count(..., utilization_counters[], ...)`.
-    "utilization_counters",
-    # Documented `[in,out]` everywhere it appears in amdsmi.h.
-    "timestamp",
-})
-_AMDSMI_BUFFER_PARM_NAMES = frozenset({
-    # @param[out] documented as "Pointer to string" / "array of"
-    "name", "uuid", "bdf", "data",
-    "processor_handles", "socket_handles", "sensor_inds", "sensor_types",
-    "afids",
-    # @param[out] "user-provided buffer ... must contain at least
-    # max_processes entries ... Must be allocated by user" — a caller-sized
-    # record array driven by the in,out `max_processes` count, NOT a single
-    # callee-allocated record. Without this it would be a degree-1
-    # pointer-to-record => rank 0 => returned single struct.
-    "list",
-})
+_AMDSMI_INOUT_PARM_NAMES = frozenset(
+    {
+        # Documented as @param[in,out]: input as buffer-capacity, output as
+        # actual count. Always paired with an array out-param sibling.
+        "count",
+        "num_pages",
+        "len",
+        "size",
+        "num_afids",
+        "processor_count",
+        "sensor_count",
+        # Caller-allocated array; callee fills counter values per element.
+        # `amdsmi_get_utilization_count(..., utilization_counters[], ...)`.
+        "utilization_counters",
+        # Documented `[in,out]` everywhere it appears in amdsmi.h.
+        "timestamp",
+    }
+)
+_AMDSMI_BUFFER_PARM_NAMES = frozenset(
+    {
+        # @param[out] documented as "Pointer to string" / "array of"
+        "name",
+        "uuid",
+        "bdf",
+        "data",
+        "processor_handles",
+        "socket_handles",
+        "sensor_inds",
+        "sensor_types",
+        "afids",
+        # @param[out] "user-provided buffer ... must contain at least
+        # max_processes entries ... Must be allocated by user" — a caller-sized
+        # record array driven by the in,out `max_processes` count, NOT a single
+        # callee-allocated record. Without this it would be a degree-1
+        # pointer-to-record => rank 0 => returned single struct.
+        "list",
+    }
+)
 
 
 class amdsmi:
@@ -1621,45 +1688,53 @@ class amdsmi:
     # without them. (`<stdint.h>` types — uint{8,16,32,64}_t, int{32,64}_t —
     # don't need to be listed here: the codegen already handles them via
     # `from libc.stdint cimport *`.)
-    _EXTRA_TYPES = frozenset({
-        "amd_metrics_table_header_t",   # used by amdsmi_gpu_metrics_t and
-                                        # amdsmi_get_gpu_metrics_header_info
-        "processor_type_t",             # used by amdsmi_get_processor_type
-        # `struct timespec` (<time.h>, transitively included by amdsmi.h) is
-        # a BY-VALUE field of amdsmi_fabric_telemetry_dataset_t.timestamp.
-        # Admitting it lets the codegen emit its `cdef struct timespec:`
-        # layout AND a `.fromPtr` wrapper (mirrors the in-header by-value
-        # record amdsmi_cper_timestamp_t). It is a tagged struct (not a
-        # typedef), so it renders as `cdef struct timespec` -> valid C
-        # `struct timespec`; the real per-platform layout comes from the
-        # `cdef extern from "amd_smi/amdsmi.h"` block, so no ABI is baked in.
-        "timespec",
-    })
+    _EXTRA_TYPES = frozenset(
+        {
+            "amd_metrics_table_header_t",  # used by amdsmi_gpu_metrics_t and
+            # amdsmi_get_gpu_metrics_header_info
+            "processor_type_t",  # used by amdsmi_get_processor_type
+            # `struct timespec` (<time.h>, transitively included by amdsmi.h) is
+            # a BY-VALUE field of amdsmi_fabric_telemetry_dataset_t.timestamp.
+            # Admitting it lets the codegen emit its `cdef struct timespec:`
+            # layout AND a `.fromPtr` wrapper (mirrors the in-header by-value
+            # record amdsmi_cper_timestamp_t). It is a tagged struct (not a
+            # typedef), so it renders as `cdef struct timespec` -> valid C
+            # `struct timespec`; the real per-platform layout comes from the
+            # `cdef extern from "amd_smi/amdsmi.h"` block, so no ABI is baked in.
+            "timespec",
+        }
+    )
 
     # Useful non-`AMDSMI_`-prefixed integer macros declared in amdsmi.h.
     # `__AMDSMI_H__` (the include guard) is intentionally excluded.
-    _EXTRA_MACROS = frozenset({
-        "CENTRIGRADE_TO_MILLI_CENTIGRADE",
-        "MAX_NUMBER_OF_AFIDS_PER_RECORD",
-    })
+    _EXTRA_MACROS = frozenset(
+        {
+            "CENTRIGRADE_TO_MILLI_CENTIGRADE",
+            "MAX_NUMBER_OF_AFIDS_PER_RECORD",
+        }
+    )
 
     # String-valued AMDSMI_ macros — emitted as `char *` constants rather
     # than int. Identified by the printf-format/version-string nature of
     # their literal value in amdsmi.h.
-    _STRING_MACROS = frozenset({
-        "AMDSMI_TIME_FORMAT",
-        "AMDSMI_DATE_FORMAT",
-        "AMDSMI_LIB_VERSION_STRING",
-    })
+    _STRING_MACROS = frozenset(
+        {
+            "AMDSMI_TIME_FORMAT",
+            "AMDSMI_DATE_FORMAT",
+            "AMDSMI_LIB_VERSION_STRING",
+        }
+    )
     # Function-like macros (parameters in their definition). Cython emits
     # them as `__Pyx_PyInt_From_int(MACRO)` which fails to compile because
     # `MACRO` is a token-paste expression, not an evaluable int. Filter
     # them out at node_filter time.
-    _SKIPPED_MACROS = frozenset({
-        "AMDSMI_LIB_VERSION_CREATE_STRING",  # (MAJOR, MINOR, RELEASE)
-        "AMDSMI_LIB_VERSION_EXPAND_PARTS",   # (MAJOR_STR, MINOR_STR, …)
-        "AMDSMI_EVENT_MASK_FROM_INDEX",      # (i)
-    })
+    _SKIPPED_MACROS = frozenset(
+        {
+            "AMDSMI_LIB_VERSION_CREATE_STRING",  # (MAJOR, MINOR, RELEASE)
+            "AMDSMI_LIB_VERSION_EXPAND_PARTS",  # (MAJOR_STR, MINOR_STR, …)
+            "AMDSMI_EVENT_MASK_FROM_INDEX",  # (i)
+        }
+    )
 
     @staticmethod
     def _topmost_name(node):
@@ -1675,8 +1750,11 @@ class amdsmi:
         ``bdf_`` struct without listing it explicitly.
         """
         from interfacegen import tree
+
         curr = node
-        while curr.parent is not None and not isinstance(curr.parent, tree.Root):
+        while curr.parent is not None and not isinstance(
+            curr.parent, tree.Root
+        ):
             curr = curr.parent
         return curr.name or ""
 
@@ -1734,18 +1812,22 @@ class amdsmi:
     # `node_handle` is tagged `@param[out] amdsmi_node_handle*` (the
     # type, not `node_handle`), so without an override the
     # `_handle -> IN` fallback would bind a *returned* handle as a
-    # caller input. Forcing it to OUT lets the rank-0 callee-allocated
-    # fallback return it.
+    # caller input. Both entries therefore state
+    # `OUT_CALLEE_ALLOCATED`, which is what moves the parm into the
+    # return tuple: `Parm.is_out_callee_allocated_ptr` reads the
+    # explicit hint only and has no rank-0 fallback.
     #
     # An upstream bug report (same overloaded-tag pattern across
     # many amdsmi `amdsmi_get_*` getters) has been filed against
     # ROCm/amdsmi. This entry list is incremental — extend as
     # additional ones surface.
-    _MISTAGGED_OUT = frozenset((
-        ("amdsmi_get_lib_version", 0),  # `version` is pure OUT
-        ("amdsmi_get_node_handle", 1),  # `node_handle` is a returned OUT
-                                        # handle (doc'd by type spelling)
-    ))
+    _MISTAGGED_OUT = frozenset(
+        (
+            ("amdsmi_get_lib_version", 0),  # `version` is pure OUT
+            ("amdsmi_get_node_handle", 1),  # `node_handle` is a returned OUT
+            # handle (doc'd by type spelling)
+        )
+    )
 
     # Caller-allocated array buffers that upstream doxygen mistags
     # `@param[out]` (instead of the `[in,out]` its siblings use), which
@@ -1754,9 +1836,9 @@ class amdsmi:
     # actually a caller-sized array the callee fills. Forcing INOUT keeps
     # them on the caller-allocated path (a `ListOfPointer` argument),
     # matching the identically-typed `amdsmi_get_processor_handles`.
-    _FORCE_INOUT = frozenset((
-        ("amdsmi_get_processor_handles_by_type", 2),  # processor_handles
-    ))
+    _FORCE_INOUT = frozenset(
+        (("amdsmi_get_processor_handles_by_type", 2),)  # processor_handles
+    )
 
     @staticmethod
     def ptr_parm_intent(node: Parm):
@@ -1764,9 +1846,9 @@ class amdsmi:
 
         Priority of rules (most specific first):
           0. Hardcoded overrides for upstream-doxygen-mistagged parms
-             (`_MISTAGGED_OUT` -> OUT, `_FORCE_INOUT` -> INOUT). Run
-             BEFORE the doxygen rule because the doxygen tag is the very
-             thing that's wrong.
+             (`_MISTAGGED_OUT` -> OUT_CALLEE_ALLOCATED, `_FORCE_INOUT`
+             -> INOUT). Run BEFORE the doxygen rule because the doxygen
+             tag is the very thing that's wrong.
           1. Doxygen `@param[in|out|in,out]` tag on the parent function —
              trusted as the source of truth. Covers 294 of 302 pointer
              parms in amdsmi.h. Delegated to
@@ -1806,7 +1888,11 @@ class amdsmi:
             if generic.is_callee_allocated_out_shape(node):
                 return ParmIntent.OUT_CALLEE_ALLOCATED
             return ParmIntent.OUT
-        if fname in ("amdsmi_init", "amdsmi_shut_down", "amdsmi_status_string"):
+        if fname in (
+            "amdsmi_init",
+            "amdsmi_shut_down",
+            "amdsmi_status_string",
+        ):
             return ParmIntent.IN
         return ParmIntent.IN
 
@@ -1844,7 +1930,9 @@ class amdsmi:
             return 1
         # A single opaque handle canonicalizes to void* — pointer-to-handle
         # is void**; treat such a single slot as a scalar.
-        if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(degree=2):
+        if node.is_pointer_to_void(degree=1) or node.is_pointer_to_void(
+            degree=2
+        ):
             return 0
         if node.is_pointer_to_record(degree=1):
             return 0
@@ -1884,10 +1972,12 @@ class hsa:
     # `hsa_ext_program_iterate_modules` parameters — without the
     # ctypedef, Cython can't resolve the type identifier in the
     # rendered function signature.
-    _EXTRA_TYPES = frozenset((
-        "BrigModuleHeader",
-        "BrigModule_t",
-    ))
+    _EXTRA_TYPES = frozenset(
+        (
+            "BrigModuleHeader",
+            "BrigModule_t",
+        )
+    )
 
     # Targeted exclusions where the codegen can't currently produce a
     # well-formed binding. Keep this list as small as possible and
@@ -1907,21 +1997,23 @@ class hsa:
     # (C11 anonymous-member name injection is not modeled), so the
     # emitted binding would be silently wrong. Keep these three omitted
     # until the anonymous-member path is implemented.
-    _CODEGEN_BLOCKLIST = frozenset((
-        "hsa_amd_memory_copy_op_s",
-        "hsa_amd_memory_copy_op_t",
-        "hsa_amd_memory_async_batch_copy",
-        # Feature-detection markers, not value-carrying constants:
-        # `#define HSA_LARGE_MODEL` (set when `__LP64__` is defined),
-        # `#define HSA_LITTLE_ENDIAN` (set when `LITTLEENDIAN_CPU` is
-        # defined). The default macro_type classifies them as ints,
-        # yielding a `__Pyx_PyLong_From_int(HSA_LARGE_MODEL)` call
-        # that expands to `__Pyx_PyLong_From_int()` — too few args.
-        # The C-side use is `#ifdef HSA_LARGE_MODEL`, never as an
-        # rvalue; nothing user-visible to expose.
-        "HSA_LARGE_MODEL",
-        "HSA_LITTLE_ENDIAN",
-    ))
+    _CODEGEN_BLOCKLIST = frozenset(
+        (
+            "hsa_amd_memory_copy_op_s",
+            "hsa_amd_memory_copy_op_t",
+            "hsa_amd_memory_async_batch_copy",
+            # Feature-detection markers, not value-carrying constants:
+            # `#define HSA_LARGE_MODEL` (set when `__LP64__` is defined),
+            # `#define HSA_LITTLE_ENDIAN` (set when `LITTLEENDIAN_CPU` is
+            # defined). The default macro_type classifies them as ints,
+            # yielding a `__Pyx_PyLong_From_int(HSA_LARGE_MODEL)` call
+            # that expands to `__Pyx_PyLong_From_int()` — too few args.
+            # The C-side use is `#ifdef HSA_LARGE_MODEL`, never as an
+            # rvalue; nothing user-visible to expose.
+            "HSA_LARGE_MODEL",
+            "HSA_LITTLE_ENDIAN",
+        )
+    )
 
     @staticmethod
     def node_filter(node: Node):
@@ -1941,10 +2033,12 @@ class hsa:
     # Trusting the tag would push the parm into the return tuple,
     # silently dropping it from the function signature so the user
     # has no way to pass their own pre-allocated buffer.
-    _MISTAGGED_INOUT = frozenset((
-        # (funcname, parm_name)
-        ("hsa_memory_copy", "dst"),
-    ))
+    _MISTAGGED_INOUT = frozenset(
+        (
+            # (funcname, parm_name)
+            ("hsa_memory_copy", "dst"),
+        )
+    )
 
     @staticmethod
     @fallback(*_NUMERICAL_INTENT_CHAIN)
@@ -1954,7 +2048,10 @@ class hsa:
         hipblas (handle pointer-to-void degree=2 → OUT) and the chain.
         """
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in hsa._MISTAGGED_INOUT:
+        if (
+            parent is not None
+            and (parent.name, node.name) in hsa._MISTAGGED_INOUT
+        ):
             return ParmIntent.INOUT
         return hipblas.ptr_parm_intent.__wrapped__(node)
 
@@ -2052,7 +2149,10 @@ class hipfile:
         handle creation, ``string_z`` for path strings, ``conservative`` for
         pointer-to-const, etc.).
         """
-        if (node.parent.name, node.name) in hipfile._ASYNC_CALLER_ALLOCATED_OUT:
+        if (
+            node.parent.name,
+            node.name,
+        ) in hipfile._ASYNC_CALLER_ALLOCATED_OUT:
             return ParmIntent.OUT
         return None  # defer to chain
 
@@ -2091,9 +2191,9 @@ class hipfile:
         writes them after the call returns) instead of scalar returns.
         """
         if isinstance(node, Parm):
-            if node.is_pointer_to_basic_type(degree=1) and not node.is_pointer_to_char(
+            if node.is_pointer_to_basic_type(
                 degree=1
-            ):
+            ) and not node.is_pointer_to_char(degree=1):
                 return 0
         return None  # defer to chain
 
@@ -2142,7 +2242,9 @@ class comgr:
     def ptr_rank(node):
         # `Typed.is_pointer_to_char(degree=-1)` — only char pointers are
         # treated as char sequences (rank 1). Everything else stays scalar.
-        if hasattr(node, "is_pointer_to_char") and node.is_pointer_to_char(degree=-1):
+        if hasattr(node, "is_pointer_to_char") and node.is_pointer_to_char(
+            degree=-1
+        ):
             return 1
         return 0
 
@@ -2195,7 +2297,8 @@ class comgr:
         """
         if isinstance(node, Parm):
             return (node.parent.name, node.parm_index) == (
-                "amd_comgr_action_info_set_option_list", 1,
+                "amd_comgr_action_info_set_option_list",
+                1,
             )
         return False
 
@@ -2261,7 +2364,8 @@ class llvm_c:
             return ParmIntent.INOUT
         if (
             fn_name in ("LLVMGetVersion",)
-            or parm_name in (
+            or parm_name
+            in (
                 "OutEE",
                 "OutError",
                 "OutFn",
@@ -2273,7 +2377,8 @@ class llvm_c:
                 "OutMod",
                 "OutModule",
             )
-            or (fn_name, parm_name) in (
+            or (fn_name, parm_name)
+            in (
                 ("LLVMGetValueName2", "Length"),
                 ("LLVMGetTargetFromTriple", "T"),
                 ("LLVMGetTargetFromTriple", "ErrorMessage"),
@@ -2309,10 +2414,12 @@ class llvm_c:
         """Returns a node_filter closure that keeps declarations whose
         `render_location()` contains `header_relpath`. Mirrors
         `create_node_filter()` at generate_llvm.py:222-232."""
+
         def _filter(node: Node):
             if isinstance(node, MacroDefinition):
                 return False
             return header_relpath in node.render_location()
+
         return _filter
 
 

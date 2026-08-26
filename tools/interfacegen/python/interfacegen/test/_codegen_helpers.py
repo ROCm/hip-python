@@ -9,6 +9,8 @@ boilerplate so each test stays focused on its specific pattern.
 """
 
 import os
+import subprocess
+import sys
 
 from interfacegen import cython, treefactory
 from interfacegen.cparser import CParser
@@ -22,7 +24,8 @@ def build_root(header_text: str):
     parser = CParser("input.h", unsaved_files=[("input.h", header_text)])
     parser.parse()
     return treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
 
 
@@ -85,6 +88,28 @@ def write_module(generator, tmp_path) -> dict:
         with open(os.path.join(out_dir, fname)) as fh:
             out[fname] = fh.read()
     return out
+
+
+def cython_check(tmp_path, module_name: str = "mod"):
+    """Compile a module that cimports the emitted declarations, and return the
+    ``CompletedProcess``. Call after ``write_module``.
+
+    Naming ``cy<module>.pxd`` on the command line instead does not work, and
+    the output gives no hint why: Cython compiles the named file as a module
+    body *and* loads that same file as the module's declarations, so every
+    symbol arrives twice and a few hundred spurious "Non-extern C function
+    declared but not defined" errors bury whatever was real. A cimport reaches
+    the .pxd in the role it was emitted for.
+    """
+    out_dir = str(tmp_path)
+    with open(os.path.join(out_dir, "_probe.pyx"), "w") as fh:
+        fh.write(f"cimport cy{module_name}\n")
+    return subprocess.run(
+        [sys.executable, "-m", "cython", "--3str", "_probe.pyx"],
+        cwd=out_dir,
+        capture_output=True,
+        text=True,
+    )
 
 
 def find_function(root, name: str):
