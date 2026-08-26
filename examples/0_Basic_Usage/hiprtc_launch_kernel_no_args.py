@@ -56,20 +56,20 @@ def hip_check(call_result):
     return result
 
 
-source = b"""\
+source = """\
 extern "C" __global__ void print_tid() {
   printf("tid: %d\\n", (int) threadIdx.x);
 }
 """
 
-prog = hip_check(hiprtc.hiprtcCreateProgram(source, b"print_tid", 0, [], []))
+prog = hip_check(hiprtc.hiprtcCreateProgram(source, "print_tid", 0, [], []))
 
 props = hip_check(hip.hipGetDeviceProperties(0))
-arch = props.gcnArchName
+arch = props.gcnArchName.decode("utf-8")
 
 print(f"Compiling kernel for {arch}")
 
-cflags = [b"--offload-arch=" + arch]
+cflags = ["--offload-arch=" + arch]
 (err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
 if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
     log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
@@ -80,7 +80,7 @@ code_size = hip_check(hiprtc.hiprtcGetCodeSize(prog))
 code = bytearray(code_size)
 hip_check(hiprtc.hiprtcGetCode(prog, code))
 module = hip_check(hip.hipModuleLoadData(code))
-kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
+kernel = hip_check(hip.hipModuleGetFunction(module, "print_tid"))
 #
 hip_check(
     hip.hipModuleLaunchKernel(

@@ -28,13 +28,34 @@ device code file that contains the definition of device function "foo".
 
 To make this work, both snippets need to be compiled with
 the ``-fgpu-rdc`` option and the compilation results needs to
-be added as `HIPRTC_JIT_INPUT_LLVM_BITCODE` type input to the link object.
+be added as LLVM-bitcode type input to the link object.
 """
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
 from rocm.bindings import hip, hiprtc
+
+
+def _llvm_bitcode_input_type():
+    """The enum member that selects LLVM bitcode input, under either spelling.
+
+    ROCm 7.14 renamed this enum's members from ``HIPRTC_JIT_INPUT_*`` to
+    ``hipJitInput*``. The values did not change, so asking for the current name
+    and accepting the old one keeps this example working across releases.
+    """
+    for name in ("hipJitInputLLVMBitcode", "HIPRTC_JIT_INPUT_LLVM_BITCODE"):
+        member = getattr(hiprtc.hiprtcJITInputType, name, None)
+        if member is not None:
+            return member
+    raise AttributeError(
+        "hiprtc.hiprtcJITInputType has neither 'hipJitInputLLVMBitcode' nor "
+        "'HIPRTC_JIT_INPUT_LLVM_BITCODE'; this ROCm names LLVM bitcode input "
+        "in some third way"
+    )
+
+
+LLVM_BITCODE_INPUT_TYPE = _llvm_bitcode_input_type()
 
 
 def hip_check(call_result):
@@ -60,23 +81,23 @@ def hip_check(call_result):
 
 
 class HiprtcProgram:
-    def __init__(self, name: str, source: bytes):
+    def __init__(self, name: str, source: str):
         self.source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.llvm_bitcode = None
         self.llvm_bitcode_size = None
 
-    def _get_arch(self) -> bytes:
+    def _get_arch(self) -> str:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        return props.gcnArchName
+        return props.gcnArchName.decode("utf-8")
 
     def compile_to_llvm_bc(self):
         # [literalinclude-hiprtc-compile-rdc-begin]
         prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.source, self.name, 0, [], [])
         )
-        cflags = [b"--offload-arch=" + self._get_arch(), b"-fgpu-rdc"]
+        cflags = ["--offload-arch=" + self._get_arch(), "-fgpu-rdc"]
         (err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
@@ -92,7 +113,7 @@ class HiprtcProgram:
         self.llvm_bitcode = bitcode
 
     def __del__(self):
-        if hasattr(self, 'prog') and self.prog is not None:
+        if hasattr(self, "prog") and self.prog is not None:
             try:
                 hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
             except Exception:
@@ -110,7 +131,7 @@ class HiprtcLinker:
         hip_check(
             hiprtc.hiprtcLinkAddData(
                 self.link_state,
-                hiprtc.hiprtcJITInputType.HIPRTC_JIT_INPUT_LLVM_BITCODE,
+                LLVM_BITCODE_INPUT_TYPE,
                 hiprtc_program.llvm_bitcode,
                 hiprtc_program.llvm_bitcode_size,
                 hiprtc_program.name,
@@ -127,7 +148,7 @@ class HiprtcLinker:
         )
 
     def __del__(self):
-        if hasattr(self, 'link_state') and self.link_state is not None:
+        if hasattr(self, "link_state") and self.link_state is not None:
             try:
                 hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
             except Exception:
@@ -144,7 +165,7 @@ if __name__ in ("__test__", "__main__"):
             printf("tid: %d\\n", (int) threadIdx.x);
         }
         """
-    ).encode("utf-8")
+    )
 
     kernel_src = textwrap.dedent(
         """\
@@ -154,7 +175,7 @@ if __name__ in ("__test__", "__main__"):
             foo();
         }
         """
-    ).encode("utf-8")
+    )
     # [literalinclude-kernel-sources-end]
 
     # [literalinclude-hiprtc-link-flow-begin]
@@ -167,7 +188,7 @@ if __name__ in ("__test__", "__main__"):
     linker.add_program(device_fun_prog)
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
-    kernel = hip_check(hip.hipModuleGetFunction(module, b"print_tid"))
+    kernel = hip_check(hip.hipModuleGetFunction(module, "print_tid"))
     # [literalinclude-hiprtc-link-flow-end]
     #
     hip_check(

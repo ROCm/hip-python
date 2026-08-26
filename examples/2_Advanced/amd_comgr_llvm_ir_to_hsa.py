@@ -42,9 +42,9 @@ from rocm import comgr
 
 
 class LLVMProgram:
-    def __init__(self, name: str, arch: str, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.hsa = None  # type: bytes
         self.hsa_size = None
         self.log = None
@@ -140,9 +140,7 @@ if __name__ in ("__test__", "__main__"):
 
         ; __CLANG_OFFLOAD_BUNDLE____END__ hip-amdgcn-amd-amdhsa--gfx942
         """  # noqa: E501
-    ).encode(
-        "utf-8"
-    )  # noqa: E501
+    )
 
     arch = "gfx942"
     kernel_prog = LLVMProgram("kernel", arch, kernel_llvm_ir)

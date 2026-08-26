@@ -28,6 +28,23 @@ bitcode file (via path). The example lists all function names and
 the number of functions in the file.
 """
 
+# The bindings load a shared LLVM at first call rather than at import, so an
+# absent library would surface as a failed call deep in the example. Ask the
+# bindings instead of inspecting the platform: has_symbol answers the capability
+# question directly, and covers every reason the library may be missing --
+# including any build configured with HIP_PYTHON_BUNDLE_LIBLLVM=OFF, which is
+# the default on Windows because ROCm ships no shared LLVM there and one has to
+# be linked from the static archives.
+from rocm.bindings.llvm.c import core as _llvmc_core
+
+if not _llvmc_core.has_symbol("LLVMCreateMemoryBufferWithContentsOfFile"):
+    raise NotImplementedError(
+        "This example needs a loadable shared LLVM behind the "
+        "rocm.bindings.llvm.c bindings; none was found. ROCm ships no shared "
+        "LLVM on Windows, where rocm-bindings-compiler bundles one only when "
+        "built with HIP_PYTHON_BUNDLE_LIBLLVM=ON."
+    )
+
 # [literalinclude-begin]
 import argparse
 
@@ -46,19 +63,44 @@ if __name__ == "__main__":
     )
     parser.add_argument("path", type=str)
     args = parser.parse_args()
-    filepath = args.path.encode("utf-8")
+    filepath = args.path
 else:
     # Loaded under pytest (via runpy.run_path) -- default to a known-good
-    # bitcode file so the example doubles as an importable smoke test.
-    filepath = b"/opt/rocm/amdgcn/bitcode/opencl.bc"
+    # bitcode file so the example doubles as an importable smoke test. The
+    # device library sits directly under the ROCm root in a /opt/rocm-style
+    # installation and under lib/llvm in the wheel and TheRock trees.
+    import os
+    import pathlib
+
+    rocm_path = pathlib.Path(os.environ.get("ROCM_PATH", "/opt/rocm"))
+    for _candidate in (
+        rocm_path / "amdgcn" / "bitcode" / "opencl.bc",
+        rocm_path / "lib" / "llvm" / "amdgcn" / "bitcode" / "opencl.bc",
+    ):
+        if _candidate.is_file():
+            filepath = str(_candidate)
+            break
+    else:
+        raise FileNotFoundError(
+            f"no opencl.bc found under {rocm_path}; set ROCM_PATH to a ROCm "
+            f"installation or pass a bitcode file on the command line"
+        )
 
 
 def check_status(status, message):
+    """Reports an LLVM failure and stops.
+
+    The calls below hand each other pointers that are only valid if the step
+    before them succeeded, so continuing past a failure segfaults rather than
+    reporting anything.
+    """
     if status != 0:
-        print(
-            f"{str(message)}",
-        )
-        LLVMDisposeMessage(message)
+        text = str(message)
+        # LLVMParseBitcode2 reports no message of its own, so that call site
+        # passes a plain string; only LLVM's own messages are LLVM's to free.
+        if not isinstance(message, str):
+            LLVMDisposeMessage(message)
+        raise RuntimeError(text)
 
 
 (status, buf, message) = LLVMCreateMemoryBufferWithContentsOfFile(filepath)

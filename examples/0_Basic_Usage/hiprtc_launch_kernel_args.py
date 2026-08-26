@@ -65,7 +65,7 @@ def hip_check(call_result):
     return result
 
 
-source = b"""\
+source = """\
 extern "C" __global__ void scale_vector(float factor, int n, short unused1, int unused2, float unused3, float *x) {
   int tid = threadIdx.x + blockIdx.x * blockDim.x;
   if ( tid == 0 ) {
@@ -77,16 +77,14 @@ extern "C" __global__ void scale_vector(float factor, int n, short unused1, int 
 }
 """
 
-prog = hip_check(
-    hiprtc.hiprtcCreateProgram(source, b"scale_vector", 0, [], [])
-)
+prog = hip_check(hiprtc.hiprtcCreateProgram(source, "scale_vector", 0, [], []))
 
 props = hip_check(hip.hipGetDeviceProperties(0))
-arch = props.gcnArchName
+arch = props.gcnArchName.decode("utf-8")
 
 print(f"Compiling kernel for {arch}")
 
-cflags = [b"--offload-arch=" + arch]
+cflags = ["--offload-arch=" + arch]
 (err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
 if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
     log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
@@ -97,7 +95,7 @@ code_size = hip_check(hiprtc.hiprtcGetCodeSize(prog))
 code = bytearray(code_size)
 hip_check(hiprtc.hiprtcGetCode(prog, code))
 module = hip_check(hip.hipModuleLoadData(code))
-kernel = hip_check(hip.hipModuleGetFunction(module, b"scale_vector"))
+kernel = hip_check(hip.hipModuleGetFunction(module, "scale_vector"))
 
 # kernel launch
 

@@ -34,6 +34,14 @@ Single-GPU; no batching.
 
 import ctypes
 import os
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs hipSPARSELt. ROCm's Windows packaging ships "
+        "hipsparselt.h without the export header it includes, so the bindings "
+        "cannot be compiled into the rocm-bindings-libraries wheel there."
+    )
 
 import numpy as np
 from rocm.bindings import hip, hipsparse, hipsparselt
@@ -100,9 +108,15 @@ d_c = hip_check(hip.hipMalloc(c_bytes))
 d_d = hip_check(hip.hipMalloc(c_bytes))
 d_pruned = hip_check(hip.hipMalloc(a_bytes))  # pruned A goes here
 
-hip_check(hip.hipMemcpy(d_a, a_h, a_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(d_b, b_h, b_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(d_c, c_h, c_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
+hip_check(
+    hip.hipMemcpy(d_a, a_h, a_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
+hip_check(
+    hip.hipMemcpy(d_b, b_h, b_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
+hip_check(
+    hip.hipMemcpy(d_c, c_h, c_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
 
 # hipSPARSELt handle + descriptors. Note: every hipSPARSELt API takes
 # `&handle` / `&desc` (pointer-style). The Python bindings accept the
@@ -117,26 +131,50 @@ matC = hipsparselt.hipsparseLtMatDescriptor_t()
 matD = hipsparselt.hipsparseLtMatDescriptor_t()
 hip_check(
     hipsparselt.hipsparseLtStructuredDescriptorInit(
-        handle, matA, m, k, m, 16, hip.hipDataType.HIP_R_16F,
+        handle,
+        matA,
+        m,
+        k,
+        m,
+        16,
+        hip.hipDataType.HIP_R_16F,
         hipsparse.hipsparseOrder_t.HIPSPARSE_ORDER_COL,
         hipsparselt.hipsparseLtSparsity_t.HIPSPARSELT_SPARSITY_50_PERCENT,
     )
 )
 hip_check(
     hipsparselt.hipsparseLtDenseDescriptorInit(
-        handle, matB, k, n, k, 16, hip.hipDataType.HIP_R_16F,
+        handle,
+        matB,
+        k,
+        n,
+        k,
+        16,
+        hip.hipDataType.HIP_R_16F,
         hipsparse.hipsparseOrder_t.HIPSPARSE_ORDER_COL,
     )
 )
 hip_check(
     hipsparselt.hipsparseLtDenseDescriptorInit(
-        handle, matC, m, n, m, 16, hip.hipDataType.HIP_R_16F,
+        handle,
+        matC,
+        m,
+        n,
+        m,
+        16,
+        hip.hipDataType.HIP_R_16F,
         hipsparse.hipsparseOrder_t.HIPSPARSE_ORDER_COL,
     )
 )
 hip_check(
     hipsparselt.hipsparseLtDenseDescriptorInit(
-        handle, matD, m, n, m, 16, hip.hipDataType.HIP_R_16F,
+        handle,
+        matD,
+        m,
+        n,
+        m,
+        16,
+        hip.hipDataType.HIP_R_16F,
         hipsparse.hipsparseOrder_t.HIPSPARSE_ORDER_COL,
     )
 )
@@ -146,16 +184,22 @@ alg_sel = hipsparselt.hipsparseLtMatmulAlgSelection_t()
 plan = hipsparselt.hipsparseLtMatmulPlan_t()
 hip_check(
     hipsparselt.hipsparseLtMatmulDescriptorInit(
-        handle, matmul,
+        handle,
+        matmul,
         hipsparse.hipsparseOperation_t.HIPSPARSE_OPERATION_NON_TRANSPOSE,
         hipsparse.hipsparseOperation_t.HIPSPARSE_OPERATION_NON_TRANSPOSE,
-        matA, matB, matC, matD,
+        matA,
+        matB,
+        matC,
+        matD,
         hipsparselt.hipsparseLtComputetype_t.HIPSPARSELT_COMPUTE_32F,
     )
 )
 hip_check(
     hipsparselt.hipsparseLtMatmulAlgSelectionInit(
-        handle, alg_sel, matmul,
+        handle,
+        alg_sel,
+        matmul,
         hipsparselt.hipsparseLtMatmulAlg_t.HIPSPARSELT_MATMUL_ALG_DEFAULT,
     )
 )
@@ -163,7 +207,10 @@ hip_check(
 # Prune A to 2:4 pattern (writes pruned data to d_pruned).
 hip_check(
     hipsparselt.hipsparseLtSpMMAPrune(
-        handle, matmul, d_a, d_pruned,
+        handle,
+        matmul,
+        d_a,
+        d_pruned,
         hipsparselt.hipsparseLtPruneAlg_t.HIPSPARSELT_PRUNE_SPMMA_STRIP,
         None,  # default stream
     )
@@ -172,12 +219,17 @@ hip_check(
 # Build the matmul plan and discover required scratch sizes.
 hip_check(hipsparselt.hipsparseLtMatmulPlanInit(handle, plan, matmul, alg_sel))
 workspace_size = ctypes.c_size_t(0)
-hip_check(hipsparselt.hipsparseLtMatmulGetWorkspace(handle, plan, ctypes.addressof(workspace_size)))
+hip_check(
+    hipsparselt.hipsparseLtMatmulGetWorkspace(
+        handle, plan, ctypes.addressof(workspace_size)
+    )
+)
 compressed_size = ctypes.c_size_t(0)
 compress_buffer_size = ctypes.c_size_t(0)
 hip_check(
     hipsparselt.hipsparseLtSpMMACompressedSize(
-        handle, plan,
+        handle,
+        plan,
         ctypes.addressof(compressed_size),
         ctypes.addressof(compress_buffer_size),
     )
@@ -198,31 +250,46 @@ hip_check(
 streams = (ctypes.c_void_p * 1)(0)  # default stream
 hip_check(
     hipsparselt.hipsparseLtMatmul(
-        handle, plan,
+        handle,
+        plan,
         ctypes.addressof(alpha),
-        d_compressed, d_b,
+        d_compressed,
+        d_b,
         ctypes.addressof(beta),
-        d_c, d_d,
-        d_workspace, streams, 1,
+        d_c,
+        d_d,
+        d_workspace,
+        streams,
+        1,
     )
 )
 hip_check(hip.hipDeviceSynchronize())
 
 # Verify against a NumPy reference using the pruned A (read back from d_pruned).
 a_pruned_h = np.empty_like(a_h)
-hip_check(hip.hipMemcpy(a_pruned_h, d_pruned, a_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost))
+hip_check(
+    hip.hipMemcpy(
+        a_pruned_h, d_pruned, a_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost
+    )
+)
 d_h = np.empty_like(c_h)
-hip_check(hip.hipMemcpy(d_h, d_d, c_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost))
+hip_check(
+    hip.hipMemcpy(d_h, d_d, c_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost)
+)
 d_expected = (
     alpha.value * a_pruned_h.astype(np.float32) @ b_h.astype(np.float32)
     + beta.value * c_h.astype(np.float32)
 ).astype(np.float16)
 
-if np.allclose(d_h.astype(np.float32), d_expected.astype(np.float32), atol=1e-1, rtol=1e-2):
+if np.allclose(
+    d_h.astype(np.float32), d_expected.astype(np.float32), atol=1e-1, rtol=1e-2
+):
     print("ok")
 else:
     diff = np.abs(d_h.astype(np.float32) - d_expected.astype(np.float32))
-    print(f"FAILED: max abs diff = {diff.max():.4f}, mean abs diff = {diff.mean():.4f}")
+    print(
+        f"FAILED: max abs diff = {diff.max():.4f}, mean abs diff = {diff.mean():.4f}"
+    )
 
 # Clean up.
 hip_check(hipsparselt.hipsparseLtMatmulPlanDestroy(plan))

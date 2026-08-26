@@ -43,7 +43,6 @@ import array
 import copy
 import ctypes
 import math
-import sys
 
 import numpy as np
 from rocm.bindings import hip, hiprtc
@@ -94,7 +93,10 @@ def llvm_check(status, message):
 
 class LLVMProgram:
     def __init__(self, name: str, source: bytes):
-        self.name = name.encode("utf-8")
+        self.name = name
+        # `source` stays bytes: the LLVM and hipRTC entry points below take
+        # the image plus its size in bytes, which len() only reports for a
+        # bytes object.
         self.llvm_bc_or_ir = source
         self.llvm_bc_or_ir_size = len(source)
 
@@ -108,7 +110,7 @@ class LLVMProgram:
         ir_buf = LLVMCreateMemoryBufferWithMemoryRange(
             self.llvm_bc_or_ir,
             self.llvm_bc_or_ir_size,
-            b"llvm-ir-buffer",
+            "llvm-ir-buffer",
             0,
         )
         context = LLVMContextCreate()
@@ -130,11 +132,10 @@ class LLVMProgram:
         return result
 
 
-
 class HipProgram:
-    def __init__(self, name: str, arch: str, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.llvm_bc_or_ir = None
         self.llvm_bc_or_ir_size = None
@@ -144,7 +145,7 @@ class HipProgram:
         self.prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.hip_source, self.name, 0, [], [])
         )
-        cflags = [b"--offload-arch=" + arch, b"-fgpu-rdc"]
+        cflags = ["--offload-arch=" + arch, "-fgpu-rdc"]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(self.prog))
@@ -162,7 +163,7 @@ class HipProgram:
         buf = LLVMCreateMemoryBufferWithMemoryRange(
             self.llvm_bc_or_ir,
             self.llvm_bc_or_ir_size,
-            b"llvm-ir-buffer",
+            "llvm-ir-buffer",
             0,
         )
         (status, mod) = LLVMParseBitcode2(buf)
@@ -175,7 +176,7 @@ class HipProgram:
         return result
 
     def __del__(self):
-        if hasattr(self, 'prog') and self.prog is not None:
+        if hasattr(self, "prog") and self.prog is not None:
             try:
                 hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
             except Exception:
@@ -218,7 +219,7 @@ class HiprtcLinker:
         )
 
     def __del__(self):
-        if hasattr(self, 'link_state') and self.link_state is not None:
+        if hasattr(self, "link_state") and self.link_state is not None:
             try:
                 hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
             except Exception:
@@ -242,7 +243,7 @@ if __name__ in ("__test__", "__main__"):
             print_val(arr);
         }
         """
-    ).encode("utf-8")
+    )
 
     print_val_hip = textwrap.dedent(
         """\
@@ -250,7 +251,7 @@ if __name__ in ("__test__", "__main__"):
             printf("%f\\n",arr[threadIdx.x]);
         }
         """
-    ).encode("utf-8")
+    )
 
     # warning: below IR contains target dependent information
     scale_op_llvm_ir = {
@@ -294,19 +295,20 @@ if __name__ in ("__test__", "__main__"):
     #         arr[threadIdx.x] *= factor;
     #     }
     #     """
-    # ).encode("utf-8")
+    # )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName
-    gpugen = arch.decode("utf-8").split(":")[0]
+    arch = props.gcnArchName.decode("utf-8")
+    gpugen = arch.split(":")[0]
     if gpugen not in scale_op_llvm_ir:
         supported_gpugens = ", ".join(
             [f"'{a}'" for a in scale_op_llvm_ir.keys()]
         )
-        print(
-            f"ERROR: unsupported GPU architecture '{gpugen}' (supported: {supported_gpugens})"
+        raise NotImplementedError(
+            f"This example runs on {supported_gpugens} only, because the LLVM "
+            f"IR it links is pre-generated for that target; this GPU is "
+            f"'{gpugen}'."
         )
-        sys.exit(1)
 
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print_val_prog = HipProgram("print_val", arch, print_val_hip)
@@ -329,11 +331,9 @@ if __name__ in ("__test__", "__main__"):
             data_ptr = ctypes.cast(
                 linker.code.as_c_void_p(), ctypes.POINTER(ctypes.c_byte)
             )
-            result = np.ctypeslib.as_array(
-                data_ptr, shape=(linker.code_size,)
-            )
+            result = np.ctypeslib.as_array(data_ptr, shape=(linker.code_size,))
             outfile.write(result)
-    kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
+    kernel = hip_check(hip.hipModuleGetFunction(module, "scale"))
 
     f32, size = 4, 32
     assert size <= 1024

@@ -45,10 +45,30 @@ Acknowledgements:
 
 import argparse
 
+# The bindings load a shared LLVM at first call rather than at import, so an
+# absent library would surface as a failed call deep in the example. Ask the
+# bindings instead of inspecting the platform: has_symbol answers the capability
+# question directly, and covers every reason the library may be missing --
+# including any build configured with HIP_PYTHON_BUNDLE_LIBLLVM=OFF, which is
+# the default on Windows because ROCm ships no shared LLVM there and one has to
+# be linked from the static archives.
+from rocm.bindings.llvm.c import core as _llvmc_core
+
+if not _llvmc_core.has_symbol("LLVMCreateMemoryBufferWithContentsOfFile"):
+    raise NotImplementedError(
+        "This example needs a loadable shared LLVM behind the "
+        "rocm.bindings.llvm.c bindings; none was found. ROCm ships no shared "
+        "LLVM on Windows, where rocm-bindings-compiler bundles one only when "
+        "built with HIP_PYTHON_BUNDLE_LIBLLVM=ON."
+    )
+
 # [literalinclude-begin]
 import sys
 
-from rocm.bindings.llvm.c.analysis import LLVMVerifierFailureAction, LLVMVerifyModule
+from rocm.bindings.llvm.c.analysis import (
+    LLVMVerifierFailureAction,
+    LLVMVerifyModule,
+)
 from rocm.bindings.llvm.c.bitwriter import LLVMWriteBitcodeToFile
 from rocm.bindings.llvm.c.core import (
     LLVMAddFunction,
@@ -66,17 +86,15 @@ from rocm.bindings.llvm.c.core import (
     LLVMPositionBuilderAtEnd,
 )
 from rocm.bindings.llvm.c.executionengine import (
-    LLVMCreateExecutionEngineForModule,
     LLVMCreateGenericValueOfInt,
+    LLVMCreateInterpreterForModule,
     LLVMDisposeExecutionEngine,
     LLVMGenericValueToInt,
     LLVMLinkInInterpreter,
     LLVMRunFunction,
 )
 
-if __name__ == "__test__":
-    x, y = 1, 2
-else:
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Computes `x + y` via the LLVM interpreter"
     )
@@ -84,26 +102,31 @@ else:
     parser.add_argument("y", type=int)
     args = parser.parse_args()
     x, y = args.x, args.y
+    bitcode_path = "sum.bc"
+else:
+    # Loaded under pytest (via runpy.run_path), which passes no arguments of
+    # its own; parsing the test runner's would abort the example. The bitcode
+    # goes to a scratch directory so a test run leaves the tree as it found it.
+    import os.path
+    import tempfile
+
+    x, y = 1, 2
+    bitcode_path = os.path.join(tempfile.gettempdir(), "sum.bc")
 
 # Build the code
 builder = LLVMCreateBuilder()
 
-# Note that the LLVM C APIs will typically not copy
-# bytes/strings. Hence the Python objects that you pass
-# to them should not go out of scope during the lifetime
-# of the respective LLVM C object.
-
-mod = LLVMModuleCreateWithName(b"my_module")
+mod = LLVMModuleCreateWithName("my_module")
 
 param_types = [LLVMInt32Type(), LLVMInt32Type()]
 ret_type = LLVMFunctionType(LLVMInt32Type(), param_types, 2, 0)
-sumfn = LLVMAddFunction(mod, b"sum", ret_type)
+sumfn = LLVMAddFunction(mod, "sum", ret_type)
 
-entry = LLVMAppendBasicBlock(sumfn, b"entry")
+entry = LLVMAppendBasicBlock(sumfn, "entry")
 
 LLVMPositionBuilderAtEnd(builder, entry)
 tmp = LLVMBuildAdd(
-    builder, LLVMGetParam(sumfn, 0), LLVMGetParam(sumfn, 1), b"tmp"
+    builder, LLVMGetParam(sumfn, 0), LLVMGetParam(sumfn, 1), "tmp"
 )
 LLVMBuildRet(builder, tmp)
 
@@ -115,9 +138,13 @@ if error:
     print(f"error: {error}", file=sys.stderr)
     LLVMDisposeMessage(error)
 
-# Interpret the code with arguments from CLI
+# Ask for the interpreter by name. LLVMCreateExecutionEngineForModule takes
+# whatever it can get, which is the interpreter only as long as no code
+# generator has been registered; in a process where something already called
+# LLVMInitializeAllTargets it picks a target instead and aborts on the first
+# one that cannot emit machine code.
 LLVMLinkInInterpreter()
-status, engine, error = LLVMCreateExecutionEngineForModule(mod)
+status, engine, error = LLVMCreateInterpreterForModule(mod)
 if status != 0:
     print("failed to create execution engine", file=sys.stderr)
     if error:
@@ -125,7 +152,7 @@ if status != 0:
         LLVMDisposeMessage(error)
         sys.exit(1)
 
-sumfn = LLVMGetNamedFunction(mod, b"sum")
+sumfn = LLVMGetNamedFunction(mod, "sum")
 parms = [
     LLVMCreateGenericValueOfInt(LLVMInt32Type(), x, 0),
     LLVMCreateGenericValueOfInt(LLVMInt32Type(), y, 0),
@@ -134,8 +161,11 @@ res = LLVMRunFunction(engine, sumfn, 2, parms)
 print(f"{LLVMGenericValueToInt(res, 0)}")
 
 # Out to file
-if LLVMWriteBitcodeToFile(mod, b"sum.bc") != 0:
-    print("error while writing file 'sum.bc', skipping", file=sys.stderr)
+if LLVMWriteBitcodeToFile(mod, bitcode_path) != 0:
+    print(
+        f"error while writing file '{bitcode_path}', skipping",
+        file=sys.stderr,
+    )
 
 # shutdown
 LLVMDisposeExecutionEngine(engine)

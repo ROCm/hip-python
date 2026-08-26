@@ -30,6 +30,15 @@ Initializes one RCCL communicator per visible AMD GPU
 :py:obj:`~.ncclBcast`, and verifies every peer received the data.
 """
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs RCCL. ROCm ships no RCCL on Windows, so the "
+        "rocm-bindings-systems wheel that provides rocm.bindings.rccl is not "
+        "built there."
+    )
+
 # [literalinclude-begin]
 import numpy as np
 from rocm.bindings import hip, rccl

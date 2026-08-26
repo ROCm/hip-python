@@ -35,6 +35,7 @@ multi-device synchronization) and intentionally lives under
 """
 
 # [literalinclude-begin]
+import ctypes
 import time
 
 import numpy as np
@@ -65,19 +66,19 @@ def hip_check(call_result):
 
 class GpuOffload:
 
-    def __init__(self, source: bytes, kernel_names: list):
+    def __init__(self, source: str, kernel_names: list):
         self.source = source
         self.kernel_names = kernel_names
 
-    def _get_arch(self) -> bytes:
+    def _get_arch(self) -> str:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        return props.gcnArchName
+        return props.gcnArchName.decode("utf-8")
 
     def compile_kernels(self):
         prog = hip_check(
-            hiprtc.hiprtcCreateProgram(self.source, b"program", 0, [], [])
+            hiprtc.hiprtcCreateProgram(self.source, "program", 0, [], [])
         )
-        cflags = [b"--offload-arch=" + self._get_arch()]
+        cflags = ["--offload-arch=" + self._get_arch()]
         (err,) = hiprtc.hiprtcCompileProgram(prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(prog))
@@ -91,7 +92,7 @@ class GpuOffload:
         for kernel_name in self.kernel_names:
             setattr(
                 self,
-                "_" + kernel_name.decode(),
+                "_" + kernel_name,
                 hip_check(hip.hipModuleGetFunction(module, kernel_name)),
             )
 
@@ -135,7 +136,7 @@ def jacobi_cpu(x, A, b, n: int, iter: int):
     return x
 
 
-HIP_SOURCE = rb"""
+HIP_SOURCE = r"""
   // GPU Jacobi (Unoptimized)
   extern "C" __global__ void jacobi_gpu_unoptimized(float* x, float* A, float* b, int n)
   {
@@ -249,7 +250,7 @@ if __name__ in ("__test__", "__main__"):
 
     gpu_offload = GpuOffload(
         source=HIP_SOURCE,
-        kernel_names=(b"jacobi_gpu", b"jacobi_gpu_unoptimized"),
+        kernel_names=("jacobi_gpu", "jacobi_gpu_unoptimized"),
     )
     time_compile = time.time()
     gpu_offload.compile_kernels()

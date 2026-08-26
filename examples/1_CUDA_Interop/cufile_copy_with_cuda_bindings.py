@@ -43,14 +43,22 @@ filesystem; set ``HIPFILE_TMPDIR`` to such a mount if the default temp dir is
 tmpfs.
 """
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs cuda.bindings.cufile, which on AMD GPUs is layered "
+        "on hipFile. ROCm ships no hipFile library on Windows, which also lacks "
+        "the O_DIRECT flag the cuFile API issues its I/O with."
+    )
+
 # [literalinclude-begin]
 import hashlib
 import os
 import pathlib
 import tempfile
 
-from cuda.bindings import runtime
-from cuda.bindings import cufile
+from cuda.bindings import cufile, runtime
 
 
 def cuda_check(call_result):

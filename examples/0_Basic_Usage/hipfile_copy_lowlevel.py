@@ -51,6 +51,16 @@ default temp dir is tmpfs.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs hipFile. ROCm ships no hipFile library on Windows, "
+        "so the rocm-bindings-systems wheel that provides "
+        "rocm.bindings.hipfile is not built there, and Windows has no O_DIRECT "
+        "flag for hipFile to issue its I/O with either."
+    )
+
 # [literalinclude-begin]
 import hashlib
 import os
@@ -58,8 +68,7 @@ import pathlib
 import stat
 import tempfile
 
-from rocm.bindings.hip import hipMalloc, hipFree
-
+from rocm.bindings.hip import hipFree, hipMalloc
 from rocm.bindings.hipfile import (
     hipFileBufDeregister,
     hipFileBufRegister,
@@ -75,7 +84,6 @@ from rocm.bindings.hipfile import (
     hipFileUseCount,
     hipFileWrite,
 )
-
 
 _FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
 

@@ -29,13 +29,29 @@ and obtain information such as their description.
 
 import sys
 
+from rocm.bindings.llvm.c import core as _llvmc_core
 from rocm.bindings.llvm.c import target as _llvmc_target
 
+# The bindings load a shared LLVM at first call rather than at import, so an
+# absent library would surface as a failed call deep in the example. Ask the
+# bindings instead of inspecting the platform: has_symbol answers the capability
+# question directly, and covers every reason the library may be missing --
+# including any build configured with HIP_PYTHON_BUNDLE_LIBLLVM=OFF, which is
+# the default on Windows because ROCm ships no shared LLVM there and one has to
+# be linked from the static archives.
+if not _llvmc_core.has_symbol("LLVMCreateMemoryBufferWithContentsOfFile"):
+    raise NotImplementedError(
+        "This example needs a loadable shared LLVM behind the "
+        "rocm.bindings.llvm.c bindings; none was found. ROCm ships no shared "
+        "LLVM on Windows, where rocm-bindings-compiler bundles one only when "
+        "built with HIP_PYTHON_BUNDLE_LIBLLVM=ON."
+    )
 
-# The bundled `libLLVM.so` ships in two flavours:
-#   - the static-archive aggregate built with `--whole-archive` (when
-#     `HIP_PYTHON_FORCE_BUILD_LIBLLVM=ON` at configure time), which
-#     exports the `LLVMInitializeAll*` wrappers; and
+# A loadable `libLLVM.so` still ships in two flavours:
+#   - the aggregate linked from the static archives (when
+#     `HIP_PYTHON_FORCE_BUILD_LIBLLVM=ON` at configure time, and always
+#     on Windows, where ROCm ships no shared LLVM), which exports the
+#     `LLVMInitializeAll*` wrappers; and
 #   - a copy of the system `libLLVM.so` (when the system library is
 #     present and `HIP_PYTHON_FORCE_BUILD_LIBLLVM=OFF` — the default),
 #     which is stripped of `LLVMInitializeAll*` because those wrappers
@@ -87,11 +103,11 @@ else:
         if target_name.startswith("x86"):
             target_features = LLVMGetHostCPUFeatures()
         else:
-            target_features = b"+xnack"
+            target_features = "+xnack"
         machine = LLVMCreateTargetMachine(
             target,
             LLVMGetDefaultTargetTriple(),
-            b"generic",
+            "generic",
             target_features,
             LLVMCodeGenOptLevel.LLVMCodeGenLevelDefault,
             LLVMRelocMode.LLVMRelocDefault,
@@ -104,6 +120,6 @@ else:
         target = LLVMGetNextTarget(target)
 
     print("Getting target for 'amdgcn-amd-amdhsa':")
-    (status, target, error) = LLVMGetTargetFromTriple(b"amdgcn-amd-amdhsa")
+    (status, target, error) = LLVMGetTargetFromTriple("amdgcn-amd-amdhsa")
     if target:
         print(f"- {LLVMGetTargetName(target)}")

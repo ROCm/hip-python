@@ -42,7 +42,6 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 import array
 import ctypes
 import math
-import sys
 
 from rocm.bindings import hip, hiprtc
 
@@ -71,15 +70,17 @@ def hip_check(call_result):
 
 class LLLVMProgram:
     def __init__(self, name: str, source: bytes):
-        self.name = name.encode("utf-8")
+        self.name = name
+        # `source` stays bytes: hiprtcLinkAddData takes the image plus its
+        # size in bytes, which len() only reports for a bytes object.
         self.llvm_bc_or_ir = source
         self.llvm_bc_or_ir_size = len(source)
 
 
 class HipProgram:
-    def __init__(self, name: str, arch: str, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.llvm_bc_or_ir = None
         self.llvm_bc_or_ir_size = None
@@ -89,7 +90,7 @@ class HipProgram:
         self.prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.hip_source, self.name, 0, [], [])
         )
-        cflags = [b"--offload-arch=" + arch, b"-fgpu-rdc"]
+        cflags = ["--offload-arch=" + arch, "-fgpu-rdc"]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(self.prog))
@@ -103,7 +104,7 @@ class HipProgram:
         hip_check(hiprtc.hiprtcGetBitcode(self.prog, self.llvm_bc_or_ir))
 
     def __del__(self):
-        if hasattr(self, 'prog') and self.prog is not None:
+        if hasattr(self, "prog") and self.prog is not None:
             try:
                 hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
             except Exception:
@@ -137,7 +138,7 @@ class HiprtcLinker:
         )
 
     def __del__(self):
-        if hasattr(self, 'link_state') and self.link_state is not None:
+        if hasattr(self, "link_state") and self.link_state is not None:
             try:
                 hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
             except Exception:
@@ -158,7 +159,7 @@ if __name__ in ("__test__", "__main__"):
             print_val(arr);
         }
         """
-    ).encode("utf-8")
+    )
 
     print_val_hip = textwrap.dedent(
         """\
@@ -166,7 +167,7 @@ if __name__ in ("__test__", "__main__"):
             printf("%f\\n",arr[threadIdx.x]);
         }
         """
-    ).encode("utf-8")
+    )
 
     # warning: below IR contains target dependent information
     scale_op_llvm_ir = {
@@ -210,19 +211,20 @@ if __name__ in ("__test__", "__main__"):
     #         arr[threadIdx.x] *= factor;
     #     }
     #     """
-    # ).encode("utf-8")
+    # )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName
-    gpugen = arch.decode("utf-8").split(":")[0]
+    arch = props.gcnArchName.decode("utf-8")
+    gpugen = arch.split(":")[0]
     if gpugen not in scale_op_llvm_ir:
         supported_gpugens = ", ".join(
             [f"'{a}'" for a in scale_op_llvm_ir.keys()]
         )
-        print(
-            f"ERROR: unsupported GPU architecture '{gpugen}' (supported: {supported_gpugens})"
+        raise NotImplementedError(
+            f"This example runs on {supported_gpugens} only, because the LLVM "
+            f"IR it links is pre-generated for that target; this GPU is "
+            f"'{gpugen}'."
         )
-        sys.exit(1)
 
     linker = HiprtcLinker()
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
@@ -233,7 +235,7 @@ if __name__ in ("__test__", "__main__"):
     linker.add_program(scale_op_prog)
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
-    kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
+    kernel = hip_check(hip.hipModuleGetFunction(module, "scale"))
 
     f32, size = 4, 32
     assert size <= 1024

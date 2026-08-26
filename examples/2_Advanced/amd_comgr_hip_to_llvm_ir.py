@@ -24,19 +24,33 @@
 """In this example, we generate LLVM IR from HIP C++ code.
 
 This time we use AMD COMGR infrastructure. This requires us to use the
-`hiprtc_runtime.h` header file that HIPRTC is using internally.
-
-During the ROCm LLVM Python package preparation process, we generate this
-header file and put it into the
-`rocm.comgr.comgr.HIPRTC_RUNTIME_HEADER` variable.
+`hiprtc_runtime.h` header file that HIPRTC is using internally, which the
+`rocm.comgr.comgr.HIPRTC_RUNTIME_HEADER` variable reads from the ROCm
+installation in use.
 """
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+# Printing the bitcode as IR text goes through the LLVM C API, which the
+# bindings load at first call rather than at import, so an absent library would
+# surface as a failed call deep in the example. Ask the bindings instead of
+# inspecting the platform: has_symbol covers every reason the library may be
+# missing -- any build configured with HIP_PYTHON_BUNDLE_LIBLLVM=OFF, which is
+# the default on Windows because ROCm ships no shared LLVM there and one has to
+# be linked from the static archives.
+from rocm.bindings.llvm.c import core as _llvmc_core
+
+if not _llvmc_core.has_symbol("LLVMCreateMemoryBufferWithMemoryRange"):
+    raise NotImplementedError(
+        "This example needs a loadable shared LLVM behind the "
+        "rocm.bindings.llvm.c bindings; none was found. ROCm ships no shared "
+        "LLVM on Windows, where rocm-bindings-compiler bundles one only when "
+        "built with HIP_PYTHON_BUNDLE_LIBLLVM=ON."
+    )
+
 # [literalinclude-begin]
 import copy
 
-from rocm.version import ROCM_VERSION_TUPLE
 from rocm import comgr
 from rocm.bindings.llvm.c.bitreader import LLVMParseBitcode2
 from rocm.bindings.llvm.c.core import (
@@ -46,6 +60,7 @@ from rocm.bindings.llvm.c.core import (
     LLVMDisposeModule,
     LLVMPrintModuleToString,
 )
+from rocm.version import ROCM_VERSION_TUPLE
 
 
 def llvm_check(status, message):
@@ -56,9 +71,9 @@ def llvm_check(status, message):
 
 
 class HipProgram:
-    def __init__(self, name: str, arch: str, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.llvm_bc_or_ir = None
         self.llvm_bc_or_ir_size = None
         self.log = None
@@ -87,7 +102,7 @@ class HipProgram:
         buf = LLVMCreateMemoryBufferWithMemoryRange(
             self.llvm_bc_or_ir,
             self.llvm_bc_or_ir_size,
-            b"llvm-ir-buffer",
+            "llvm-ir-buffer",
             0,
         )
         (status, mod) = LLVMParseBitcode2(buf)
@@ -98,7 +113,6 @@ class HipProgram:
         LLVMDisposeModule(mod)
         LLVMDisposeMemoryBuffer(buf)
         return result
-
 
 
 if __name__ in ("__test__", "__main__"):
@@ -112,7 +126,7 @@ if __name__ in ("__test__", "__main__"):
             arr[threadIdx.x] *= fabs(factor);
         }
         """
-    ).encode("utf-8")
+    )
     # [literalinclude-comgr-runtime-header-end]
 
     arch = "gfx90a"

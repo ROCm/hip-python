@@ -40,9 +40,10 @@ Hence, they do not appear in the kernel source.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+from rocm import comgr
+
 # [literalinclude-begin]
 from rocm.bindings import hip, hiprtc
-from rocm import comgr
 
 
 def hip_check(call_result):
@@ -72,11 +73,11 @@ class HipProgram:
         self,
         program_name,  # type: str
         arch,  # type: str
-        source,  # type: bytes
+        source,  # type: str
         opt_level,  # type: int
     ):
         self.hip_source = source
-        self.name = program_name.encode("utf-8")
+        self.name = program_name
         self.prog = None
         self.code = None
         self.code_size = None
@@ -95,8 +96,8 @@ class HipProgram:
             hiprtc.hiprtcCreateProgram(self.hip_source, self.name, 0, [], [])
         )
         cflags = [
-            b"--offload-arch=" + self.arch.encode(),
-            f"-O{opt_level}".encode(),
+            "--offload-arch=" + self.arch,
+            f"-O{opt_level}",
         ]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
@@ -252,16 +253,14 @@ if __name__ in ("__test__", "__main__"):
     gpugen = arch.split(":")[0]
     print(
         yaml.dump(
-            comgr.get_isa_metadata_all()[
-                f"amdgcn-amd-amdhsa--{gpugen}"
-            ],
+            comgr.get_isa_metadata_all()[f"amdgcn-amd-amdhsa--{gpugen}"],
             indent=2,
             sort_keys=False,
         )
     )
     print("```")
 
-    program = HipProgram("kernel", arch, kernel_hip.encode(), opt_level)
+    program = HipProgram("kernel", arch, kernel_hip, opt_level)
 
     print("\n###  HIP C++ source:\n\n```c++")
     print(kernel_hip)

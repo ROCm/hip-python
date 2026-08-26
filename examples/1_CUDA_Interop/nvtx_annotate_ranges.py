@@ -33,6 +33,23 @@ ROCm-aware profiler (``rocprof-compute``) to see the ranges;
 without a profiler attached the annotations are cheap no-ops.
 """
 
+# The shim answers the capability question itself, so ask it rather than
+# inspecting the platform: `enabled()` is False when the ROCTX runtime is
+# unavailable -- as on Windows, for which ROCm ships no ROCTX library -- and also
+# when NVTX_DISABLE is set. Either way every annotation below degrades to a
+# no-op, so the example would run to completion while demonstrating nothing.
+import nvtx
+
+if not nvtx.enabled():
+    raise NotImplementedError(
+        "This example needs a working NVTX implementation: nvtx.enabled() is "
+        "False, so every annotation would be a no-op. Either NVTX_DISABLE is "
+        "set, or the ROCTX runtime behind the hip-python-interop shim is "
+        "unavailable (ROCm ships no ROCTX library on Windows, so the "
+        "rocm-bindings-systems wheel that provides rocm.bindings.roctx is not "
+        "built there)."
+    )
+
 # [literalinclude-begin]
 import time
 

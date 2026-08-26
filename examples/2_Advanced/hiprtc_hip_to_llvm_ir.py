@@ -30,6 +30,23 @@ do not appear in the kernel source.
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+# Printing the bitcode as IR text goes through the LLVM C API, which the
+# bindings load at first call rather than at import, so an absent library would
+# surface as a failed call deep in the example. Ask the bindings instead of
+# inspecting the platform: has_symbol covers every reason the library may be
+# missing -- any build configured with HIP_PYTHON_BUNDLE_LIBLLVM=OFF, which is
+# the default on Windows because ROCm ships no shared LLVM there and one has to
+# be linked from the static archives.
+from rocm.bindings.llvm.c import core as _llvmc_core
+
+if not _llvmc_core.has_symbol("LLVMCreateMemoryBufferWithMemoryRange"):
+    raise NotImplementedError(
+        "This example needs a loadable shared LLVM behind the "
+        "rocm.bindings.llvm.c bindings; none was found. ROCm ships no shared "
+        "LLVM on Windows, where rocm-bindings-compiler bundles one only when "
+        "built with HIP_PYTHON_BUNDLE_LIBLLVM=ON."
+    )
+
 # [literalinclude-begin]
 import copy
 
@@ -74,19 +91,19 @@ def llvm_check(status, message):
 
 
 class HipProgram:
-    def __init__(self, name: str, arch: bytes, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.llvm_bc_or_ir = None
         self.llvm_bc_or_ir_size = None
         self._compile_to_llvm_bc(arch)
 
-    def _compile_to_llvm_bc(self, arch: bytes):
+    def _compile_to_llvm_bc(self, arch: str):
         self.prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.hip_source, self.name, 0, [], [])
         )
-        cflags = [b"--offload-arch=" + arch, b"-fgpu-rdc"]
+        cflags = ["--offload-arch=" + arch, "-fgpu-rdc"]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(self.prog))
@@ -106,7 +123,7 @@ class HipProgram:
         buf = LLVMCreateMemoryBufferWithMemoryRange(
             self.llvm_bc_or_ir,
             self.llvm_bc_or_ir_size,
-            b"llvm-ir-buffer",
+            "llvm-ir-buffer",
             0,
         )
         (status, mod) = LLVMParseBitcode2(buf)
@@ -119,7 +136,7 @@ class HipProgram:
         return result
 
     def __del__(self):
-        if hasattr(self, 'prog') and self.prog is not None:
+        if hasattr(self, "prog") and self.prog is not None:
             try:
                 hip_check(hiprtc.hiprtcDestroyProgram(self.prog.createRef()))
             except Exception:
@@ -135,9 +152,9 @@ if __name__ in ("__test__", "__main__"):
             arr[threadIdx.x] *= factor;
         }
         """
-    ).encode("utf-8")
+    )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName
+    arch = props.gcnArchName.decode("utf-8")
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print(kernel_prog.get_llvm_ir().decode("utf-8"))

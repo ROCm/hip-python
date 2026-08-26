@@ -38,8 +38,8 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 import ctypes
 
 import numpy as np
-from rocm.bindings import hip, hiprtc
 from rocm import comgr
+from rocm.bindings import hip, hiprtc
 
 compile_via_comgr = True
 
@@ -69,10 +69,10 @@ def hip_check(call_result):
 
 
 class HsaProgram:
-    def __init__(self, name: str, arch: str, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         global compile_via_comgr
         self.hsa_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.code_obj = None
         self.log = None
@@ -99,12 +99,12 @@ class HsaProgram:
             hiprtc.hiprtcCreateProgram(self.hsa_source, self.name, 0, [], [])
         )
         cflags = [
-            b"-x",
-            b"assembler",
-            b"-target",
-            b"amdhsa-amd-amdgcn",
-            b"--offload-arch=gfx942",
-            b"-Wno-unused-command-line-argument",  # just for nicer COMGR logs
+            "-x",
+            "assembler",
+            "-target",
+            "amdhsa-amd-amdgcn",
+            "--offload-arch=gfx942",
+            "-Wno-unused-command-line-argument",  # just for nicer COMGR logs
         ]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
@@ -276,9 +276,7 @@ amdhsa.version:
   - 2
 ...
       .end_amdgpu_metadata
-      """.encode(
-        "utf-8"
-    )
+      """
 
     arch = "gfx942"
     kernel_prog = HsaProgram("kernel", arch, kernel_hsa)
@@ -288,7 +286,7 @@ amdhsa.version:
         if arch == props.gcnArchName.decode().split(":")[0]:
             module = hip_check(hip.hipModuleLoadData(kernel_prog.code_obj))
             kernel = hip_check(
-                hip.hipModuleGetFunction(module, b"_Z6squarePfi")
+                hip.hipModuleGetFunction(module, "_Z6squarePfi")
             )
             print(
                 "Found AMD GPU with matching architecture.\n"

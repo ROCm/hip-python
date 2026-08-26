@@ -41,6 +41,15 @@ passed via :py:func:`ctypes.addressof`, while the pure-out
 ``processor_type`` is returned directly by the binding.
 """
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs AMD SMI. ROCm ships no AMD SMI library on Windows, "
+        "so the rocm-bindings-systems wheel that provides rocm.bindings.amdsmi "
+        "is not built there."
+    )
+
 # [literalinclude-begin]
 import ctypes
 
@@ -95,12 +104,13 @@ def is_amd_gpu(processor_handle):
         amdsmi.amdsmi_get_processor_type(processor_handle)
     )
     return (
-        processor_type
-        == amdsmi.processor_type_t.AMDSMI_PROCESSOR_TYPE_AMD_GPU
+        processor_type == amdsmi.processor_type_t.AMDSMI_PROCESSOR_TYPE_AMD_GPU
     )
 
 
-amdsmi_check(amdsmi.amdsmi_init(amdsmi.amdsmi_init_flags_t.AMDSMI_INIT_AMD_GPUS))
+amdsmi_check(
+    amdsmi.amdsmi_init(amdsmi.amdsmi_init_flags_t.AMDSMI_INIT_AMD_GPUS)
+)
 try:
     version = amdsmi_check(amdsmi.amdsmi_get_lib_version())
     print(
@@ -119,9 +129,7 @@ try:
     print(f"AMD GPUs: {len(gpus)}")
 
     for index, processor_handle in enumerate(gpus):
-        asic = amdsmi_check(
-            amdsmi.amdsmi_get_gpu_asic_info(processor_handle)
-        )
+        asic = amdsmi_check(amdsmi.amdsmi_get_gpu_asic_info(processor_handle))
         name = asic.market_name
         if isinstance(name, bytes):
             name = name.split(b"\x00", 1)[0].decode("utf-8", "replace")

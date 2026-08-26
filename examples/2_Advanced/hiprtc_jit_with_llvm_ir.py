@@ -35,7 +35,6 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 import array
 import ctypes
 import math
-import sys
 
 from rocm.bindings import hip, hiprtc
 
@@ -64,7 +63,9 @@ def hip_check(call_result):
 
 class LLLVMProgram:
     def __init__(self, name: str, source: bytes):
-        self.name = name.encode("utf-8")
+        self.name = name
+        # `source` stays bytes: hiprtcLinkAddData takes the image plus its
+        # size in bytes, which len() only reports for a bytes object.
         self.llvm_bc_or_ir = source
         self.llvm_bc_or_ir_size = len(source)
 
@@ -101,7 +102,7 @@ class HiprtcLinker:
         )
 
     def __del__(self):
-        if hasattr(self, 'link_state') and self.link_state is not None:
+        if hasattr(self, "link_state") and self.link_state is not None:
             try:
                 hip_check(hiprtc.hiprtcLinkDestroy(self.link_state))
             except Exception:
@@ -163,26 +164,27 @@ if __name__ in ("__test__", "__main__"):
     #         arr[threadIdx.x] *= factor;
     #     }
     #     """
-    # ).encode("utf-8")
+    # )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName
-    gpugen = arch.decode("utf-8").split(":")[0]
+    arch = props.gcnArchName.decode("utf-8")
+    gpugen = arch.split(":")[0]
     if gpugen not in kernel_llvm_ir:
         supported_gpugens = ", ".join(
             [f"'{a}'" for a in kernel_llvm_ir.keys()]
         )
-        print(
-            f"ERROR: unsupported GPU architecture '{gpugen}' (supported: {supported_gpugens})"
+        raise NotImplementedError(
+            f"This example runs on {supported_gpugens} only, because the LLVM "
+            f"IR it feeds to hipRTC is pre-generated for that target; this GPU "
+            f"is '{gpugen}'."
         )
-        sys.exit(1)
 
     linker = HiprtcLinker()
     scale_op_prog = LLLVMProgram("kernel", kernel_llvm_ir[gpugen])
     linker.add_program(scale_op_prog)
     linker.complete()
     module = hip_check(hip.hipModuleLoadData(linker.code))
-    kernel = hip_check(hip.hipModuleGetFunction(module, b"scale"))
+    kernel = hip_check(hip.hipModuleGetFunction(module, "scale"))
 
     f32, size = 4, 32
     assert size <= 1024

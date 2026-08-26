@@ -48,18 +48,27 @@ __author__ = (
     "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com> (port)"
 )
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs hipFile. ROCm ships no hipFile library on Windows, "
+        "so the rocm-bindings-systems wheel that provides rocm.hipfile is not "
+        "built there, and Windows has no O_DIRECT flag for hipFile to issue "
+        "its I/O with either."
+    )
+
 # [literalinclude-begin]
 import hashlib
 import os
 import pathlib
 import tempfile
 
-from rocm.bindings.hip import hipMalloc, hipFree
-
+from rocm.bindings.hip import hipFree, hipMalloc
 from rocm.hipfile import (
+    Buffer,
     Driver,
     FileHandle,
-    Buffer,
     FileHandleType,
     get_version,
 )
@@ -109,7 +118,9 @@ with tempfile.TemporaryDirectory(dir=scratch_dir) as tmp_dir:
                     print(f"Transferring {size} bytes...")
                     bytes_read = fh_input.read(registered_buffer, size, 0, 0)
                     print(f"Bytes Read: {bytes_read}")
-                    bytes_written = fh_output.write(registered_buffer, size, 0, 0)
+                    bytes_written = fh_output.write(
+                        registered_buffer, size, 0, 0
+                    )
                     print(f"Bytes Written: {bytes_written}")
 
     # hipFree returns only an error; the wrapper hands it back as a 1-tuple.

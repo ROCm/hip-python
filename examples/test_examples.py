@@ -25,8 +25,8 @@ import runpy
 import subprocess
 
 import pytest
-from rocm.version import ROCM_VERSION_TUPLE, ROCM_VERSION
 from rocm.bindings import hip as hiprt
+from rocm.version import ROCM_VERSION, ROCM_VERSION_TUPLE
 
 device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5, 5)
 
@@ -41,6 +41,7 @@ hiprtc_cannot_produce_llvm_bitcode = False
 
 try:
     import hip
+
     have_matching_hip_python = hip.ROCM_VERSION == ROCM_VERSION
 except Exception:
     pass
@@ -67,10 +68,6 @@ python_examples = [
     "0_Basic_Usage/hiprand_monte_carlo_pi.py",
 ]
 
-if have_rccl_support:
-    python_examples += [
-        "0_Basic_Usage/rccl_comminitall_bcast.py"
-    ]
 
 def _have_runtime_library(module_name: str, probe_symbol: str) -> bool:
     """True only if the binding module imports AND its backing runtime-linked
@@ -86,11 +83,24 @@ def _have_runtime_library(module_name: str, probe_symbol: str) -> bool:
 
 
 have_amdsmi = _have_runtime_library("amdsmi", "amdsmi_init")
+have_rccl = _have_runtime_library("rccl", "ncclCommInitAll")
 have_roctx = _have_runtime_library("roctx", "roctxMarkA")
 have_hipfile = _have_runtime_library("hipfile", "hipFileGetVersion")
 have_hipblaslt = _have_runtime_library("hipblaslt", "hipblasLtCreate")
 have_hipsparselt = _have_runtime_library("hipsparselt", "hipsparseLtInit")
 have_hipsolver = _have_runtime_library("hipsolver", "hipsolverCreate")
+# The LLVM-C bindings need a shared LLVM, which rocm-bindings-compiler bundles
+# when HIP_PYTHON_BUNDLE_LIBLLVM is on -- the default everywhere but Windows,
+# where ROCm ships no shared LLVM and one has to be linked from its static
+# archives.
+have_llvm = _have_runtime_library(
+    "llvm.c.core", "LLVMCreateMemoryBufferWithContentsOfFile"
+)
+
+_llvm_skipif = pytest.mark.skipif(
+    not have_llvm,
+    reason="requires the LLVM-C bindings with a loadable shared LLVM",
+)
 
 _hipblaslt_skipif = pytest.mark.skipif(
     not have_hipblaslt,
@@ -123,6 +133,16 @@ if have_amdsmi:
         "0_Basic_Usage/amdsmi_enumerate_sockets.py",
     ]
 
+# Two independent conditions: have_rccl_support rules out GPU generations RCCL
+# does not cover, while have_rccl asks whether the bindings exist at all. The
+# latter is not implied by the former -- ROCm ships no RCCL on Windows, so the
+# rocm-bindings-systems wheel is not built there and rocm.bindings.rccl is absent
+# regardless of which GPU is installed.
+if have_rccl and have_rccl_support:
+    python_examples += [
+        "0_Basic_Usage/rccl_comminitall_bcast.py",
+    ]
+
 # The hipfile_copy examples create their own scratch fixture at runtime, so they
 # only need the hipFILE bindings with a loadable libhipfile.so (plus an
 # O_DIRECT-capable temp dir, overridable via HIPFILE_TMPDIR).
@@ -136,7 +156,9 @@ _hipfile_skipif = pytest.mark.skipif(
 )
 python_examples += [
     pytest.param("0_Basic_Usage/hipfile_copy.py", marks=_hipfile_skipif),
-    pytest.param("0_Basic_Usage/hipfile_copy_lowlevel.py", marks=_hipfile_skipif),
+    pytest.param(
+        "0_Basic_Usage/hipfile_copy_lowlevel.py", marks=_hipfile_skipif
+    ),
 ]
 
 # hipBLASLt / hipSPARSELt GEMM examples. Both were recently re-enabled in the
@@ -144,7 +166,9 @@ python_examples += [
 # shared library being loadable (see _have_runtime_library).
 python_examples += [
     pytest.param("0_Basic_Usage/hipblaslt_gemm.py", marks=_hipblaslt_skipif),
-    pytest.param("0_Basic_Usage/hipsparselt_spmm.py", marks=_hipsparselt_skipif),
+    pytest.param(
+        "0_Basic_Usage/hipsparselt_spmm.py", marks=_hipsparselt_skipif
+    ),
     pytest.param("0_Basic_Usage/hipsolver_getrf.py", marks=_hipsolver_skipif),
 ]
 
@@ -202,13 +226,13 @@ python_examples += [
 
 # Compiler examples (moved to 2_Advanced/)
 python_examples += [
-    "2_Advanced/list_targets.py",
-    "2_Advanced/parse_llvm_bitcode.py",
-    # "2_Advanced/execution_engine_sum.py",  # TODO: only direct running works
+    pytest.param("2_Advanced/list_targets.py", marks=_llvm_skipif),
+    pytest.param("2_Advanced/parse_llvm_bitcode.py", marks=_llvm_skipif),
+    pytest.param("2_Advanced/execution_engine_sum.py", marks=_llvm_skipif),
     "2_Advanced/amd_comgr_parse_amd_hsa_kernel_descriptor.py",
     "2_Advanced/amd_comgr_disassemble_amdgpu_program.py",
     "2_Advanced/amd_comgr_disassemble_amdgpu_code_obj.py",
-    "2_Advanced/amd_comgr_hip_to_llvm_ir.py",
+    pytest.param("2_Advanced/amd_comgr_hip_to_llvm_ir.py", marks=_llvm_skipif),
     "2_Advanced/hiprtc_amd_comgr_hip_to_hsa.py",
     "2_Advanced/amd_comgr_llvm_ir_to_hsa.py",
     "2_Advanced/hiprtc_amd_comgr_hsa_to_code_obj.py",
@@ -223,10 +247,13 @@ python_examples += [
     ),
     pytest.param(
         "2_Advanced/hiprtc_hip_to_llvm_ir.py",
-        marks=pytest.mark.skipif(
-            not have_matching_hip_python,
-            reason="requires that 'hip-python' is installed",
-        ),
+        marks=[
+            _llvm_skipif,
+            pytest.mark.skipif(
+                not have_matching_hip_python,
+                reason="requires that 'hip-python' is installed",
+            ),
+        ],
     ),
     pytest.param(
         "2_Advanced/hiprtc_linking_with_llvm_ir.py",
@@ -272,12 +299,20 @@ if have_hip_python_interop:
         # Use a temporary directory for build artifacts to avoid polluting source
         with tempfile.TemporaryDirectory() as tmpdir:
             env = os.environ.copy()
-            env["PYTHONPATH"] = example_dir + os.pathsep + env.get("PYTHONPATH", "")
+            env["PYTHONPATH"] = (
+                example_dir + os.pathsep + env.get("PYTHONPATH", "")
+            )
 
             # Build extension in-place
             subprocess.check_call(
-                [sys.executable, "setup.py", "build_ext", "--inplace",
-                 f"--build-temp={tmpdir}", f"--build-lib={example_dir}"],
+                [
+                    sys.executable,
+                    "setup.py",
+                    "build_ext",
+                    "--inplace",
+                    f"--build-temp={tmpdir}",
+                    f"--build-lib={example_dir}",
+                ],
                 cwd=example_dir,
                 env=env,
             )

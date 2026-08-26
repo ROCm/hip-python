@@ -31,12 +31,21 @@ in both environments, which is the whole point of the shim: code that
 already speaks NVML keeps working on AMD hardware unchanged.
 """
 
+import sys
+
+if sys.platform == "win32":
+    raise NotImplementedError(
+        "This example needs the pynvml shim, which is backed by AMD SMI. ROCm "
+        "ships no AMD SMI library on Windows, so the rocm-bindings-systems "
+        "wheel that provides rocm.bindings.amdsmi is not built there."
+    )
+
 # [literalinclude-begin]
 import pynvml
 
 
 def _gib(num_bytes):
-    return num_bytes / (1024 ** 3)
+    return num_bytes / (1024**3)
 
 
 pynvml.nvmlInit()
@@ -48,7 +57,9 @@ try:
         handle = pynvml.nvmlDeviceGetHandleByIndex(index)
 
         name = pynvml.nvmlDeviceGetName(handle)
-        if isinstance(name, bytes):  # upstream pynvml returns bytes on older versions
+        if isinstance(
+            name, bytes
+        ):  # upstream pynvml returns bytes on older versions
             name = name.decode("utf-8", "replace")
         uuid = pynvml.nvmlDeviceGetUUID(handle)
         mem = pynvml.nvmlDeviceGetMemoryInfo(handle)

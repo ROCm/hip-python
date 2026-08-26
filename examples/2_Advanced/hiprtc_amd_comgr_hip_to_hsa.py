@@ -32,9 +32,9 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # [literalinclude-begin]
 
-from rocm.version import HIP_VERSION_TUPLE
-from rocm.bindings import hip, hiprtc
 from rocm import comgr
+from rocm.bindings import hip, hiprtc
+from rocm.version import HIP_VERSION_TUPLE
 
 compile_via_comgr = True
 
@@ -64,9 +64,9 @@ def hip_check(call_result):
 
 
 class HipProgram:
-    def __init__(self, name: str, arch: bytes, source: bytes):
+    def __init__(self, name: str, arch: str, source: str):
         self.hip_source = source
-        self.name = name.encode("utf-8")
+        self.name = name
         self.prog = None
         self.hsa = None
         self.hsa_size = None
@@ -77,7 +77,7 @@ class HipProgram:
         else:
             self._compile_to_hsa_via_hiprtc(arch)
 
-    def _compile_to_hsa_via_comgr(self, arch: bytes):
+    def _compile_to_hsa_via_comgr(self, arch: str):
         """Compile HIP C++ to HSA via AMD COMGR."""
         (
             self.hsa,
@@ -85,13 +85,13 @@ class HipProgram:
             self.diagnostic,
         ) = comgr.compile_hip_to_hsa(
             self.hip_source,
-            b"amdgcn-amd-amdhsa--" + arch,
+            "amdgcn-amd-amdhsa--" + arch,
             HIP_VERSION_TUPLE,  # type: tuple[int,int,int]
             prepend_hiprtc_runtime_header=True,  # type: bool
         )
         self.hsa_size = len(self.hsa)
 
-    def _compile_to_hsa_via_hiprtc(self, arch: bytes):
+    def _compile_to_hsa_via_hiprtc(self, arch: str):
         """Compile HIP C++ to HSA via hipRTC.
 
         Note:
@@ -107,7 +107,7 @@ class HipProgram:
         self.prog = hip_check(
             hiprtc.hiprtcCreateProgram(self.hip_source, self.name, 0, [], [])
         )
-        cflags = [b"--offload-arch=" + arch, b"-S"]
+        cflags = ["--offload-arch=" + arch, "-S"]
         (err,) = hiprtc.hiprtcCompileProgram(self.prog, len(cflags), cflags)
         if err != hiprtc.hiprtcResult.HIPRTC_SUCCESS:
             log_size = hip_check(hiprtc.hiprtcGetProgramLogSize(self.prog))
@@ -132,9 +132,9 @@ if __name__ in ("__test__", "__main__"):
             arr[threadIdx.x] *= factor;
         }
         """
-    ).encode("utf-8")
+    )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName
+    arch = props.gcnArchName.decode("utf-8")
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print(kernel_prog.hsa.decode())
