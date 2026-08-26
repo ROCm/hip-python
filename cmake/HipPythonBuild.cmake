@@ -224,11 +224,12 @@ endfunction()
 # Default for the HIP_PYTHON_BUNDLE_LIBLLVM option, which is declared both by
 # packages/CMakeLists.txt and by the standalone rocm-bindings-compiler build.
 #
-# Off on Windows: ROCm ships no shared LLVM there, only the static archives, and
-# the fallback of linking those into one is Unix-only (see
-# packages/rocm-bindings-compiler/bundled/libllvm/CMakeLists.txt). Defaulting
-# off keeps a plain Windows configure working instead of failing on a request
-# the platform cannot satisfy.
+# Off on Windows. ROCm ships no shared LLVM there, so bundling means linking one
+# from the static archives; that works (see
+# packages/rocm-bindings-compiler/bundled/libllvm/CMakeLists.txt) but adds ~75 MB
+# to the wheel, so it is left to the caller to ask for. Without it the
+# rocm.bindings.llvm.* bindings import and raise on first use, while everything
+# else, amd_comgr included, is unaffected.
 if(WIN32)
   set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT OFF)
 else()

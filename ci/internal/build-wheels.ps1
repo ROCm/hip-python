@@ -10,9 +10,15 @@
 #   * Ninja instead of "Unix Makefiles". The bash script forces make purely to
 #     dodge a GCC jobserver bug on the largest generated .c files; that does not
 #     apply here, and scikit-build-core expects ninja.
-#   * numba-hip is off. numba.hip raises NotImplementedError on Windows.
-#   * HIP_PYTHON_FORCE_BUILD_LIBLLVM is not set. CI enables it for numba-hip's
-#     benefit and it relies on GNU --whole-archive semantics.
+#   * numba-hip is off, because it is only usable next to a wheel that bundles
+#     LLVM, which is not what this script builds by default (see below). Ask
+#     for both together to get a working numba.hip:
+#       -ExtraCMakeArgs '-DHIP_PYTHON_BUNDLE_LIBLLVM=ON','-DHIP_PYTHON_BUILD_NUMBA_HIP=ON'
+#   * libLLVM bundling is not requested. ROCm ships no shared LLVM on Windows,
+#     so it has to be linked from the static archives, which works but adds
+#     ~75 MB to the compiler wheel. Pass
+#     -ExtraCMakeArgs '-DHIP_PYTHON_BUNDLE_LIBLLVM=ON' to get it, which is what
+#     the rocm.bindings.llvm.* bindings and numba-hip need.
 #
 # The MSVC environment is imported automatically when the script is not already
 # running inside a Developer shell, so it behaves the same from a plain
@@ -26,6 +32,7 @@
 #   ci\internal\build-wheels.ps1 -RocmPath C:\rocm
 #   ci\internal\build-wheels.ps1 -Light               # core + hip + compiler only
 #   ci\internal\build-wheels.ps1 -UseRocmClang        # amdclang-cl instead of MSVC
+#   ci\internal\build-wheels.ps1 -UseSabi 3.11        # one cp311-abi3 wheel set
 
 [CmdletBinding()]
 param(
@@ -42,6 +49,14 @@ param(
     # Compile with ROCm's clang (amdclang-cl, the MSVC-compatible driver)
     # instead of MSVC. Useful if ROCm headers need clang extensions.
     [switch] $UseRocmClang,
+
+    # Build limited-API (abi3) wheels against the CPython stable ABI, with this
+    # CPython version as the floor, e.g. "3.11". One such wheel set loads on
+    # every interpreter from the floor upwards, so the build no longer has to be
+    # repeated per Python version. "no" (the default) builds version-specific
+    # wheels. Reads USE_SABI from the environment, the same name the bash script
+    # uses, so CI can set it once for both platforms.
+    [string] $UseSabi = $(if ($env:USE_SABI) { $env:USE_SABI } else { "no" }),
 
     [string] $BuildDir = "build",
     [string] $WheelOutputDir,
@@ -73,6 +88,30 @@ function Invoke-Native {
     if ($LASTEXITCODE -ne 0) {
         throw "$Exe $($Arguments -join ' ') failed with exit code $LASTEXITCODE"
     }
+}
+
+### Stable-ABI (abi3) floor
+#
+# Validated before anything expensive runs, because the failure modes further
+# down are unhelpful: CMake reports a malformed floor only after the toolchain
+# probe, and a floor below 3.11 gets all the way into the C compiler, where the
+# bindings fail on the buffer-protocol calls in rocm-bindings-core's types.pyx
+# (PyObject_GetBuffer and friends entered the limited API in 3.11).
+#
+# The floor is independent of the interpreter running the build, except that it
+# cannot exceed it -- you cannot target a newer stable ABI than the headers you
+# compile against. HipPythonBuild.cmake enforces that side, since it is the one
+# that knows which Python was found.
+$abi3Floor = ""
+if ($UseSabi -ne "no") {
+    if ($UseSabi -notmatch '^3\.[0-9]{2}$') {
+        throw "-UseSabi must be 'no' or a CPython floor version like 3.11; got '$UseSabi'."
+    }
+    if ([version] $UseSabi -lt [version] "3.11") {
+        throw "-UseSabi floor must be at least 3.11 (the bindings use the buffer " +
+              "protocol, which the stable ABI only exposes from 3.11 on); got '$UseSabi'."
+    }
+    $abi3Floor = $UseSabi
 }
 
 ### MSVC environment
@@ -132,7 +171,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $RocmPath "include"))) {
 foreach ($tool in @("cmake", "ninja")) {
     if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) {
         throw "$tool not found. Install the build requirements: " +
-              "python -m pip install -r ci\requirements-build.txt"
+              "python -m pip install -r ci\internal\requirements-build.txt"
     }
 }
 
@@ -187,12 +226,21 @@ $cmakeArgs = @(
     "-DHIP_PYTHON_BUILD_SYSTEMS=$buildSystems",
     "-DHIP_PYTHON_BUILD_COMPILER=$buildCompiler",
     "-DHIP_PYTHON_BUILD_INTEROP=$buildInterop",
-    # numba.hip does not support Windows.
+    # numba.hip needs the shared LLVM this script does not bundle by default.
     "-DHIP_PYTHON_BUILD_NUMBA_HIP=OFF",
     # auditwheel is Linux-only; wheels already carry a win_amd64 tag.
     "-DHIP_PYTHON_AUDITWHEEL_REPAIR=OFF",
     "-DHIP_PYTHON_WHEEL_OUTPUT_DIR=$WheelOutputDir"
 )
+
+# Quote the whole -D argument: Windows PowerShell 5.1 splits an unquoted
+# `-DFOO=3.11` into `-DFOO=3` and `.11` on its way to a native command, and CMake
+# then rejects the floor as '3' while warning about a stray path.
+if ($abi3Floor) {
+    $cmakeArgs += "-DHIP_PYTHON_ABI3_FLOOR=$abi3Floor"
+    Write-Host ("Building against the CPython stable ABI, floor $abi3Floor; " +
+                "wheels will be tagged cp$($abi3Floor -replace '\.','')-abi3.")
+}
 
 $cmakeArgs += $ExtraCMakeArgs
 

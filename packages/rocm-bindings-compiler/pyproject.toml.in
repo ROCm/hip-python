@@ -24,6 +24,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Cython",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Compilers",
@@ -55,4 +57,5 @@ sdist.include = [
     "src/rocm/bindings/llvm/**/*.pyi",
     "bundled/libllvm/CMakeLists.txt",
     "bundled/libllvm/Target.cpp",
+    "bundled/libllvm/gen_msvc_exports.py",
 ]

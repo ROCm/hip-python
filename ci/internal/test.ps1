@@ -4,9 +4,10 @@
 # the wheels produced by ci\internal\build-wheels.ps1, and deviates from the bash
 # script only where Linux assumptions do not hold:
 #
-#   * No numba-hip suite. numba.hip raises NotImplementedError on Windows, and
-#     build-wheels.ps1 configures with -DHIP_PYTHON_BUILD_NUMBA_HIP=OFF, so no
-#     numba_hip wheel exists to test.
+#   * No numba-hip suite. build-wheels.ps1 configures with
+#     -DHIP_PYTHON_BUILD_NUMBA_HIP=OFF by default, so no numba_hip wheel exists
+#     to test. numba.hip itself runs on Windows as long as the compiler wheel
+#     was built with -DHIP_PYTHON_BUNDLE_LIBLLVM=ON; its suite passes there.
 #   * Suites are not fatal individually. On Linux every ROCm component is
 #     present, so any failure is a real defect; on Windows ROCm ships no AMD SMI,
 #     RCCL, ROCTX, hipFile, hipSPARSELt or hipTensor, and the suites skip the
@@ -39,7 +40,9 @@ param(
     [string] $TestVenv,
 
     # Python used to create the venv. Must be the interpreter the wheels were
-    # built against: the extension modules are ABI-tagged for it.
+    # built against, because the extension modules are ABI-tagged for it --
+    # unless they were built with build-wheels.ps1 -UseSabi, in which case any
+    # interpreter from that floor upwards can install them.
     [string] $Python = "python",
 
     # Install ROCm itself into the test venv from the rocm_sdk wheels, which is

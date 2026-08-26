@@ -29,9 +29,9 @@ find_package(LLVM REQUIRED CONFIG)
 
 option(HIP_PYTHON_BUNDLE_LIBLLVM "Bundle libLLVM.so in rocm-bindings-compiler wheel" ${HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT})
 option(HIP_PYTHON_FORCE_BUILD_LIBLLVM
-  "Always build libLLVM.so from LLVM static archives (--whole-archive) instead of\
- reusing the system shared library. Yields a self-contained library that exports\
- every LLVM symbol (e.g. LLVMInitializeAllTargetInfos), at the cost of a much\
+  "Always build the shared LLVM from LLVM's static archives instead of reusing\
+ the system shared library. Yields a self-contained library that also carries\
+ the header-inline helpers (e.g. LLVMInitializeAllTargetInfos), at the cost of a\
  longer link step and a larger wheel. Implies HIP_PYTHON_BUNDLE_LIBLLVM=ON."
   OFF)
 
@@ -96,25 +96,6 @@ if(HIP_PYTHON_BUNDLE_LIBLLVM)
   endif()
 endif()
 
-# ROCm ships no shared LLVM on Windows — only the static archives and
-# llvm-config under <rocm>/lib/llvm — so bundling always lands in the
-# build-from-archives path there. That path is Unix-shaped: it feeds
-# llvm-config's --ldflags/--system-libs through separate_arguments(UNIX_COMMAND)
-# and hands the resulting `-l` flags to the linker, which MSVC does not accept.
-# Bundling therefore defaults off on Windows and this only fires when it was
-# asked for explicitly — fail here rather than deep inside the link.
-if(BUILD_BUNDLED_LIBLLVM AND WIN32)
-  message(FATAL_ERROR
-    "Cannot bundle ${HIP_PYTHON_LIBLLVM_NAME}: no shared LLVM was found in the ROCm "
-    "installation at ${ROCM_PATH}, and building one from LLVM's static archives is "
-    "not supported on Windows.\n"
-    "Drop -DHIP_PYTHON_BUNDLE_LIBLLVM=ON / -DHIP_PYTHON_FORCE_BUILD_LIBLLVM=ON to "
-    "build rocm-bindings-compiler without it. The rocm.bindings.amd_comgr bindings "
-    "work either way (amd_comgr.dll does ship); the rocm.bindings.llvm.* bindings "
-    "will import but raise when first used, because there is no LLVM library for "
-    "them to load.")
-endif()
-
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 message(STATUS "LLVM include dirs: ${LLVM_INCLUDE_DIRS}")
@@ -149,25 +130,53 @@ endif()
 
 message(STATUS "Using llvm-config: ${LLVM_CONFIG_EXECUTABLE}")
 
-# Query llvm-config for static library files. --link-static is required:
-# without it, an LLVM build configured with LLVM_BUILD_LLVM_DYLIB=ON returns
-# only the shared libLLVM, which would defeat the --whole-archive link below
-# (re-linking the same symbols, not adding the missing inline-helper ones).
-execute_process(
-  COMMAND ${LLVM_CONFIG_EXECUTABLE} --link-static --libfiles
-  OUTPUT_VARIABLE LLVM_LIBFILES
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  RESULT_VARIABLE LLVM_LIBFILES_RESULT
-)
-if(NOT LLVM_LIBFILES_RESULT EQUAL 0)
-  message(FATAL_ERROR
-    "llvm-config --link-static --libfiles failed (exit=${LLVM_LIBFILES_RESULT}). "
-    "The LLVM installation at ${LLVM_INSTALL_PREFIX} may not provide static archives, "
-    "which are required to build a self-contained libLLVM.so.")
+# Query llvm-config for the static archives. --link-static is required: without
+# it, an LLVM build configured with LLVM_BUILD_LLVM_DYLIB=ON returns only the
+# shared libLLVM, which would defeat the link below (re-linking the same
+# symbols, not adding the missing inline-helper ones).
+#
+# Windows takes --libnames plus --libdir rather than --libfiles: llvm-config
+# separates entries with a single space, and an absolute Windows path may
+# contain one ("C:/Program Files/..."), so --libfiles cannot be split back into
+# a list. Library file names cannot contain spaces, so joining them onto
+# --libdir is unambiguous.
+if(WIN32)
+  execute_process(
+    COMMAND ${LLVM_CONFIG_EXECUTABLE} --libdir
+    OUTPUT_VARIABLE LLVM_STATIC_LIBDIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE LLVM_LIBDIR_RESULT
+  )
+  execute_process(
+    COMMAND ${LLVM_CONFIG_EXECUTABLE} --link-static --libnames all
+    OUTPUT_VARIABLE LLVM_LIBNAMES
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE LLVM_LIBFILES_RESULT
+  )
+  if(LLVM_LIBDIR_RESULT EQUAL 0 AND LLVM_LIBFILES_RESULT EQUAL 0)
+    file(TO_CMAKE_PATH "${LLVM_STATIC_LIBDIR}" LLVM_STATIC_LIBDIR)
+    string(REPLACE " " ";" LLVM_LIBNAMES_LIST "${LLVM_LIBNAMES}")
+    set(LLVM_LIBFILES_LIST "")
+    foreach(_libname ${LLVM_LIBNAMES_LIST})
+      list(APPEND LLVM_LIBFILES_LIST "${LLVM_STATIC_LIBDIR}/${_libname}")
+    endforeach()
+  endif()
+else()
+  execute_process(
+    COMMAND ${LLVM_CONFIG_EXECUTABLE} --link-static --libfiles
+    OUTPUT_VARIABLE LLVM_LIBFILES
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE LLVM_LIBFILES_RESULT
+  )
+  string(REPLACE " " ";" LLVM_LIBFILES_LIST "${LLVM_LIBFILES}")
 endif()
 
-# Convert space-separated string to list
-string(REPLACE " " ";" LLVM_LIBFILES_LIST "${LLVM_LIBFILES}")
+if(NOT LLVM_LIBFILES_RESULT EQUAL 0)
+  message(FATAL_ERROR
+    "llvm-config --link-static failed (exit=${LLVM_LIBFILES_RESULT}). "
+    "The LLVM installation at ${LLVM_INSTALL_PREFIX} may not provide static archives, "
+    "which are required to build a self-contained ${HIP_PYTHON_LIBLLVM_NAME}.")
+endif()
 
 message(STATUS "LLVM library files: ${LLVM_LIBFILES_LIST}")
 
@@ -210,6 +219,89 @@ endif()
 string(REGEX REPLACE "-l(rocm_sysdeps_[^ ]+\\.so[^ ]*)" "-l:lib\\1"
        LLVM_SYSTEM_LIBS "${LLVM_SYSTEM_LIBS}")
 
+# On Windows llvm-config reports zlib (as zs.lib) but not the zstd archive that
+# LLVMSupport references just as unconditionally, so the link fails on
+# ZSTD_compress2 and friends unless it is added here. Both live under the
+# sysdeps libdir added to the search path above, which llvm-config does not
+# mention either.
+if(WIN32 AND NOT LLVM_SYSTEM_LIBS MATCHES "zstd")
+  find_library(LLVM_ZSTD_LIBRARY
+    NAMES zstd_static zstd
+    PATHS "${ROCM_SYSDEPS_LIBDIR}" ${LLVM_LIBRARY_DIRS}
+    NO_DEFAULT_PATH
+  )
+  if(LLVM_ZSTD_LIBRARY)
+    message(STATUS "Adding zstd for LLVMSupport: ${LLVM_ZSTD_LIBRARY}")
+    string(APPEND LLVM_SYSTEM_LIBS " ${LLVM_ZSTD_LIBRARY}")
+  endif()
+endif()
+
+# Windows exports are opt-in, so the DLL needs a module-definition file.
+#
+# ELF gives every global symbol in an archive default visibility, which is why
+# the --whole-archive link below produces a fully populated libLLVM.so from the
+# very same components. A PE image instead exports only what the objects marked
+# with __declspec(dllexport), and ROCm's LLVM is compiled with the export
+# annotations off (llvm/Config/llvm-config.h leaves
+# LLVM_ENABLE_LLVM_EXPORT_ANNOTATIONS undefined), so its archives carry no
+# export directives whatsoever: /WHOLEARCHIVE alone yields a DLL with no export
+# table, which loads and offers nothing.
+#
+# Naming the symbols is the remaining option, and the C API is the subset worth
+# naming: it is unmangled, it is what the bindings and numba-hip call, and it is
+# small enough to fit a PE export table (~1,200 entries, against 65,535
+# ordinals; the full symbol set is over 190,000). Upstream LLVM builds
+# LLVM-C.dll the same way. Listing a symbol also makes the linker pull in the
+# object defining it, so the export list, not /WHOLEARCHIVE, decides what the
+# DLL contains.
+if(WIN32)
+  find_program(LLVM_NM_EXECUTABLE
+    NAMES llvm-nm
+    PATHS ${LLVM_TOOLS_BINARY_DIR} ${LLVM_INSTALL_PREFIX}/bin
+    NO_DEFAULT_PATH
+  )
+  if(NOT LLVM_NM_EXECUTABLE)
+    message(FATAL_ERROR
+      "llvm-nm not found next to ${LLVM_CONFIG_EXECUTABLE}. It is needed to read "
+      "the C API entry points out of LLVM's static archives, which is how the "
+      "export list for ${HIP_PYTHON_LIBLLVM_NAME} is built.")
+  endif()
+
+  # Target.cpp defines these; they exist nowhere in the archives because LLVM
+  # ships them as static inline helpers in llvm-c/Target.h.
+  set(LLVM_SHIM_EXPORTS
+    LLVMInitializeAllTargetInfos
+    LLVMInitializeAllTargets
+    LLVMInitializeAllTargetMCs
+    LLVMInitializeAllAsmPrinters
+    LLVMInitializeAllAsmParsers
+    LLVMInitializeAllDisassemblers
+    LLVMInitializeNativeTarget
+    LLVMInitializeNativeAsmParser
+    LLVMInitializeNativeAsmPrinter
+    LLVMInitializeNativeDisassembler
+  )
+  set(LLVM_EXPORTS_EXTRA_ARGS "")
+  foreach(_symbol ${LLVM_SHIM_EXPORTS})
+    list(APPEND LLVM_EXPORTS_EXTRA_ARGS --extra ${_symbol})
+  endforeach()
+
+  set(LLVM_EXPORTS_DEF "${CMAKE_CURRENT_BINARY_DIR}/LLVM.def")
+  add_custom_command(
+    OUTPUT "${LLVM_EXPORTS_DEF}"
+    COMMAND "${Python_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/gen_msvc_exports.py"
+            --nm "${LLVM_NM_EXECUTABLE}"
+            --output "${LLVM_EXPORTS_DEF}"
+            ${LLVM_EXPORTS_EXTRA_ARGS}
+            ${LLVM_LIBFILES_LIST}
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/gen_msvc_exports.py" ${LLVM_LIBFILES_LIST}
+    COMMENT "Reading the LLVM C API export list out of LLVM's static archives"
+    VERBATIM
+  )
+  add_custom_target(rocmllvm_exports DEPENDS "${LLVM_EXPORTS_DEF}")
+endif()
+
 # Create shared library - name it libLLVM.so for easier discovery
 add_library(rocmllvm SHARED Target.cpp)
 set_target_properties(rocmllvm PROPERTIES OUTPUT_NAME "LLVM")
@@ -218,9 +310,14 @@ target_include_directories(rocmllvm
   PRIVATE ${LLVM_INCLUDE_DIRS}
 )
 
-# Apply LLVM C++ flags
-separate_arguments(LLVM_CXXFLAGS_LIST UNIX_COMMAND "${LLVM_CXXFLAGS}")
-target_compile_options(rocmllvm PRIVATE ${LLVM_CXXFLAGS_LIST})
+# Apply LLVM C++ flags. Not on Windows: llvm-config reports MSVC flags there
+# (/EHs-c- /GR-, matching how the archives were built) which contradict the ones
+# CMake already puts on the command line, and cl.exe then warns on every
+# override. Target.cpp is a C API translation unit that needs neither.
+if(NOT WIN32)
+  separate_arguments(LLVM_CXXFLAGS_LIST UNIX_COMMAND "${LLVM_CXXFLAGS}")
+  target_compile_options(rocmllvm PRIVATE ${LLVM_CXXFLAGS_LIST})
+endif()
 
 # Link with LLVM libraries using --whole-archive (mimics Makefile)
 # This ensures all symbols from static libs are included in the shared lib.
@@ -244,21 +341,29 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   target_link_options(rocmllvm PRIVATE -Wl,-all_load)
   target_link_libraries(rocmllvm PRIVATE ${LLVM_LIBFILES_LIST})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  # Windows: No -Bsymbolic equivalent needed
-  # DLLs use per-DLL symbol namespaces by design
-  # /WHOLEARCHIVE for including all symbols from static libs
-  foreach(lib ${LLVM_LIBFILES_LIST})
-    target_link_options(rocmllvm PRIVATE /WHOLEARCHIVE:${lib})
-  endforeach()
+  # No symbol interposition to guard against: DLLs have per-DLL namespaces. The
+  # export list generated above takes the place of --whole-archive, and doing
+  # both would be counterproductive — /WHOLEARCHIVE would drag every object of
+  # every component in, and /OPT:REF would drop them again for want of a
+  # reference, leaving the same DLL and a far longer link.
+  add_dependencies(rocmllvm rocmllvm_exports)
+  set_property(TARGET rocmllvm APPEND PROPERTY LINK_DEPENDS "${LLVM_EXPORTS_DEF}")
+  target_link_options(rocmllvm PRIVATE "/DEF:${LLVM_EXPORTS_DEF}")
   target_link_libraries(rocmllvm PRIVATE ${LLVM_LIBFILES_LIST})
 endif()
 
-# Apply LLVM linker flags and system libs
-separate_arguments(LLVM_LDFLAGS_LIST UNIX_COMMAND "${LLVM_LDFLAGS}")
-separate_arguments(LLVM_SYSTEM_LIBS_LIST UNIX_COMMAND "${LLVM_SYSTEM_LIBS}")
+# Apply LLVM linker flags and system libs. NATIVE_COMMAND picks the platform's
+# quoting rules: UNIX_COMMAND treats a backslash as an escape, which turns
+# llvm-config's Windows output into -LIBPATH:C:Usersrocmlibllvmlib.
+separate_arguments(LLVM_LDFLAGS_LIST NATIVE_COMMAND "${LLVM_LDFLAGS}")
+separate_arguments(LLVM_SYSTEM_LIBS_LIST NATIVE_COMMAND "${LLVM_SYSTEM_LIBS}")
 target_link_options(rocmllvm PRIVATE ${LLVM_LDFLAGS_LIST})
 if(EXISTS "${ROCM_SYSDEPS_LIBDIR}")
-  target_link_options(rocmllvm PRIVATE "-L${ROCM_SYSDEPS_LIBDIR}")
+  if(WIN32)
+    target_link_options(rocmllvm PRIVATE "/LIBPATH:${ROCM_SYSDEPS_LIBDIR}")
+  else()
+    target_link_options(rocmllvm PRIVATE "-L${ROCM_SYSDEPS_LIBDIR}")
+  endif()
 endif()
 target_link_libraries(rocmllvm PRIVATE ${LLVM_SYSTEM_LIBS_LIST})
 
@@ -274,20 +379,35 @@ set_target_properties(rocmllvm PROPERTIES
 # IMPORTANT: Set default component to ensure this gets installed with the package
 # Library will be named libLLVM.so (via OUTPUT_NAME property)
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME rocm-bindings-compiler)
+# The Windows import library is an ARCHIVE artifact. Nothing links against the
+# bundled library at build time — the bindings load it by name — so it is put in
+# a component of its own that no packaging step installs. Left unnamed, CMake
+# would drop it into the default lib/ directory and it would surface at the root
+# of the wheel.
 install(TARGETS rocmllvm
   LIBRARY DESTINATION rocm/bindings/llvm
   RUNTIME DESTINATION rocm/bindings/llvm  # For Windows DLL
   COMPONENT rocm-bindings-compiler
+  ARCHIVE DESTINATION rocm/bindings/llvm COMPONENT rocm-bindings-compiler-devel
 )
 set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME)
 
-# Install README explaining the bundled libLLVM.so
 if(BUNDLE_SYSTEM_LIBLLVM)
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/LIBLLVM_README.txt"
-"This directory contains libLLVM.so copied from the system ROCm LLVM installation.
+"This directory contains ${HIP_PYTHON_LIBLLVM_NAME} copied from the system ROCm LLVM installation.
 Source: ${SYSTEM_LIBLLVM}
 
 This ensures the wheel is self-contained and does not rely on system RPATH.
+")
+elseif(WIN32)
+  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/LIBLLVM_README.txt"
+"This directory contains a ${HIP_PYTHON_LIBLLVM_NAME} built from the static LLVM
+archives of the ROCm installation at ${LLVM_LIBRARY_DIRS}, because ROCm ships no
+shared LLVM on Windows.
+
+It exports the LLVM C API, which is what the bindings call. LLVM's C++ symbols
+are not exported: ROCm's archives are compiled without export annotations, and
+the full symbol set exceeds what a PE export table can address.
 ")
 else()
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/LIBLLVM_README.txt"
