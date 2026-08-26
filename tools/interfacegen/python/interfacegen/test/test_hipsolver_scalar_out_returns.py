@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression lock-in for hipSOLVER's ``*_bufferSize`` workspace-size
 callee-allocated OUT returns in ``support.recipes.rocm.hipsolver``.
 
@@ -30,7 +49,8 @@ def _build(header_text: str):
     parser = CParser("input.h", unsaved_files=[("input.h", header_text)])
     parser.parse()
     return treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
 
 
@@ -62,12 +82,14 @@ def _assert_scalar_return(recipe, p):
 
 def test_int_lwork_buffersize_is_scalar_return():
     """``int* lwork`` in a ``*_bufferSize`` query -> returned scalar."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         int hipsolverDgetrf_bufferSize(hipsolverHandle_t* handle,
                                        int m, int n, double* A, int lda,
                                        int* lwork);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     _assert_scalar_return(
         rocm.hipsolver, _parm(root, "hipsolverDgetrf_bufferSize", "lwork")
@@ -76,13 +98,15 @@ def test_int_lwork_buffersize_is_scalar_return():
 
 def test_size_t_lwork_buffersize_is_scalar_return():
     """``size_t* lwork`` variant likewise becomes a returned scalar."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         typedef unsigned long size_t;
         int hipsolverDnDgetrf_bufferSize(hipsolverHandle_t* handle,
                                          int m, int n, double* A, int lda,
                                          size_t* lwork);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     _assert_scalar_return(
         rocm.hipsolver, _parm(root, "hipsolverDnDgetrf_bufferSize", "lwork")
@@ -93,14 +117,16 @@ def test_dnx_dual_lwork_on_device_and_host_both_convert():
     """The 64-bit ``hipsolverDnX*_bufferSize`` dual host size outputs
     ``lworkOnDevice`` + ``lworkOnHost`` both become returned scalars
     (a three-element return tuple with the status)."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         typedef unsigned long size_t;
         int hipsolverDnXgetrf_bufferSize(hipsolverHandle_t* handle,
                                          int m, int n, double* A, int lda,
                                          size_t* lworkOnDevice,
                                          size_t* lworkOnHost);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     for pname in ("lworkOnDevice", "lworkOnHost"):
         _assert_scalar_return(
@@ -111,12 +137,14 @@ def test_dnx_dual_lwork_on_device_and_host_both_convert():
 def test_lwork_outside_buffersize_is_not_converted():
     """An ``int* lwork`` in a function NOT ending in ``_bufferSize`` must
     stay a caller-allocated buffer (the scope guard rejects it)."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         int hipsolverDgetrf_query(hipsolverHandle_t* handle,
                                   int m, int n, double* A, int lda,
                                   int* lwork);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     p = _parm(root, "hipsolverDgetrf_query", "lwork")
     assert not rocm.hipsolver._is_buffersize_lwork(p)
@@ -127,13 +155,15 @@ def test_lwork_outside_buffersize_is_not_converted():
 def test_by_value_lwork_input_untouched():
     """The by-value ``int lwork`` *input* of a compute call is not a
     pointer and must not be classified as a scalar OUT return."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         int hipsolverDgetrf(hipsolverHandle_t* handle,
                             int m, int n, double* A, int lda,
                             double* work, int lwork,
                             int* devIpiv, int* devInfo);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     p = _parm(root, "hipsolverDgetrf", "lwork")
     assert not rocm.hipsolver._is_buffersize_lwork(p)
@@ -144,12 +174,14 @@ def test_other_buffersize_pointer_untouched():
     """A non-``lwork`` pointer in a ``*_bufferSize`` (e.g. ``devIpiv``) is
     left to the delegated hipblas rank/intent — the override is scoped to
     ``lwork*`` names only."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsolverHandle_t;
         int hipsolverDgetrf_bufferSize(hipsolverHandle_t* handle,
                                        int m, int n, double* A, int lda,
                                        int* devIpiv, int* lwork);
-    """)
+    """
+    )
     _bind(root, rocm.hipsolver)
     devipiv = _parm(root, "hipsolverDgetrf_bufferSize", "devIpiv")
     assert not rocm.hipsolver._is_buffersize_lwork(devipiv)

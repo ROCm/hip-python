@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Tests for the scalar callee-allocated OUT overrides in
 ``support.recipes.rocm.hipblaslt``.
 
@@ -26,7 +45,8 @@ def _build(header_text: str):
     parser = CParser("input.h", unsaved_files=[("input.h", header_text)])
     parser.parse()
     return treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
 
 
@@ -67,12 +87,16 @@ def test_untagged_version_becomes_scalar_return():
     caller ``ListOf*`` argument). The ``_SCALAR_OUT_PARMS`` override forces
     the callee-allocated scalar return.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtHandle_t;
         int hipblasLtGetVersion(hipblasLtHandle_t handle, int* version);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
-    _assert_scalar_return(rocm.hipblaslt, _parm(root, "hipblasLtGetVersion", "version"))
+    _assert_scalar_return(
+        rocm.hipblaslt, _parm(root, "hipblasLtGetVersion", "version")
+    )
 
 
 def test_documented_size_written_becomes_scalar_return():
@@ -81,7 +105,8 @@ def test_documented_size_written_becomes_scalar_return():
     The override upgrades it to a returned scalar. The caller-sized ``buf``
     attribute buffer is deliberately NOT upgraded.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtMatmulDesc_t;
         typedef int hipblasLtMatmulDescAttributes_t;
         /**
@@ -95,28 +120,35 @@ def test_documented_size_written_becomes_scalar_return():
             void* buf,
             unsigned long sizeInBytes,
             unsigned long* sizeWritten);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
     _assert_scalar_return(
-        rocm.hipblaslt, _parm(root, "hipblasLtMatmulDescGetAttribute", "sizeWritten")
+        rocm.hipblaslt,
+        _parm(root, "hipblasLtMatmulDescGetAttribute", "sizeWritten"),
     )
     # The attribute buffer stays a caller-allocated argument (not a return).
     buf = _parm(root, "hipblasLtMatmulDescGetAttribute", "buf")
-    assert rocm.hipblaslt.ptr_parm_intent(buf) != ParmIntent.OUT_CALLEE_ALLOCATED
+    assert (
+        rocm.hipblaslt.ptr_parm_intent(buf) != ParmIntent.OUT_CALLEE_ALLOCATED
+    )
 
 
 def test_sm_count_target_and_nan_call_id_are_scalar_returns():
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtHandle_t;
         /** @param[out] smCountTarget the SM-count target. */
         int hipblasLtGetSmCountTarget(hipblasLtHandle_t handle, int* smCountTarget);
         /** @param[out] first_nan_call_id the call id of the first NaN. */
         int hipblasLtCheckNumericsDrain(hipblasLtHandle_t handle,
                                         unsigned int* first_nan_call_id);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
     _assert_scalar_return(
-        rocm.hipblaslt, _parm(root, "hipblasLtGetSmCountTarget", "smCountTarget")
+        rocm.hipblaslt,
+        _parm(root, "hipblasLtGetSmCountTarget", "smCountTarget"),
     )
     _assert_scalar_return(
         rocm.hipblaslt,
@@ -129,7 +161,8 @@ def test_return_algo_count_scalar_but_results_array_caller_allocated():
     caller-sized ``heuristicResultsArray[]`` MUST stay caller-allocated
     (rank-1 OUT) — the override targets only the scalar count.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtHandle_t;
         typedef struct { int state; } hipblasLtMatmulHeuristicResult_t;
         /**
@@ -142,12 +175,16 @@ def test_return_algo_count_scalar_but_results_array_caller_allocated():
             int requestedAlgoCount,
             hipblasLtMatmulHeuristicResult_t heuristicResultsArray[],
             int* returnAlgoCount);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
     _assert_scalar_return(
-        rocm.hipblaslt, _parm(root, "hipblasLtMatmulAlgoGetHeuristic", "returnAlgoCount")
+        rocm.hipblaslt,
+        _parm(root, "hipblasLtMatmulAlgoGetHeuristic", "returnAlgoCount"),
     )
-    arr = _parm(root, "hipblasLtMatmulAlgoGetHeuristic", "heuristicResultsArray")
+    arr = _parm(
+        root, "hipblasLtMatmulAlgoGetHeuristic", "heuristicResultsArray"
+    )
     assert rocm.hipblaslt.ptr_parm_intent(arr) == ParmIntent.OUT
     assert rocm.hipblaslt.ptr_rank(arr) == 1
 
@@ -156,10 +193,12 @@ def test_handle_creator_still_returns_via_hipblas_tail():
     """The override delegates its tail to hipblas, so the ``void** handle``
     creator heuristic (``hipblasLtCreate``) still yields a returned handle.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtHandle_t;
         int hipblasLtCreate(hipblasLtHandle_t* handle);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
     p = _parm(root, "hipblasLtCreate", "handle")
     assert rocm.hipblaslt.ptr_parm_intent(p) == ParmIntent.OUT_CALLEE_ALLOCATED
@@ -171,13 +210,20 @@ def test_override_is_transparent_for_non_listed_params():
     the delegated hipblas tail would — the override must not perturb any
     matrix / handle / buffer parm it doesn't explicitly target.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipblasLtMatmulDesc_t;
         int hipblasLtMatmul(hipblasLtMatmulDesc_t desc, const void* A, void* C);
-    """)
+    """
+    )
     _bind(root, rocm.hipblaslt)
     for pname in ("A", "C"):
         p = _parm(root, "hipblasLtMatmul", pname)
-        assert ("hipblasLtMatmul", pname) not in rocm.hipblaslt._SCALAR_OUT_PARMS
-        assert rocm.hipblaslt.ptr_parm_intent(p) == rocm.hipblas.ptr_parm_intent(p)
+        assert (
+            "hipblasLtMatmul",
+            pname,
+        ) not in rocm.hipblaslt._SCALAR_OUT_PARMS
+        assert rocm.hipblaslt.ptr_parm_intent(
+            p
+        ) == rocm.hipblas.ptr_parm_intent(p)
         assert rocm.hipblaslt.ptr_rank(p) == rocm.hipblas.ptr_rank(p)

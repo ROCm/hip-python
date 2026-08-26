@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression tests for `_is_useless_macro` and the recipe `node_filter`s
 that wire it in.
 
@@ -20,7 +39,7 @@ constant whose name happens to end in ``_H`` (e.g. some hypothetical
 """
 
 import pytest
-
+from _codegen_helpers import build_root
 from interfacegen.support.recipes.rocm import (
     _is_attribute_macro,
     _is_header_guard_macro,
@@ -31,8 +50,6 @@ from interfacegen.support.recipes.rocm import (
     hiptensor,
 )
 from interfacegen.tree import MacroDefinition
-
-from _codegen_helpers import build_root
 
 
 def _macros(root):
@@ -155,18 +172,21 @@ def test_normal_size_macro_is_not_useless():
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("recipe,prefix", [
-    (hipblaslt, "HIPBLASLT"),
-    (hiptensor, "HIPTENSOR"),
-    (hipdnn_backend, "HIPDNN"),
-    (hipsparselt, "HIPSPARSELT"),
-])
+@pytest.mark.parametrize(
+    "recipe,prefix",
+    [
+        (hipblaslt, "HIPBLASLT"),
+        (hiptensor, "HIPTENSOR"),
+        (hipdnn_backend, "HIPDNN"),
+        (hipsparselt, "HIPSPARSELT"),
+    ],
+)
 def test_recipe_node_filter_drops_useless_macros(recipe, prefix):
     """Synthesise an attribute macro + a header guard with the recipe's
     prefix and assert the recipe's `node_filter` rejects both, while
     accepting a normal int macro with the same prefix."""
     root = build_root(
-        f"#define {prefix}_API_EXPORT __attribute__((visibility(\"default\")))\n"
+        f'#define {prefix}_API_EXPORT __attribute__((visibility("default")))\n'
         f"#define {prefix}_H\n"
         f"#define {prefix}_VERSION_MAJOR 1\n"
     )
@@ -174,15 +194,15 @@ def test_recipe_node_filter_drops_useless_macros(recipe, prefix):
     guard_m = _macro_named(root, f"{prefix}_H")
     int_m = _macro_named(root, f"{prefix}_VERSION_MAJOR")
 
-    assert recipe.node_filter(attr_m) is False, (
-        f"{recipe.__name__}.node_filter must drop attribute macros"
-    )
-    assert recipe.node_filter(guard_m) is False, (
-        f"{recipe.__name__}.node_filter must drop header-guard macros"
-    )
-    assert recipe.node_filter(int_m) is True, (
-        f"{recipe.__name__}.node_filter must keep normal int macros"
-    )
+    assert (
+        recipe.node_filter(attr_m) is False
+    ), f"{recipe.__name__}.node_filter must drop attribute macros"
+    assert (
+        recipe.node_filter(guard_m) is False
+    ), f"{recipe.__name__}.node_filter must drop header-guard macros"
+    assert (
+        recipe.node_filter(int_m) is True
+    ), f"{recipe.__name__}.node_filter must keep normal int macros"
 
 
 # ---------------------------------------------------------------------------
@@ -197,18 +217,19 @@ def test_hipblaslt_node_filter_drops_cxx_only_macros():
     """Every name in `hipblaslt._CODEGEN_BLOCKLIST` is rejected by
     `hipblaslt.node_filter`, while a normal `HIPBLASLT_*` int macro is
     still accepted."""
-    src = "".join(
-        f"#define {name} 0\n" for name in hipblaslt._CODEGEN_BLOCKLIST
-    ) + "#define HIPBLASLT_VERSION_MAJOR 1\n"
+    src = (
+        "".join(f"#define {name} 0\n" for name in hipblaslt._CODEGEN_BLOCKLIST)
+        + "#define HIPBLASLT_VERSION_MAJOR 1\n"
+    )
     root = build_root(src)
 
     for name in hipblaslt._CODEGEN_BLOCKLIST:
         m = _macro_named(root, name)
-        assert hipblaslt.node_filter(m) is False, (
-            f"hipblaslt.node_filter must drop blocklisted macro {name}"
-        )
+        assert (
+            hipblaslt.node_filter(m) is False
+        ), f"hipblaslt.node_filter must drop blocklisted macro {name}"
 
     keep = _macro_named(root, "HIPBLASLT_VERSION_MAJOR")
-    assert hipblaslt.node_filter(keep) is True, (
-        "hipblaslt.node_filter must keep normal HIPBLASLT_* int macros"
-    )
+    assert (
+        hipblaslt.node_filter(keep) is True
+    ), "hipblaslt.node_filter must keep normal HIPBLASLT_* int macros"

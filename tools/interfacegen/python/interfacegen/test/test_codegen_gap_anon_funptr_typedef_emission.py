@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression test for the synthesized AnonymousFunctionPointer
 ``ctypedef`` emission gap that broke the HSA bindings.
 
@@ -24,7 +43,6 @@ against an HSA-shaped synthetic header.
 import textwrap
 
 import pytest
-
 from interfacegen.support.recipes import control
 from interfacegen.test._codegen_helpers import make_generator, write_module
 
@@ -63,9 +81,9 @@ def test_anon_funptr_typedef_is_emitted_when_parent_admitted(tmp_path):
     assert pxd, f"expected cyhsa.pxd in {list(files)}"
     # The parent function's signature must reference the synthesized
     # type by its full `<parent>_anon_funptr_<N>` name.
-    assert "hsa_iterate_agents_anon_funptr_0" in pxd, (
-        "parent function should reference the synthesized funptr type"
-    )
+    assert (
+        "hsa_iterate_agents_anon_funptr_0" in pxd
+    ), "parent function should reference the synthesized funptr type"
     # And — the actual fix — the matching ctypedef must be emitted so
     # Cython can resolve the type at compile time.
     assert "ctypedef" in pxd
@@ -133,10 +151,7 @@ def test_anon_funptr_typedef_in_struct_field_admitted_transitively(tmp_path):
     # AnonymousFunctionPointer is appended as a sibling of the Field
     # under the Struct, per `treefactory.handle_param_or_field_decl_cursor_`.
     assert "hsa_dispatch_callbacks_s_anon_funptr_0" in pxd
-    assert (
-        "ctypedef int (*hsa_dispatch_callbacks_s_anon_funptr_0)"
-        in pxd
-    )
+    assert "ctypedef int (*hsa_dispatch_callbacks_s_anon_funptr_0)" in pxd
 
 
 if __name__ == "__main__":

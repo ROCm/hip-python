@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression test: self-referential struct pointer field.
 
 Real-world hit (ROCm 7.14 ``hip/hip_runtime.h``):
@@ -31,7 +50,6 @@ import re
 
 from _codegen_helpers import make_generator, write_module
 
-
 HEADER_SELF_REF = """
 typedef struct hipDevResource_st {
     int type;
@@ -45,9 +63,9 @@ def _emitted_field_line(text: str, struct_name: str, field_name: str) -> str:
     in_struct = False
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped.startswith(f"cdef struct {struct_name}") or stripped.startswith(
-            f"ctypedef struct {struct_name}"
-        ):
+        if stripped.startswith(
+            f"cdef struct {struct_name}"
+        ) or stripped.startswith(f"ctypedef struct {struct_name}"):
             in_struct = True
             continue
         if in_struct:
@@ -56,7 +74,9 @@ def _emitted_field_line(text: str, struct_name: str, field_name: str) -> str:
                 continue
             if field_name in stripped:
                 return stripped
-    raise AssertionError(f"field {field_name} not found in struct {struct_name}")
+    raise AssertionError(
+        f"field {field_name} not found in struct {struct_name}"
+    )
 
 
 def test_self_referential_pointer_field_drops_struct_keyword(tmp_path):
@@ -69,6 +89,6 @@ def test_self_referential_pointer_field_drops_struct_keyword(tmp_path):
     assert re.search(
         r"hipDevResource_st\s*\*\s*nextResource", line
     ), f"expected `hipDevResource_st * nextResource`-shape, got: {line!r}"
-    assert "struct hipDevResource_st" not in line, (
-        f"emitted illegal elaborated `struct` keyword in field: {line!r}"
-    )
+    assert (
+        "struct hipDevResource_st" not in line
+    ), f"emitted illegal elaborated `struct` keyword in field: {line!r}"

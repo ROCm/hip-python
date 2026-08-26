@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression test for `_persist_shim_header` and the
 `_apply_header_workarounds` round-trip.
 
@@ -27,14 +46,12 @@ import os
 import textwrap
 
 import pytest
-
 from hip_python_codegen.binding_generator import (
+    SHIM_INCLUDES_SUBDIR,
     _apply_header_workarounds,
     _neutralize_rocrand_c_fallback,
     _persist_shim_header,
-    SHIM_INCLUDES_SUBDIR,
 )
-
 
 # The C-mode fallback block from ROCm 7.14 rocrand.h that collides with
 # HIP's uint4 under a C compile (see
@@ -227,8 +244,12 @@ def test_persist_shim_header_creates_dirs_and_writes(tmp_path):
         package="rocm-bindings-libraries",
     )
     expected = os.path.join(
-        output_dir, "packages", "rocm-bindings-libraries",
-        SHIM_INCLUDES_SUBDIR, "hipblaslt", "hipblaslt.h",
+        output_dir,
+        "packages",
+        "rocm-bindings-libraries",
+        SHIM_INCLUDES_SUBDIR,
+        "hipblaslt",
+        "hipblaslt.h",
     )
     assert os.path.isfile(expected)
     with open(expected) as f:
@@ -241,9 +262,7 @@ def test_persist_shim_header_noop_on_none_content(tmp_path):
     output_dir = str(tmp_path)
     _persist_shim_header("hipblaslt/hipblaslt.h", None, output_dir)
     # The shim_includes directory should not even exist.
-    assert not os.path.exists(
-        os.path.join(output_dir, "packages")
-    )
+    assert not os.path.exists(os.path.join(output_dir, "packages"))
 
 
 if __name__ == "__main__":

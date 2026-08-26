@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Recipe test: the amdsmi recipe admits the foreign `struct timespec`.
 
 `amdsmi_fabric_telemetry_dataset_t` has a BY-VALUE `timespec timestamp`
@@ -20,10 +39,13 @@ emits BOTH layers:
 
 import re
 
+from _codegen_helpers import (
+    build_root,
+    find_record,
+    make_generator,
+    write_module,
+)
 from interfacegen.support.recipes.rocm import amdsmi
-
-from _codegen_helpers import build_root, find_record, make_generator, write_module
-
 
 HEADER = """
 struct timespec {
@@ -44,9 +66,9 @@ def test_amdsmi_node_filter_admits_timespec_record():
     assert "timespec" in amdsmi._EXTRA_TYPES
     root = build_root(HEADER)
     ts = find_record(root, "timespec")
-    assert amdsmi.node_filter(ts) is True, (
-        "amdsmi.node_filter must admit `struct timespec` via _EXTRA_TYPES"
-    )
+    assert (
+        amdsmi.node_filter(ts) is True
+    ), "amdsmi.node_filter must admit `struct timespec` via _EXTRA_TYPES"
 
 
 def test_amdsmi_timespec_emitted_as_cdef_struct_with_wrapper(tmp_path):
@@ -63,18 +85,18 @@ def test_amdsmi_timespec_emitted_as_cdef_struct_with_wrapper(tmp_path):
 
     # C layer: a real `cdef struct timespec:` layout (valid C `struct
     # timespec`), and the dataset field references it.
-    assert re.search(r"\bcdef\s+struct\s+timespec\s*:", cy_pxd), (
-        f"expected `cdef struct timespec:` in cy pxd; full pxd:\n{cy_pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+timespec\s*:", cy_pxd
+    ), f"expected `cdef struct timespec:` in cy pxd; full pxd:\n{cy_pxd}"
     assert "ctypedef struct timespec" not in cy_pxd, (
         "timespec is a tagged struct, must not be emitted as `ctypedef "
         f"struct` (bare `timespec` is not valid C); full pxd:\n{cy_pxd}"
     )
-    assert re.search(r"\btimespec\s+timestamp\b", cy_pxd), (
-        f"expected the dataset to reference `timespec timestamp`; pxd:\n{cy_pxd}"
-    )
+    assert re.search(
+        r"\btimespec\s+timestamp\b", cy_pxd
+    ), f"expected the dataset to reference `timespec timestamp`; pxd:\n{cy_pxd}"
 
     # High level: a wrapper class so `timespec.fromPtr(...)` resolves.
-    assert re.search(r"\bcdef\s+class\s+timespec\b", pyx), (
-        f"expected a `cdef class timespec` wrapper; full pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"\bcdef\s+class\s+timespec\b", pyx
+    ), f"expected a `cdef class timespec` wrapper; full pyx:\n{pyx}"

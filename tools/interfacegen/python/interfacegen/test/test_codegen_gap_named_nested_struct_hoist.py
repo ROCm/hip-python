@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Gap test: named-nested struct gets dropped when node_filter is prefix-based.
 
 Real-world hit (from amdsmi.h:902-915):
@@ -45,10 +64,8 @@ but harmless).
 
 import re
 
-from interfacegen.tree import MacroDefinition
-
 from _codegen_helpers import make_generator, write_module
-
+from interfacegen.tree import MacroDefinition
 
 HEADER = """
 typedef union {
@@ -90,7 +107,9 @@ def test_named_nested_struct_definition_emitted_when_parent_admitted(tmp_path):
     pxd = files["cymod_n.pxd"]
 
     # All `<typename> bdf` field references in the file:
-    refs = re.findall(r"^\s+([A-Za-z_][A-Za-z0-9_]*)\s+bdf\b", pxd, re.MULTILINE)
+    refs = re.findall(
+        r"^\s+([A-Za-z_][A-Za-z0-9_]*)\s+bdf\b", pxd, re.MULTILINE
+    )
     assert refs, "expected at least one field reference to the inner `bdf`"
 
     missing = []
@@ -115,9 +134,9 @@ def test_named_nested_struct_works_with_permissive_filter(tmp_path):
     gen = make_generator(HEADER, module_name="mod_n_ok")  # default = admit all
     files = write_module(gen, tmp_path)
     pxd = files["cymod_n_ok.pxd"]
-    assert re.search(r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd), (
-        f"expected `cdef struct my_bdf_t_bdf_:` definition; full pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd
+    ), f"expected `cdef struct my_bdf_t_bdf_:` definition; full pxd:\n{pxd}"
 
 
 def _topmost_name(node):
@@ -126,6 +145,7 @@ def _topmost_name(node):
     pattern (or call the recipe's helper) rather than the naive
     `node.name`-only filter to avoid dropping named-nested types."""
     from interfacegen import tree
+
     curr = node
     while curr.parent is not None and not isinstance(curr.parent, tree.Root):
         curr = curr.parent
@@ -159,7 +179,9 @@ def _hipfoo_prefix_filter(node):
         return False
     return (node.name or "").startswith(("hipFoo", "_hipFoo")) and not (
         node.name or ""
-    ).startswith("_")  # explicit: leading-underscore tags are rejected
+    ).startswith(
+        "_"
+    )  # explicit: leading-underscore tags are rejected
 
 
 def test_underscore_tagged_struct_admitted_via_typedef_referent(tmp_path):
@@ -186,17 +208,19 @@ def test_underscore_tagged_struct_admitted_via_typedef_referent(tmp_path):
     # The struct definition for the underscore-tagged type must be present
     # so Cython can resolve `ctypedef _hipFooAlgo_t hipFooAlgo_t` and the
     # `const _hipFooAlgo_t *algo` parameter in `hipFooSubmit`.
-    assert re.search(r"\bcdef\s+struct\s+_hipFooAlgo_t\b", pxd), (
-        f"expected `cdef struct _hipFooAlgo_t:` definition; full pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+_hipFooAlgo_t\b", pxd
+    ), f"expected `cdef struct _hipFooAlgo_t:` definition; full pxd:\n{pxd}"
     # And the typedef alias must point at it.
-    assert re.search(r"ctypedef\s+_hipFooAlgo_t\s+hipFooAlgo_t", pxd), (
-        f"expected `ctypedef _hipFooAlgo_t hipFooAlgo_t`; full pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"ctypedef\s+_hipFooAlgo_t\s+hipFooAlgo_t", pxd
+    ), f"expected `ctypedef _hipFooAlgo_t hipFooAlgo_t`; full pxd:\n{pxd}"
     # Source-order matters: the struct definition must precede the typedef.
     struct_pos = pxd.find("cdef struct _hipFooAlgo_t")
     typedef_pos = pxd.find("ctypedef _hipFooAlgo_t hipFooAlgo_t")
-    assert struct_pos != -1 and typedef_pos != -1 and struct_pos < typedef_pos, (
+    assert (
+        struct_pos != -1 and typedef_pos != -1 and struct_pos < typedef_pos
+    ), (
         f"struct definition must come before its typedef alias; "
         f"struct at {struct_pos}, typedef at {typedef_pos}; full pxd:\n{pxd}"
     )
@@ -220,10 +244,10 @@ def test_named_nested_struct_emitted_with_topmost_parent_filter(tmp_path):
     pxd = files["cymod_n_walk.pxd"]
 
     # The named-nested struct definition must be present.
-    assert re.search(r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd), (
-        f"expected `cdef struct my_bdf_t_bdf_:` definition; full pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd
+    ), f"expected `cdef struct my_bdf_t_bdf_:` definition; full pxd:\n{pxd}"
     # And the parent union must reference it without dangling.
-    assert re.search(r"my_bdf_t_bdf_\s+bdf\b", pxd), (
-        f"expected union to reference `my_bdf_t_bdf_ bdf`; full pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"my_bdf_t_bdf_\s+bdf\b", pxd
+    ), f"expected union to reference `my_bdf_t_bdf_ bdf`; full pxd:\n{pxd}"

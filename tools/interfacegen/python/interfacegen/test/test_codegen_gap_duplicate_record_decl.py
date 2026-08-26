@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression test for duplicate top-level record declarations.
 
 Some ROCm headers define the same record type at two sites in the include
@@ -38,8 +57,11 @@ import re
 import textwrap
 
 from interfacegen import cython
-from interfacegen.test._codegen_helpers import build_root, make_generator, write_module
-
+from interfacegen.test._codegen_helpers import (
+    build_root,
+    make_generator,
+    write_module,
+)
 
 # Two identical ``typedef struct {...} uint4;`` definitions mimic the HIP +
 # rocrand C-mode fallback collision (same canonical typename ``uint4``).
@@ -55,7 +77,10 @@ DUPLICATE_RECORD_HEADER = textwrap.dedent(
 def _record_nodes(root, name):
     out = []
     for n in root.walk():
-        if isinstance(n, (cython.Struct, cython.Union, cython.Enum)) and n.name == name:
+        if (
+            isinstance(n, (cython.Struct, cython.Union, cython.Enum))
+            and n.name == name
+        ):
             out.append(n)
     return out
 
@@ -65,7 +90,9 @@ def test_duplicate_record_decl_collapsed_to_one_node():
     yield a single record node, not one per ``STRUCT_DECL`` cursor."""
     root = build_root(DUPLICATE_RECORD_HEADER)
     recs = _record_nodes(root, "uint4")
-    assert len(recs) == 1, f"expected exactly one uint4 record node, got {len(recs)}"
+    assert (
+        len(recs) == 1
+    ), f"expected exactly one uint4 record node, got {len(recs)}"
 
 
 def test_forward_decl_then_definition_prefers_definition():
@@ -80,7 +107,9 @@ def test_forward_decl_then_definition_prefers_definition():
     root = build_root(src)
     recs = _record_nodes(root, "Foo")
     assert len(recs) == 1, f"expected exactly one Foo node, got {len(recs)}"
-    assert recs[0].cursor.is_definition(), (
+    assert recs[
+        0
+    ].cursor.is_definition(), (
         "the surviving Foo node must be the definition, not the forward decl"
     )
 
@@ -94,11 +123,11 @@ def test_duplicate_record_decl_emits_one_class(tmp_path):
     files = write_module(gen, tmp_path)
 
     cy_pxd = files["cymod_dup.pxd"]
-    assert len(re.findall(r"ctypedef struct uint4:", cy_pxd)) == 1, (
-        f"expected exactly one `ctypedef struct uint4:`; full pxd:\n{cy_pxd}"
-    )
+    assert (
+        len(re.findall(r"ctypedef struct uint4:", cy_pxd)) == 1
+    ), f"expected exactly one `ctypedef struct uint4:`; full pxd:\n{cy_pxd}"
 
     wrapper_pxd = files["mod_dup.pxd"]
-    assert len(re.findall(r"cdef class uint4\(", wrapper_pxd)) == 1, (
-        f"expected exactly one `cdef class uint4(`; full pxd:\n{wrapper_pxd}"
-    )
+    assert (
+        len(re.findall(r"cdef class uint4\(", wrapper_pxd)) == 1
+    ), f"expected exactly one `cdef class uint4(`; full pxd:\n{wrapper_pxd}"

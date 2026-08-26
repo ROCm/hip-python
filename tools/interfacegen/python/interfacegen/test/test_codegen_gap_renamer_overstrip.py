@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Lock-down test: prefix-stripping renamer doesn't mangle parm names.
 
 The amdsmi recipe TODO comment (rocm.py:805-828) flags a risk: "Renamer
@@ -30,9 +49,7 @@ import re
 import textwrap
 
 import pytest
-
 from _codegen_helpers import make_generator, write_module
-
 
 HEADER = """
 typedef int amdsmi_processor_type_t;
@@ -50,9 +67,9 @@ def test_prefix_strip_renamer_preserves_parm_name(tmp_path):
     cym_pxd = files["cymod_r.pxd"]
 
     # 1. typedef rename worked
-    assert re.search(r"\bctypedef\s+int\s+processor_type_t\b", cym_pxd), (
-        f"expected `ctypedef int processor_type_t`, full pxd:\n{cym_pxd}"
-    )
+    assert re.search(
+        r"\bctypedef\s+int\s+processor_type_t\b", cym_pxd
+    ), f"expected `ctypedef int processor_type_t`, full pxd:\n{cym_pxd}"
 
     # 2. function rename worked
     assert re.search(
@@ -60,19 +77,17 @@ def test_prefix_strip_renamer_preserves_parm_name(tmp_path):
     ), f"expected `int get_processor_type(...)`, full pxd:\n{cym_pxd}"
 
     # 3. parm name was NOT mangled — should still be `processor_type`
-    sig_match = re.search(
-        r"int\s+get_processor_type\s*\(([^)]*)\)", cym_pxd
-    )
+    sig_match = re.search(r"int\s+get_processor_type\s*\(([^)]*)\)", cym_pxd)
     assert sig_match, "could not find function signature in cymod_r.pxd"
     parms = sig_match.group(1)
-    assert "processor_type" in parms, (
-        f"parm name lost / mangled — full signature parms: {parms!r}"
-    )
+    assert (
+        "processor_type" in parms
+    ), f"parm name lost / mangled — full signature parms: {parms!r}"
     # And the parm name must be a STANDALONE token, not a substring of a
     # mangled name.
-    assert re.search(r"\bprocessor_type\b", parms), (
-        f"parm name appears mangled (not a standalone token): {parms!r}"
-    )
+    assert re.search(
+        r"\bprocessor_type\b", parms
+    ), f"parm name appears mangled (not a standalone token): {parms!r}"
 
 
 @pytest.mark.parametrize(
@@ -80,9 +95,15 @@ def test_prefix_strip_renamer_preserves_parm_name(tmp_path):
     [
         ("amdsmi_processor_type_t", "processor_type_t"),
         ("amdsmi_get_processor_type", "get_processor_type"),
-        ("AMDSMI_MAX_DEVICES", "AMDSMI_MAX_DEVICES"),  # different prefix — leave
+        (
+            "AMDSMI_MAX_DEVICES",
+            "AMDSMI_MAX_DEVICES",
+        ),  # different prefix — leave
         ("processor_type", "processor_type"),  # no prefix — leave
-        ("amdsmi_amdsmi_double", "amdsmi_double"),  # only one ^amdsmi_ stripped
+        (
+            "amdsmi_amdsmi_double",
+            "amdsmi_double",
+        ),  # only one ^amdsmi_ stripped
     ],
 )
 def test_prefix_strip_renamer_unit(name, expected):

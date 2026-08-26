@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression test: array field whose element type is a typedef of ``void *``.
 
 Real-world hit:
@@ -27,7 +46,6 @@ import re
 
 from _codegen_helpers import make_generator, write_module
 
-
 HEADER_VOID_TYPEDEF = """
 typedef void* handle_t;
 typedef struct container_s {
@@ -52,9 +70,9 @@ def _emitted_field_line(text: str, struct_name: str, field_name: str) -> str:
     in_struct = False
     for line in text.splitlines():
         stripped = line.strip()
-        if stripped.startswith(f"cdef struct {struct_name}") or stripped.startswith(
-            f"ctypedef struct {struct_name}"
-        ):
+        if stripped.startswith(
+            f"cdef struct {struct_name}"
+        ) or stripped.startswith(f"ctypedef struct {struct_name}"):
             in_struct = True
             continue
         if in_struct:
@@ -63,7 +81,9 @@ def _emitted_field_line(text: str, struct_name: str, field_name: str) -> str:
                 continue
             if field_name in stripped:
                 return stripped
-    raise AssertionError(f"field {field_name} not found in struct {struct_name}")
+    raise AssertionError(
+        f"field {field_name} not found in struct {struct_name}"
+    )
 
 
 def test_void_typedef_array_field_renders_suffix_after_name(tmp_path):
@@ -73,15 +93,17 @@ def test_void_typedef_array_field_renders_suffix_after_name(tmp_path):
     line = _emitted_field_line(pxd, "container_s", "arr")
     # Want: void *arr[8]   (suffix after name)
     # Got:  void *[8] arr  (suffix before name — Cython rejects)
-    assert re.search(r"void\s*\*\s*arr\s*\[\s*8\s*\]", line), (
-        f"expected `void *arr[8]`-shape, got: {line!r}"
-    )
-    assert not re.search(r"void\s*\*\s*\[\s*8\s*\]\s*arr", line), (
-        f"emitted broken `void *[8] arr` shape: {line!r}"
-    )
+    assert re.search(
+        r"void\s*\*\s*arr\s*\[\s*8\s*\]", line
+    ), f"expected `void *arr[8]`-shape, got: {line!r}"
+    assert not re.search(
+        r"void\s*\*\s*\[\s*8\s*\]\s*arr", line
+    ), f"emitted broken `void *[8] arr` shape: {line!r}"
 
 
-def test_struct_pointer_typedef_array_field_renders_suffix_after_name(tmp_path):
+def test_struct_pointer_typedef_array_field_renders_suffix_after_name(
+    tmp_path,
+):
     """For a `typedef struct foo* foo_t;` typedef, the renderer keeps the
     typedef name (no canonical expansion to ``foo *``) because the
     innermost canonical layer is a record, not a basic type — so
@@ -94,9 +116,9 @@ def test_struct_pointer_typedef_array_field_renders_suffix_after_name(tmp_path):
     files = write_module(gen, tmp_path)
     pxd = files["cymod_s.pxd"]
     line = _emitted_field_line(pxd, "container2_s", "arr")
-    assert re.search(r"foo_t\s+arr\s*\[\s*8\s*\]", line), (
-        f"expected `foo_t arr[8]`-shape, got: {line!r}"
-    )
-    assert not re.search(r"\[\s*8\s*\]\s*arr", line), (
-        f"emitted broken `[8] arr` shape: {line!r}"
-    )
+    assert re.search(
+        r"foo_t\s+arr\s*\[\s*8\s*\]", line
+    ), f"expected `foo_t arr[8]`-shape, got: {line!r}"
+    assert not re.search(
+        r"\[\s*8\s*\]\s*arr", line
+    ), f"emitted broken `[8] arr` shape: {line!r}"

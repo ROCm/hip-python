@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2025 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression lock-in for scalar callee-allocated OUT returns in
 ``support.recipes.rocm.hipsparselt``.
 
@@ -32,7 +51,8 @@ def _build(header_text: str):
     parser = CParser("input.h", unsaved_files=[("input.h", header_text)])
     parser.parse()
     return treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
 
 
@@ -65,17 +85,23 @@ def _assert_scalar_return(recipe, p):
 
 
 def test_version_and_property_are_scalar_returns():
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsparseLtHandle_t;
         typedef int hipLibraryPropertyType;
         /** @param[out] version version number. */
         int hipsparseLtGetVersion(const hipsparseLtHandle_t* handle, int* version);
         /** @param[out] value property value. */
         int hipsparseLtGetProperty(hipLibraryPropertyType propertyType, int* value);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
-    _assert_scalar_return(rocm.hipsparselt, _parm(root, "hipsparseLtGetVersion", "version"))
-    _assert_scalar_return(rocm.hipsparselt, _parm(root, "hipsparseLtGetProperty", "value"))
+    _assert_scalar_return(
+        rocm.hipsparselt, _parm(root, "hipsparseLtGetVersion", "version")
+    )
+    _assert_scalar_return(
+        rocm.hipsparselt, _parm(root, "hipsparseLtGetProperty", "value")
+    )
 
 
 def test_override_forces_scalar_return_without_parseable_tag():
@@ -87,15 +113,21 @@ def test_override_forces_scalar_return_without_parseable_tag():
     tag regex. Here we drop the tags entirely to prove the override — not the
     doxygen chain — is what pins ``OUT_CALLEE_ALLOCATED`` + rank 0.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsparseLtHandle_t;
         typedef int hipLibraryPropertyType;
         int hipsparseLtGetVersion(const hipsparseLtHandle_t* handle, int* version);
         int hipsparseLtGetProperty(hipLibraryPropertyType propertyType, int* value);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
-    _assert_scalar_return(rocm.hipsparselt, _parm(root, "hipsparseLtGetVersion", "version"))
-    _assert_scalar_return(rocm.hipsparselt, _parm(root, "hipsparseLtGetProperty", "value"))
+    _assert_scalar_return(
+        rocm.hipsparselt, _parm(root, "hipsparseLtGetVersion", "version")
+    )
+    _assert_scalar_return(
+        rocm.hipsparselt, _parm(root, "hipsparseLtGetProperty", "value")
+    )
 
 
 def test_override_is_transparent_for_non_listed_params():
@@ -103,36 +135,47 @@ def test_override_is_transparent_for_non_listed_params():
     the delegated hipsparse tail would — the override must not perturb any
     handle / descriptor parm it doesn't explicitly target.
     """
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipsparseLtHandle_t;
         int hipsparseLtInit(hipsparseLtHandle_t* handle);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
     p = _parm(root, "hipsparseLtInit", "handle")
-    assert ("hipsparseLtInit", "handle") not in rocm.hipsparselt._SCALAR_OUT_PARMS
-    assert rocm.hipsparselt.ptr_parm_intent(p) == rocm.hipsparse.ptr_parm_intent(p)
+    assert (
+        "hipsparseLtInit",
+        "handle",
+    ) not in rocm.hipsparselt._SCALAR_OUT_PARMS
+    assert rocm.hipsparselt.ptr_parm_intent(
+        p
+    ) == rocm.hipsparse.ptr_parm_intent(p)
     assert rocm.hipsparselt.ptr_rank(p) == rocm.hipsparse.ptr_rank(p)
 
 
 def test_workspace_size_is_scalar_return():
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsparseLtHandle_t;
         typedef struct { int x; } hipsparseLtMatmulPlan_t;
         /** @param[out] workspaceSize workspace size in bytes. */
         int hipsparseLtMatmulGetWorkspace(const hipsparseLtHandle_t* handle,
                                           const hipsparseLtMatmulPlan_t* plan,
                                           unsigned long* workspaceSize);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
     _assert_scalar_return(
-        rocm.hipsparselt, _parm(root, "hipsparseLtMatmulGetWorkspace", "workspaceSize")
+        rocm.hipsparselt,
+        _parm(root, "hipsparseLtMatmulGetWorkspace", "workspaceSize"),
     )
 
 
 def test_compressed_sizes_are_two_scalar_returns():
     """Both size out-pointers of ``hipsparseLtSpMMACompressedSize`` become
     returned scalars (a two-element return tuple with the status)."""
-    root = _build("""
+    root = _build(
+        """
         typedef struct { int x; } hipsparseLtHandle_t;
         typedef struct { int x; } hipsparseLtMatmulPlan_t;
         /**
@@ -143,21 +186,27 @@ def test_compressed_sizes_are_two_scalar_returns():
                                            const hipsparseLtMatmulPlan_t* plan,
                                            unsigned long* compressedSize,
                                            unsigned long* compressBufferSize);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
     for pname in ("compressedSize", "compressBufferSize"):
         _assert_scalar_return(
-            rocm.hipsparselt, _parm(root, "hipsparseLtSpMMACompressedSize", pname)
+            rocm.hipsparselt,
+            _parm(root, "hipsparseLtSpMMACompressedSize", pname),
         )
 
 
 def test_handle_creator_is_scalar_return():
     """A ``void** handle`` creator stays a returned handle (hipsparse rule)."""
-    root = _build("""
+    root = _build(
+        """
         typedef void* hipsparseLtHandle_t;
         int hipsparseLtInit(hipsparseLtHandle_t* handle);
-    """)
+    """
+    )
     _bind(root, rocm.hipsparselt)
     p = _parm(root, "hipsparseLtInit", "handle")
-    assert rocm.hipsparselt.ptr_parm_intent(p) == ParmIntent.OUT_CALLEE_ALLOCATED
+    assert (
+        rocm.hipsparselt.ptr_parm_intent(p) == ParmIntent.OUT_CALLEE_ALLOCATED
+    )
     assert rocm.hipsparselt.ptr_rank(p) == 0

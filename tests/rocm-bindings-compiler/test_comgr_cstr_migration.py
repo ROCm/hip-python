@@ -1,6 +1,25 @@
 # MIT License
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Regression tests for the comgr.py migration from
 ``to_cstr`` + ``_KeepAliveMixin`` to direct ``CStr``.
 
@@ -25,7 +44,6 @@ the rocm-bindings-compiler wheel is installed.
 import gc
 
 import pytest
-
 from rocm.bindings.util import types as _t
 
 
@@ -73,7 +91,9 @@ def test_isa_name_bytes_and_str_dedup_to_same_canonical_pointer():
     Action("COMPILE_SOURCE_TO_BC", isa_name=isa)
     Action("COMPILE_SOURCE_TO_BC", isa_name=isa.encode("utf-8"))
     # Exactly one canonical bytes for this content.
-    matching = [b for b in _t.CStr._retained_inputs if b == isa.encode("utf-8")]
+    matching = [
+        b for b in _t.CStr._retained_inputs if b == isa.encode("utf-8")
+    ]
     assert len(matching) == 1
 
 
@@ -92,7 +112,9 @@ def test_repeated_set_options_with_identical_flags_bounded():
     # the count grows by len(flags) per call. Verify that the
     # backing bytes content is deduplicated in CStr._retained_inputs
     # — that's the bound that matters for memory.
-    assert len(_t.CStr._retained_inputs) <= 4  # 2 unique flags (+slack for any prior)
+    assert (
+        len(_t.CStr._retained_inputs) <= 4
+    )  # 2 unique flags (+slack for any prior)
 
 
 def test_data_name_str_interned_after_data_dropped():
@@ -123,7 +145,9 @@ def test_action_kind_str_to_enum_accepts_short_and_full_prefix():
     from rocm.comgr.comgr import Action
 
     short = Action.action_kind_str_to_enum("COMPILE_SOURCE_TO_BC")
-    full = Action.action_kind_str_to_enum("AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC")
+    full = Action.action_kind_str_to_enum(
+        "AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC"
+    )
     assert short is full
     assert short.name == "AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC"
 
@@ -188,9 +212,9 @@ def test_valid_action_kinds_contains_stable_baseline():
         "LAST",
     }
     missing = baseline - set(keys)
-    assert not missing, (
-        f"valid_action_kinds() missing baseline keys: {missing}"
-    )
+    assert (
+        not missing
+    ), f"valid_action_kinds() missing baseline keys: {missing}"
     # Every returned key must round-trip through the lookup.
     for k in keys:
         Action.action_kind_str_to_enum(k)
@@ -201,14 +225,24 @@ def test_valid_data_kinds_contains_stable_baseline():
 
     keys = Data.valid_kinds()
     baseline = {
-        "UNDEF", "SOURCE", "INCLUDE", "PRECOMPILED_HEADER",
-        "DIAGNOSTIC", "LOG", "BC", "RELOCATABLE", "EXECUTABLE",
-        "BYTES", "FATBIN", "AR", "BC_BUNDLE", "AR_BUNDLE", "LAST",
+        "UNDEF",
+        "SOURCE",
+        "INCLUDE",
+        "PRECOMPILED_HEADER",
+        "DIAGNOSTIC",
+        "LOG",
+        "BC",
+        "RELOCATABLE",
+        "EXECUTABLE",
+        "BYTES",
+        "FATBIN",
+        "AR",
+        "BC_BUNDLE",
+        "AR_BUNDLE",
+        "LAST",
     }
     missing = baseline - set(keys)
-    assert not missing, (
-        f"Data.valid_kinds() missing baseline keys: {missing}"
-    )
+    assert not missing, f"Data.valid_kinds() missing baseline keys: {missing}"
     for k in keys:
         Data.kind_str_to_enum(k)
 
@@ -219,9 +253,7 @@ def test_valid_languages_contains_stable_baseline():
     keys = Action.valid_languages()
     baseline = {"NONE", "OPENCL_1_2", "OPENCL_2_0", "HIP", "LAST"}
     missing = baseline - set(keys)
-    assert not missing, (
-        f"valid_languages() missing baseline keys: {missing}"
-    )
+    assert not missing, f"valid_languages() missing baseline keys: {missing}"
     for k in keys:
         Action.lang_str_to_enum(k)
 
@@ -238,8 +270,11 @@ def test_removed_action_kinds_raise_attribute_error():
     in short form and in full-prefix form."""
     from rocm.comgr.comgr import Action
 
-    for short in ("ADD_DEVICE_LIBRARIES", "OPTIMIZE_BC_TO_BC",
-                  "COMPILE_SOURCE_TO_FATBIN"):
+    for short in (
+        "ADD_DEVICE_LIBRARIES",
+        "OPTIMIZE_BC_TO_BC",
+        "COMPILE_SOURCE_TO_FATBIN",
+    ):
         with pytest.raises(AttributeError):
             Action.action_kind_str_to_enum(short)
         with pytest.raises(AttributeError):
