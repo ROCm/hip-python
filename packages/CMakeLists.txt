@@ -413,9 +413,11 @@ if(HIP_PYTHON_BUILD_NUMBA_HIP)
   # `python -m build` path as the hip-python metapackage above.
   #
   # SKIP_AUDITWHEEL: numba-hip's setup.py forces a non-pure (platlib)
-  # wheel tagged py3-none-linux_x86_64, but it ships no ELF/shared
-  # library, so auditwheel repair rejects it. Skip the repair and copy
-  # the wheel through as-is.
+  # wheel, but it ships no ELF/shared library, so auditwheel repair
+  # rejects it. Skip the repair and copy the wheel through as-is. That
+  # setup.py therefore tags the wheel py3-none-${AUDITWHEEL_PLAT} itself
+  # -- nothing downstream retags it, and a py3-none-linux_x86_64 is a
+  # wheel no index accepts.
   hip_python_add_wheel_target(
     TARGET numba_hip_wheel
     PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/numba-hip"

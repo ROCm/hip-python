@@ -47,8 +47,15 @@
 # Env read by install_rocm:
 #   ROCM_SPECIFIER  required. 'X.Y', 'X.Y.Z', 'therock:X.Y.Z', 'therock:X.Y.ZrcR',
 #                   'therock:X.Y.ZaYYYYMMDD', 'therock:*', 'therock:*rc*',
-#                   'therock:*a*' or 'preinstalled'.
+#                   'therock:*a*' or 'preinstalled'. The three wildcards may
+#                   also be written 'therock:?', 'therock:?rc?' and
+#                   'therock:?a?', which install_rocm rewrites to the '*'
+#                   spellings; see __canonicalize_rocm_specifier.
 #   AMDGPU_TARGETS  required for the 'therock:' specifiers; a single target.
+#                   'gfx942', an artifact group such as 'gfx94X-dcgpu', or a
+#                   spelling that carries a board suffix, a model letter or
+#                   feature flags: install_rocm reduces each of those to the
+#                   target, see __normalize_amdgpu_targets.
 #   ROCM_PATH       default '/opt/rocm'.
 #   ROCM_PKGS       packages to install for the non-TheRock path; empty
 #                   installs the 'rocm' meta package.
@@ -164,6 +171,7 @@ function __validate_rocm_version_expr() {
     if [[ ! "${therock_rocm_version}" =~ ^(\*|\*(a|rc)\*|([0-9]+)\.([0-9]+)\.([0-9]+)((a|rc)[0-9]+)?)$ ]]; then
       printf "ERROR: Invalid therock ROCM_SPECIFIER format: '${rocm_specifier}'\n" >&2
       printf "ERROR: Expected formats: 'therock:*', 'therock:*(a|rc)*', 'therock:X.Y.Z(.(a|rc)R)?'\n" >&2
+      printf "ERROR: The wildcards may also be written 'therock:?', 'therock:?a?' and 'therock:?rc?'\n" >&2
       return 1
     fi
     return
@@ -172,7 +180,7 @@ function __validate_rocm_version_expr() {
     : # pass
   else
     printf "ERROR: Invalid ROCM_SPECIFIER format: '${rocm_specifier}'\n" >&2
-    printf "ERROR: Expected format: 'X.Y' or 'X.Y.Z' (numbers), 'preinstalled', 'therock:X.Y.Z', 'therock:X.Y.ZrcR' (R is a number), 'therock:X.Y.ZaD' (D is a date in format 'YYYYMMDD'), 'therock:*', 'therock:*rc*', 'therock:*a*'\n" >&2
+    printf "ERROR: Expected format: 'X.Y' or 'X.Y.Z' (numbers), 'preinstalled', 'therock:X.Y.Z', 'therock:X.Y.ZrcR' (R is a number), 'therock:X.Y.ZaD' (D is a date in format 'YYYYMMDD'), 'therock:*', 'therock:*rc*', 'therock:*a*' (also spelled 'therock:?', 'therock:?rc?', 'therock:?a?')\n" >&2
     return 1
   fi
 }
@@ -271,6 +279,91 @@ EOF
   ldconfig # update ld cache
 }
 
+# Rewrites the '?' spellings of the three therock wildcards to the '*' ones,
+# in place, and exports the result.
+#
+# A specifier is typically typed into a GitHub comment, where '*a*' is read as
+# emphasis and renders as 'a': the text a reader sees is then not the specifier
+# that ran. '?a?' survives the rendering and means the same thing, so it is
+# rewritten here, once, ahead of everything that reads ROCM_SPECIFIER --
+# validation, the tarball URL, the env file the later steps source, and the
+# step summary all see the one canonical spelling.
+#
+# The patterns are quoted because an unquoted '?' in a case pattern is a glob
+# that matches any single character.
+function __canonicalize_rocm_specifier() {
+  case "${ROCM_SPECIFIER:-}" in
+    'therock:?')    ROCM_SPECIFIER='therock:*'    ;;
+    'therock:?a?')  ROCM_SPECIFIER='therock:*a*'  ;;
+    'therock:?rc?') ROCM_SPECIFIER='therock:*rc*' ;;
+  esac
+  export ROCM_SPECIFIER
+}
+
+# Reduces AMDGPU_TARGETS to the gfx target the TheRock path can use, in place,
+# and exports the result.
+#
+# Only a 'therock:' specifier reads it, to pick which distribution is
+# downloaded, and it arrives from wherever a caller happens to keep the
+# architecture: a workflow's constant, a SLURM GRES type name, the 'gfx90a'
+# default of ci/internal/prepare-container.sh, or a shell where the same
+# variable also drives a device-code compile and so carries a board suffix or
+# feature flags. Every one of those spellings names one target here.
+#
+# This is insurance rather than a check on an input: without it
+# 'gfx942-mi300x' reaches amdgpu_target_to_therock_artifact_group, which derives
+# a group by replacing the last character with 'X' and so reports that
+# 'gfx942-mi300x' "does not match any artifact group" -- true, and no help at
+# all in finding the cause.
+#
+# A model name such as 'mi300x' is an error rather than something to resolve.
+# Translating one is the caller's job, done before a job is even submitted,
+# where a name we do not know can still be reported as a bad request.
+function __normalize_amdgpu_targets() {
+  local target="${AMDGPU_TARGETS:-}"
+
+  # Nothing to normalise, and nothing to complain about either: the package and
+  # 'preinstalled' paths never read it. The TheRock path does, so an empty value
+  # there is worth saying plainly rather than leaving to 'unbound variable'.
+  if [[ -z "${target}" ]]; then
+    if [[ "${ROCM_SPECIFIER:-}" == "therock:"* ]]; then
+      printf "ERROR: AMDGPU_TARGETS is empty; a 'therock:' ROCM_SPECIFIER needs a target like gfx942 to pick a distribution\n" >&2
+      return 1
+    fi
+    return 0
+  fi
+
+  # 'gfx942:sramecc+:xnack-' -> 'gfx942'. The feature flags belong to a
+  # compiler invocation and have no bearing on which tarball is downloaded.
+  target=${target%%:*}
+
+  case "${target,,}" in
+    # Already an artifact group. install_therock_from_tarball tries the value
+    # verbatim before any derived name and matches it against a list of
+    # capital-X spellings, so this one keeps the case it came in with.
+    gfx*-all|gfx*-dcgpu|gfx*-dgpu) ;;
+    # 'gfx942-mi300x' -> 'gfx942'. A board suffix says which card, which the
+    # distribution does not distinguish.
+    gfx*-*) target=${target%%-*} ; target=${target,,} ;;
+    gfx*) target=${target,,} ;;
+    *)
+      printf "ERROR: AMDGPU_TARGETS='%s' does not name a gfx target; pass one like gfx942\n" "${AMDGPU_TARGETS}" >&2
+      return 1 ;;
+  esac
+
+  # 'gfx1100p' -> 'gfx1100'. SLURM's RDNA variant names put the model in a
+  # single trailing letter rather than behind a dash, so gfx1100p and gfx1100w
+  # are two cards of the gfx1100 architecture and gfx1101v is one of gfx1101.
+  # Only a four-digit number can carry such a letter: gfx90a's is part of the
+  # architecture, which is why this asks for the digits rather than stripping
+  # any trailing letter it finds.
+  if [[ ${target} =~ ^gfx[0-9]{4}[a-z]$ ]]; then
+    target=${target:0:-1}
+  fi
+
+  export AMDGPU_TARGETS=${target}
+}
+
 function install_rocm() {
   local -
 
@@ -280,6 +373,8 @@ function install_rocm() {
 
   set -u
 
+  __canonicalize_rocm_specifier
+  __normalize_amdgpu_targets
   __validate_rocm_version_expr "${ROCM_SPECIFIER}"
 
   if [[ "${ROCM_SPECIFIER}" == "therock:"* ]]; then
@@ -345,6 +440,11 @@ function amdgpu_target_to_therock_artifact_group() {
     gfx90X-dcgpu
     gfx94X-dcgpu
     gfx950-dcgpu
+    # The Strix APUs publish per target rather than per family: the index lists
+    # gfx1150 and gfx1151 themselves, and no gfx115X spelling exists for the
+    # derivation below to find.
+    gfx1150
+    gfx1151
   )
 
   local matched_groups=()
@@ -449,7 +549,9 @@ print(json.load(open('${json_file}'))['latest'])")
 # Args:
 #   $1 - therock_rocm_version (optional), e.g. "7.10.0rc2", "7.10.0", "*", "*a*"
 #        "*rc*", ....
-#        if not provided, the version is extracted from ROCM_SPECIFIER env var.
+#        if not provided, the version is extracted from ROCM_SPECIFIER env var,
+#        which install_rocm has by then rewritten to the '*' spelling of a
+#        wildcard written with '?'. Only the '*' spellings are understood here.
 #   $2 - artifact_group (optional), e.g. gfx90X-dcgpu, gfx110X-dgpu, gfx1150,
 #        gfx120X-all
 #        if not provided, tries AMDGPU_TARGETS directly, then all applicable
@@ -481,7 +583,19 @@ function install_therock_from_tarball() {
 
   local os="linux"
   local list=""
-  local first_artifact_group="${artifact_groups_array[0]}"
+  # Defaulted, because a target the table does not know still has a verbatim
+  # attempt coming in targets_to_try, and reading element zero of an empty array
+  # under 'set -u' would end the run with an "unbound variable" that names
+  # neither the target nor the table.
+  local first_artifact_group="${artifact_groups_array[0]:-}"
+
+  # A group is only needed to resolve a wildcard, since it is what the version
+  # index is keyed by. An explicit version needs none, so a target the table
+  # does not know is fatal here and nowhere else.
+  if [[ -z "${first_artifact_group}" && "${therock_rocm_version}" == *"*"* ]]; then
+    printf "ERROR: AMDGPU_TARGETS='%s' matches no TheRock artifact group, so the '%s' version cannot be resolved; name the version explicitly, or add the group to amdgpu_target_to_therock_artifact_group\n" "${AMDGPU_TARGETS}" "${therock_rocm_version}" >&2
+    return 1
+  fi
 
   # Determine list URL and resolve wildcards
   if [[ "${therock_rocm_version}" == *"rc"* ]]; then

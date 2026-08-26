@@ -54,11 +54,21 @@ How it is done:
   (``py3``/``none``) while retaining the platform tag -- otherwise marking the
   distribution non-pure would also make the tag interpreter-specific
   (e.g. ``cp312-cp312-...``). The build step then produces a
-  ``py3-none-<platform>`` wheel; CI relabels the platform tag to manylinux.
+  ``py3-none-<platform>`` wheel.
+
+  The platform is ``AUDITWHEEL_PLAT`` when the environment names one, and the
+  manylinux images CI builds in always name it. Nothing retags this wheel
+  afterwards: ``packages/CMakeLists.txt`` passes ``SKIP_AUDITWHEEL``
+  for numba-hip because it ships no ELF for ``auditwheel repair`` to look at,
+  so whatever is chosen here is what the artifact carries -- and a bare
+  ``linux_x86_64`` is a tag no index accepts. Off manylinux the generic tag
+  stands, so a local build on another platform is not mislabelled.
 
 Once numba-hip grows real compiled extensions this whole module becomes
 redundant (platlib placement and tagging are then automatic) and can be removed.
 """
+
+import os
 
 from setuptools import setup
 from setuptools.dist import Distribution
@@ -85,7 +95,11 @@ class bdist_wheel(_bdist_wheel):
         # Keep the wheel interpreter-agnostic (py3-none) but platform-specific
         # (platlib). Without this, a non-pure dist yields a cpXY-specific tag.
         _, _, plat = super().get_tag()
-        return "py3", "none", plat
+        # The manylinux images set AUDITWHEEL_PLAT to the tag their glibc
+        # supports. This wheel is not repaired (see the module docstring), so
+        # asking for it here is the only chance to be tagged something an
+        # index will take.
+        return "py3", "none", os.environ.get("AUDITWHEEL_PLAT") or plat
 
 
 setup(distclass=BinaryDistribution, cmdclass={"bdist_wheel": bdist_wheel})

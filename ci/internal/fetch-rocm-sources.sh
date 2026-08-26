@@ -26,7 +26,8 @@ set -xeu
 #                   here: it selects which ref naming scheme to derive.
 #   ROCM_VERSION    the X.Y.Z the ref is derived from. Defaults to the version
 #                   of the installed ROCm, which is what makes a wildcard
-#                   specifier like 'therock:*' resolve to a concrete ref.
+#                   specifier like 'therock:*' (or 'therock:?', the spelling
+#                   that survives a GitHub comment) resolve to a concrete ref.
 #   ROCM_SOURCES_REF
 #                   one ref for all three repositories, overriding the derived
 #                   one. For a version whose release branches do not exist yet,
