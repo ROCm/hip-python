@@ -242,14 +242,17 @@ $env:HIP_PYTHON_cudaError_t_HALLUCINATE = "1"
 # Suite 1 - hip-python examples.
 # Suite 2 - hip-python-interop pynvml/NVML shim unit tests (mocked, no GPU).
 # Suite 3 - rocm-bindings unit tests (core + compiler), GPU-free.
+# Suite 4 - handcoded-Cython stubs: checks that the hand-maintained
+#           cuda.bindings.cufile stub still covers the installed module.
 #
-# Suites 2 and 3 live outside the importable packages (tests/, not under src/) so
+# Suites 2 to 4 live outside the importable packages (tests/, not under src/) so
 # they exercise the *installed* wheels.
 $suites = [ordered] @{
     "examples"                = Join-Path $examplesBuildDir "examples"
     "hip-python-interop"      = Join-Path $repoRoot "tests\hip-python-interop"
     "rocm-bindings-core"      = Join-Path $repoRoot "tests\rocm-bindings-core"
     "rocm-bindings-compiler"  = Join-Path $repoRoot "tests\rocm-bindings-compiler"
+    "stubs"                   = Join-Path $repoRoot "tests\stubs"
 }
 
 # pytest exits 5 when it collected nothing to run. On Windows that is the

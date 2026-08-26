@@ -622,19 +622,31 @@ if(HIP_PYTHON_ENABLE_STUBGEN)
   message(STATUS "stubgen executable: ${HIP_PYTHON_STUBGEN_EXECUTABLE}")
 
   # Single repo-spanning enumeration. Each entry:
-  #   "<package-dir>|<dotted-module>|<source-pyi-relative-dir>|<cython-target>"
+  #   "<package-dir>|<source-pyi-relative-dir>|<cython-target>"
   #
   # `<source-pyi-relative-dir>` is relative to `packages/`; it's where the
   # `.pyi` lands in the source tree (next to the `.pyx`).
   # `<cython-target>` is the CMake target whose compiled `.so` stubgen
-  # introspects.
+  # introspects. Its dotted module name is read back from the target's
+  # `HIP_PYTHON_MODULE_NAME` property rather than repeated here, so a
+  # target that spells its module differently per platform cannot be
+  # mis-registered.
+  #
+  # Two kinds of handcoded module are deliberately absent:
+  #
+  #   * The DLL loaders (`rocm.bindings.util.{loader,posixloader,
+  #     win32loader}`). Every one of their functions is `cdef`, so they
+  #     are `cimport`-only and their stub would carry nothing but
+  #     `__pyx_capi__` and `__test__` — the same reason the generated
+  #     `cy*` wrappers get no `.pyi`. They ship as `.pxd`/`.pyx` only.
+  #   * `cuda.bindings.cufile`, whose `.pyi` is hand-maintained rather
+  #     than generated.
+  #
+  # See the notes in `share/design/BUILDING.md`.
   set(HIP_PYTHON_STUBGEN_MODULES
-    "core|rocm.bindings.util.types|rocm-bindings-core/src/rocm/bindings/util|rocm_bindings_core_types"
-    "core|rocm.bindings.util.loader|rocm-bindings-core/src/rocm/bindings/util|rocm_bindings_core_loader"
-    "core|rocm.bindings.util.posixloader|rocm-bindings-core/src/rocm/bindings/util|rocm_bindings_core_platform_loader"
-    "hip|rocm.bindings._hip_helpers|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hip_helpers"
-    "hip|rocm.bindings._hiprtc_helpers|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hiprtc_helpers"
-    "interop|cuda.bindings.cufile|hip-python-interop/src/cuda/bindings|cuda_bindings_cufile"
+    "core|rocm-bindings-core/src/rocm/bindings/util|rocm_bindings_core_types"
+    "hip|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hip_helpers"
+    "hip|rocm-bindings-hip/src/rocm/bindings|rocm_bindings_hiprtc_helpers"
   )
 
   # Bucket per-module stub targets by package shortname; these populate
@@ -646,12 +658,41 @@ if(HIP_PYTHON_ENABLE_STUBGEN)
   set(_compiler_stub_targets)
   set(_interop_stub_targets)
 
+  # Build-tree roots of every package configured in this run. stubgen has
+  # to *import* the module it stubs, so the module's own imports must
+  # resolve too — `rocm.bindings._hip_helpers` pulls in
+  # `rocm.bindings.util.types` and `rocm.bindings.hiprtc`. Without these on
+  # PYTHONPATH those imports fall through to whatever wheels happen to be
+  # installed, and a site-packages copy older than the working tree makes
+  # stubgen fail outright ("module 'rocm.bindings.util.types' has no
+  # attribute 'ListOfInt64'") or, worse, stub against the wrong dependency.
+  # Those roots are only useful once the extensions are actually in them,
+  # so every stub target also depends on the aggregate build target of each
+  # package contributing a root.
+  set(_stubgen_pythonpath_roots)
+  set(_stubgen_package_targets)
+  foreach(_pkg_triple IN ITEMS
+      "CORE|rocm-bindings-core|package_rocm_bindings_core"
+      "HIP|rocm-bindings-hip|package_rocm_bindings_hip"
+      "LIBRARIES|rocm-bindings-libraries|package_rocm_bindings_libraries"
+      "SYSTEMS|rocm-bindings-systems|package_rocm_bindings_systems"
+      "COMPILER|rocm-bindings-compiler|package_rocm_bindings_compiler"
+      "INTEROP|hip-python-interop|package_hip_python_interop")
+    string(REPLACE "|" ";" _pkg_fields "${_pkg_triple}")
+    list(GET _pkg_fields 0 _pkg_opt)
+    list(GET _pkg_fields 1 _pkg_dir)
+    list(GET _pkg_fields 2 _pkg_target)
+    if(HIP_PYTHON_BUILD_${_pkg_opt} AND TARGET ${_pkg_target})
+      list(APPEND _stubgen_pythonpath_roots "${CMAKE_CURRENT_BINARY_DIR}/${_pkg_dir}")
+      list(APPEND _stubgen_package_targets "${_pkg_target}")
+    endif()
+  endforeach()
+
   foreach(_entry IN LISTS HIP_PYTHON_STUBGEN_MODULES)
     string(REPLACE "|" ";" _fields "${_entry}")
     list(GET _fields 0 _pkg_short)
-    list(GET _fields 1 _module)
-    list(GET _fields 2 _pyi_subdir)
-    list(GET _fields 3 _cython_target)
+    list(GET _fields 1 _pyi_subdir)
+    list(GET _fields 2 _cython_target)
 
     # Skip entries whose owning package isn't enabled in this configure
     # — the cython target won't exist, and add_custom_target DEPENDS on
@@ -663,17 +704,29 @@ if(HIP_PYTHON_ENABLE_STUBGEN)
     endif()
 
     # Skip entries whose cython target was not created in this configure —
-    # e.g. optional modules like cuda.bindings.cufile that are only built
-    # when their backing library (hipfile) is present. DEPENDS on a missing
-    # target would otherwise fail at generate time.
+    # e.g. a module that is only built when its backing ROCm library is
+    # present. DEPENDS on a missing target would otherwise fail at
+    # generate time.
     if(NOT TARGET ${_cython_target})
       continue()
+    endif()
+
+    # The dotted module name follows the target, so the platform-specific
+    # loader stubs itself correctly on both Linux and Windows.
+    get_target_property(_module ${_cython_target} HIP_PYTHON_MODULE_NAME)
+    if(NOT _module)
+      message(FATAL_ERROR
+        "Stubgen entry '${_entry}' names target ${_cython_target}, which "
+        "has no HIP_PYTHON_MODULE_NAME property. Only targets created by "
+        "hip_python_add_cython_module() can be stubbed.")
     endif()
 
     hip_python_add_stubgen_target(
       MODULE "${_module}"
       CYTHON_TARGET "${_cython_target}"
       SOURCE_PYI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${_pyi_subdir}"
+      EXTRA_PYTHONPATH ${_stubgen_pythonpath_roots}
+      EXTRA_DEPENDS ${_stubgen_package_targets}
     )
     list(APPEND _${_pkg_short}_stub_targets "${_cython_target}_stub")
   endforeach()

@@ -617,9 +617,16 @@ function(hip_python_add_cython_module)
   list(LENGTH _module_parts _module_parts_len)
   math(EXPR _leaf_index "${_module_parts_len} - 1")
   list(GET _module_parts ${_leaf_index} _module_leaf)
+  # HIP_PYTHON_MODULE_NAME lets consumers recover the dotted name from the
+  # target alone. The stubgen dispatch in packages/CMakeLists.txt relies on
+  # it: its module list names targets only, so a target whose module name
+  # differs per platform -- `rocm_bindings_core_platform_loader` compiles
+  # posixloader on Linux and win32loader on Windows -- cannot be registered
+  # under a name that is wrong on one of them.
   set_target_properties(${ARG_TARGET} PROPERTIES
     OUTPUT_NAME "${_module_leaf}"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${ARG_DESTINATION}"
+    HIP_PYTHON_MODULE_NAME "${ARG_MODULE_NAME}"
   )
 
   # Use package-specific component if provided, otherwise default to Python
@@ -870,19 +877,26 @@ endfunction()
 # aggregate targets) explicitly.
 #
 # Args:
-#   MODULE          Dotted module name (e.g. rocm.bindings.util.types).
-#   CYTHON_TARGET   The cython add-module target whose compiled .so
-#                   stubgen should introspect. Used for DEPENDS and
-#                   for naming the generated <CYTHON_TARGET>_stub
-#                   target.
-#   SOURCE_PYI_DIR  Absolute path to the directory next to the .pyx
-#                   where the generated .pyi should land.
+#   MODULE            Dotted module name (e.g. rocm.bindings.util.types).
+#   CYTHON_TARGET     The cython add-module target whose compiled .so
+#                     stubgen should introspect. Used for DEPENDS and
+#                     for naming the generated <CYTHON_TARGET>_stub
+#                     target.
+#   SOURCE_PYI_DIR    Absolute path to the directory next to the .pyx
+#                     where the generated .pyi should land.
+#   EXTRA_PYTHONPATH  Additional roots to place on PYTHONPATH so the
+#                     stubbed module's own imports resolve against this
+#                     build tree instead of site-packages.
+#   EXTRA_DEPENDS     Targets that must be built for EXTRA_PYTHONPATH to
+#                     be populated (an empty root silently falls back to
+#                     site-packages, which is the failure this avoids).
 #
 # Output target name: ${CYTHON_TARGET}_stub.
 function(hip_python_add_stubgen_target)
   set(options "")
   set(oneValueArgs MODULE CYTHON_TARGET SOURCE_PYI_DIR)
-  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "" ${ARGN})
+  set(multiValueArgs EXTRA_PYTHONPATH EXTRA_DEPENDS)
+  cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   string(REPLACE "." ";" _parts "${ARG_MODULE}")
   list(GET _parts -1 _leaf)
@@ -895,20 +909,51 @@ function(hip_python_add_stubgen_target)
   list(REMOVE_AT _parts -1)
   string(REPLACE ";" "/" _module_subdir "${_parts}")
 
+  # Assemble PYTHONPATH. The staging dir comes first so the module under
+  # inspection always resolves to the freshly built .so, then the sibling
+  # package build trees so its imports do too. The separator is escaped:
+  # a bare ";" would split the -E env argument into two commands.
+  if(WIN32)
+    set(_path_sep "\;")
+  else()
+    set(_path_sep ":")
+  endif()
+  set(_pythonpath "${_staging}")
+  foreach(_root IN LISTS ARG_EXTRA_PYTHONPATH)
+    set(_pythonpath "${_pythonpath}${_path_sep}${_root}")
+  endforeach()
+
   # stubgen with `--module a.b.c --output OUT` writes
   # OUT/a/b/c.pyi (preserves the dotted path inside OUT). Write to
   # a temp dir per invocation, then move the single leaf .pyi to the
   # source-tree destination.
   set(_stubgen_outdir "${_staging}_out")
+  set(_raw_pyi "${_stubgen_outdir}/${_module_subdir}/${_leaf}.pyi")
+
+  # Anchored to CMAKE_SOURCE_DIR (`packages/`) for the same reason as the
+  # wheel assembler above: this helper is mirrored into each
+  # packages/<pkg>/cmake/, and those mirrors do not carry the script.
+  # Stubgen targets only ever exist in the unified build.
+  set(_postprocess_script
+      "${CMAKE_SOURCE_DIR}/../cmake/hip_python_postprocess_stub.py")
+  if(NOT EXISTS "${_postprocess_script}")
+    message(FATAL_ERROR
+      "Stub post-processor not found at ${_postprocess_script}. "
+      "It must live in the repo-root cmake/ directory next to "
+      "HipPythonBuild.cmake.")
+  endif()
 
   add_custom_target(${ARG_CYTHON_TARGET}_stub
     # Tear down + rebuild the staging tree to keep it in sync with
     # the just-built .so on every invocation.
     COMMAND ${CMAKE_COMMAND} -E rm -rf "${_staging}" "${_stubgen_outdir}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${_staging}/${_module_subdir}"
-    # Symlink the just-built .so into the leaf staging directory so
-    # `import <module>` works under PYTHONPATH=${_staging}.
-    COMMAND ${CMAKE_COMMAND} -E create_symlink
+    # Copy (not symlink) the just-built .so into the leaf staging
+    # directory so `import <module>` works under PYTHONPATH=${_staging}.
+    # `cmake -E create_symlink` needs Developer Mode or an elevated shell
+    # on Windows; a copy of one extension module costs nothing and works
+    # everywhere.
+    COMMAND ${CMAKE_COMMAND} -E copy
             "$<TARGET_FILE:${ARG_CYTHON_TARGET}>"
             "${_staging}/${_module_subdir}/$<TARGET_FILE_NAME:${ARG_CYTHON_TARGET}>"
     # Make sure the destination dir exists.
@@ -922,19 +967,24 @@ function(hip_python_add_stubgen_target)
     # signatures, leaving sphinx-autoapi with empty class/method
     # description columns on the rendered docs (rocm.bindings.util.types
     # was the visible regression that motivated this flag).
-    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${_staging}
+    COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${_pythonpath}"
             ${HIP_PYTHON_STUBGEN_EXECUTABLE}
             --module ${ARG_MODULE}
             --output ${_stubgen_outdir}
             --include-private
             --include-docstrings
-    # Move the generated leaf .pyi from the dotted-path layout into
-    # the source-tree destination next to the .pyx.
-    COMMAND ${CMAKE_COMMAND} -E copy
-            "${_stubgen_outdir}/${_module_subdir}/${_leaf}.pyi"
+    # Strip the Cython version out of the stub and stamp it as generated
+    # before it reaches the source tree. This step also does the move rather
+    # than a plain `cmake -E copy`: stubgen skips a module it cannot import
+    # and still exits 0, so the post-processor is where a missing stub turns
+    # into an error that names the module.
+    COMMAND ${Python_EXECUTABLE}
+            "${_postprocess_script}"
+            ${ARG_MODULE}
+            "${_raw_pyi}"
             "${_pyi_path}"
     COMMAND ${CMAKE_COMMAND} -E rm -rf "${_stubgen_outdir}"
-    DEPENDS ${ARG_CYTHON_TARGET}
+    DEPENDS ${ARG_CYTHON_TARGET} ${ARG_EXTRA_DEPENDS}
     BYPRODUCTS "${_pyi_path}"
     COMMENT "stubgen ${ARG_MODULE} -> ${_pyi_path}"
     VERBATIM

@@ -10,7 +10,11 @@ set -xeu
 #
 #   2. The hip-python-interop pynvml/NVML shim unit tests.
 #
-#   3. The numba-hip test suite (tests/numba-hip), run against those same
+#   3. The handcoded-Cython stub suite (tests/stubs), which checks that
+#      the hand-maintained `cuda.bindings.cufile` stub still declares
+#      every public name the installed module exposes.
+#
+#   4. The numba-hip test suite (tests/numba-hip), run against those same
 #      wheels plus the numba_hip wheel. numba-hip's tests and CI were
 #      folded in here when its standalone packages/numba-hip/ci/ scripts
 #      were retired; the unified `all_wheels` target now also builds the
@@ -105,7 +109,18 @@ pytest -v -rs ${src_dir}/tests/rocm-bindings-core
 pytest -v -rs ${src_dir}/tests/rocm-bindings-compiler
 
 ### -------------------------------------------------------------------
-### Suite 4 — numba-hip
+### Suite 4 — handcoded-Cython stubs
+### -------------------------------------------------------------------
+#
+# `cuda.bindings.cufile` is the one handcoded module whose `.pyi` is
+# written by hand instead of generated, so a `.pyx` change can ship
+# without the matching stub edit. This suite checks the stub against the
+# *installed* extension, which is the artifact users consume.
+
+pytest -v -rs ${src_dir}/tests/stubs
+
+### -------------------------------------------------------------------
+### Suite 5 — numba-hip
 ### -------------------------------------------------------------------
 #
 # The tests live OUTSIDE the importable package (tests/numba-hip, not
