@@ -271,8 +271,14 @@ class DeviceArray(NDBuffer):
             Stores a pointer to the data of the original Python object.
         _itemsize (``size_t``, protected):
             Stores the itemsize.
-        __dict__ (`dict`, protected):
-            Dict with member ``__cuda_array_interface__``.
+        _cuda_array_interface (`dict`, protected):
+            The CUDA array interface metadata, handed out as a copy by
+            `~.NDBuffer.__cuda_array_interface__`.
+        _pybuffer_obj (`object`, protected):
+            Keeps the exporter of a wrapped `Py_buffer` alive.
+        _typestr_bytes (`bytes`, protected):
+            NUL-terminated format string handed to consumers of this
+            Python buffer. Must stay alive as long as any view exists.
     """
 
     __pyx_vtable__: ClassVar[PyCapsule] = ...
@@ -1194,6 +1200,14 @@ class NDBuffer(Pointer):
         need to pass the ``_force=True`` keyword argument --- in particular if your
         instance was created from a type that does not implement the CUDA array
         interface protocol.
+
+    Note:
+        This type represents a dense, C-contiguous array; all of its
+        addressing is derived from the shape and the itemsize. An input that
+        implements the CUDA array interface protocol is therefore rejected
+        if it carries a mask, a non-zero offset, or strides that describe a
+        non-contiguous layout. Strides that spell out the contiguous layout
+        the shape already implies are accepted.
     See:
         `~.configure`
 
@@ -1204,8 +1218,14 @@ class NDBuffer(Pointer):
             Stores a pointer to the data of the original Python object.
         _py_buffer_acquired (`bool`, protected):
             Stores a pointer to the data of the original Python object.
-        __dict__ (`dict`, protected):
-            Dict with member ``__cuda_array_interface__``.
+        _cuda_array_interface (`dict`, protected):
+            The CUDA array interface metadata, handed out as a copy by
+            `~.NDBuffer.__cuda_array_interface__`.
+        _pybuffer_obj (`object`, protected):
+            Keeps the exporter of a wrapped `Py_buffer` alive.
+        _typestr_bytes (`bytes`, protected):
+            NUL-terminated format string handed to consumers of this
+            Python buffer. Must stay alive as long as any view exists.
         _itemsize (``size_t``, protected):
             Stores the itemsize. The item size is not member of
             ``__cuda_array_interface__``.
@@ -1222,6 +1242,7 @@ class NDBuffer(Pointer):
     size: Incomplete
     stream_as_int: Incomplete
     typestr: Incomplete
+    __cuda_array_interface__: Incomplete
     def __init__(self, pyobj) -> Any:
         """Constructor.
 
