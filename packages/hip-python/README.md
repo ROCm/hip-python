@@ -12,7 +12,7 @@ The HIP Python ecosystem consists of:
 - `rocm-bindings-core` — shared types, loaders, ROCm path resolution
 - `rocm-bindings-hip` — HIP and HIPRTC bindings
 - `rocm-bindings-libraries` — math libraries (hipBLAS, hipSOLVER, hipFFT, ...)
-- `rocm-bindings-systems` — system libraries (RCCL, ROCTX, amdsmi, HSA)
+- `rocm-bindings-systems` — system libraries (RCCL, ROCTX, amdsmi, hipFILE)
 - `rocm-bindings-compiler` — LLVM-C, COMGR, Clang bindings
 - `hip-python-interop` — CUDA interop layer (`cuda.bindings.*`)
 - `hip-python` — this metapackage
@@ -22,7 +22,7 @@ The HIP Python ecosystem consists of:
 ```bash
 pip install hip-python                  # core + HIP only
 pip install hip-python[libraries]       # + math libraries
-pip install hip-python[systems]         # + RCCL/ROCTX/amdsmi/HSA
+pip install hip-python[systems]         # + RCCL/ROCTX/amdsmi/hipFILE
 pip install hip-python[compiler]        # + LLVM/COMGR/Clang
 ```
 

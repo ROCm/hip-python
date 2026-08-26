@@ -20,6 +20,8 @@
 .. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 .. SOFTWARE.
 
+.. _sec_install:
+
 Installation
 ============
 
@@ -35,9 +37,55 @@ Currently, only AMD GPUs are supported.
 Supported Operation Systems
 ---------------------------
 
-Currently, only Linux is supported by the HIP Python interfaces's library
-loader. The next section lists additional constraints with respect to the
-required ROCm\ |trade| installation.
+Wheels are published for both Linux and Windows. Linux remains the primary
+platform in one respect: every interface is available there.
+
+Windows is supported by the library loader, but ROCm\ |trade| does not ship
+every component for it, so a Windows install offers fewer interfaces. The
+modules below have no Windows counterpart because the library or its headers
+are absent from the Windows ROCm\ |trade| packages:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Unavailable on Windows
+     - Reason
+   * - ``rocm.bindings.amdsmi``
+     - ROCm ships no AMD SMI library for Windows. The ``pynvml`` shim in
+       ``hip-python-interop``, which is backed by it, is unavailable too.
+   * - ``rocm.bindings.roctx``
+     - ROCm ships no ROCTX library for Windows. The ``nvtx`` shim in
+       ``hip-python-interop``, which is backed by it, is unavailable too.
+   * - ``rocm.bindings.rccl``
+     - ROCm ships no RCCL for Windows.
+   * - ``rocm.hipfile``, ``rocm.bindings.hipfile``
+     - ROCm ships no hipFile library for Windows, which also has no
+       ``O_DIRECT`` flag for hipFile to issue its I/O with.
+   * - ``rocm.bindings.hipsparselt``
+     - ROCm's Windows packaging ships ``hipsparselt.h`` without the export
+       header it includes, so the bindings cannot be compiled.
+
+Importing an unavailable module raises ``ImportError``; the examples and test
+suites detect this and report the platform verdict rather than failing.
+
+``rocm.bindings.llvm`` is a case of its own on Windows. The modules load their
+shared LLVM on the first call, and ROCm ships only static LLVM archives for
+Windows -- one has to be linked from them. The published
+``rocm-bindings-compiler`` wheel carries such an ``LLVM.dll``, so the bindings
+work there out of the box. A wheel you build yourself does not, unless you ask
+for it: the bundling adds about 75 MB, so ``HIP_PYTHON_BUNDLE_LIBLLVM`` is off
+by default on Windows and without it the first call raises. ``has_symbol``,
+which every one of those modules has, answers up front whether the library is
+there. See :ref:`building_from_source`.
+
+``numba.hip`` compiles its kernels through those LLVM bindings, so the same
+holds for it: it works with the published Windows wheels -- its test suite
+passes there -- and a self-built ``rocm-bindings-compiler`` has to be
+configured with ``HIP_PYTHON_BUNDLE_LIBLLVM=ON`` to keep it working.
+
+The next section lists additional constraints with respect to the required
+ROCm\ |trade| installation.
 
 Software Requirements
 ---------------------
@@ -109,8 +157,11 @@ Installation Commands
 
       python3 -m pip install --upgrade pip
 
-HIP Python ships as **seven separate wheels**, so that you only install
-the runtime dependencies you actually need. The sections below cover
+HIP Python ships as **eight separate wheels**, so that you only install
+the runtime dependencies you actually need: the five ``rocm-bindings-*``
+binding wheels, the ``hip-python-interop`` CUDA interoperability
+layer, the ``hip-python`` alias package, and ``numba-hip`` (installed
+separately, see :doc:`/user_guide/4_numba_hip`). The sections below cover
 the three common installation shapes; pick one that matches your use
 case.
 
@@ -179,7 +230,7 @@ compatibility shims: a ``pynvml`` (NVML) shim backed by AMD SMI, an
 ``nvtx`` (NVTX) shim backed by ROCTX, and a minimal
 ``cuda.core.Device`` shim backed by HIP. Use this to port CUDA Python
 code to AMD GPUs with minimal source changes (see
-:ref:`/user_guide/2_cuda_python_interop` for the porting guide):
+:doc:`/user_guide/2_cuda_python_interop` for the porting guide):
 
 .. code-block:: shell
 
@@ -215,8 +266,8 @@ deployments) install only the binding wheels you actually need:
    * - ``rocm-bindings-libraries``
      - You call into the math/FFT/random/sparse libraries
        (``hipblas``, ``hipsolver``, ``hiprand``, ``hipfft``,
-       ``hipsparse``, plus the experimental ``hipblaslt``,
-       ``hipsparselt``, ``hiptensor``, ``hipdnn_backend``).
+       ``hipsparse``, plus the experimental ``hipblaslt`` and
+       ``hipsparselt``).
    * - ``rocm-bindings-systems``
      - You call the system-level libraries: ``rccl`` (collective
        communication), ``roctx`` (profiling/tracing),
@@ -225,7 +276,8 @@ deployments) install only the binding wheels you actually need:
    * - ``rocm-bindings-compiler``
      - You call AMD COMGR (``amd_comgr`` or the higher-level
        :py:obj:`rocm.comgr`) or the LLVM-C bindings
-       (``rocm.bindings.llvm.c.*``).
+       (``rocm.bindings.llvm.c.*``, see
+       :doc:`/user_guide/3_jit_compilation`).
 
 Example — install only HIP + HIPRTC + the math libraries:
 
@@ -243,11 +295,11 @@ you want and let pip figure out the dependencies.
 
 .. note::
 
-   Some bindings (``hipfile``, ``hipblaslt``, ``hipsparselt``,
-   ``hiptensor``, ``hipdnn_backend``) require shared libraries that may
-   not be part of a standard ROCm installation. See the project
-   README for build-from-source instructions if ``dlopen`` of the
-   corresponding ``.so`` fails on your system.
+   Some bindings (``hipfile``, ``hipblaslt``, ``hipsparselt``) require
+   shared libraries that may not be part of a standard ROCm
+   installation. See the project README for build-from-source
+   instructions if ``dlopen`` of the corresponding ``.so`` fails on your
+   system.
 
 .. note::
 

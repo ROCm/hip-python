@@ -3,7 +3,7 @@
 Python bindings for the ROCm math libraries: hipBLAS, hipBLASLt, hipSOLVER,
 hipRAND, hipFFT, hipSPARSE (and other experimental math libraries).
 
-The system-level libraries (RCCL, ROCTX, amdsmi, HSA) live in the sibling
+The system-level libraries (RCCL, ROCTX, amdsmi, hipFILE) live in the sibling
 `rocm-bindings-systems` package.
 
 Part of [HIP Python](https://github.com/rocm/hip-python). Full docs:

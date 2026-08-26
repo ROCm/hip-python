@@ -15,7 +15,7 @@
 .. _numba_hip:
 
 Kernel Programming in Python with Numba HIP
-==========================================
+===========================================
 
 `Numba <https://numba.pydata.org/>`__ is a just-in-time (JIT) compiler that
 turns a subset of Python and NumPy into fast machine code. **Numba HIP** is the
@@ -67,6 +67,35 @@ run unchanged. This is intended primarily for porting existing Numba CUDA code:
    ``hip.shared.array``, ``hip.syncthreads()``, ``hip.declare_device``).
    ``hip.pose_as_cuda()`` is mainly intended for porting existing Numba CUDA
    code.
+
+Installation
+------------
+
+Numba HIP ships as its own wheel, ``numba-hip``, versioned independently of
+the ROCm\ |trade|-tracking binding wheels:
+
+.. code-block:: shell
+
+   python3 -m pip install numba-hip
+
+It declares ``numba``, ``rocm-bindings-hip``, ``rocm-bindings-compiler``, and
+``hip-python-interop`` as dependencies, so pip pulls in the bindings it needs.
+A ROCm\ |trade| installation must be present; see :doc:`/user_guide/0_install`.
+
+Numba HIP compiles its kernels through the LLVM bindings in
+``rocm-bindings-compiler``, which resolve a shared LLVM at the first call.
+
+.. note::
+
+   **On Windows**, ROCm\ |trade| ships only static LLVM archives, so a shared
+   LLVM has to be linked from them at build time. The published
+   ``rocm-bindings-compiler`` wheel carries one, and Numba HIP works there out
+   of the box: its test suite passes. A ``rocm-bindings-compiler`` you build
+   yourself has to be configured with ``HIP_PYTHON_BUNDLE_LIBLLVM=ON``, since
+   the default Windows build leaves that off -- it adds about 75 MB to the
+   wheel. See :ref:`building_from_source` for the flag, and
+   ``HIP_PYTHON_BUILD_NUMBA_HIP`` for building the ``numba-hip`` wheel itself
+   from source.
 
 Vector addition
 ---------------

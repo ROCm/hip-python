@@ -31,12 +31,13 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 * **Linux** is the primary supported platform (prebuilt packages and code).
   * Prebuilt packages distributed via PyPI are only provided for
     Linux systems that match the `manylinux_2_17_x86_64` tag.
-* **Windows** support is **experimental** — the build system targets
-  Windows (a `win32loader` Cython module and a Windows code path in
-  the per-package CMakeLists exist), but no prebuilt wheels are
-  published, and the platform is not part of the regular CI matrix.
-  Building from source on Windows may require local fixes; please
-  report issues you hit.
+* **Windows** is supported from source: the wheels build with MSVC and
+  the test suites pass there
+  ([`ci/internal/build-wheels.ps1`](ci/internal/build-wheels.ps1),
+  [`ci/internal/test.ps1`](ci/internal/test.ps1)). No prebuilt Windows
+  wheels are published yet. ROCm does not ship every component for
+  Windows, so a Windows install offers fewer bindings — the user guide
+  lists which ones and why.
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
     * See the `git` branches tagged with `release/rocm-rel-X.Y[.Z]`
@@ -49,9 +50,10 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ### Build requirements
 
-* A Linux operating system (Windows is experimental — see above)
-* A C compiler
-* `bash`, `python3` + `venv`
+* Linux or Windows
+* A C compiler (GCC/Clang on Linux, MSVC on Windows)
+* `python3` + `venv`, and a shell the CI scripts run in (`bash` on Linux,
+  PowerShell on Windows)
 * The ROCm&trade; HIP SDK
 * Python 3.9+ with `pip>=24.0`.
 
@@ -129,24 +131,27 @@ python3 -m pip install dist/rocm_bindings_core-*.whl \
 ## Build from Source
 
 The build uses CMake with `scikit-build-core` as the Python build backend.
-It produces six wheels:
+It produces eight wheels:
 
 - `rocm-bindings-core` — DLL loader, types, ROCm path resolution
 - `rocm-bindings-hip` — `hip` and `hiprtc` Python bindings
 - `rocm-bindings-libraries` — math libraries: `hipblas`, `hipblaslt`*,
-  `hipsolver`, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`*,
-  `hiptensor`*, `hipdnn_backend`* (* = experimental, see [Known Limitations](#known-limitations))
+  `hipsolver`, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt`*
+  (* = experimental, see [Known Limitations](#known-limitations))
 - `rocm-bindings-systems` — system-level libraries: `rccl`
   (collective communication), `roctx` (profiling/tracing),
-  `hipfile`*, `amdsmi`, `hsa`* (HSA runtime + AMD extensions)
-- `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional bundled `libLLVM.so`)
-- `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc}` interop layer,
-  plus `pynvml` (NVML, AMD SMI-backed), `nvtx` (NVTX, ROCTX-backed) and minimal
-  `cuda.core.Device` (HIP-backed) compatibility shims
-
-Plus a `hip-python` package that exposes the `hip.*` namespace as an
-alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
-(etc.) keeps working unchanged.
+  `hipfile`*, `amdsmi`
+- `rocm-bindings-compiler` — LLVM-C and AMD COMGR bindings (with optional
+  bundled `libLLVM.so` / `LLVM.dll`)
+- `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc,cufile}` interop
+  layer, plus `pynvml` (NVML, AMD SMI-backed), `nvtx` (NVTX, ROCTX-backed) and
+  minimal `cuda.core.Device` (HIP-backed) compatibility shims
+- `hip-python` — exposes the `hip.*` namespace as an alias of
+  `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas` (etc.)
+  keeps working unchanged
+- `numba-hip` — the ROCm HIP target for Numba (`numba.hip`), a pure-Python
+  wheel with its own version; built by default and skippable with
+  `-DHIP_PYTHON_BUILD_NUMBA_HIP=OFF`
 
 > [!NOTE]
 > The HIP-side `from hip import hip, hiprtc` (and friends) are aliases
@@ -206,8 +211,7 @@ alias of `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas`
    cmake --build build --target all_wheels -j$(nproc)
    ```
 
-   Wheels for all six packages plus the `hip-python` metapackage land in
-   `packages/build/dist/`.
+   Wheels for all eight packages land in `packages/build/dist/`.
 
 5. Install the wheels:
 
@@ -378,8 +382,8 @@ For deeper documentation:
 | `HIP_PYTHON_BUILD_<NAME>` | `ON` | Per-package opt-in: `CORE`, `HIP`, `LIBRARIES`, `SYSTEMS`, `COMPILER`, `INTEROP`, `HIP_PYTHON`, `NUMBA_HIP`. |
 | `HIP_PYTHON_RUNTIME_LINKING` | `ON` | When `ON`, generated extensions resolve ROCm shared libraries lazily at runtime; when `OFF`, they link against them at build time. |
 | `HIP_PYTHON_ENABLE_LIB_<NAME>` | `ON` | Per-library toggle inside `rocm-bindings-libraries` (e.g. `HIP_PYTHON_ENABLE_LIB_HIPRAND=OFF`). |
-| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle `libLLVM.so` inside the `rocm-bindings-compiler` wheel. |
-| `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Build the bundled `libLLVM.so` from source instead of reusing the ROCm-provided library. |
+| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON`, `OFF` on Windows | Bundle a shared LLVM inside the `rocm-bindings-compiler` wheel. ROCm ships none for Windows, so there it is linked from the static archives and costs ~75 MB, hence the opt-in. |
+| `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Link the bundled LLVM from the static archives even where ROCm ships a shared one (always the case on Windows). |
 | `HIP_PYTHON_AUDITWHEEL_REPAIR` | `OFF` | Run `auditwheel repair` to produce manylinux wheels. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Wheel output directory. |
 | `HIP_PYTHON_BUILD_DOCS` | `OFF` | Build the Sphinx HTML documentation as a CMake target (`docs`). |
@@ -438,10 +442,18 @@ See [share/design/CODEGEN.md](share/design/CODEGEN.md) and
 
 **CI scripts** (under [`ci/`](ci)):
 
-- `ci/internal/build-wheels.sh` — build the package wheels (full or light mode).
+- `ci/internal/build-wheels.sh` / `ci/internal/build-wheels.ps1` — build the
+  package wheels (full or light mode) on Linux / Windows.
+- `ci/internal/test.sh` / `ci/internal/test.ps1` — run the example, interop,
+  bindings and numba-hip test suites against the built wheels.
+- `ci/internal/env-rocm.ps1` — locate ROCm and bootstrap the MSVC environment
+  for the two Windows scripts above.
+- `ci/internal/generate-bindings.sh` — the standalone codegen run that produces
+  a release branch's generated tree; `ci/internal/commit-bindings.sh` commits it.
 - `ci/internal/prepare-release.sh` — author the release-only `VERSION.in` template
   on a `release/rocm-rel-*` branch.
-- `ci/internal/test.sh` — run the unified example and numba-hip test suites.
+- `ci/internal/build-hipfile.sh` — build and install hipFILE, which ROCm does
+  not ship (see [share/design/HIPFILE.md](share/design/HIPFILE.md)).
 - `ci/docs/build.sh` — render the Sphinx documentation (thin wrapper over the
   `docs` CMake target).
 - `ci/docs/regenerate-stubs.sh` — regenerate the handcoded-Cython `.pyi` stubs.
@@ -450,9 +462,9 @@ See [share/design/CODEGEN.md](share/design/CODEGEN.md) and
 
 ### Experimental libraries
 
-The newly added bindings — `hipfile`, `hipblaslt`, `hipsparselt`,
-`hiptensor`, `hipdnn_backend`, and `hsa` — are marked **experimental** for
-one release cycle. What this means in practice:
+The newly added bindings — `hipfile`, `hipblaslt`, and `hipsparselt` —
+are marked **experimental** for one release cycle. What this means in
+practice:
 
 - The Python-level API surface is generated automatically from the
   upstream C headers and is functional today, but parameter
@@ -467,15 +479,13 @@ one release cycle. What this means in practice:
   are stable.
 
 > [!IMPORTANT]
-> The shared libraries backing `hipfile`, `hipblaslt`, `hipsparselt`,
-> `hiptensor`, and `hipdnn_backend` may **not be part of a standard ROCm
-> installation**. If `dlopen` of `libhipfile.so`, `libhipblaslt.so`,
-> `libhipsparselt.so`, `libhiptensor.so`, or `libhipDNN.so` fails on
+> The shared libraries backing `hipfile`, `hipblaslt`, and `hipsparselt`
+> may **not be part of a standard ROCm installation**. If `dlopen` of
+> `libhipfile.so`, `libhipblaslt.so`, or `libhipsparselt.so` fails on
 > your system, you have to build the corresponding library manually
 > by following the build instructions in its source package:
 >
-> - `hipblaslt`, `hipsparselt`, `hiptensor`, `hipdnn_backend` — see the
->   per-library README under
+> - `hipblaslt`, `hipsparselt` — see the per-library README under
 >   <https://github.com/ROCm/rocm-libraries>.
 > - `hipfile` — see the per-library README under
 >   <https://github.com/ROCm/rocm-systems>.
@@ -484,15 +494,18 @@ one release cycle. What this means in practice:
 > `LD_LIBRARY_PATH` (or `${ROCM_PATH}/lib`) so hip-python's loader
 > can find it at runtime.
 
-### `hsakmt` is intentionally not bound
+### Not every ROCm library is bound
 
-`/opt/rocm/lib/` ships only `libhsakmt.a` — a static archive — so
-hip-python's `dlopen`-based runtime model can't load it. We've
-deliberately deferred the `hsakmt` binding rather than ship a
-non-functional one. Track upstream
+The code generator emits more bindings than the wheels compile. A
+binding ships only when the ROCm installation provides a header the
+build can compile against and a shared library the loader can open at
+runtime; the build probes for both at configure time and silently drops
+the modules that fail. `hsakmt` is a deliberate exception: `/opt/rocm/lib/`
+ships only the static archive `libhsakmt.a`, which a `dlopen`-based
+runtime cannot load, so the binding is deferred rather than shipped
+non-functional. Track upstream
 [ROCm/ROCT-Thunk-Interface](https://github.com/ROCm/ROCT-Thunk-Interface)
-for a shared-library variant. The companion `hsa` binding is
-unaffected — `libhsa-runtime64.so.1` is shipped and loaded normally.
+for a shared-library variant.
 
 ### `hipblaslt`: Cython-level (`cimport`) usage may require C++ compilation
 

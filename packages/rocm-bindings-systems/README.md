@@ -1,7 +1,9 @@
 # rocm-bindings-systems
 
 Python bindings for ROCm system-level libraries: RCCL (collective
-communication), ROCTX (profiling/tracing), amdsmi, and the HSA runtime.
+communication), ROCTX (profiling/tracing), amdsmi (system management), and
+hipFILE (accelerated file I/O, also available as the higher-level
+`rocm.hipfile`).
 
 The math libraries (hipBLAS, hipSOLVER, hipRAND, hipFFT, hipSPARSE, ...) live in
 the sibling `rocm-bindings-libraries` package.

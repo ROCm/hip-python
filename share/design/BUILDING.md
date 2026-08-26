@@ -1,18 +1,18 @@
 # Build system design
 
 This document describes the hip-python build system: its layout, the
-seven packages it produces, the shared CMake helpers, and the supported
+eight packages it produces, the shared CMake helpers, and the supported
 build invocations.
 
 ## Goals
 
 The build system is designed around three properties:
 
-1. **Seven independent wheels, one source tree.** Each of the seven
+1. **Eight independent wheels, one source tree.** Each of the eight
    Python packages can be built and installed on its own, but they share
    build wiring (CMake helpers, generated module lists, namespace
-   markers). Six of the seven are compiled (Cython extensions); the
-   seventh, `hip-python`, is a pure-Python metapackage.
+   markers). Six of the eight are compiled (Cython extensions); the
+   other two, `hip-python` and `numba-hip`, are pure Python.
 2. **Generator-friendly.** Module counts and source filenames in three
    of the five generator-owned packages (`rocm-bindings-libraries`,
    `rocm-bindings-systems`, `rocm-bindings-compiler`) can grow between
@@ -25,7 +25,7 @@ The build system is designed around three properties:
    `rocm-bindings-core/src/rocm/version.py`, produced from the handcoded
    `version.py.in` template — see [CODEGEN.md](CODEGEN.md).)
 
-## The seven packages
+## The eight packages
 
 | Package | Source path | Provides |
 |---|---|---|
@@ -36,8 +36,9 @@ The build system is designed around three properties:
 | `rocm-bindings-compiler` | `packages/rocm-bindings-compiler/` | LLVM-C bindings, AMD COMGR bindings, optional bundled `libLLVM.so`. Module list is generator-managed. |
 | `hip-python-interop` | `packages/hip-python-interop/` | CUDA interop layer: `cuda.bindings.{driver,runtime,nvrtc}`. Implemented on top of HIP. |
 | `hip-python` | `packages/hip-python/` | Provides the `hip.*` namespace as an alias of `rocm.bindings.*` (`from hip import hip, hiprtc, hipblas, …` re-export). Pure Python. |
+| `numba-hip` | `packages/numba-hip/` | The ROCm HIP backend for Numba (`numba.hip`). Pure Python, versioned independently of the binding wheels; built unless `HIP_PYTHON_BUILD_NUMBA_HIP=OFF`. |
 
-All seven packages contribute to two PEP 420 implicit namespace packages
+The binding packages contribute to two PEP 420 implicit namespace packages
 at runtime: `rocm.bindings.*` and `cuda.bindings.*`. Multiple packages
 add modules to the same namespace; only `rocm-bindings-core` ships the
 runtime `__init__.pxd` markers — for `rocm/`, `rocm/bindings/`, and
@@ -52,14 +53,15 @@ hip-python/
 │   ├── HipPythonBuild.cmake       Shared helpers (see below)
 │   └── HipPythonCodegen.cmake     Configure-time HIP Python code generation
 ├── packages/
-│   ├── CMakeLists.txt             Unified top-level build; orchestrates all seven packages + docs
+│   ├── CMakeLists.txt             Unified top-level build; orchestrates all eight packages + docs
 │   ├── rocm-bindings-core/        per-package: pyproject.toml + CMakeLists.txt + cmake/ + src/rocm/
 │   ├── rocm-bindings-hip/         …
 │   ├── rocm-bindings-libraries/   …
 │   ├── rocm-bindings-systems/     …  + bundled/libhipfile/ (optional libhipfile.so bundling)
 │   ├── rocm-bindings-compiler/    …  + bundled/libllvm/ (libLLVM detection + optional bundling)
 │   ├── hip-python-interop/        …  src/cuda/ instead of src/rocm/
-│   └── hip-python/                pure-Python `hip.*` alias of `rocm.bindings.*` (src/hip/)
+│   ├── hip-python/                pure-Python `hip.*` alias of `rocm.bindings.*` (src/hip/)
+│   └── numba-hip/                 pure-Python Numba HIP backend (src/numba/hip/)
 ├── docs_src/                      Sphinx source (reStructuredText)
 ├── docs/                          Generator output: rendered Sphinx HTML (when HIP_PYTHON_BUILD_DOCS=ON)
 └── share/design/                  this folder (BUILDING.md, CODEGEN.md, BINDINGS.md)
@@ -91,6 +93,10 @@ installs. Two examples currently:
   `librocmllvm.so` from LLVM static archives via `--whole-archive`, OR
   copies a system `libLLVM.so` from the ROCm install. The cython modules
   in this wheel get an `$ORIGIN/..` RPATH so they find the bundled lib.
+  On Windows ROCm ships no shared LLVM at all, so the library is always
+  linked from the archives — with an export list rather than
+  `/WHOLEARCHIVE`, since PE images export only what they are told to (see
+  the comments in that `CMakeLists.txt` and `gen_msvc_exports.py`).
 - `packages/rocm-bindings-systems/bundled/libhipfile/` — when
   `HIP_PYTHON_BUNDLE_LIBHIPFILE=ON`, copies the resolved `libhipfile.so`
   into the wheel and sets `$ORIGIN` RPATH on the cython modules.
@@ -552,7 +558,7 @@ nvrtc) are stable across releases.
 
 | Option | Default | Effect |
 |---|---|---|
-| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON` | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `packages/rocm-bindings-compiler/src/`). |
+| `HIP_PYTHON_BUNDLE_LIBLLVM` | `ON`, `OFF` on Windows | Bundle a working `libLLVM.so` inside the wheel (uses the system one if available; otherwise builds from sources via `packages/rocm-bindings-compiler/src/`). Windows has no system one to reuse, so bundling there means a ~75 MB `LLVM.dll` linked from the static archives; it is opt-in for that reason, and without it the `rocm.bindings.llvm.*` bindings import but raise on first use. |
 | `HIP_PYTHON_FORCE_BUILD_LIBLLVM` | `OFF` | Force-build `libLLVM.so` from sources even if a system one is present. Implies BUNDLE. |
 
 ## Cython namespace markers and install layout
@@ -871,7 +877,7 @@ documentation files.
 cd packages && cmake -B build                 # one-time, populates VERSION + cmake helper
 cd packages/rocm-bindings-core && python3 -m build --wheel --no-isolation
 
-# Full build, all seven packages (run from packages/ subdir):
+# Full build, all eight packages (run from packages/ subdir):
 cd packages && cmake -B build && cmake --build build --target all_wheels -j$(nproc)
 
 # Production manylinux wheels:

@@ -28,9 +28,9 @@ in the source tree.
 Components
 ----------
 
-The build produces **seven Python wheels**, one per package directory
-under ``packages/``. All seven contribute to the same two PEP 420
-implicit namespace packages at runtime — ``rocm.bindings.*`` and
+The build produces **eight Python wheels**, one per package directory
+under ``packages/``. The binding wheels contribute to the same two
+PEP 420 implicit namespace packages at runtime — ``rocm.bindings.*`` and
 ``cuda.bindings.*`` — so a downstream user installs only the wheels
 they need.
 
@@ -54,8 +54,9 @@ they need.
    * - ``rocm-bindings-libraries``
      - Math/FFT/random/sparse libraries: ``hipblas``, ``hipblaslt``,
        ``hipsolver``, ``hiprand``, ``hipfft``, ``hipsparse``,
-       ``hipsparselt``, ``hiptensor``, ``hipdnn_backend``. Module list is
-       generator-managed.
+       ``hipsparselt``. Module list is generator-managed, and modules
+       the ROCm installation cannot supply are dropped at configure
+       time.
 
    * - ``rocm-bindings-systems``
      - System-level libraries: ``rccl``, ``roctx``, ``hipfile``,
@@ -75,8 +76,13 @@ they need.
      - Pure-Python alias package: ``from hip import hip, hiprtc, ...``
        re-exports ``rocm.bindings.*``.
 
+   * - ``numba-hip``
+     - The ROCm HIP backend for Numba (``numba.hip``). Pure
+       Python, versioned independently of the binding wheels; see
+       :doc:`/user_guide/4_numba_hip`.
+
 The unified build orchestrator at ``packages/CMakeLists.txt`` builds
-all seven via the ``all_wheels`` aggregate target. A development loop
+all eight via the ``all_wheels`` aggregate target. A development loop
 can also build one package at a time (``cd packages/<pkg> && python3
 -m build --wheel --no-isolation``) without touching the others.
 
@@ -103,6 +109,48 @@ Wheels land in ``packages/build/dist/`` (override with
 
    cd packages/rocm-bindings-core
    python3 -m build --wheel --no-isolation
+
+Frequently used build options
+-----------------------------
+
+Two options decide what ``all_wheels`` actually contains beyond the
+binding wheels:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 34 16 50
+
+   * - Option
+     - Default
+     - Effect
+   * - ``HIP_PYTHON_BUNDLE_LIBLLVM``
+     - ``ON`` (Linux), ``OFF`` (Windows)
+     - Bundles a shared LLVM into the ``rocm-bindings-compiler`` wheel.
+       The ``rocm.bindings.llvm.*`` modules resolve a shared LLVM on
+       their first call; ROCm ships one on Linux but only static
+       archives on Windows, where the build links an ``LLVM.dll`` from
+       them. Off by default there because it adds about 75 MB to the
+       wheel — without it those modules import but raise on first use.
+       The published Windows wheel *is* built with it on, so switch it
+       on to match: a plain source build is a downgrade.
+   * - ``HIP_PYTHON_BUILD_NUMBA_HIP``
+     - ``ON``
+     - Builds the pure-Python ``numba-hip`` wheel. It carries its own
+       version and depends on the compiler bindings, so on Windows pair
+       it with ``HIP_PYTHON_BUNDLE_LIBLLVM=ON`` — otherwise the
+       ``numba.hip`` you build is less capable than the published one.
+
+For example, a Windows build with both:
+
+.. code-block:: powershell
+
+   cd packages
+   cmake -B build -DHIP_PYTHON_BUNDLE_LIBLLVM=ON -DHIP_PYTHON_BUILD_NUMBA_HIP=ON
+   cmake --build build --target all_wheels
+
+The full option list — build type, ROCm path, ``auditwheel`` repair,
+configure-time codegen, stub generation — is in
+:download:`share/design/BUILDING.md <../../share/design/BUILDING.md>`.
 
 Documentation build
 -------------------
@@ -150,10 +198,82 @@ Wheels and docs can build concurrently:
 
    cmake --build build --target all_wheels docs -j$(nproc)
 
-The TOC under ``docs_src/sphinx/_toc.yml.in`` is hand-maintained
-with one subtree per wheel; generator-emitted per-module pages slot
-in without TOC edits because the codegen renders an updated copy on
-every codegen run.
+``docs_src/sphinx/_toc.yml.in`` is itself generator output: the codegen
+renders it from the handcoded ``_toc.yml.in.in`` template on every run,
+substituting the discovered module list into one subtree per wheel. The
+handwritten user-guide pages are listed inline in the template, so they
+are the part to edit by hand; per-module API pages slot in without any
+TOC edit.
+
+.. _sec_build_windows:
+
+Building on Windows
+-------------------
+
+Wheels are published for Windows alongside the Linux ones, so building from
+source here is for development or for a configuration the published wheels do
+not carry. ``ci\internal\build-wheels.ps1`` is the PowerShell counterpart to the
+Linux ``ci/internal/build-wheels.sh`` and drives the same ``all_wheels`` target:
+
+.. code-block:: powershell
+
+   . ci\internal\env-rocm.ps1            # sets ROCM_PATH and PATH
+   python -m pip install -r ci\requirements-build.txt
+   ci\internal\build-wheels.ps1          # add -Light for core + hip + compiler
+   ci\internal\test.ps1                  # examples + unit-test suites
+
+The MSVC environment is imported automatically, so the script behaves the same
+from a plain PowerShell prompt, a CI runner, or a Developer shell.
+
+``test.ps1`` takes ROCm from ``ROCM_PATH`` by default, which suits a system
+install or an unpacked tarball. Pass ``-UseRocmSdkWheels`` to install ROCm into
+the test venv from the ``rocm_sdk`` wheels instead, the way most users get it:
+
+.. code-block:: powershell
+
+   ci\internal\test.ps1 -UseRocmSdkWheels          # target read from the GPU
+   ci\internal\test.ps1 -UseRocmSdkWheels -GfxArch gfx1100
+
+The ROCm version defaults to the one the bindings were generated against, and
+the ``rocm-sdk-device-*`` wheel to the target of the GPU in the machine. Those
+wheels spread ROCm over several trees, so do not point ``ROCM_PATH`` at one of
+them by hand: ``_rocm_sdk_devel`` in particular holds a second copy of
+``libhipblaslt.dll`` next to an incomplete set of Tensile kernels, and hipBLASLt
+looks for kernels beside whichever copy it loaded, so that one crashes inside the
+algorithm search. Let the bindings resolve libraries through
+``rocm_sdk.find_libraries``, which knows which tree owns each library.
+
+Where the Windows build differs from Linux:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 34 66
+
+   * - Aspect
+     - Windows behaviour
+   * - Host compiler
+     - MSVC (``cl``) by default, because the host CPython is built with it and
+       the extension modules must match its CRT and ABI. ``-UseRocmClang``
+       switches to ``amdclang-cl``, the MSVC-compatible clang driver: it keeps
+       the same ABI and diagnoses portability problems MSVC stays quiet about.
+   * - Build type
+     - ``CMAKE_BUILD_TYPE=Release`` is set explicitly. A multi-config MSVC
+       default of ``Debug`` links against the debug CRT, which the release
+       CPython does not provide.
+   * - Generator
+     - Ninja. The Linux script forces ``make`` only to dodge a GCC jobserver
+       bug on the largest generated ``.c`` files.
+   * - ``auditwheel``
+     - Not used; it is a Linux ELF retagger. The wheels are emitted with a
+       native ``win_amd64`` tag.
+   * - Module set
+     - Smaller. The components ROCm does not ship for Windows are detected and
+       skipped at configure time; see the table in :ref:`sec_install`.
+   * - Library naming
+     - ROCm's Windows DLLs are version-suffixed (``amdhip64_7.dll``,
+       ``hiprtc0714.dll``) or keep a Unix ``lib`` prefix
+       (``libhipblaslt.dll``). :py:obj:`rocm.bindings.util.paths` resolves
+       these by scanning ``ROCM_PATH`` rather than by assuming a flat name.
 
 ``manylinux`` repair via ``auditwheel``
 ---------------------------------------

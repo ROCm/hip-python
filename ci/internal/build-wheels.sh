@@ -5,8 +5,9 @@ set -xeu
 #
 # Two modes:
 #
-#   - Full mode (default): builds all six packages — core, hip,
-#     libraries, systems, compiler, hip-python-interop.
+#   - Full mode (default): builds all six compiled packages — core, hip,
+#     libraries, systems, compiler, hip-python-interop — plus the two
+#     pure-Python ones, hip-python and numba-hip.
 #
 #   - Light mode (LIGHT_MODE=true): builds only core, hip, and
 #     compiler. Skips libraries / systems / interop. Use this for

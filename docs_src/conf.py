@@ -52,7 +52,7 @@ external_projects = ["python", "rocm"]
 external_projects_current_project = "hip-python"
 
 setting_all_article_info = True
-all_article_info_os = ["linux"]
+all_article_info_os = ["linux", "windows"]
 all_article_info_author = (
     "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 )
@@ -69,7 +69,7 @@ article_pages = [
         "read-time": "5 min read",
     },
     {
-        "file": "user_guide/1_usage",
+        "file": "user_guide/1_basic_usage",
         "read-time": "60 min read",
     },
     {
@@ -81,12 +81,20 @@ article_pages = [
         "read-time": "30 min read",
     },
     {
-        "file": "user_guide/4_datatypes",
+        "file": "user_guide/4_numba_hip",
+        "read-time": "30 min read",
+    },
+    {
+        "file": "user_guide/5_adapters",
         "read-time": "10 min read",
     },
     {
-        "file": "user_guide/5_report_bugs",
-        "read-time": "20 min read",
+        "file": "user_guide/6_build_from_source",
+        "read-time": "15 min read",
+    },
+    {
+        "file": "user_guide/7_license",
+        "read-time": "1 min read",
     },
 ]
 
