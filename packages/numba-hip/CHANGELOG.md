@@ -1,3 +1,38 @@
+# numba-hip 0.2.1 (31 Jul 2026)
+
+* **Windows support.** `numba.hip` compiles and runs kernels on Windows.
+  The HIP runtime and clang's resource directory are resolved through
+  `rocm.bindings.util.paths` instead of hand-built Unix paths, which also
+  lets a wheel-only install (no ROCm tree) find the runtime at all; the
+  libclang directory override looks for the DLL names; the cache
+  directory falls back to the account name where `os.getuid()` does not
+  exist; the device-library wrappers are parsed against an
+  Itanium-mangling target, since device code is Itanium-mangled whatever
+  the host is; and hipRTC program names are derived from the dependency
+  rather than passed a full path with a drive letter. Requires a
+  `rocm-bindings-compiler` built with `HIP_PYTHON_BUNDLE_LIBLLVM=ON`,
+  since kernels are compiled through the LLVM bindings.
+* `amdgcn.optimize_module` no longer runs the LLVM passes in a forked
+  child. It verifies the module with `LLVMVerifyModule` first — the same
+  defect the verifier would abort on is reported as a return value — so
+  the abort has no occasion to happen. An `LLVMOpaqueModule` argument is
+  optimized in place again, and the per-call interpreter start plus
+  bitcode round trip are gone (about 0.3 ms for a small module).
+* Adopt the PEP 621 src-layout (`src/numba/hip`), relocate the test
+  suite out of the importable package to the repo-root `tests/numba-hip`,
+  and fold the build/test scripts into the top-level `ci/internal`. The
+  unified `all_wheels` CMake target builds the `numba-hip` wheel, so
+  there is no separate numba-hip build stage.
+* Allow numba 0.63 (Python 3.14 support) and lower the binding floor to
+  ROCm 7.2.3.
+* Delegate libclang lookup to the shared `rocm.bindings` resolver.
+* Initialize the typing context lazily in the target descriptor.
+* `hipdrv/driver.py` replaces the deprecated context APIs with the
+  device-based model; `hipdevicelib` demotes allow-listed device-library
+  symbols to `linkonce_odr` and makes `_setup_libclang()` idempotent.
+* Documentation: README converted to Markdown, project URLs point at the
+  hip-python monorepo.
+
 # numba-hip 0.2.0 (30 May 2026)
 
 * **Hard cut to the new HIP Python bindings (ROCm 7.2.3+).** numba-hip now

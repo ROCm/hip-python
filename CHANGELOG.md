@@ -2,6 +2,96 @@
 
 ## Unreleased
 
+### Make the handcoded-Cython stubs generated artifacts again
+
+The `.pyi` stubs of the handcoded Cython modules are refreshed by a
+developer-run CMake target that no wheel target depends on, and nothing
+checked the result — so `rocm.bindings.util.types` drifted through four
+consecutive commits that edited the stub by hand instead of re-running
+`all_stubs`. Since sphinx-autoapi renders these stubs, the published
+`CStr` documentation ended up describing a `malloc(size_bytes)` that had
+been renamed and warning that `bytes` inputs may be garbage collected
+after the class had started interning them. The stub is regenerated here
+and the pipeline changed so it cannot happen quietly again: every
+generated stub now opens with an `AUTO-GENERATED ... Edits will be
+overwritten` banner.
+
+The stubs also stopped depending on the developer's Cython version.
+stubgen renders module-level `cpdef` objects as
+`_cython_<major>_<minor>_<patch>.cython_function_or_method`, so the same
+`.pyx` produced a different `.pyi` on a machine one patch release
+behind. A post-processing step rewrites those to `Callable[..., Any]`,
+which is what a type checker wanted anyway, and it now also refuses a
+stub taken from a limited-API build — one that would silently replace
+the docstrings sphinx-autoapi publishes with CPython's generic text.
+
+The DLL loaders left the stub story altogether. Every function in
+`rocm.bindings.util.{loader,posixloader,win32loader}` is `cdef`, so
+nothing in them is reachable from Python and their stubs declared
+nothing but `__pyx_capi__` and `__test__`. All three files are deleted
+and the modules ship as `.pxd`/`.pyx` only, which is the rule the
+generated `cy*` wrappers already followed.
+
+Two wiring bugs went with it. `core_stubs` failed outright on Windows,
+because the module list spelled out `rocm.bindings.util.posixloader`
+against `rocm_bindings_core_platform_loader` — the one target that
+compiles `posixloader` on Linux and `win32loader` on Windows. The dotted
+name now comes from the target's `HIP_PYTHON_MODULE_NAME` property, so
+no entry can name a module that is wrong on one of the two platforms,
+and the staging step copies the extension instead of symlinking it,
+which needed Developer Mode on Windows. And stubgen put only the module
+under inspection on `PYTHONPATH`, leaving its imports to resolve against
+site-packages: with an installed wheel older than the working tree,
+`hip_stubs` died on
+`module 'rocm.bindings.util.types' has no attribute 'ListOfInt64'`. The
+sibling packages' build trees are now on `PYTHONPATH` and are built
+first. A stub that stubgen skips is an error rather than a silent
+success.
+
+Finally, `cuda.bindings.cufile` is no longer registered as a stubgen
+target. Its surface is almost entirely module-level `cpdef` functions,
+which stubgen can only render as opaque `cython_function_or_method`
+attributes; running `all_stubs` would have replaced a curated stub —
+module docstring, enum members, typed signatures — with a far worse
+mechanical one. It is hand-maintained, and `tests/stubs` checks instead
+that it still names every public symbol the module exposes.
+
+### Release the GIL around the long-running LLVM calls
+
+Ten LLVM-C headers wrap work that runs long enough to be worth handing
+the GIL to other threads: verification (`Analysis.h`), bitcode and IR
+parsing and writing (`BitReader.h`, `BitWriter.h`, `IRReader.h`),
+linking (`Linker.h`), pass pipelines (`PassBuilder.h`), target machine
+setup and emission (`TargetMachine.h`), MCJIT and ORC
+(`ExecutionEngine.h`, `LLJIT.h`), and all of LTO (`lto.h`). Their
+wrappers now run the C call inside `with nogil:`, so a pass pipeline or
+a JIT compilation in one thread no longer blocks the rest of the
+process. The other 20 modules keep the GIL: in `core` a call is
+typically one field access, where releasing and reacquiring the lock
+costs more than the call.
+
+The choice is per header rather than per library, which is new for the
+generator — `write_llvm_modules` asks the recipe
+(`llvm_c.nogil_headers`) which module opts in, and the recipe picks the
+exception sentinel from each function's return type so a missing
+libLLVM still surfaces at the first call without the caller having to
+hold the GIL to find out. Functions that take a callback keep the GIL
+whatever their return type, so a handler can call back into Python.
+
+One rough edge is worth knowing about: a function returning `void` or a
+struct by value has no return value left to carry the signal, so on
+those a missing library is reported as an unraisable exception rather
+than a raised `RuntimeError`. Probing with `has_symbol` up front, as
+all the examples do, avoids it. The bindings still do not make LLVM
+itself thread-safe — sharing a context, module or builder across
+threads was always your responsibility and now the GIL no longer hides
+it.
+
+The JIT chapter of the user guide lists which module releases the GIL
+for what, and `share/design/BINDINGS.md` gained a "Per-module `nogil`
+in the LLVM bindings" section covering the sentinel table and why no
+LLVM enum supplies a named error constant.
+
 ### Stable-ABI wheels on Windows
 
 The abi3 build was reachable on Windows only by hand-passing
@@ -42,18 +132,14 @@ entry points and when to reach for each: HIPRTC and `rocm.comgr` when the
 goal is a kernel running on the GPU, `rocm.bindings.llvm.c` when the goal
 is the IR itself.
 
-The LLVM half covers how to tell whether the bindings are usable —
-importing a module touches no library, so a missing one surfaces as a
-`RuntimeError` at the first call, and `has_symbol` answers the question
-up front, including for the `LLVMInitializeAll*` entry points that not
-every `libLLVM` exports. It then covers how header names map to module
-names and the calling conventions that differ from the rest of HIP Python:
-LLVM returns bare values rather than a status tuple, and every object it
-hands out has a matching `LLVMDispose*`. Four worked examples follow —
-listing targets, reading bitcode, building and running a module, and
-running a pass pipeline — and a closing section on passing bitcode back to
-HIPRTC and COMGR. Where a shared LLVM comes from stays with the install
-and build-from-source chapters, which the section points at.
+The LLVM half covers how header names map to module names and the calling
+conventions that differ from the rest of HIP Python: LLVM returns bare
+values rather than a status tuple, and every object it hands out has a
+matching `LLVMDispose*`. Four worked examples follow — listing targets,
+reading bitcode, building and running a module, and running a pass
+pipeline — and a closing section on passing bitcode back to HIPRTC and
+COMGR. Where a shared LLVM comes from, and how to tell at runtime whether
+one is there, stays with the install and build-from-source chapters.
 
 `examples/2_Advanced/llvm_optimize_module.py` is new: it builds a function
 with a stack slot, runs `default<O2>` over it through `LLVMRunPasses`, and
