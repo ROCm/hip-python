@@ -89,6 +89,22 @@ set(SYSTEMS_INCLUDE_DIRS
 # rocm-bindings-hip.
 hip_python_append_sibling_includes(SYSTEMS_INCLUDE_DIRS)
 
+# Skip system modules this ROCm install cannot build (see
+# hip_python_filter_available_modules). hipfile was already dropped above via
+# find_package; this covers the rest. Every module in this package is absent
+# from the Windows ROCm SDK, so there the list comes back empty and the
+# package builds nothing — see the guard further down.
+#
+# ENABLE_ESMI_LIB is passed for the same reason the amdsmi compile sets it
+# (see the build loop below): without it the preprocessor strips the ESMI
+# declarations back out of amd_smi/amdsmi.h.
+hip_python_filter_available_modules(HIP_PYTHON_SELECTED_SYSTEMS
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings"
+  INCLUDE_DIRS ${SYSTEMS_INCLUDE_DIRS} ${HIPFILE_INCLUDE_DIR}
+  COMPILE_DEFINITIONS ENABLE_ESMI_LIB
+  MODULES ${HIP_PYTHON_SELECTED_SYSTEMS}
+)
+
 # Build each enabled system module
 foreach(_lib IN LISTS HIP_PYTHON_SELECTED_SYSTEMS)
   set(_lib_name ${_lib})
@@ -215,3 +231,11 @@ endforeach()
 add_custom_target(package_rocm_bindings_systems
   DEPENDS ${_all_systems_targets}
 )
+
+# Report the surviving module list to the unified build so it can skip this
+# package's wheel and sdist targets when nothing was built, rather than
+# publishing a wheel that advertises bindings it does not contain. The list is
+# empty on the Windows ROCm SDK, which ships none of rccl, roctx, hipfile or
+# amdsmi. Harmless in a standalone single-package configure, where PARENT_SCOPE
+# is just the top level.
+set(HIP_PYTHON_SYSTEMS_SELECTED_MODULES "${HIP_PYTHON_SELECTED_SYSTEMS}" PARENT_SCOPE)

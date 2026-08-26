@@ -20,17 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Find LLVM using ROCm's LLVM installation
+# Reuse the LLVM the parent already located. LLVM_DIR is cached by that
+# find_package, so this resolves to the same installation instead of
+# hardcoding a path of its own: a fixed guess and the parent's choice can
+# disagree, and on Windows neither is reliably present.
 message(STATUS "=== bundled/libllvm/CMakeLists.txt: Starting libLLVM detection ===")
-if(DEFINED ROCM_PATH)
-  set(LLVM_DIR "${ROCM_PATH}/lib/llvm/lib/cmake/llvm")
-  message(STATUS "ROCM_PATH is set to: ${ROCM_PATH}")
-endif()
-
 find_package(LLVM REQUIRED CONFIG)
 
-# Options to control bundling behavior (can be set via parent CMakeLists.txt)
-option(HIP_PYTHON_BUNDLE_LIBLLVM "Bundle libLLVM.so in rocm-bindings-compiler wheel" ON)
+option(HIP_PYTHON_BUNDLE_LIBLLVM "Bundle libLLVM.so in rocm-bindings-compiler wheel" ${HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT})
 option(HIP_PYTHON_FORCE_BUILD_LIBLLVM
   "Always build libLLVM.so from LLVM static archives (--whole-archive) instead of\
  reusing the system shared library. Yields a self-contained library that exports\
@@ -54,33 +51,68 @@ endif()
 set(BUNDLE_SYSTEM_LIBLLVM OFF)
 set(BUILD_BUNDLED_LIBLLVM OFF)
 
+# The filename the bindings will look for at runtime. rocm.bindings.util.paths
+# resolves the short name 'LLVM' with the platform's prefix and suffix, so the
+# bundled copy has to land under that exact name.
+if(WIN32)
+  set(HIP_PYTHON_LIBLLVM_NAME "LLVM.dll")
+elseif(APPLE)
+  set(HIP_PYTHON_LIBLLVM_NAME "libLLVM.dylib")
+else()
+  set(HIP_PYTHON_LIBLLVM_NAME "libLLVM.so")
+endif()
+
 if(HIP_PYTHON_BUNDLE_LIBLLVM)
   if(HIP_PYTHON_FORCE_BUILD_LIBLLVM)
-    message(STATUS "HIP_PYTHON_FORCE_BUILD_LIBLLVM=ON - will build and bundle libLLVM.so from static archives")
+    message(STATUS "HIP_PYTHON_FORCE_BUILD_LIBLLVM=ON - will build and bundle ${HIP_PYTHON_LIBLLVM_NAME} from static archives")
     set(BUILD_BUNDLED_LIBLLVM ON)
-  elseif(DEFINED ROCM_PATH)
-    if(EXISTS "${ROCM_PATH}/llvm/lib")
-      # Look for libLLVM.so in ROCm LLVM library directory
-      find_library(SYSTEM_LIBLLVM
-        NAMES LLVM
-        PATHS "${ROCM_PATH}/llvm/lib" ${LLVM_LIBRARY_DIRS}
+  else()
+    # Look for a shared LLVM belonging to the installation found above.
+    # LLVM_LIBRARY_DIRS comes from LLVMConfig.cmake, so it tracks whichever
+    # layout was discovered; ${ROCM_PATH}/llvm/lib is retained for the
+    # traditional Linux tree. On Windows the loadable artifact is a DLL and
+    # lives in a bin directory — find_library would match the LLVM.lib import
+    # library instead, which is not something the bindings can dlopen.
+    if(WIN32)
+      find_file(SYSTEM_LIBLLVM
+        NAMES "${HIP_PYTHON_LIBLLVM_NAME}"
+        PATHS ${LLVM_TOOLS_BINARY_DIR} ${LLVM_LIBRARY_DIRS} "${ROCM_PATH}/bin"
         NO_DEFAULT_PATH
       )
-      if(SYSTEM_LIBLLVM)
-        message(STATUS "Found system libLLVM.so at ${SYSTEM_LIBLLVM} - will copy to wheel")
-        set(BUNDLE_SYSTEM_LIBLLVM ON)
-      else()
-        message(STATUS "libLLVM.so not found in ${ROCM_PATH}/llvm/lib - will build and bundle")
-        set(BUILD_BUNDLED_LIBLLVM ON)
-      endif()
     else()
-      message(STATUS "${ROCM_PATH}/llvm/lib doesn't exist - will build and bundle libLLVM.so")
+      find_library(SYSTEM_LIBLLVM
+        NAMES LLVM
+        PATHS ${LLVM_LIBRARY_DIRS} "${ROCM_PATH}/llvm/lib"
+        NO_DEFAULT_PATH
+      )
+    endif()
+    if(SYSTEM_LIBLLVM)
+      message(STATUS "Found system ${HIP_PYTHON_LIBLLVM_NAME} at ${SYSTEM_LIBLLVM} - will copy to wheel")
+      set(BUNDLE_SYSTEM_LIBLLVM ON)
+    else()
+      message(STATUS "${HIP_PYTHON_LIBLLVM_NAME} not found near ${LLVM_DIR} - will build and bundle")
       set(BUILD_BUNDLED_LIBLLVM ON)
     endif()
-  else()
-    message(STATUS "ROCM_PATH not set - will build and bundle libLLVM.so")
-    set(BUILD_BUNDLED_LIBLLVM ON)
   endif()
+endif()
+
+# ROCm ships no shared LLVM on Windows — only the static archives and
+# llvm-config under <rocm>/lib/llvm — so bundling always lands in the
+# build-from-archives path there. That path is Unix-shaped: it feeds
+# llvm-config's --ldflags/--system-libs through separate_arguments(UNIX_COMMAND)
+# and hands the resulting `-l` flags to the linker, which MSVC does not accept.
+# Bundling therefore defaults off on Windows and this only fires when it was
+# asked for explicitly — fail here rather than deep inside the link.
+if(BUILD_BUNDLED_LIBLLVM AND WIN32)
+  message(FATAL_ERROR
+    "Cannot bundle ${HIP_PYTHON_LIBLLVM_NAME}: no shared LLVM was found in the ROCm "
+    "installation at ${ROCM_PATH}, and building one from LLVM's static archives is "
+    "not supported on Windows.\n"
+    "Drop -DHIP_PYTHON_BUNDLE_LIBLLVM=ON / -DHIP_PYTHON_FORCE_BUILD_LIBLLVM=ON to "
+    "build rocm-bindings-compiler without it. The rocm.bindings.amd_comgr bindings "
+    "work either way (amd_comgr.dll does ship); the rocm.bindings.llvm.* bindings "
+    "will import but raise when first used, because there is no LLVM library for "
+    "them to load.")
 endif()
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
@@ -95,7 +127,7 @@ if(BUNDLE_SYSTEM_LIBLLVM)
   file(REAL_PATH "${SYSTEM_LIBLLVM}" SYSTEM_LIBLLVM_REAL)
   install(FILES ${SYSTEM_LIBLLVM_REAL}
     DESTINATION rocm/bindings/llvm
-    RENAME libLLVM.so
+    RENAME "${HIP_PYTHON_LIBLLVM_NAME}"
     COMPONENT rocm-bindings-compiler
   )
   message(STATUS "Will install system libLLVM.so from ${SYSTEM_LIBLLVM_REAL}")

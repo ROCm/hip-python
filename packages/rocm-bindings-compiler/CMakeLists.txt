@@ -45,12 +45,24 @@ hip_python_initialize()
 
 hip_python_resolve_version()
 
-# Find ROCm LLVM and AMD Comgr
+# Find ROCm LLVM and AMD Comgr. Both config packages live under the ROCm
+# install, whose internal layout varies by distribution — see
+# hip_python_add_rocm_cmake_prefixes. LLVM_DIR is set here rather than left to
+# find_package because ROCm exposes a broken LLVM redirect stub on Windows; it
+# is then reused by bundled/libllvm/CMakeLists.txt.
+hip_python_add_rocm_cmake_prefixes()
 find_package(amd_comgr REQUIRED)
 
-# Find LLVM (will be used by bundled/libllvm/CMakeLists.txt)
-if(DEFINED ROCM_PATH)
-  set(LLVM_DIR "${ROCM_PATH}/llvm/lib/cmake/llvm")
+hip_python_find_rocm_llvm_dir(LLVM_DIR)
+if(NOT LLVM_DIR)
+  message(FATAL_ERROR
+    "rocm-bindings-compiler needs LLVM's CMake package, and the ROCm "
+    "installation at ${ROCM_PATH} does not provide one.\n"
+    "On Windows the pip rocm-sdk-devel tree ships the LLVM headers and static "
+    "archives but leaves lib/llvm/lib/cmake empty; a TheRock tarball has the "
+    "package at lib/llvm/lib/cmake/llvm. Point ROCM_PATH at an installation "
+    "that includes it, pass -DLLVM_DIR=<dir containing LLVMConfig.cmake>, or "
+    "configure with -DHIP_PYTHON_BUILD_COMPILER=OFF to skip this package.")
 endif()
 find_package(LLVM REQUIRED CONFIG)
 
@@ -176,7 +188,19 @@ foreach(module ${LLVM_C_TRANSFORMS_MODULES})
   list(APPEND LLVM_TARGETS rocm_bindings_llvm_c_transforms_${module})
 endforeach()
 
-# Build LLVM config modules
+# Build LLVM config modules.
+#
+# rocm.bindings.llvm.config exposes llvm-config.h's build-configuration macros,
+# whose defined-ness varies by platform, so the generated binding references
+# some the local LLVM does not define. Reconcile the two before compiling.
+hip_python_absent_macro_definitions(_llvm_config_defs
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings/llvm/config/cyllvm_config.pxd"
+  "${LLVM_INCLUDE_DIRS}/llvm/Config/llvm-config.h")
+if(_llvm_config_defs)
+  list(JOIN _llvm_config_defs ", " _llvm_config_defs_pretty)
+  message(STATUS "llvm-config.h leaves these undefined, supplying them to rocm.bindings.llvm.config: ${_llvm_config_defs_pretty}")
+endif()
+
 foreach(module ${LLVM_CONFIG_MODULES})
   # Conditionally link against rocmllvm if we're building it
   if(TARGET rocmllvm AND BUILD_BUNDLED_LIBLLVM)
@@ -188,6 +212,7 @@ foreach(module ${LLVM_CONFIG_MODULES})
       COMPONENT rocm-bindings-compiler
       CYTHON_INCLUDE_DIRS ${COMPILER_INCLUDE_DIRS}
       INCLUDE_DIRS ${COMPILER_INCLUDE_DIRS}
+      COMPILE_DEFINITIONS ${_llvm_config_defs}
       LINK_LIBRARIES rocmllvm
       DEPENDS ${COMPILER_CYTHON_DEPENDS} rocmllvm
     )
@@ -201,6 +226,7 @@ foreach(module ${LLVM_CONFIG_MODULES})
       COMPONENT rocm-bindings-compiler
       CYTHON_INCLUDE_DIRS ${COMPILER_INCLUDE_DIRS}
       INCLUDE_DIRS ${COMPILER_INCLUDE_DIRS}
+      COMPILE_DEFINITIONS ${_llvm_config_defs}
       DEPENDS ${COMPILER_CYTHON_DEPENDS}
     )
   endif()

@@ -82,6 +82,33 @@ endif()
 # rocm-bindings-core, rocm.bindings.cyhip from rocm-bindings-hip.
 hip_python_append_sibling_includes(LIBRARIES_INCLUDE_DIRS)
 
+# Per-module C preprocessor defines. Declared before the availability probe
+# below so the probe compiles each header exactly as the module itself will;
+# the build loop reads the same variables via `_hp_defs_${_lib}`.
+#
+# hipsparse: hipsparse.h picks its deprecation marker by feature test. In C
+# mode without __has_c_attribute it falls back to HIPSPARSE_DEPRECATED, which
+# hipsparse-export.h defines as __declspec(deprecated) for MSVC — and MSVC
+# rejects __declspec on an enumerator, which is where hipsparseOrder_t uses
+# it. gcc/clang take the __attribute__ or [[deprecated]] path instead and are
+# unaffected. Pre-defining the marker empty (hipsparse-export.h guards it with
+# #ifndef) drops the deprecation annotations, which a bindings build does not
+# need. Keep this MSVC-only so other toolchains compile the header verbatim.
+set(_hp_defs_hipsparse)
+if(MSVC)
+  list(APPEND _hp_defs_hipsparse "HIPSPARSE_DEPRECATED=")
+endif()
+
+# Skip libraries this ROCm install cannot build (see
+# hip_python_filter_available_modules). On Windows this drops hipsparselt,
+# whose header ships without the hipsparselt-export.h it includes.
+hip_python_filter_available_modules(HIP_PYTHON_SELECTED_LIBRARIES
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings"
+  INCLUDE_DIRS ${LIBRARIES_INCLUDE_DIRS}
+  COMPILE_DEFINITIONS ${_hp_defs_hipsparse}
+  MODULES ${HIP_PYTHON_SELECTED_LIBRARIES}
+)
+
 # Build each enabled library
 foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)
   # Map library name to actual library file name
@@ -108,6 +135,7 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)
     CYTHON_INCLUDE_DIRS ${LIBRARIES_INCLUDE_DIRS}
     INCLUDE_DIRS ${LIBRARIES_INCLUDE_DIRS}
     LINK_LIBRARIES ${_lib_link_libraries}
+    COMPILE_DEFINITIONS ${_hp_defs_${_lib}}
     DEPENDS ${LIBRARIES_CYTHON_DEPENDS}
   )
 
@@ -121,6 +149,7 @@ foreach(_lib IN LISTS HIP_PYTHON_SELECTED_LIBRARIES)
     CYTHON_INCLUDE_DIRS ${LIBRARIES_INCLUDE_DIRS}
     INCLUDE_DIRS ${LIBRARIES_INCLUDE_DIRS}
     LINK_LIBRARIES ${_lib_link_libraries}
+    COMPILE_DEFINITIONS ${_hp_defs_${_lib}}
     DEPENDS ${LIBRARIES_CYTHON_DEPENDS}
   )
 

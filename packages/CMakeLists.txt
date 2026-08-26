@@ -174,7 +174,7 @@ option(HIP_PYTHON_BUILD_COMPILER "Build rocm-bindings-compiler package" ON)
 option(HIP_PYTHON_BUILD_INTEROP "Build hip-python-interop package" ON)
 
 # Control libLLVM.so bundling in rocm-bindings-compiler
-option(HIP_PYTHON_BUNDLE_LIBLLVM "Bundle libLLVM.so in rocm-bindings-compiler wheel" ON)
+option(HIP_PYTHON_BUNDLE_LIBLLVM "Bundle libLLVM.so in rocm-bindings-compiler wheel" ${HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT})
 option(HIP_PYTHON_FORCE_BUILD_LIBLLVM
   "Always build libLLVM.so from LLVM static archives (--whole-archive) instead of\
  reusing the system shared library. Implies HIP_PYTHON_BUNDLE_LIBLLVM=ON."
@@ -317,6 +317,20 @@ endif()
 # Metadata package (no build, pure Python)
 # hip-python/ doesn't need CMake - it's just re-exports
 
+# rocm-bindings-systems can legitimately come up empty: rccl, roctx, hipfile
+# and amdsmi are all absent from the Windows ROCm SDK, so that package's
+# availability probes drop every module it knows about. Building an empty
+# wheel would advertise bindings it does not carry, so gate its packaging
+# targets on whether anything survived. HIP_PYTHON_SYSTEMS_SELECTED_MODULES is
+# set by the subdirectory above.
+set(_hp_package_systems ${HIP_PYTHON_BUILD_SYSTEMS})
+if(HIP_PYTHON_BUILD_SYSTEMS AND NOT HIP_PYTHON_SYSTEMS_SELECTED_MODULES)
+  message(STATUS
+    "rocm-bindings-systems has no buildable modules against ${ROCM_PATH} — "
+    "skipping its wheel and sdist targets")
+  set(_hp_package_systems OFF)
+endif()
+
 # Wheel packaging targets (conditional on build options)
 if(HIP_PYTHON_BUILD_CORE)
   hip_python_add_wheel_target(
@@ -351,7 +365,7 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
   message(STATUS "Wheel target enabled: libraries_wheel")
 endif()
 
-if(HIP_PYTHON_BUILD_SYSTEMS)
+if(_hp_package_systems)
   hip_python_add_wheel_target(
     TARGET systems_wheel
     PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
@@ -422,7 +436,7 @@ endif()
 if(HIP_PYTHON_BUILD_LIBRARIES)
   list(APPEND ALL_WHEEL_TARGETS libraries_wheel)
 endif()
-if(HIP_PYTHON_BUILD_SYSTEMS)
+if(_hp_package_systems)
   list(APPEND ALL_WHEEL_TARGETS systems_wheel)
 endif()
 if(HIP_PYTHON_BUILD_COMPILER)
@@ -479,7 +493,7 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
   message(STATUS "Sdist target enabled: libraries_sdist")
 endif()
 
-if(HIP_PYTHON_BUILD_SYSTEMS)
+if(_hp_package_systems)
   hip_python_add_sdist_target(
     TARGET systems_sdist
     PACKAGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/rocm-bindings-systems"
@@ -535,7 +549,7 @@ endif()
 if(HIP_PYTHON_BUILD_LIBRARIES)
   list(APPEND ALL_SDIST_TARGETS libraries_sdist)
 endif()
-if(HIP_PYTHON_BUILD_SYSTEMS)
+if(_hp_package_systems)
   list(APPEND ALL_SDIST_TARGETS systems_sdist)
 endif()
 if(HIP_PYTHON_BUILD_COMPILER)
@@ -741,7 +755,7 @@ if(HIP_PYTHON_BUILD_DOCS)
     endif()
   endforeach()
   # rocm-systems and llvm-project are always consulted during codegen
-  # (hiprtc_runtime.h + the clang Python bindings respectively), so an
+  # (the HIP headers + the clang Python bindings respectively), so an
   # empty rev there means the codegen run didn't pass the corresponding
   # --rocm-{systems,llvm-project}-dir flag — render that as
   # "*hash not recorded*" so the always-used framing in index.rst.in

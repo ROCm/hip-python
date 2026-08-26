@@ -13,10 +13,15 @@ set -xeu
 #      cmake/generated_{modules,versions}.cmake, and the docs-side outputs
 #      (docs_src/sphinx/_toc.yml.in + docs_src/python_api/*.rst) - emitted by
 #      `hip-python-generate`.
-#   2. The hiprtc runtime header (rocm.comgr/hiprtc_runtime.h) - built from
-#      the clr/hipamd `hiprtc-builtins` target.
-#   3. The rocm.bindings.clang bindings (cindex.py et al. + LLVM LICENSE.TXT)
+#   2. The rocm.bindings.clang bindings (cindex.py et al. + LLVM LICENSE.TXT)
 #      - copied from the llvm-project clang Python bindings.
+#
+# The hipRTC runtime header is deliberately not produced here. rocm.comgr reads
+# that text out of the installed ROCm's hiprtc-builtins library rather than from
+# a copy obtained by configuring clr/hipamd and building its `hiprtc-builtins`
+# target, which is both cheaper and correct: a generated file carries the data
+# model of whichever host generated it, and a Linux-generated copy is invalid
+# input to a Windows HIP compilation.
 #
 # The generated tree is written into ${BUILD_DIR}/hip_python so the sibling
 # commit step (ci/internal/commit-bindings.sh) can stage and commit it.
@@ -104,9 +109,6 @@ fi
 
 ### step 3 - copy the rocm.bindings.clang bindings
 
-# Done before the hiprtc header build (step 4): this is a pure, low-risk file
-# copy, whereas the hiprtc build is fragile. Running it first guarantees the
-# clang bindings are present even if a later step fails.
 cd ${build_dir}/packages/rocm-bindings-compiler/src/rocm/bindings/clang/
 
   # 1) copy clang bindings into the rocm-bindings-compiler wheel's
@@ -164,61 +166,6 @@ PYEOF
   cp ${rocm_llvm_project_dir}/LICENSE.TXT .
 
 cd ${build_dir}
-
-### step 4 - generate the hiprtc runtime header
-
-cp -R ${rocm_systems_dir}/projects/clr ${BUILD_DIR}/
-
-# create venv in temp directory
-VENV_DIR=$(mktemp -d)
-python3 -m venv ${VENV_DIR}
-. ${VENV_DIR}/bin/activate
-python3 -m pip install cmake cppheaderparser
-
-PYTHON3_EXECUTABLE="${VENV_DIR}/bin/python3"
-
-# FIXME(HIP/AMD): add missing cmake_minimum_required(..) to CMakeLists.txt,
-# as it is a hard error with recent CMake versions
-if ! grep -q "cmake_minimum_required" ${BUILD_DIR}/clr/hipamd/CMakeLists.txt; then
-    cp ${BUILD_DIR}/clr/hipamd/CMakeLists.txt ${BUILD_DIR}/clr/hipamd/CMakeLists.txt.orig
-    printf 'cmake_minimum_required(VERSION 3.16.8)\n\n' > ${BUILD_DIR}/clr/hipamd/CMakeLists.txt.tmp
-    cat ${BUILD_DIR}/clr/hipamd/CMakeLists.txt.orig >> ${BUILD_DIR}/clr/hipamd/CMakeLists.txt.tmp
-    mv ${BUILD_DIR}/clr/hipamd/CMakeLists.txt.tmp ${BUILD_DIR}/clr/hipamd/CMakeLists.txt
-fi
-
-# create build directory in temp location
-HIPAMD_BUILD_DIR=$(mktemp -d)
-
-HIP_DIR=${rocm_systems_dir}/projects/hip
-HIPCC_BIN_DIR=${rocm_path}/bin
-HIP_LLVM_ROOT=${rocm_path}/llvm
-OPENCL_DIR=${rocm_systems_dir}/projects/clr/opencl
-ROCCLR_DIR=${rocm_systems_dir}/projects/clr/rocclr
-HIP_PLATFORM=amd
-
-cmake -S ${BUILD_DIR}/clr/hipamd \
-      -B ${HIPAMD_BUILD_DIR} \
-      -DHIP_COMMON_DIR="${HIP_DIR}" \
-      -DHIPCC_BIN_DIR="${HIPCC_BIN_DIR}" \
-      -DHIP_LLVM_ROOT="${HIP_LLVM_ROOT}" \
-      -DAMD_OPENCL_PATH=${OPENCL_DIR} \
-      -DROCCLR_PATH=${ROCCLR_DIR} \
-      -DCMAKE_PREFIX_PATH="${rocm_path}/" \
-      -DPython3_EXECUTABLE="${PYTHON3_EXECUTABLE}" \
-      -DCMAKE_INSTALL_PREFIX=install \
-      --fresh --debug-output
-
-# generate hiprtc runtime header
-echo "generate hiprtc runtime header"
-cmake --build ${HIPAMD_BUILD_DIR} --target hiprtc-builtins --verbose
-
-# copy header file into the merged hip-python tree's rocm-bindings-compiler wheel
-echo "copy header file into rocm-bindings-compiler 'rocm.comgr' package"
-cp ${HIPAMD_BUILD_DIR}/src/hiprtc/hip_rtc_gen/hipRTC \
-   ${build_dir}/packages/rocm-bindings-compiler/src/rocm/comgr/hiprtc_runtime.h
-
-deactivate
-rm -rf ${VENV_DIR} ${HIPAMD_BUILD_DIR}
 
 ### re-raise the generator status
 

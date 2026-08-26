@@ -13,8 +13,13 @@ license-files = ["LICENSE"]
 dependencies = [
     "rocm-bindings-hip~=@HIP_PYTHON_DEP_VERSION@",
     # pynvml shim is backed by rocm.bindings.amdsmi and the nvtx shim by
-    # rocm.bindings.roctx (both from rocm-bindings-systems).
-    "rocm-bindings-systems~=@HIP_PYTHON_DEP_VERSION@",
+    # rocm.bindings.roctx (both from rocm-bindings-systems). ROCm ships neither
+    # amdsmi nor roctracer on Windows, so no rocm-bindings-systems wheel is
+    # built there and requiring it unconditionally would make this wheel
+    # uninstallable. The cuda.* bindings, which are the bulk of this package,
+    # do not depend on it; only the pynvml and nvtx shims do, and importing
+    # those on Windows raises.
+    "rocm-bindings-systems~=@HIP_PYTHON_DEP_VERSION@; sys_platform != 'win32'",
 ]
 authors = [
     {name = "Advanced Micro Devices, Inc.", email = "hip-python.maintainer@amd.com"},

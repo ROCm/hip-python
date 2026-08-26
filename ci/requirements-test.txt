@@ -1,0 +1,10 @@
+# Python test dependencies for the hip-python test suites.
+#
+# Mirrors the dependency set installed by ci/internal/test.sh: pytest and
+# cffi, plus the contents of examples/requirements.txt (which the example
+# suite installs separately).
+pytest
+cffi
+numpy
+setuptools>=42
+cython>=3.1.0

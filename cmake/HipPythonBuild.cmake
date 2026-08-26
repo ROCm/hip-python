@@ -1,6 +1,7 @@
 include_guard(GLOBAL)
 
 include(CMakeParseArguments)
+include(CheckCSourceCompiles)
 
 set(Python_FIND_VIRTUALENV FIRST)
 # Building stable-ABI (abi3) modules via `Python_add_library(... USE_SABI ...)`
@@ -131,6 +132,26 @@ function(hip_python_initialize)
         "active Python (${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}).")
     endif()
   endif()
+
+  # CMake's MSVC platform module defaults CMAKE_BUILD_TYPE to Debug, where on
+  # Linux it defaults to empty, so a configure that says nothing about the build
+  # type means something different on Windows. MSVC then defines _DEBUG, and
+  # CPython's pyconfig.h reads that as a request for the debug ABI: it turns on
+  # Py_DEBUG (hence Py_REF_DEBUG) and asks for python3XX_d.lib. Linking the
+  # extension modules against a normal release interpreter fails on the
+  # refcount-tracking symbols that ABI adds — _Py_NegativeRefcount,
+  # _Py_INCREF_IncRefTotal, _Py_DECREF_DecRefTotal — which name neither Python
+  # nor the build type. Both documented build entry points pass
+  # -DCMAKE_BUILD_TYPE=Release, so this is only reachable from a hand-run
+  # configure.
+  if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(WARNING
+      "CMAKE_BUILD_TYPE=Debug with MSVC: the extension modules will be compiled "
+      "against CPython's debug ABI and will only link if ${Python_EXECUTABLE} is a "
+      "debug build. Pass -DCMAKE_BUILD_TYPE=Release (what ci/internal/build-wheels.ps1 "
+      "and the scikit-build-core wheel builds use) unless that is what you want. "
+      "Note that Debug is CMake's default build type on Windows, not an empty one.")
+  endif()
 endfunction()
 
 function(hip_python_select_modules out_var selection)
@@ -198,6 +219,253 @@ function(hip_python_collect_enabled_modules out_var option_prefix)
     endif()
   endforeach()
   set(${out_var} ${_selected} PARENT_SCOPE)
+endfunction()
+
+# Default for the HIP_PYTHON_BUNDLE_LIBLLVM option, which is declared both by
+# packages/CMakeLists.txt and by the standalone rocm-bindings-compiler build.
+#
+# Off on Windows: ROCm ships no shared LLVM there, only the static archives, and
+# the fallback of linking those into one is Unix-only (see
+# packages/rocm-bindings-compiler/bundled/libllvm/CMakeLists.txt). Defaulting
+# off keeps a plain Windows configure working instead of failing on a request
+# the platform cannot satisfy.
+if(WIN32)
+  set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT OFF)
+else()
+  set(HIP_PYTHON_BUNDLE_LIBLLVM_DEFAULT ON)
+endif()
+
+# Put the ROCm install on CMake's config-package search path.
+#
+# Neither find_package(LLVM CONFIG) nor find_package(amd_comgr) looks inside
+# ${ROCM_PATH} on its own, and the directory layout differs between ROCm
+# distributions, so register every prefix under which a `lib/cmake/<pkg>/` has
+# been observed:
+#
+#   <rocm>/lib/llvm   TheRock's nested toolchain tree
+#   <rocm>/llvm       traditional Linux ROCm, where LLVM is a sibling tree
+#   <rocm>            TheRock wheels and tarballs — the only layout that ships
+#                     on Windows — and current Linux packages
+#
+# The toolchain prefixes come first deliberately: `<rocm>/lib/cmake` also holds
+# redirect stubs that forward to the real toolchain packages, and at least the
+# LLVM one is broken on Windows (see hip_python_find_rocm_llvm_dir), so a real
+# package should win wherever both are visible.
+#
+# Registering prefixes rather than setting LLVM_DIR / amd_comgr_DIR directly
+# keeps an explicitly supplied `-DLLVM_DIR=...` authoritative and covers every
+# ROCm config package with one mechanism, rather than having each consumer
+# hardcode a path of its own: rocm-bindings-compiler and its bundled/libllvm
+# subdirectory are two such consumers, and no fixed path matches every layout.
+function(hip_python_add_rocm_cmake_prefixes)
+  set(_result "${CMAKE_PREFIX_PATH}")
+  foreach(_prefix IN ITEMS
+      "${ROCM_PATH}/lib/llvm"
+      "${ROCM_PATH}/llvm"
+      "${ROCM_PATH}")
+    if(IS_DIRECTORY "${_prefix}")
+      list(APPEND _result "${_prefix}")
+    endif()
+  endforeach()
+  list(REMOVE_DUPLICATES _result)
+  set(CMAKE_PREFIX_PATH "${_result}" PARENT_SCOPE)
+endfunction()
+
+# Locate a usable LLVM CMake package inside the ROCm installation.
+#
+# ROCm installs a redirect stub at <rocm>/lib/cmake/llvm/LLVMConfig.cmake that
+# includes <rocm>/llvm/lib/cmake/llvm/LLVMConfig.cmake. That target path exists
+# on Linux but on Windows it exists in neither the pip rocm-sdk-devel tree nor
+# the TheRock tarball, where the real package is <rocm>/lib/llvm/lib/cmake/llvm.
+# Left alone, find_package(LLVM CONFIG) matches the stub and then fails inside
+# its include() with a message that names neither LLVM nor the ROCm install.
+#
+# A real LLVM config directory ships LLVMExports.cmake alongside
+# LLVMConfig.cmake, whereas the stub directory contains only LLVMConfig.cmake
+# and LLVMConfigVersion.cmake, so requiring the exports file tells them apart.
+# An already-set LLVM_DIR is honoured first, so `-DLLVM_DIR=...` still wins.
+#
+# Sets out_var to the directory, or to an empty string when the installation
+# ships no usable package — the case for the Windows pip rocm-sdk-devel tree,
+# which has the LLVM headers and static archives but an empty lib/llvm/lib/cmake.
+function(hip_python_find_rocm_llvm_dir out_var)
+  set(_result "")
+  foreach(_dir IN ITEMS
+      "${LLVM_DIR}"
+      "${ROCM_PATH}/lib/llvm/lib/cmake/llvm"
+      "${ROCM_PATH}/llvm/lib/cmake/llvm"
+      "${ROCM_PATH}/lib/cmake/llvm")
+    if(_dir AND EXISTS "${_dir}/LLVMConfig.cmake"
+             AND EXISTS "${_dir}/LLVMExports.cmake")
+      set(_result "${_dir}")
+      break()
+    endif()
+  endforeach()
+  set(${out_var} "${_result}" PARENT_SCOPE)
+endfunction()
+
+# Supply, as `NAME=0` compile definitions, the macros a generated binding
+# references but the local header does not define.
+#
+# A generated `cy<module>.pxd` declares the macros it exposes inside its
+# `cdef extern from "<header>"` block, which makes Cython emit a C reference to
+# each one. That matches the header the bindings were generated from, but a
+# build-configuration header such as llvm/Config/llvm-config.h `#undef`s a
+# different subset per platform: bindings generated against a Linux LLVM
+# reference LLVM_ON_UNIX and HAVE_SYSEXITS_H, neither of which a Windows LLVM
+# defines, and the compile fails with "undeclared identifier". Passing the
+# absent ones as 0 reproduces what the `#undef` means for the `cdef bint` the
+# binding declares.
+#
+# Macros the generator itself saw as absent are declared *outside* the extern
+# block, where Cython defines a variable of its own; defining those here would
+# corrupt that declaration, so only the in-block ones are considered. The header
+# is scanned literally rather than preprocessed, so a macro that arrives through
+# a nested include looks absent — usable for self-contained config headers,
+# which is where the platform-conditional macros live.
+function(hip_python_absent_macro_definitions out_var pxd header)
+  set(_defs "")
+  if(EXISTS "${pxd}" AND EXISTS "${header}")
+    file(STRINGS "${header}" _header_defines REGEX "^[ \t]*#[ \t]*define[ \t]+")
+    file(STRINGS "${pxd}" _pxd_lines)
+    set(_in_extern_block FALSE)
+    foreach(_line IN LISTS _pxd_lines)
+      if(_line MATCHES "^cdef extern from ")
+        set(_in_extern_block TRUE)
+      elseif(NOT _in_extern_block)
+        # Outside any extern block; nothing to check.
+      elseif(_line MATCHES "^[^ \t]")
+        set(_in_extern_block FALSE)
+      elseif(NOT _line MATCHES "[(:]"
+             AND _line MATCHES "^[ \t]+cdef .*[ \t*]([A-Za-z_][A-Za-z0-9_]*)$")
+        # An indented `cdef <type> <NAME>` with no parentheses or trailing colon
+        # is a value declaration; functions and struct/enum bodies are not.
+        set(_name "${CMAKE_MATCH_1}")
+        set(_defined FALSE)
+        foreach(_define IN LISTS _header_defines)
+          if(_define MATCHES "^[ \t]*#[ \t]*define[ \t]+${_name}([ \t(]|$)")
+            set(_defined TRUE)
+            break()
+          endif()
+        endforeach()
+        if(NOT _defined)
+          list(APPEND _defs "${_name}=0")
+        endif()
+      endif()
+    endforeach()
+  endif()
+  set(${out_var} "${_defs}" PARENT_SCOPE)
+endfunction()
+
+# Read the ROCm header that a generated binding compiles against.
+#
+# Each generated `cy<module>.pxd` opens with the `cdef extern from "<header>"`
+# block naming the header that the Cython-generated `.c` will `#include`, so
+# the module's build requirement is recorded in the binding itself and there
+# is no separate table to keep in sync as the module set evolves. Returns an
+# empty string when the file or the declaration is absent.
+function(hip_python_module_rocm_header out_var source_dir module)
+  set(_header "")
+  set(_pxd "${source_dir}/cy${module}.pxd")
+  if(EXISTS "${_pxd}")
+    file(STRINGS "${_pxd}" _decl REGEX "^cdef extern from " LIMIT_COUNT 1)
+    if(_decl)
+      string(REGEX MATCH "\"([^\"]+)\"" _quoted "${_decl}")
+      set(_header "${CMAKE_MATCH_1}")
+    endif()
+  endif()
+  set(${out_var} "${_header}" PARENT_SCOPE)
+endfunction()
+
+# Narrow a list of modules down to the ones this ROCm install can actually
+# build, and report the ones dropped.
+#
+# No ROCm install ships every library. The Windows ROCm SDK has no rccl,
+# roctx, amdsmi or usable hipsparselt headers; Linux installs can likewise
+# omit the optional packages. A module whose header is missing does not
+# degrade gracefully — it fails the compile and takes the whole wheel with
+# it — so unavailable modules are skipped here, the same way
+# `find_package(hipfile QUIET)` already gates the hipfile bindings.
+#
+# Availability is established by compiling a probe that includes the header,
+# not by looking for the file. That is deliberate: it is the only way to
+# reject a header that is present but unusable, which is exactly the case for
+# Windows `hipsparselt/hipsparselt.h` (shipped, but it includes a
+# `hipsparselt-export.h` that is not). Pass the same COMPILE_DEFINITIONS and
+# INCLUDE_DIRS the real targets use, or the probe will disagree with the
+# build — a probe that is stricter than the real compile silently drops a
+# module that would have worked.
+#
+# Neither platform nor ROCm version is consulted anywhere, so a release that
+# starts or stops shipping a library needs no change here. Set
+# HIP_PYTHON_SKIP_MODULE_DETECTION=ON to bypass the probes and build exactly
+# the requested set.
+#
+#   hip_python_filter_available_modules(SELECTED
+#     SOURCE_DIR <dir holding cy<module>.pxd>
+#     INCLUDE_DIRS <dirs...>
+#     COMPILE_DEFINITIONS <defs...>
+#     MODULES <module>...)
+function(hip_python_filter_available_modules out_var)
+  cmake_parse_arguments(ARG "" "SOURCE_DIR" "INCLUDE_DIRS;COMPILE_DEFINITIONS;MODULES" ${ARGN})
+
+  if(HIP_PYTHON_SKIP_MODULE_DETECTION)
+    set(${out_var} ${ARG_MODULES} PARENT_SCOPE)
+    return()
+  endif()
+
+  # check_c_source_compiles() reads these from the calling scope; they are
+  # function-local here, so nothing leaks into the rest of the configure. The
+  # include order matters and matches hip_python_add_cython_module: the
+  # codegen's patched shim headers arrive via ARG_INCLUDE_DIRS and have to
+  # shadow their unpatched originals under ${ROCM_PATH}/include.
+  set(CMAKE_REQUIRED_INCLUDES ${ARG_INCLUDE_DIRS} "${HIP_PYTHON_ROCM_INCLUDE_DIR}")
+  set(CMAKE_REQUIRED_DEFINITIONS)
+  foreach(_def IN LISTS HIP_PYTHON_COMMON_COMPILE_DEFINITIONS ARG_COMPILE_DEFINITIONS)
+    list(APPEND CMAKE_REQUIRED_DEFINITIONS "-D${_def}")
+  endforeach()
+
+  set(_available)
+  set(_skipped)
+  foreach(_module IN LISTS ARG_MODULES)
+    hip_python_module_rocm_header(_header "${ARG_SOURCE_DIR}" "${_module}")
+    if("${_header}" STREQUAL "")
+      # Nothing declared to probe — keep the module and let the compile speak.
+      list(APPEND _available "${_module}")
+      continue()
+    endif()
+
+    # The __has_attribute shim is Cython's, reproduced here because the ROCm
+    # headers are sensitive to it and the probe has to see what the real
+    # translation unit sees. hip/amd_detail/amd_hip_vector_types.h branches on
+    # `defined(__has_attribute)`: with it defined the vector types are plain C,
+    # without it the header emits C++ templates even in C mode, so a probe
+    # lacking the shim rejects every ROCm library under MSVC. Cython emits the
+    # shim into every generated .c, which is the only reason these bindings
+    # compile as C on Windows at all.
+    string(MAKE_C_IDENTIFIER "HIP_PYTHON_HAVE_${_module}_HEADER" _probe_var)
+    check_c_source_compiles("
+#ifndef __has_attribute
+#define __has_attribute(x) 0
+#endif
+#include \"${_header}\"
+int main(void) { return 0; }
+" ${_probe_var})
+
+    if(${_probe_var})
+      list(APPEND _available "${_module}")
+    else()
+      list(APPEND _skipped "${_module} (<${_header}>)")
+    endif()
+  endforeach()
+
+  if(_skipped)
+    string(REPLACE ";" ", " _skipped_text "${_skipped}")
+    message(STATUS
+      "hip-python: skipping modules unavailable in ${ROCM_PATH}: ${_skipped_text}")
+  endif()
+
+  set(${out_var} ${_available} PARENT_SCOPE)
 endfunction()
 
 function(hip_python_collect_cython_depends out_var)
@@ -330,6 +598,15 @@ function(hip_python_add_cython_module)
       ${ARG_INCLUDE_DIRS}
       "${HIP_PYTHON_ROCM_INCLUDE_DIR}"
   )
+  # The generated bindings are single translation units covering an entire
+  # ROCm library, and the largest of them (rocm.bindings.hip,
+  # cuda.bindings.driver/runtime) exceed the 65,279-section limit of MSVC's
+  # default COFF object layout — the compile aborts with C1128. /bigobj
+  # raises the limit. `MSVC` is true for any MSVC-like frontend, so this
+  # covers cl, clang-cl and amdclang-cl alike.
+  if(MSVC)
+    target_compile_options(${ARG_TARGET} PRIVATE /bigobj)
+  endif()
   if(ARG_LINK_LIBRARIES)
     target_link_directories(${ARG_TARGET} PRIVATE "${HIP_PYTHON_ROCM_LIB_DIR}")
     target_link_libraries(${ARG_TARGET} PRIVATE ${ARG_LINK_LIBRARIES})
