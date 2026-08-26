@@ -25,9 +25,8 @@
 # ``cufile.pxd`` sits over its ``cycufile.pxd``: here the ``cpdef`` layer sits
 # over the hand-written ``cycufile.pxd`` C-level aliases.
 
-from libc.stdint cimport intptr_t
-
 cimport cuda.bindings.cycufile as cycufile
+from libc.stdint cimport int64_t, intptr_t
 
 
 cdef class Descr:
@@ -55,8 +54,8 @@ cpdef intptr_t handle_register(intptr_t descr) except? 0
 cpdef handle_deregister(intptr_t fh)
 cpdef buf_register(intptr_t buf_ptr_base, size_t length, int flags)
 cpdef buf_deregister(intptr_t buf_ptr_base)
-cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, long buf_ptr_offset)
-cpdef write(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, long buf_ptr_offset)
+cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, int64_t file_offset, int64_t buf_ptr_offset)
+cpdef write(intptr_t fh, intptr_t buf_ptr_base, size_t size, int64_t file_offset, int64_t buf_ptr_offset)
 cpdef driver_open()
 cpdef driver_close()
 cpdef use_count()

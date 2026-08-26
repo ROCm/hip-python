@@ -38,8 +38,20 @@ import types
 
 import pytest
 
-# Skip the whole module when the interop wheel is not importable, rather than
-# erroring at collection time.
+# ROCm ships no ROCTX library on Windows, so the rocm-bindings-systems wheel
+# that backs the shim is not built there. These tests stub rocm.bindings.roctx to
+# record what the shim dispatches, so they need the real module to exist even
+# though they never call into it; the shim's own no-op fallback (nvtx.enabled()
+# == False) keeps importing fine but dispatches nothing to record.
+if sys.platform == "win32":
+    pytest.skip(
+        "the nvtx shim is backed by ROCTX, which ROCm does not ship on Windows",
+        allow_module_level=True,
+    )
+
+# Elsewhere the backing module is assumed present, so import it plainly.
+import rocm.bindings.roctx  # noqa: E402,F401
+
 nvtx = pytest.importorskip("nvtx")
 
 
@@ -158,7 +170,9 @@ def test_domain_routes_to_global_roctx(rec):
 
 def test_domain_uses_event_attributes_message(rec):
     d = nvtx.get_domain("dom")
-    attrs = d.get_event_attributes(message="attr-msg", color="red", category="c")
+    attrs = d.get_event_attributes(
+        message="attr-msg", color="red", category="c"
+    )
     d.push_range(attrs)
     d.pop_range()
     assert rec.calls == [("push", "attr-msg"), ("pop",)]

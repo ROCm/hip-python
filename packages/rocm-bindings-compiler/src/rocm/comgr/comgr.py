@@ -24,15 +24,15 @@
 
 Attributes:
     HIPRTC_RUNTIME_HEADER (`str`):
-        The content of the ``hipRTC`` / ``hiprtc_runtime/h`` header file.
+        The content of the ``hipRTC`` / ``hiprtc_runtime.h`` header file, read on
+        first access from the installed ROCm's ``hiprtc-builtins`` library. See
+        :py:mod:`rocm.comgr.hiprtc_header`, which explains why the installed
+        copy is the only correct one.
         Take a look at https://github.com/ROCm/clr for more details on how this
         file is generated.
-        The ``HIP`` and ``clr`` branches for generating the file have been
-        selected according to ``rocm.bindings.comgr.ROCM_VERSION``.
 """
 
 import ctypes
-import os
 import textwrap
 
 import rocm.bindings.amd_comgr as _amd_comgr
@@ -40,6 +40,7 @@ from rocm.bindings.util.types import CStr
 from rocm.version import ROCM_VERSION_TUPLE  # noqa: F401
 
 from . import amd_hsa_kernel_descriptor
+from .hiprtc_header import get_hiprtc_runtime_header
 
 
 def to_bytes(obj):
@@ -92,7 +93,7 @@ def metadata_string_get_bytes(
             A metadata node that represents a string.
     """
     # First determines length of string, then loads it into buffer.
-    str_len = ctypes.c_ulong(0)
+    str_len = ctypes.c_size_t(0)
     comgr_check(
         _amd_comgr.amd_comgr_get_metadata_string(
             metadata_string, ctypes.addressof(str_len), None
@@ -108,7 +109,7 @@ def metadata_string_get_bytes(
     return str_buf
 
 
-@ctypes.CFUNCTYPE(None, ctypes.c_ulong, ctypes.c_ulong, ctypes.c_void_p)
+@ctypes.CFUNCTYPE(None, ctypes.c_uint64, ctypes.c_uint64, ctypes.c_void_p)
 def _get_map_keys_cb(ckey, _, userdata):
     """Callback for extracting keys from a metadata map.
 
@@ -126,15 +127,21 @@ def _get_map_keys_cb(ckey, _, userdata):
 
         ```cython
         cdef struct amd_comgr_metadata_node_s:
-            unsigned long handle
+            uint64_t handle
         ```
 
         We can thus simplify the callback signature too
 
         ```cython
         void (*callback) (
-          unsigned long key, unsigned long value, void * userdata)
+          uint64_t key, uint64_t value, void * userdata)
         ```
+
+        The handle is spelled ``uint64_t`` and not ``unsigned long`` because
+        Windows is LLP64: ``unsigned long`` is 32 bits there, so ctypes would
+        marshal a truncated handle and the lookup would fault. (The generated
+        ``cyamd_comgr.pxd`` does say ``unsigned long`` -- that is libclang's
+        canonical spelling of ``uint64_t`` captured on a LP64 host.)
     """
     result_list = ctypes.cast(
         ctypes.c_void_p(userdata), ctypes.POINTER(ctypes.py_object)
@@ -161,7 +168,9 @@ def metadata_map_get_keys(metadata_map: _amd_comgr.amd_comgr_metadata_node_s):
     return keys.value
 
 
-def parse_metadata(metadata: _amd_comgr.amd_comgr_metadata_node_s, level: int = 0):
+def parse_metadata(
+    metadata: _amd_comgr.amd_comgr_metadata_node_s, level: int = 0
+):
     """Parse metadata node and return a nest of `dict`, `list`, and `str`.
 
     Args:
@@ -170,7 +179,9 @@ def parse_metadata(metadata: _amd_comgr.amd_comgr_metadata_node_s, level: int = 
         level (int, optional):
             Not used yet. Useful for debugging.
     """
-    metadata_kind = comgr_check(_amd_comgr.amd_comgr_get_metadata_kind(metadata))
+    metadata_kind = comgr_check(
+        _amd_comgr.amd_comgr_get_metadata_kind(metadata)
+    )
     if (
         metadata_kind
         == _amd_comgr.amd_comgr_metadata_kind_s.AMD_COMGR_METADATA_KIND_MAP
@@ -378,7 +389,7 @@ class Symbol:
         self.value = -1  # type: (int)
 
 
-@ctypes.CFUNCTYPE(None, ctypes.c_ulong, ctypes.c_void_p)
+@ctypes.CFUNCTYPE(None, ctypes.c_uint64, ctypes.c_void_p)
 def _iterate_symbols_cb(csymbol, userdata):
     """Callback for extracting keys from a metadata map.
 
@@ -575,7 +586,7 @@ class Data:
         the cy* enum, so always in sync with the installed wheel.
         """
         return sorted(
-            name[len(_DATA_KIND_PREFIX):]
+            name[len(_DATA_KIND_PREFIX) :]
             for name in _amd_comgr.amd_comgr_data_kind_s.__members__
             if name.startswith(_DATA_KIND_PREFIX)
         )
@@ -601,9 +612,7 @@ class Data:
     def _set_data_name(self, name):
         self._name = to_bytes(name).decode("utf-8")
         comgr_check(
-            _amd_comgr.amd_comgr_set_data_name(
-                self.get(), CStr(self._name)
-            )
+            _amd_comgr.amd_comgr_set_data_name(self.get(), CStr(self._name))
         )
 
     def _set_data_buffer(self, data_buffer=None):
@@ -616,7 +625,7 @@ class Data:
 
     def get_data_name(self) -> str:
         """Returns the data object's name as `str`."""
-        name_len = ctypes.c_ulong(0)
+        name_len = ctypes.c_size_t(0)
         comgr_check(
             _amd_comgr.amd_comgr_get_data_name(
                 self.get(), ctypes.addressof(name_len), None
@@ -634,7 +643,7 @@ class Data:
     def get_data_len(self):  # type(Data) -> int
         """Get the size of the managed data as Python 'int'."""
         if not self._len:
-            data_len = ctypes.c_ulong(0)
+            data_len = ctypes.c_size_t(0)
             comgr_check(
                 _amd_comgr.amd_comgr_get_data(
                     self.get(), ctypes.addressof(data_len), None
@@ -653,7 +662,7 @@ class Data:
             object, you can also access ``self.source_bytes`` for a copy of
             the original source data buffer.
         """
-        data_len = ctypes.c_ulong(0)
+        data_len = ctypes.c_size_t(0)
         comgr_check(
             _amd_comgr.amd_comgr_get_data(
                 self.get(), ctypes.addressof(data_len), None
@@ -766,7 +775,7 @@ class Action:
         the cy* enum, so always in sync with the installed wheel.
         """
         return sorted(
-            name[len(_ACTION_KIND_PREFIX):]
+            name[len(_ACTION_KIND_PREFIX) :]
             for name in _amd_comgr.amd_comgr_action_kind_s.__members__
             if name.startswith(_ACTION_KIND_PREFIX)
         )
@@ -809,7 +818,7 @@ class Action:
         cy* enum, so always in sync with the installed wheel.
         """
         return sorted(
-            name[len(_LANGUAGE_PREFIX):]
+            name[len(_LANGUAGE_PREFIX) :]
             for name in _amd_comgr.amd_comgr_language_s.__members__
             if name.startswith(_LANGUAGE_PREFIX)
         )
@@ -822,7 +831,9 @@ class Action:
         options=None,
         logging: bool = False,
     ):
-        self._action_info = comgr_check(_amd_comgr.amd_comgr_create_action_info())
+        self._action_info = comgr_check(
+            _amd_comgr.amd_comgr_create_action_info()
+        )
         self.result_data_set = DataSet()
         self._action_kind = Action.action_kind_str_to_enum(action_kind_str)
         if isa_name:
@@ -898,7 +909,7 @@ class Action:
 
     def get_option(self, index: int) -> bytes:
         # First determines length of string, then loads it into buffer.
-        str_len = ctypes.c_ulong(0)
+        str_len = ctypes.c_size_t(0)
         comgr_check(
             _amd_comgr.amd_comgr_action_info_get_option_list_item(
                 self.get(), index, ctypes.addressof(str_len), None
@@ -1084,7 +1095,7 @@ def disassemble_program(
 
     status = _amd_comgr.amd_comgr_status_s.AMD_COMGR_STATUS_SUCCESS
     address = 0
-    size = ctypes.c_ulong(0)  # TODO(interfacegen): Make return value
+    size = ctypes.c_uint64(0)  # TODO(interfacegen): Make return value
     while (
         status == _amd_comgr.amd_comgr_status_s.AMD_COMGR_STATUS_SUCCESS
         and address < len(program)
@@ -1097,7 +1108,9 @@ def disassemble_program(
         )[0]
         address += size.value
 
-    comgr_check(_amd_comgr.amd_comgr_destroy_disassembly_info(disassembly_info))
+    comgr_check(
+        _amd_comgr.amd_comgr_destroy_disassembly_info(disassembly_info)
+    )
     return "\n".join(wrapped.disassembly) + "\n"
 
 
@@ -1448,10 +1461,15 @@ def _do_single_compile_action(
     source_name = "source." + source_lang.lower()
     assert not prepend_hiprtc_runtime_header or source_lang == "HIP"
 
-    if prepend_hiprtc_runtime_header and isinstance(source, str):
-        source = HIPRTC_RUNTIME_HEADER + "\n" + source
-    elif prepend_hiprtc_runtime_header:
-        source = HIPRTC_RUNTIME_HEADER.encode() + b"\n" + bytes(source)
+    if prepend_hiprtc_runtime_header:
+        # Called, not read as a global: the module-level __getattr__ that makes
+        # HIPRTC_RUNTIME_HEADER lazy for importers is not consulted for name
+        # lookups from inside this module.
+        header = get_hiprtc_runtime_header()
+        if isinstance(source, str):
+            source = header + "\n" + source
+        else:
+            source = header.encode() + b"\n" + bytes(source)
 
     # prepare options
     options = []
@@ -1995,7 +2013,14 @@ def disassemble_via_action_deprecated(
     return (result, log, diagnostic)
 
 
-with open(
-    os.path.join(os.path.dirname(__file__), "hiprtc_runtime.h"), "r"
-) as infile:
-    HIPRTC_RUNTIME_HEADER = infile.read()
+def __getattr__(name):
+    # Resolved on first access rather than at import: reading it loads hipRTC's
+    # builtins library, and a caller that never compiles HIP source should not
+    # pay for that, nor fail where that library is absent. Code inside this
+    # module must call get_hiprtc_runtime_header() instead -- this hook only
+    # covers attribute access from outside.
+    if name == "HIPRTC_RUNTIME_HEADER":
+        value = get_hiprtc_runtime_header()
+        globals()[name] = value  # subsequent lookups skip this hook
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

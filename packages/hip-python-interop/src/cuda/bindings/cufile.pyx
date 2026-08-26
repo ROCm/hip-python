@@ -34,15 +34,12 @@ to the corresponding hipFILE C symbol via the low-level
 import enum
 import os
 
-from libc.stdint cimport intptr_t
-from libc.stdlib cimport malloc, calloc, free
+cimport cuda.bindings.cycufile as cycufile
 from libc.errno cimport errno
-
+from libc.stdint cimport int64_t, intptr_t
+from libc.stdlib cimport calloc, free, malloc
 from rocm.bindings.cyhip cimport hipPeekAtLastError, hipStream_t
 from rocm.bindings.cyhipfile cimport timespec
-
-cimport cuda.bindings.cycufile as cycufile
-
 
 # ---------------------------------------------------------------------------
 # Enums. Member *names* mirror cuda-python's ``cuda.bindings.cufile`` enums
@@ -351,7 +348,7 @@ cdef class _IOParamsBatch:
         return self._parent._ptr[self._idx].u.batch.file_offset
 
     @file_offset.setter
-    def file_offset(self, long value):
+    def file_offset(self, int64_t value):
         self._parent._ptr[self._idx].u.batch.file_offset = value
 
     @property
@@ -359,7 +356,7 @@ cdef class _IOParamsBatch:
         return self._parent._ptr[self._idx].u.batch.devPtr_offset
 
     @devPtr_offset.setter
-    def devPtr_offset(self, long value):
+    def devPtr_offset(self, int64_t value):
         self._parent._ptr[self._idx].u.batch.devPtr_offset = value
 
     @property
@@ -367,7 +364,7 @@ cdef class _IOParamsBatch:
         return self._parent._ptr[self._idx].u.batch.size
 
     @size.setter
-    def size(self, unsigned long value):
+    def size(self, size_t value):
         self._parent._ptr[self._idx].u.batch.size = value
 
 
@@ -547,7 +544,7 @@ cdef class IOEvents:
         return self._ptr[0].ret
 
     @ret.setter
-    def ret(self, unsigned long value):
+    def ret(self, size_t value):
         self._ptr[0].ret = value
 
 
@@ -603,7 +600,7 @@ cpdef use_count():
             the number of times the cuFile driver is currently in use by
             this process at the moment of the call.
     """
-    cdef long count
+    cdef int64_t count
     with nogil:
         count = cycufile.hipFileUseCount()
     return count
@@ -845,7 +842,7 @@ cpdef buf_deregister(intptr_t buf_ptr_base):
 # Synchronous IO
 # ---------------------------------------------------------------------------
 
-cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, long buf_ptr_offset):
+cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, int64_t file_offset, int64_t buf_ptr_offset):
     """Read from a registered file handle into device/host memory.
 
     Synchronously reads ``size`` bytes from the file at ``file_offset`` into the
@@ -884,7 +881,7 @@ cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, lo
         `~.cuFileError`:
             on any other (cuFile-specific) error.
     """
-    cdef long retval
+    cdef ssize_t retval
     cdef int err_no
     cdef int hip_drv_err
     cdef int status
@@ -900,7 +897,7 @@ cpdef read(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, lo
     raise cuFileError(status, hip_drv_err if status == <int>OpError.CUDA_DRIVER_ERROR else None)
 
 
-cpdef write(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, long buf_ptr_offset):
+cpdef write(intptr_t fh, intptr_t buf_ptr_base, size_t size, int64_t file_offset, int64_t buf_ptr_offset):
     """Write device/host memory to a registered file handle.
 
     Synchronously writes ``size`` bytes from the buffer to the file at
@@ -941,7 +938,7 @@ cpdef write(intptr_t fh, intptr_t buf_ptr_base, size_t size, long file_offset, l
         `~.cuFileError`:
             on any other (cuFile-specific) error.
     """
-    cdef long retval
+    cdef ssize_t retval
     cdef int err_no
     cdef int hip_drv_err
     cdef int status
@@ -1158,10 +1155,10 @@ cpdef read_async(intptr_t fh, intptr_t buf_ptr_base, intptr_t size_p, intptr_t f
         err = cycufile.hipFileReadAsync(
             <void*>fh,
             <void*>buf_ptr_base,
-            <unsigned long*>size_p,
-            <long*>file_offset_p,
-            <long*>buf_ptr_offset_p,
-            <long*>bytes_read_p,
+            <size_t*>size_p,
+            <int64_t*>file_offset_p,
+            <int64_t*>buf_ptr_offset_p,
+            <ssize_t*>bytes_read_p,
             <hipStream_t><void*>stream,
         )
     _check(err)
@@ -1217,10 +1214,10 @@ cpdef write_async(intptr_t fh, intptr_t buf_ptr_base, intptr_t size_p, intptr_t 
         err = cycufile.hipFileWriteAsync(
             <void*>fh,
             <void*>buf_ptr_base,
-            <unsigned long*>size_p,
-            <long*>file_offset_p,
-            <long*>buf_ptr_offset_p,
-            <long*>bytes_written_p,
+            <size_t*>size_p,
+            <int64_t*>file_offset_p,
+            <int64_t*>buf_ptr_offset_p,
+            <ssize_t*>bytes_written_p,
             <hipStream_t><void*>stream,
         )
     _check(err)
@@ -1330,7 +1327,7 @@ cpdef get_parameter_size_t(int param):
         `~.cuFileError`:
             e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
-    cdef unsigned long value = 0
+    cdef size_t value = 0
     cdef cycufile.hipFileError err
     with nogil:
         err = cycufile.hipFileGetParameterSizeT(<cycufile.hipFileSizeTConfigParameter_t>param, &value)

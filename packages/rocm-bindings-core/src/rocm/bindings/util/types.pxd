@@ -151,6 +151,26 @@ cdef class ListOfUnsignedLong(Pointer):
     @staticmethod
     cdef ListOfUnsignedLong fromPyobj(object pyobj)
 
+cdef class ListOfInt64(Pointer):
+    cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
+
+    @staticmethod
+    cdef ListOfInt64 fromPtr(void* ptr)
+
+    @staticmethod
+    cdef ListOfInt64 fromPyobj(object pyobj)
+
+cdef class ListOfUInt64(Pointer):
+    cdef bint _is_ptr_owner
+    cdef Py_ssize_t _len
+
+    @staticmethod
+    cdef ListOfUInt64 fromPtr(void* ptr)
+
+    @staticmethod
+    cdef ListOfUInt64 fromPyobj(object pyobj)
+
 cdef class PointerToInt(ListOfInt):
 
     @staticmethod
@@ -182,3 +202,19 @@ cdef class PointerToUnsignedLong(ListOfUnsignedLong):
 
     @staticmethod
     cdef PointerToUnsignedLong fromPyobj(object pyobj)
+
+cdef class PointerToInt64(ListOfInt64):
+
+    @staticmethod
+    cdef PointerToInt64 fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToInt64 fromPyobj(object pyobj)
+
+cdef class PointerToUInt64(ListOfUInt64):
+
+    @staticmethod
+    cdef PointerToUInt64 fromPtr(void* ptr)
+
+    @staticmethod
+    cdef PointerToUInt64 fromPyobj(object pyobj)

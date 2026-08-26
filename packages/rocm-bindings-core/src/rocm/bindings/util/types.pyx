@@ -45,10 +45,14 @@ __all__ = [
     "ListOfLong",
     "ListOfUnsigned",
     "ListOfUnsignedLong",
+    "ListOfInt64",
+    "ListOfUInt64",
     "PointerToInt",
     "PointerToLong",
     "PointerToUnsigned",
     "PointerToUnsignedLong",
+    "PointerToInt64",
+    "PointerToUInt64",
 ]
 
 cdef class Pointer:
@@ -275,8 +279,10 @@ cdef class Pointer:
         if isinstance(offset, int):
             if offset < 0:
                 raise ValueError("offset='{offset}' must be non-negative")
-            return Pointer.fromPtr(<void*>(<unsigned long>self._ptr
-                                   + cpython.long.PyLong_AsUnsignedLong(offset)))
+            # uintptr_t, not unsigned long: the latter is 32-bit on Windows
+            # (LLP64), which would truncate the pointer.
+            return Pointer.fromPtr(<void*>(<libc.stdint.uintptr_t>self._ptr
+                                   + <libc.stdint.uintptr_t>cpython.long.PyLong_AsUnsignedLongLong(offset)))
         raise NotImplementedError("'__getitem__': not implemented for other"
                                   + " 'offset' types than 'int'")
 
@@ -1370,7 +1376,9 @@ cdef class NDBuffer(Pointer):
             offset += start*stride
             stride *= <size_t>shape[i]
         offset *= self._itemsize  # scale offset with itemsize
-        return NDBuffer.fromPtr(<void*>(<unsigned long>self._ptr + offset)).configure(
+        # uintptr_t, not unsigned long: the latter is 32-bit on Windows
+        # (LLP64), which would truncate the pointer.
+        return NDBuffer.fromPtr(<void*>(<libc.stdint.uintptr_t>self._ptr + offset)).configure(
             _force=True,
             typestr=self.typestr,
             itemsize=self.itemsize,
@@ -2817,6 +2825,438 @@ cdef class ListOfUnsignedLong(Pointer):
         """Return the elements as a Python `tuple` of `int`."""
         return tuple(self)
 
+cdef class ListOfInt64(Pointer):
+    """Handler for `list` / `tuple` whose entries can be converted to C ``int64_t``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``int64_t``. Such entries might be of Python type `None`,
+    `int`, or of any `ctypes` integer type.
+
+    Unlike `~.ListOfLong`, the element width does not depend on the data model of
+    the platform: ``int64_t`` is 64 bits on LP64 (Linux) and LLP64 (Windows)
+    alike, while C ``long`` is 64 bits on the former and 32 bits on the latter.
+    This is the handler for parameters whose declaration pins the width --
+    ``int64_t``, ``ssize_t``, ``ptrdiff_t``, ``intptr_t`` and library typedefs
+    aliased to them.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``int64_t``:
+
+        A `list` or `tuple` of types that can be converted to C type ``int64_t``.
+        In this case, this type allocates an array of C ``int64_t`` values wherein
+        it stores the values obtained from the `list`/`tuple` entries. Furthermore,
+        the instance's `self._is_ptr_owner` C attribute is set to `True` in this
+        case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
+    # C members declared in declaration part ``types.pxd``
+
+    def __repr__(self):
+        return f"<ListOfInt64 object, _ptr={int(self)}>"
+
+    def __cinit__(self):
+        self._is_ptr_owner = False
+        self._len = -1
+
+    @staticmethod
+    cdef ListOfInt64 fromPtr(void* ptr):
+        cdef ListOfInt64 wrapper = ListOfInt64.__new__(ListOfInt64)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        Note:
+            If ``pyobj`` is an instance of `ListOfInt64`, only the pointer is copied.
+            Releasing an acquired `Py_buffer` and temporary memory are still
+            obligations of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._is_ptr_owner = False
+        if isinstance(pyobj, ListOfInt64):
+            self._ptr = (<ListOfInt64>pyobj)._ptr
+
+        elif isinstance(pyobj, (tuple, list)):
+            self._is_ptr_owner = True
+            self._len = len(pyobj)
+            self._ptr = libc.stdlib.malloc(
+                len(pyobj)*sizeof(libc.stdint.int64_t)
+            )
+            libc.string.memset(
+                <void*>self._ptr, 0, len(pyobj)*sizeof(libc.stdint.int64_t)
+            )
+            for i, entry in enumerate(pyobj):
+                if isinstance(entry, int):
+                    (<libc.stdint.int64_t*>self._ptr)[i] = \
+                        cpython.long.PyLong_AsLongLong(entry)
+                elif isinstance(entry, (
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<libc.stdint.int64_t*>self._ptr)[i] = \
+                        cpython.long.PyLong_AsLongLong(entry.value)
+                else:
+                    raise ValueError(
+                        f"cannot cast input element '{i}' to C int64_t"
+                    )
+        else:
+            self._is_ptr_owner = False
+            Pointer.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a ListOfInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfInt64`` instance, this method
+        returns it directly. No new ``ListOfInt64`` is created.
+        """
+        return ListOfInt64.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef ListOfInt64 fromPyobj(object pyobj):
+        """Derives a ListOfInt64 from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfInt64`` instance, this method
+        returns it directly. No new ``ListOfInt64`` is created.
+
+        Args:
+            pyobj (`object`):
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``int64_t``, or any other `object` that is accepted as input
+                by `~.Pointer.__init__`.
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of `ListOfInt64`.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfInt64 wrapper
+
+        if isinstance(pyobj, ListOfInt64):
+            return pyobj
+        else:
+            wrapper = ListOfInt64.__new__(ListOfInt64)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._is_ptr_owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.ListOfInt64` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+        ListOfInt64.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C ``int64_t`` slots.
+
+        The returned `~.ListOfInt64` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfInt64 wrapper = ListOfInt64.__new__(ListOfInt64)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(
+                count*sizeof(libc.stdint.int64_t)
+            )
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(
+                wrapper._ptr, 0, count*sizeof(libc.stdint.int64_t)
+            )
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<libc.stdint.int64_t*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
+
+cdef class ListOfUInt64(Pointer):
+    """Handler for `list` / `tuple` whose entries can be converted to C ``uint64_t``
+
+    Datatype for handling Python `list` and `tuple` objects with entries that can be
+    converted to C type ``uint64_t``. Such entries might be of Python type `None`,
+    `int`, or of any `ctypes` integer type.
+
+    Unlike `~.ListOfUnsignedLong`, the element width does not depend on the data
+    model of the platform: ``uint64_t`` is 64 bits on LP64 (Linux) and LLP64
+    (Windows) alike, while C ``unsigned long`` is 64 bits on the former and 32
+    bits on the latter. This is the handler for parameters whose declaration pins
+    the width -- ``uint64_t``, ``size_t``, ``uintptr_t`` and library typedefs
+    aliased to them.
+
+    The type can be initialized from the following Python objects:
+
+    * `list` / `tuple` of types that can be converted to C type ``uint64_t``:
+
+        A `list` or `tuple` of types that can be converted to C type ``uint64_t``.
+        In this case, this type allocates an array of C ``uint64_t`` values wherein
+        it stores the values obtained from the `list`/`tuple` entries. Furthermore,
+        the instance's `self._is_ptr_owner` C attribute is set to `True` in this
+        case.
+
+    * `object` that is accepted as input by `~.Pointer.__init__`:
+
+        In this case, init code from `~.Pointer` is used and the C attribute
+        ``self._is_ptr_owner`` remains unchanged. See `~.Pointer` for more
+        information.
+
+    Note:
+        Type checks are performed in the above order.
+
+    Note:
+        Simple, contiguous numpy and Python 3 array types can be passed
+        directly to this routine as they implement the Python buffer protocol.
+
+    C Attributes:
+        _ptr (``void *``, protected):
+            See `~.Pointer` for more information.
+        _py_buffer (`~.Py_buffer`, protected):
+            See `~.Pointer` for more information.
+        _py_buffer_acquired (`bool`, protected):
+            See `~.Pointer` for more information.
+        _is_ptr_owner (`bint`, protected):
+            If this object is the owner of the allocated buffer. Defaults to `False`.
+    """
+    # C members declared in declaration part ``types.pxd``
+
+    def __repr__(self):
+        return f"<ListOfUInt64 object, _ptr={int(self)}>"
+
+    def __cinit__(self):
+        self._is_ptr_owner = False
+        self._len = -1
+
+    @staticmethod
+    cdef ListOfUInt64 fromPtr(void* ptr):
+        cdef ListOfUInt64 wrapper = ListOfUInt64.__new__(ListOfUInt64)
+        wrapper._ptr = ptr
+        return wrapper
+
+    cdef void init_from_pyobj(self, object pyobj):
+        """
+        Note:
+            If ``pyobj`` is an instance of `ListOfUInt64`, only the pointer is
+            copied. Releasing an acquired `Py_buffer` and temporary memory are still
+            obligations of the original object.
+        """
+        self._py_buffer_acquired = False
+        self._is_ptr_owner = False
+        if isinstance(pyobj, ListOfUInt64):
+            self._ptr = (<ListOfUInt64>pyobj)._ptr
+
+        elif isinstance(pyobj, (tuple, list)):
+            self._is_ptr_owner = True
+            self._len = len(pyobj)
+            self._ptr = libc.stdlib.malloc(
+                len(pyobj)*sizeof(libc.stdint.uint64_t)
+            )
+            libc.string.memset(
+                <void*>self._ptr, 0, len(pyobj)*sizeof(libc.stdint.uint64_t)
+            )
+            for i, entry in enumerate(pyobj):
+                if isinstance(entry, int):
+                    (<libc.stdint.uint64_t*>self._ptr)[i] = \
+                        cpython.long.PyLong_AsUnsignedLongLong(entry)
+                elif isinstance(entry, (
+                    ctypes.c_bool,
+                    ctypes.c_short,
+                    ctypes.c_ushort,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_long,
+                    ctypes.c_ulong,
+                    ctypes.c_longlong,
+                    ctypes.c_ulonglong,
+                    ctypes.c_size_t,
+                    ctypes.c_ssize_t,
+                )):
+                    (<libc.stdint.uint64_t*>self._ptr)[i] = \
+                        cpython.long.PyLong_AsUnsignedLongLong(entry.value)
+                else:
+                    raise ValueError(
+                        f"cannot cast input element '{i}' to C uint64_t"
+                    )
+        else:
+            self._is_ptr_owner = False
+            Pointer.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a ListOfUInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``ListOfUInt64`` instance, this method
+        returns it directly. No new ``ListOfUInt64`` is created.
+        """
+        return ListOfUInt64.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef ListOfUInt64 fromPyobj(object pyobj):
+        """Derives a ListOfUInt64 from the given object.
+
+        In case ``pyobj`` is itself an ``ListOfUInt64`` instance, this method
+        returns it directly. No new ``ListOfUInt64`` is created.
+
+        Args:
+            pyobj (`object`):
+                Must be either a `list` or `tuple` of objects that can be converted
+                to C type ``uint64_t``, or any other `object` that is accepted as
+                input by `~.Pointer.__init__`.
+
+        Note:
+            This routine does not perform a copy but returns the original ``pyobj``
+            if ``pyobj`` is an instance of `ListOfUInt64`.
+        Note:
+            This routines assumes that the original input is not garbage
+            collected before the deletion of this object.
+        """
+        cdef ListOfUInt64 wrapper
+
+        if isinstance(pyobj, ListOfUInt64):
+            return pyobj
+        else:
+            wrapper = ListOfUInt64.__new__(ListOfUInt64)
+            wrapper.init_from_pyobj(pyobj)
+            return wrapper
+
+    def __dealloc__(self):
+        if self._py_buffer_acquired:
+            cpython.buffer.PyBuffer_Release(&self._py_buffer)
+        if self._is_ptr_owner:
+            libc.stdlib.free(self._ptr)
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.ListOfUInt64` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+        """
+        ListOfUInt64.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count):
+        """Allocate an owned, zero-initialized array of ``count`` C ``uint64_t`` slots.
+
+        The returned `~.ListOfUInt64` owns the buffer (freed on garbage
+        collection) and has a known length, so it is indexable, iterable,
+        and convertible via `~.to_list`/`~.to_tuple`.
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef ListOfUInt64 wrapper = ListOfUInt64.__new__(ListOfUInt64)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(
+                count*sizeof(libc.stdint.uint64_t)
+            )
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(
+                wrapper._ptr, 0, count*sizeof(libc.stdint.uint64_t)
+            )
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    def __len__(self):
+        return _listof_require_len(self._len)
+
+    def __getitem__(self, subscript):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        if isinstance(subscript, slice):
+            return [self[j] for j in range(*subscript.indices(n))]
+        i = _listof_norm_index(subscript, n)
+        return (<libc.stdint.uint64_t*>self._ptr)[i]
+
+    def __iter__(self):
+        cdef Py_ssize_t n = _listof_require_len(self._len)
+        cdef Py_ssize_t i
+        for i in range(n):
+            yield self[i]
+
+    def to_list(self):
+        """Return the elements as a Python `list` of `int`."""
+        return list(self)
+
+    def to_tuple(self):
+        """Return the elements as a Python `tuple` of `int`."""
+        return tuple(self)
+
 cdef int _pointerto_require_scalar(object pyobj) except -1:
     """Reject multi-element sequence initializers for a ``PointerTo*``.
 
@@ -3218,6 +3658,209 @@ cdef class PointerToUnsignedLong(ListOfUnsignedLong):
         if self._ptr == NULL:
             raise ValueError("cannot write through a NULL PointerToUnsignedLong")
         (<unsigned long*>self._ptr)[0] = v
+
+cdef class PointerToInt64(ListOfInt64):
+    """Handler for a rank-0 pointer to a single C ``int64_t``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfInt64`): it wraps a ``T *`` that points at a
+    *single* value rather than a sized buffer. Use it for a caller-allocated
+    scalar pointer argument whose declaration pins a signed 64-bit width (an
+    ``IN`` / ``INOUT`` / caller-allocated ``OUT`` ``int64_t *``, ``ssize_t *``
+    or aliased ``hoff_t *`` parameter, e.g. hipFILE's async ``bytes_read_p`` /
+    ``bytes_written_p``): allocate one slot, pass it to the C call, then read
+    the result back through `~.value` (or ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfInt64` (a `list` / `tuple`, another
+    ``ListOfInt64`` / ``PointerToInt64``, or any object accepted by
+    `~.Pointer`), except that a `list` / `tuple` initializer must have exactly
+    one element (a ``PointerTo*`` points at a single scalar); `~.allocate`
+    defaults to a single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToInt64 object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToInt64 fromPtr(void* ptr):
+        cdef PointerToInt64 wrapper = PointerToInt64.__new__(PointerToInt64)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToInt64`` instance, this method
+        returns it directly. No new ``PointerToInt64`` is created.
+        """
+        return PointerToInt64.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToInt64 fromPyobj(object pyobj):
+        """Derives a PointerToInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToInt64`` instance, this method
+        returns it directly. No new ``PointerToInt64`` is created.
+        """
+        cdef PointerToInt64 wrapper
+        if isinstance(pyobj, PointerToInt64):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToInt64.__new__(PointerToInt64)
+            ListOfInt64.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToInt64` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfInt64.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``int64_t`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToInt64 wrapper = PointerToInt64.__new__(PointerToInt64)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(
+                count*sizeof(libc.stdint.int64_t)
+            )
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(
+                wrapper._ptr, 0, count*sizeof(libc.stdint.int64_t)
+            )
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``int64_t`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToInt64")
+        return (<libc.stdint.int64_t*>self._ptr)[0]
+
+    @value.setter
+    def value(self, libc.stdint.int64_t v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToInt64")
+        (<libc.stdint.int64_t*>self._ptr)[0] = v
+
+cdef class PointerToUInt64(ListOfUInt64):
+    """Handler for a rank-0 pointer to a single C ``uint64_t``.
+
+    A ``PointerTo*`` is a length-1 specialization of the matching
+    ``ListOf*`` (here `~.ListOfUInt64`): it wraps a ``T *`` that points at a
+    *single* value rather than a sized buffer. Use it for a caller-allocated
+    scalar pointer argument whose declaration pins an unsigned 64-bit width (an
+    ``IN`` / ``INOUT`` / caller-allocated ``OUT`` ``uint64_t *`` or ``size_t *``
+    parameter): allocate one slot, pass it to the C call, then read the result
+    back through `~.value` (or ``self[0]``).
+
+    Accepts the same inputs as `~.ListOfUInt64` (a `list` / `tuple`, another
+    ``ListOfUInt64`` / ``PointerToUInt64``, or any object accepted by
+    `~.Pointer`), except that a `list` / `tuple` initializer must have exactly
+    one element (a ``PointerTo*`` points at a single scalar); `~.allocate`
+    defaults to a single slot.
+    """
+    def __repr__(self):
+        return f"<PointerToUInt64 object, _ptr={int(self)}>"
+
+    @staticmethod
+    cdef PointerToUInt64 fromPtr(void* ptr):
+        cdef PointerToUInt64 wrapper = PointerToUInt64.__new__(PointerToUInt64)
+        wrapper._ptr = ptr
+        return wrapper
+
+    @staticmethod
+    def fromObj(pyobj):
+        """Creates a PointerToUInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUInt64`` instance, this method
+        returns it directly. No new ``PointerToUInt64`` is created.
+        """
+        return PointerToUInt64.fromPyobj(pyobj)
+
+    @staticmethod
+    cdef PointerToUInt64 fromPyobj(object pyobj):
+        """Derives a PointerToUInt64 from the given object.
+
+        In case ``pyobj`` is itself a ``PointerToUInt64`` instance, this method
+        returns it directly. No new ``PointerToUInt64`` is created.
+        """
+        cdef PointerToUInt64 wrapper
+        if isinstance(pyobj, PointerToUInt64):
+            return pyobj
+        else:
+            _pointerto_require_scalar(pyobj)
+            wrapper = PointerToUInt64.__new__(PointerToUInt64)
+            ListOfUInt64.init_from_pyobj(wrapper, pyobj)
+            return wrapper
+
+    def __init__(self, object pyobj):
+        """Constructor.
+
+        Args:
+            pyobj (`object`):
+                See the class description `~.PointerToUInt64` for information
+                about accepted types for ``pyobj``.
+
+        Raises:
+            `TypeError`: If the input object ``pyobj`` is not of the right type.
+            `ValueError`: If ``pyobj`` is a `list` / `tuple` with more than one element.
+        """
+        _pointerto_require_scalar(pyobj)
+        ListOfUInt64.init_from_pyobj(self, pyobj)
+
+    @staticmethod
+    def allocate(Py_ssize_t count = 1):
+        """Allocate an owned, zero-initialized array of ``count`` C ``uint64_t`` slots.
+
+        Defaults to a single slot (the rank-0 ``PointerTo*`` use case).
+        """
+        if count < 0:
+            raise ValueError("'count' must be non-negative")
+        cdef PointerToUInt64 wrapper = PointerToUInt64.__new__(PointerToUInt64)
+        if count > 0:
+            wrapper._ptr = libc.stdlib.malloc(
+                count*sizeof(libc.stdint.uint64_t)
+            )
+            if wrapper._ptr == NULL:
+                raise MemoryError()
+            libc.string.memset(
+                wrapper._ptr, 0, count*sizeof(libc.stdint.uint64_t)
+            )
+        wrapper._is_ptr_owner = True
+        wrapper._len = count
+        return wrapper
+
+    @property
+    def value(self):
+        """The pointed-to ``uint64_t`` value (dereferences the first slot)."""
+        if self._ptr == NULL:
+            raise ValueError("cannot dereference a NULL PointerToUInt64")
+        return (<libc.stdint.uint64_t*>self._ptr)[0]
+
+    @value.setter
+    def value(self, libc.stdint.uint64_t v):
+        if self._ptr == NULL:
+            raise ValueError("cannot write through a NULL PointerToUInt64")
+        (<libc.stdint.uint64_t*>self._ptr)[0] = v
 
 
 def _clear_retained_inputs():

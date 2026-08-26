@@ -15,13 +15,15 @@ LLVM toolchain:
 
 ``rocm_sdk`` is blocked in these tests so the wheel-install tiers (which are
 verified separately against real venvs) do not shadow the env-var tier.
+
+The env-var tier is Unix-only, so the tests covering it are too — see
+``unix_only`` below.
 """
 
 import sys
 import types
 
 import pytest
-
 from rocm.bindings.util import paths
 
 
@@ -48,7 +50,23 @@ def _no_bundled(tmp_path):
     return tmp_path / "no_bundled"
 
 
-def test_get_library_path_clang_rocm_home(tmp_path, monkeypatch, block_rocm_sdk):
+# get_library_path skips the ROCM_PATH / ROCM_HOME tier on Windows: ROCm's DLLs
+# are located through PATH there rather than under a <rocm>/lib directory, and
+# returning an absolute path would be actively worse, because LoadLibrary does
+# not search a full-path-loaded DLL's own directory for its dependencies — the
+# rest of the ROCm stack it pulls in would go unfound. So on Windows these four
+# resolutions land on the bare-name fallback ('clang.dll', 'LLVM.dll') instead of
+# the fixture trees, and the expectations below describe Unix only.
+unix_only = pytest.mark.skipif(
+    sys.platform in ("win32", "cygwin"),
+    reason="get_library_path's ROCM_PATH/ROCM_HOME tier is Unix-only",
+)
+
+
+@unix_only
+def test_get_library_path_clang_rocm_home(
+    tmp_path, monkeypatch, block_rocm_sdk
+):
     llvm_lib = _make_llvm_lib(tmp_path)
     (llvm_lib / "libclang.so").touch()
     monkeypatch.setenv("ROCM_HOME", str(tmp_path))
@@ -58,7 +76,10 @@ def test_get_library_path_clang_rocm_home(tmp_path, monkeypatch, block_rocm_sdk)
     ) == str(llvm_lib / "libclang.so").encode("utf-8")
 
 
-def test_get_library_path_clang_versioned_soname(tmp_path, monkeypatch, block_rocm_sdk):
+@unix_only
+def test_get_library_path_clang_versioned_soname(
+    tmp_path, monkeypatch, block_rocm_sdk
+):
     llvm_lib = _make_llvm_lib(tmp_path)
     # Only the versioned soname is present (no bare libclang.so), as shipped by
     # rocm-sdk-core.
@@ -70,7 +91,10 @@ def test_get_library_path_clang_versioned_soname(tmp_path, monkeypatch, block_ro
     ).decode("utf-8") == str(llvm_lib / "libclang.so.23.0git")
 
 
-def test_get_library_path_llvm_rocm_path(tmp_path, monkeypatch, block_rocm_sdk):
+@unix_only
+def test_get_library_path_llvm_rocm_path(
+    tmp_path, monkeypatch, block_rocm_sdk
+):
     llvm_lib = _make_llvm_lib(tmp_path)
     (llvm_lib / "libLLVM.so.23.0git").touch()
     monkeypatch.setenv("ROCM_PATH", str(tmp_path))
@@ -80,6 +104,7 @@ def test_get_library_path_llvm_rocm_path(tmp_path, monkeypatch, block_rocm_sdk):
     ).decode("utf-8") == str(llvm_lib / "libLLVM.so.23.0git")
 
 
+@unix_only
 def test_get_library_path_rocm_path_wins_over_rocm_home(
     tmp_path, monkeypatch, block_rocm_sdk
 ):
@@ -120,7 +145,9 @@ def test_get_library_path_rocm_sdk_returns_pathlib(tmp_path, monkeypatch):
     # bundled_location points at an empty dir so the tier-1 auto-detect rglob
     # (which would scan the installed rocm package) is skipped and the rocm_sdk
     # tier is exercised deterministically.
-    result = paths.get_library_path("amdhip64", bundled_location=tmp_path / "empty")
+    result = paths.get_library_path(
+        "amdhip64", bundled_location=tmp_path / "empty"
+    )
 
     assert result == str(lib_file).encode("utf-8")
 
@@ -136,6 +163,159 @@ def test_get_library_path_rocm_sdk_returns_str(tmp_path, monkeypatch):
     monkeypatch.delenv("ROCM_PATH", raising=False)
     monkeypatch.delenv("ROCM_HOME", raising=False)
 
-    result = paths.get_library_path("amdhip64", bundled_location=tmp_path / "empty")
+    result = paths.get_library_path(
+        "amdhip64", bundled_location=tmp_path / "empty"
+    )
 
     assert result == str(lib_file).encode("utf-8")
+
+
+def _windows_or_unix_name(shortname, major=7, minor=14):
+    """The filename a ROCm install uses for ``shortname`` on this platform."""
+    if sys.platform in ("win32", "cygwin"):
+        return f"{shortname}{major:02d}{minor:02d}.dll"
+    return f"lib{shortname}.so"
+
+
+def test_get_library_path_anchored_shortname(tmp_path, monkeypatch):
+    """A library rocm_sdk does not register resolves beside one that it does.
+
+    ``find_libraries`` raises for anything outside its registry, which is where
+    hiprtc-builtins sits, so the only way a wheel install can name it is via a
+    registered neighbour -- here hipRTC, installed in the same directory.
+    """
+    lib_dir = tmp_path / "_rocm_sdk_core" / "bin"
+    lib_dir.mkdir(parents=True)
+    anchor = lib_dir / _windows_or_unix_name("hiprtc")
+    anchor.touch()
+    builtins = lib_dir / _windows_or_unix_name("hiprtc-builtins")
+    builtins.touch()
+
+    def find_libraries(shortname):
+        if shortname == "hiprtc":
+            return [anchor]
+        raise ModuleNotFoundError(shortname)  # what rocm_sdk raises
+
+    fake_rocm_sdk = types.ModuleType("rocm_sdk")
+    fake_rocm_sdk.find_libraries = find_libraries
+    monkeypatch.setitem(sys.modules, "rocm_sdk", fake_rocm_sdk)
+    monkeypatch.delenv("ROCM_PATH", raising=False)
+    monkeypatch.delenv("ROCM_HOME", raising=False)
+
+    result = paths.get_library_path(
+        "hiprtc-builtins", bundled_location=tmp_path / "empty"
+    )
+
+    assert result == str(builtins).encode("utf-8")
+
+
+def test_get_library_path_anchored_shortname_without_anchor(
+    tmp_path, monkeypatch
+):
+    """No anchor means no resolution, not an exception.
+
+    An install with no hipRTC at all -- a Windows machine carrying only the GPU
+    driver -- has to reach the bare-name fallback so the caller can report the
+    library as missing rather than crash inside path resolution.
+    """
+    empty = tmp_path / "empty"
+
+    fake_rocm_sdk = types.ModuleType("rocm_sdk")
+    fake_rocm_sdk.find_libraries = lambda shortname: []
+    monkeypatch.setitem(sys.modules, "rocm_sdk", fake_rocm_sdk)
+    # Unsetting these does not empty the Unix env tier: it falls back to
+    # /opt/rocm, so on a host with a traditional ROCm install the anchor
+    # resolves there and this never reaches the fallback it is testing.
+    # Naming a directory that holds no library is what makes the tier miss
+    # wherever the suite runs.
+    monkeypatch.setenv("ROCM_PATH", str(empty))
+    monkeypatch.setenv("ROCM_HOME", str(empty))
+    monkeypatch.setenv("PATH", str(empty))
+
+    result = paths.get_library_path(
+        "hiprtc-builtins", bundled_location=empty
+    ).decode("utf-8")
+
+    assert result == _bare_name("hiprtc-builtins")
+
+
+def _bare_name(shortname):
+    if sys.platform in ("win32", "cygwin"):
+        return f"{shortname}.dll"
+    if sys.platform == "darwin":
+        return f"lib{shortname}.dylib"
+    return f"lib{shortname}.so"
+
+
+def _no_rocm_tree(tmp_path, monkeypatch):
+    """Point every environment tier at a directory that holds no ROCm."""
+    empty = tmp_path / "empty"
+    empty.mkdir(exist_ok=True)
+    monkeypatch.setenv("ROCM_PATH", str(empty))
+    monkeypatch.setenv("ROCM_HOME", str(empty))
+
+
+def test_get_clang_resource_dir_beside_libclang(tmp_path, monkeypatch):
+    """The usual case: the resource directory sits next to libclang."""
+    _no_rocm_tree(tmp_path, monkeypatch)
+    lib = tmp_path / "llvm" / "lib"
+    resource_dir = lib / "clang" / "23"
+    resource_dir.mkdir(parents=True)
+    libclang = lib / _bare_name("clang")
+    libclang.touch()
+
+    assert paths.get_clang_resource_dir(str(libclang)) == str(resource_dir)
+
+
+def test_get_clang_resource_dir_libclang_in_bin(tmp_path, monkeypatch):
+    """Windows layout: libclang in bin, its resource directory in lib."""
+    _no_rocm_tree(tmp_path, monkeypatch)
+    llvm = tmp_path / "llvm"
+    resource_dir = llvm / "lib" / "clang" / "23"
+    resource_dir.mkdir(parents=True)
+    (llvm / "bin").mkdir()
+    libclang = llvm / "bin" / _bare_name("clang")
+    libclang.touch()
+
+    assert paths.get_clang_resource_dir(str(libclang)) == str(resource_dir)
+
+
+def test_get_clang_resource_dir_highest_version(tmp_path, monkeypatch):
+    """Several clang versions side by side resolve to the newest."""
+    _no_rocm_tree(tmp_path, monkeypatch)
+    lib = tmp_path / "llvm" / "lib"
+    for version in ("21", "23"):
+        (lib / "clang" / version).mkdir(parents=True)
+    libclang = lib / _bare_name("clang")
+    libclang.touch()
+
+    assert paths.get_clang_resource_dir(str(libclang)) == str(
+        lib / "clang" / "23"
+    )
+
+
+def test_get_clang_resource_dir_from_rocm_path(
+    tmp_path, monkeypatch, block_rocm_sdk
+):
+    """Without a libclang to anchor on, the ROCm tree is searched.
+
+    Both the traditional llvm/lib and the wheel/TheRock lib/llvm/lib layouts
+    are covered; here the latter, which is the only one Windows ships.
+    """
+    resource_dir = tmp_path / "lib" / "llvm" / "lib" / "clang" / "23"
+    resource_dir.mkdir(parents=True)
+    monkeypatch.setenv("ROCM_PATH", str(tmp_path))
+    monkeypatch.delenv("ROCM_HOME", raising=False)
+
+    assert paths.get_clang_resource_dir("no_such_libclang") == str(
+        resource_dir
+    )
+
+
+def test_get_clang_resource_dir_not_found(
+    tmp_path, monkeypatch, block_rocm_sdk
+):
+    """Nothing anywhere is reported as such rather than guessed at."""
+    _no_rocm_tree(tmp_path, monkeypatch)
+
+    assert paths.get_clang_resource_dir("no_such_libclang") is None

@@ -5,7 +5,8 @@
 ``rocm.bindings.util.types``.
 
 The ``ListOfPointer`` / ``ListOfInt`` / ``ListOfLong`` / ``ListOfUnsigned`` /
-``ListOfUnsignedLong`` / ``ListOfBytes`` wrapper classes gained:
+``ListOfUnsignedLong`` / ``ListOfInt64`` / ``ListOfUInt64`` / ``ListOfBytes``
+wrapper classes gained:
 
   * ``allocate(count)`` — an owned, zero-initialized buffer of ``count``
     elements (freed on garbage collection), with a known length.
@@ -26,15 +27,15 @@ Cython directly.
 import ctypes
 
 import pytest
-
 from rocm.bindings.util import types as _t
-
 
 _INT_CLASSES = [
     (_t.ListOfInt, ctypes.c_int),
     (_t.ListOfLong, ctypes.c_long),
     (_t.ListOfUnsigned, ctypes.c_uint),
     (_t.ListOfUnsignedLong, ctypes.c_ulong),
+    (_t.ListOfInt64, ctypes.c_int64),
+    (_t.ListOfUInt64, ctypes.c_uint64),
 ]
 
 
@@ -106,6 +107,43 @@ def test_constructed_from_list_tracks_length(cls, ctype):
 
 
 # ---------------------------------------------------------------------------
+# fixed-width ListOf* — 8-byte elements on every data model
+# ---------------------------------------------------------------------------
+
+
+def _fill(wrapper, offset, count, value):
+    """Write ``value`` into ``count`` raw bytes starting at ``offset``."""
+    raw = (ctypes.c_ubyte * (offset + count)).from_address(int(wrapper))
+    for i in range(offset, offset + count):
+        raw[i] = value
+
+
+@pytest.mark.parametrize(
+    "cls,expected",
+    [(_t.ListOfInt64, -1), (_t.ListOfUInt64, 0xFFFFFFFFFFFFFFFF)],
+)
+def test_fixed_width_elements_are_eight_bytes(cls, expected):
+    # The point of these classes: the element is 64 bits wherever the
+    # extension was compiled, unlike ``long`` / ``unsigned long`` which are
+    # 32 bits on Windows. Setting all bits of the first slot must read back
+    # as a full 64-bit value and must not spill into the second slot.
+    w = cls.allocate(2)
+    _fill(w, 0, 8, 0xFF)
+    assert w[0] == expected
+    assert w[1] == 0
+
+
+@pytest.mark.parametrize(
+    "cls,value",
+    [(_t.PointerToInt64, -(2**40)), (_t.PointerToUInt64, 2**40)],
+)
+def test_fixed_width_value_survives_beyond_32_bits(cls, value):
+    w = cls.allocate()
+    w.value = value
+    assert w.value == value
+
+
+# ---------------------------------------------------------------------------
 # ListOfPointer — elements come back as Pointer
 # ---------------------------------------------------------------------------
 
@@ -151,8 +189,13 @@ def test_listofbytes_allocate_slots_read_back_none():
 
 @pytest.mark.parametrize(
     "cls",
-    [_t.ListOfInt, _t.ListOfUnsigned, _t.ListOfUnsignedLong,
-     _t.ListOfPointer, _t.ListOfBytes],
+    [
+        _t.ListOfInt,
+        _t.ListOfUnsigned,
+        _t.ListOfUnsignedLong,
+        _t.ListOfPointer,
+        _t.ListOfBytes,
+    ],
 )
 def test_unknown_length_raises_typeerror(cls):
     # fromObj(int) wraps a raw address -> length is unknown (_len == -1).
@@ -177,6 +220,8 @@ _POINTER_CLASSES = [
     (_t.PointerToLong, _t.ListOfLong, ctypes.c_long),
     (_t.PointerToUnsigned, _t.ListOfUnsigned, ctypes.c_uint),
     (_t.PointerToUnsignedLong, _t.ListOfUnsignedLong, ctypes.c_ulong),
+    (_t.PointerToInt64, _t.ListOfInt64, ctypes.c_int64),
+    (_t.PointerToUInt64, _t.ListOfUInt64, ctypes.c_uint64),
 ]
 
 

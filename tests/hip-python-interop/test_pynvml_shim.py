@@ -33,10 +33,27 @@ tree, so the test imports the installed top-level ``pynvml`` package.
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import sys
+
 import pytest
 
-# Skip the whole module when the interop wheel (and its rocm.bindings.amdsmi
-# dependency) is not importable, rather than erroring at collection time.
+# ROCm ships no AMD SMI library on Windows, so the rocm-bindings-systems wheel
+# that backs the shim is not built there. State that verdict up front rather
+# than letting it arrive as an ImportError about a module the reader of this
+# file never mentioned: `import pynvml` reaches the shim's own
+# `from rocm.bindings import amdsmi`, and importorskip("pynvml") would not skip
+# on that, it would fail collection.
+if sys.platform == "win32":
+    pytest.skip(
+        "the pynvml shim is backed by AMD SMI, which ROCm does not ship on Windows",
+        allow_module_level=True,
+    )
+
+# Elsewhere the backing module is assumed present, so import it plainly. Doing
+# so before pynvml keeps a genuinely broken install distinguishable from the
+# platform case above.
+import rocm.bindings.amdsmi  # noqa: E402,F401
+
 pynvml = pytest.importorskip("pynvml")
 
 
@@ -57,7 +74,10 @@ def test_get_index_returns_ordinal(initialized_single_device):
 def test_mig_mode_reports_disabled(initialized_single_device):
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
     mode = pynvml.nvmlDeviceGetMigMode(handle)
-    assert mode == (pynvml.NVML_DEVICE_MIG_DISABLE, pynvml.NVML_DEVICE_MIG_DISABLE)
+    assert mode == (
+        pynvml.NVML_DEVICE_MIG_DISABLE,
+        pynvml.NVML_DEVICE_MIG_DISABLE,
+    )
     # dask-cuda reads the current mode via ``[0]``.
     assert mode[0] == pynvml.NVML_DEVICE_MIG_DISABLE
     assert pynvml.nvmlDeviceGetMaxMigDeviceCount(handle) == 0
@@ -78,7 +98,9 @@ def test_error_value_dispatches_to_subclass():
     assert isinstance(lib_not_found, pynvml.NVMLError_LibraryNotFound)
 
 
-def test_cpu_affinity_returns_bitmask_words(initialized_single_device, monkeypatch):
+def test_cpu_affinity_returns_bitmask_words(
+    initialized_single_device, monkeypatch
+):
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
     expected = [0b1011, 0b0]
 
@@ -93,7 +115,9 @@ def test_cpu_affinity_returns_bitmask_words(initialized_single_device, monkeypat
         return pynvml._OK
 
     monkeypatch.setattr(
-        pynvml.amdsmi, "amdsmi_get_cpu_affinity_with_scope", fake_affinity,
+        pynvml.amdsmi,
+        "amdsmi_get_cpu_affinity_with_scope",
+        fake_affinity,
         raising=False,
     )
     assert pynvml.nvmlDeviceGetCpuAffinity(handle, len(expected)) == expected
@@ -105,14 +129,18 @@ def test_cpu_affinity_rejects_nonpositive_size(initialized_single_device):
         pynvml.nvmlDeviceGetCpuAffinity(handle, 0)
 
 
-def test_cpu_affinity_not_supported_propagates(initialized_single_device, monkeypatch):
+def test_cpu_affinity_not_supported_propagates(
+    initialized_single_device, monkeypatch
+):
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
 
     def fake_affinity(processor_handle, cpu_set_size, cpu_set, scope):
         return int(pynvml._S.AMDSMI_STATUS_NOT_SUPPORTED)
 
     monkeypatch.setattr(
-        pynvml.amdsmi, "amdsmi_get_cpu_affinity_with_scope", fake_affinity,
+        pynvml.amdsmi,
+        "amdsmi_get_cpu_affinity_with_scope",
+        fake_affinity,
         raising=False,
     )
     with pytest.raises(pynvml.NVMLError_NotSupported):

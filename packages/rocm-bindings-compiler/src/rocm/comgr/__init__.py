@@ -43,33 +43,48 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 # High-level API from comgr.py
 from rocm.comgr.comgr import (
+    Action,
     Data,
     DataSet,
-    Action,
     Symbol,
-    compile_hip_to_bc,
-    compile_bc_to_hsa,
-    compile_hip_to_hsa,
     compile_bc,
+    compile_bc_to_hsa,
+    compile_hip_to_bc,
+    compile_hip_to_hsa,
     compile_hsa,
-    disassemble_program,
-    disassemble_code_obj_function,
     disassemble_amdhsa_code_obj_v6_kernel,
-    parse_code_obj_metadata,
-    parse_code_obj_kernel_names,
-    parse_code_symbols,
-    parse_data_symbols,
-    parse_data_metadata,
-    get_isa_metadata_all,
-    get_isa_metadata,
-    get_isa_names,
+    disassemble_code_obj_function,
+    disassemble_program,
     dump_metadata_yaml,
-    HIPRTC_RUNTIME_HEADER,
+    get_isa_metadata,
+    get_isa_metadata_all,
+    get_isa_names,
+    parse_code_obj_kernel_names,
+    parse_code_obj_metadata,
+    parse_code_symbols,
+    parse_data_metadata,
+    parse_data_symbols,
 )
+from rocm.comgr.hiprtc_header import (
+    get_hiprtc_runtime_header,
+    get_hiprtc_runtime_header_origin,
+)
+
+
+def __getattr__(name):
+    # HIPRTC_RUNTIME_HEADER is deliberately absent from the import list above:
+    # importing it by name would resolve it here, at import time, defeating the
+    # laziness rocm.comgr.comgr goes to the trouble of providing.
+    if name == "HIPRTC_RUNTIME_HEADER":
+        from rocm.comgr.comgr import HIPRTC_RUNTIME_HEADER as value
+
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 # Re-export low-level bindings from rocm.bindings.amd_comgr
 from rocm.bindings.amd_comgr import *
 
 # Re-export kernel descriptor utilities as modules
-from rocm.comgr import amd_hsa_kernel_descriptor
-from rocm.comgr import amdhsa_kernel_directives
+from rocm.comgr import amd_hsa_kernel_descriptor, amdhsa_kernel_directives

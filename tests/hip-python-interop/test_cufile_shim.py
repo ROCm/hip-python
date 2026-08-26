@@ -40,10 +40,21 @@ tree, so the test imports the installed ``cuda.bindings.cufile`` module.
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import sys
+
 import pytest
 
-# Skip the whole module when the interop wheel (built with the optional hipFILE
-# bindings) is not importable, rather than erroring at collection time.
+# ROCm ships no hipFile library on Windows -- which also has no O_DIRECT flag for
+# hipFile to issue its I/O with -- so the shim is not built into the interop
+# wheel there. Name that reason instead of reporting a missing module.
+if sys.platform == "win32":
+    pytest.skip(
+        "the cufile shim is backed by hipFile, which ROCm does not ship on Windows",
+        allow_module_level=True,
+    )
+
+# Elsewhere the bindings are still optional at build time, so a missing module is
+# a build-configuration outcome rather than a broken install.
 cufile = pytest.importorskip("cuda.bindings.cufile")
 
 
@@ -161,6 +172,7 @@ def test_file_handle_type_member_names():
 # Enum values match the generated rocm.bindings.hipfile constants
 # ---------------------------------------------------------------------------
 
+
 def test_op_error_values_match_hipfile():
     hipfile = pytest.importorskip("rocm.bindings.hipfile")
     assert int(cufile.OpError.SUCCESS) == int(
@@ -184,6 +196,7 @@ def test_file_handle_type_values_match_hipfile():
 # ---------------------------------------------------------------------------
 # Descr / IOParams / IOEvents array helpers (no libhipfile.so needed)
 # ---------------------------------------------------------------------------
+
 
 def test_descr_default_is_single_element_with_address():
     descr = cufile.Descr()
@@ -231,6 +244,7 @@ def test_io_events_ret_and_status_round_trip():
 # ---------------------------------------------------------------------------
 # C-dispatch paths (require a loadable libhipfile.so)
 # ---------------------------------------------------------------------------
+
 
 @_needs_runtime
 def test_get_version_returns_packed_int():

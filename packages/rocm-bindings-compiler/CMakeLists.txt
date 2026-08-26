@@ -330,7 +330,7 @@ install(
     src/rocm/comgr/comgr.py
     src/rocm/comgr/amd_hsa_kernel_descriptor.py
     src/rocm/comgr/amdhsa_kernel_directives.py
-    src/rocm/comgr/hiprtc_runtime.h
+    src/rocm/comgr/hiprtc_header.py
   DESTINATION rocm/comgr
   COMPONENT rocm-bindings-compiler
 )

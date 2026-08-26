@@ -180,13 +180,15 @@ The adapter types
 
 * :py:obj:`~.types.ListOfBytes`,
 * :py:obj:`~.types.ListOfPointer`,
-* :py:obj:`~.types.ListOfInt`, :py:obj:`~.types.ListOfUnsigned`, :py:obj:`~.types.ListOfUnsignedLong`,
+* :py:obj:`~.types.ListOfInt`, :py:obj:`~.types.ListOfLong`, :py:obj:`~.types.ListOfUnsigned`, :py:obj:`~.types.ListOfUnsignedLong`,
+* :py:obj:`~.types.ListOfInt64`, :py:obj:`~.types.ListOfUInt64`,
 
 are used for simple Python ``list`` or ``tuple`` objects whose elements are
 
 * :py:obj:`bytes`,
 * can be used to construct a :py:obj:`~.types.Pointer`,
-* or can be converted to the C types ``int``, ``unsigned``, ``unsigned long``, respectively.
+* can be converted to the C types ``int``, ``long``, ``unsigned``, ``unsigned long``, respectively,
+* or can be converted to the C types ``int64_t``, ``uint64_t``, respectively.
 
 The types can be initialized from the following Python objects:
 
@@ -221,6 +223,28 @@ HIP Python functions that expect a C array of C ``int``, ``unsigned``, or
 ``unsigned long`` element type (``int *``, ...) use :py:obj:`~.types.ListOfInt`,
 :py:obj:`~.types.ListOfUnsigned`, or :py:obj:`~.types.ListOfUnsignedLong`,
 respectively, to handle the conversion from appropriate Python input types.
+
+Where the C declaration pins the element width instead of naming a plain C
+integer type -- ``int64_t *``, ``ssize_t *``, ``uint64_t *``, ``size_t *`` --
+the fixed-width adapters :py:obj:`~.types.ListOfInt64` and
+:py:obj:`~.types.ListOfUInt64` are used. Their elements are 64 bits wide on
+every supported platform, whereas C ``long`` is 64 bits on Linux but 32 bits on
+Windows.
+
+Rank-0 Pointer Types
+--------------------
+
+A pointer argument that points at a *single* value rather than a sized buffer
+is handled by the ``PointerTo*`` types -- :py:obj:`~.types.PointerToInt`,
+:py:obj:`~.types.PointerToLong`, :py:obj:`~.types.PointerToUnsigned`,
+:py:obj:`~.types.PointerToUnsignedLong`, :py:obj:`~.types.PointerToInt64` and
+:py:obj:`~.types.PointerToUInt64`. Each is a length-1 specialization of the
+matching ``ListOf*`` type and accepts the same inputs, except that a
+:py:obj:`list` / :py:obj:`tuple` initializer must have exactly one element.
+
+Use them for caller-allocated scalar pointer arguments: allocate one slot with
+``allocate()``, pass the instance to the call, then read the result back
+through the ``value`` property (or ``[0]``).
 
 .. note::
 

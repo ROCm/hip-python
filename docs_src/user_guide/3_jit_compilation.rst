@@ -209,7 +209,11 @@ Unlike HIPRTC, COMGR's HIP frontend does *not* automatically
 prepend ``hip/hip_runtime.h`` to your source. The
 :py:obj:`rocm.comgr.HIPRTC_RUNTIME_HEADER` constant exposes the
 exact header that HIPRTC uses internally so you can prepend it
-yourself:
+yourself. It is read on first access from the ``hiprtc-builtins``
+library of the ROCm installation in use, so the text always
+matches that ROCm and the platform you are compiling on; see
+:py:mod:`rocm.comgr.hiprtc_header` if you need to override where
+it comes from.
 
 .. literalinclude:: ../../examples/2_Advanced/amd_comgr_hip_to_llvm_ir.py
    :language: python
