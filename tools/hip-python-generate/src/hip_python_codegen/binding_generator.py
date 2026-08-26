@@ -1692,7 +1692,7 @@ def write_cmake_version_files(opts, recipe_results):
     # headers to this codegen run.
     #
     # rocm-systems and llvm-project are ALWAYS consulted during codegen
-    # (the former supplies ``hiprtc_runtime.h``, the latter the ``clang``
+    # (the former supplies the HIP headers, the latter the ``clang``
     # Python bindings used to parse the C headers), so the docs landing
     # page always renders their commit hashes. If the caller didn't pass
     # ``--rocm-systems-dir`` / ``--rocm-llvm-project-dir`` the rev is

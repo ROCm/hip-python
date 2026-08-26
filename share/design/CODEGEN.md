@@ -247,6 +247,27 @@ Sphinx page emission lives in `docs_generator.py`. The previously
 separate `comgr` and `llvm` recipes have been merged into the unified
 hip recipe as libraries inside `binding_generator.AVAILABLE_GENERATORS`.
 
+## Per-module code generation options
+
+Most generators construct one `CythonModuleGenerator` per library with
+a fixed set of options. `write_llvm_modules` in
+`generators_compiler.py` is the exception: it walks the include tree
+and builds the option dict per header, so a single wheel can mix
+settings. Three options are decided that way today — `node_filter`
+(which declarations a header owns), `macro_type` (for
+`llvm-config.h`), and `node_init` (the per-declaration hook).
+
+The `node_init` case is the one that changes generated semantics: for
+the ten headers whose calls block, the recipe's
+`llvm_c.nogil_node_init(relpath)` marks each function's
+`modifiers_lazy_loader` with `nogil`, which is what selects the
+with-nogil emitter downstream. The header list and the choice of
+exception sentinel per return type live in the recipe
+(`llvm_c.nogil_headers`, `support/recipes/rocm.py`), not in the
+generator; the generator only asks `llvm_c.is_nogil_header(relpath)`
+and passes the factory through. See the "Per-module `nogil` in the
+LLVM bindings" section of `BINDINGS.md` for the semantics.
+
 ## Reproducing a release locally
 
 To run the generator end-to-end against a checked-out codegen base branch:

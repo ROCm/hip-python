@@ -87,6 +87,7 @@ else:
         )
 
 
+# [literalinclude-check-status-begin]
 def check_status(status, message):
     """Reports an LLVM failure and stops.
 
@@ -101,14 +102,18 @@ def check_status(status, message):
         if not isinstance(message, str):
             LLVMDisposeMessage(message)
         raise RuntimeError(text)
+        # [literalinclude-check-status-end]
 
 
+# [literalinclude-parse-bitcode-begin]
 (status, buf, message) = LLVMCreateMemoryBufferWithContentsOfFile(filepath)
 check_status(status, message)
 
 (status, mod) = LLVMParseBitcode2(buf)
 check_status(status, "failed to parse bitcode")
+# [literalinclude-parse-bitcode-end]
 
+# [literalinclude-list-functions-begin]
 num_functions = 0
 fn = LLVMGetFirstFunction(mod)  # a value type
 while fn:
@@ -121,3 +126,4 @@ while fn:
     num_functions += 1
     fn = LLVMGetNextFunction(fn)
 print(num_functions)
+# [literalinclude-list-functions-end]

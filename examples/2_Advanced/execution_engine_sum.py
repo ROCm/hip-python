@@ -113,6 +113,7 @@ else:
     x, y = 1, 2
     bitcode_path = os.path.join(tempfile.gettempdir(), "sum.bc")
 
+# [literalinclude-build-module-begin]
 # Build the code
 builder = LLVMCreateBuilder()
 
@@ -129,7 +130,9 @@ tmp = LLVMBuildAdd(
     builder, LLVMGetParam(sumfn, 0), LLVMGetParam(sumfn, 1), "tmp"
 )
 LLVMBuildRet(builder, tmp)
+# [literalinclude-build-module-end]
 
+# [literalinclude-verify-module-begin]
 # Verify
 _, error = LLVMVerifyModule(
     mod, LLVMVerifierFailureAction.LLVMAbortProcessAction
@@ -137,7 +140,9 @@ _, error = LLVMVerifyModule(
 if error:
     print(f"error: {error}", file=sys.stderr)
     LLVMDisposeMessage(error)
+# [literalinclude-verify-module-end]
 
+# [literalinclude-run-interpreter-begin]
 # Ask for the interpreter by name. LLVMCreateExecutionEngineForModule takes
 # whatever it can get, which is the interpreter only as long as no code
 # generator has been registered; in a process where something already called
@@ -159,6 +164,7 @@ parms = [
 ]
 res = LLVMRunFunction(engine, sumfn, 2, parms)
 print(f"{LLVMGenericValueToInt(res, 0)}")
+# [literalinclude-run-interpreter-end]
 
 # Out to file
 if LLVMWriteBitcodeToFile(mod, bitcode_path) != 0:
@@ -167,8 +173,10 @@ if LLVMWriteBitcodeToFile(mod, bitcode_path) != 0:
         file=sys.stderr,
     )
 
+# [literalinclude-dispose-begin]
 # shutdown
 LLVMDisposeExecutionEngine(engine)
 # LLVMDisposeModule(mod) # TODO you can either call this or the above.
 # Otherwise you get a segfault, investigate further.
 LLVMDisposeBuilder(builder)
+# [literalinclude-dispose-end]

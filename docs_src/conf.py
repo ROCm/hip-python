@@ -78,7 +78,7 @@ article_pages = [
     },
     {
         "file": "user_guide/3_jit_compilation",
-        "read-time": "30 min read",
+        "read-time": "50 min read",
     },
     {
         "file": "user_guide/4_numba_hip",

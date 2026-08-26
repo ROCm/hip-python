@@ -92,6 +92,7 @@ else:
         LLVMRelocMode,
     )
 
+    # [literalinclude-iterate-targets-begin]
     print("List of installed targets:")
     LLVMInitializeAllTargetInfos()  # all three inits are required
     LLVMInitializeAllTargets()
@@ -118,8 +119,11 @@ else:
         print(f"  data_layout: {datalayout_str}")
         LLVMDisposeMessage(datalayout_str)
         target = LLVMGetNextTarget(target)
+    # [literalinclude-iterate-targets-end]
 
+    # [literalinclude-target-from-triple-begin]
     print("Getting target for 'amdgcn-amd-amdhsa':")
     (status, target, error) = LLVMGetTargetFromTriple("amdgcn-amd-amdhsa")
     if target:
         print(f"- {LLVMGetTargetName(target)}")
+    # [literalinclude-target-from-triple-end]

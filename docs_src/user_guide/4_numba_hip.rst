@@ -84,6 +84,8 @@ A ROCm\ |trade| installation must be present; see :doc:`/user_guide/0_install`.
 
 Numba HIP compiles its kernels through the LLVM bindings in
 ``rocm-bindings-compiler``, which resolve a shared LLVM at the first call.
+:doc:`/user_guide/3_jit_compilation` describes those bindings and how to
+check that a library is there.
 
 .. note::
 

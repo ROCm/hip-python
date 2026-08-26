@@ -154,12 +154,39 @@ What "touches Python" means for an argument expression:
 | `T.fromPyobj(parm).getElementPtr()[0]` (record by value) | YES — same as above | Hoisted to `cdef <T> _cy_..._arg_N = <expr>` (record copied by value) |
 | `<C-type>handler.fromPyobj(parm)._ptr` (datahandle) | YES — `.fromPyobj` is cdef staticmethod | Hoisted to `cdef <C-type> _cy_..._arg_N = <cast><expr>` |
 
+Hoisting is not only a GIL device, which is why the table above holds
+for the with-gil emitter too. Where the hoisted expression borrows a
+pointer from an adapter — the `ListOfBytes` / `Pointer` / record-wrapper
+rows — inlining the chain into the call expression is a
+use-after-free regardless of the GIL: Cython drops an intermediate
+object as soon as the object itself is no longer needed, which is the
+moment `getPtr()` returns, so the generated C decrefs the adapter on
+the line *before* the call and `__dealloc__` frees the array the callee
+is about to read. That is why such an argument is rendered as two
+locals (`_cy_..._arg_N_obj` holding the adapter, `_cy_..._arg_N`
+holding the pointer) and why
+`interfacegen.cython.CallArgHoist.render_prehoist` is the only
+rendering. The LLVM bindings, which were then the only ones the
+with-gil emitter produces, shipped exactly this bug: a freed `void *[2]` reached
+`LLVMFunctionType` after glibc had overwritten both slots with tcache
+bookkeeping, and the first `LLVMGetParam` on the resulting type
+segfaulted. Coverage lives in
+`test_codegen_wrapper_arg_lifetime.py`.
+
 The retval wrap (`hipError_t(...)`, `T.fromValue(...)`, `T.fromPtr
 (...)`) goes through Python's type machinery (`__call__`, `__new__`,
 `__init__`) and therefore cannot live inside `with nogil:`. It is
 inlined directly into the return tuple — there is no
 `_py_<func>__retval` intermediate; the wrap appears once and only
 feeds the return tuple.
+
+The `cdef` holder in region ② keeps a `const` that qualifies a
+*pointee* (`cdef const char * _cy_lto_get_version__retval`): dropping
+it would make Cython warn that the assignment inside the block
+discards the qualifier, and the post-block wrap casts explicitly
+anyway. A `const` *value* return has to lose it, because Cython
+rejects the assignment into a `cdef const T` local ("Assignment to
+const").
 
 The whole arrangement assumes the cy* declaration is `noexcept
 nogil` (or at least `nogil`). Every per-library generator
@@ -168,8 +195,65 @@ nogil` (or at least `nogil`). Every per-library generator
 `cuda_interop.py`) sets `modifiers_lazy_loader` accordingly. If a
 recipe ever omits `nogil`, the dispatcher in
 `interfacegen.cython.Function._render_python_interface_c_interface_call`
-falls back to the with-gil emitter (single-line cy* call + inline
-Python wrap) — both modes are first-class options.
+falls back to the with-gil emitter — both modes are first-class
+options. That emitter drops the `with nogil:` block and keeps the
+retval wrap inline in the call expression, but the argument hoists
+are identical: the hoisting rule is emitter-independent (see
+below).
+
+
+### Per-module `nogil` in the LLVM bindings
+
+The LLVM generator is the one place where the choice is made per
+header rather than per library, because most of LLVM-C is cheap
+accessor traffic (`LLVMGetParam`, `LLVMTypeOf`) where releasing and
+reacquiring the GIL costs more than the call. Ten headers hold the
+calls that do block — parsing and writing bitcode, linking, building
+a target machine, running a pass pipeline, JIT-compiling through
+ORC/MCJIT, and the whole of LTO — and only those opt in:
+
+`Analysis.h`, `BitReader.h`, `BitWriter.h`, `ExecutionEngine.h`,
+`IRReader.h`, `LLJIT.h`, `Linker.h`, `PassBuilder.h`,
+`TargetMachine.h`, `lto.h`.
+
+The list and the modifier logic live in the recipe
+(`llvm_c.nogil_headers` and `llvm_c.nogil_node_init` in
+`support/recipes/rocm.py`); `write_llvm_modules` in
+`generators_compiler.py` passes the factory as that module's
+`node_init`. Everything else in `rocm.bindings.llvm.c` keeps the GIL.
+
+Because the shim raises when the symbol cannot be resolved — libLLVM
+is optional at runtime — each opted-in function needs an exception
+sentinel the caller can test without the GIL, picked from the return
+type:
+
+| Return type | Modifier | Why |
+|---|---|---|
+| pointer | `except? NULL nogil` | `NULL` is the API's own failure value |
+| integral, `LLVMBool` | `except? -1 nogil` | Cython's `bint` is a C `int`, so -1 survives the return |
+| enum | `except? <Enum>-1 nogil` | no `llvm-c` enum declares a negative enumerator, and Cython rejects a bare `-1` against an enum return |
+| `void`, record by value, float | `noexcept nogil` | no free sentinel; see below |
+
+No enum is given a named sentinel because `llvm-c` defines none:
+the constants that read like one (`LLVMDSError` is a diagnostic
+*severity*, `LLVMModuleFlagBehaviorError` a module-flag behaviour,
+`LLVMCodeGenLevelNone` an optimization level) are values their getter
+returns in normal operation, so using one would put a GIL-taking
+`PyErr_Occurred` check on the common path.
+
+`void`, by-value record and floating-point returns have no free
+sentinel at all. The alternative, `except * nogil`, makes the caller
+take the GIL after *every* call just to poll `PyErr_Occurred`, so
+those fall back to `noexcept nogil` as the hip and comgr recipes do.
+The failure still surfaces: Cython aborts such a shim at the raising
+`__init_symbol` and never reaches the call through the NULL function
+pointer, but it reports the exception as unraisable instead of
+propagating it.
+
+Functions that take a callback are left on the with-gil emitter
+whatever their return type. Registering a handler is cheap, so there
+is nothing to gain, and the callback parameter is the only route by
+which LLVM could re-enter the caller's code mid-call.
 
 
 ## Loader error contract — the implicit `except 1` return
@@ -288,7 +372,8 @@ prolog/epilog locals:
 | Symbol | Role | Lifetime |
 |---|---|---|
 | `_cy_<func>__retval` | C-level return-value holder for the cy* call. Declared `cdef <C-retval-type>` before `with nogil:`, assigned inside it. | Whole function body |
-| `_cy_<func>__arg_<N>` | Hoisted typed C local for a Python-touching arg expression. Declared `cdef <hoist-type> _cy_..._arg_N = <expr>` immediately before the cy* call. The cy*-call inside `with nogil:` references the symbol by name. Only emitted for Python-touching args; pure-C args stay inline. | Whole function body |
+| `_cy_<func>__arg_<N>` | Hoisted typed C local for a Python-touching arg expression. Declared `cdef <hoist-type> _cy_..._arg_N = <expr>` immediately before the cy* call, in both emitters; the call references the symbol by name. Only emitted for Python-touching args; pure-C args stay inline. | Whole function body |
+| `_cy_<func>__arg_<N>_obj` | Companion local for a *wrapper-bound* hoist: the adapter instance (`ListOfBytes`, `Pointer`, a record wrapper) that owns the memory `_cy_..._arg_N` points into. The pointer is extracted from it on the next line, so the adapter is still referenced when the C call runs. | Whole function body |
 | `_<func>__retval` | The with-gil emitter's retval name (legacy from before the refactor — preserved by the with-gil branch only). | Whole function body |
 
 Why no `_py_<func>__retval`: the Python wrap of the C-level retval

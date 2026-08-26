@@ -40,7 +40,8 @@ the porting of CUDA Python and Cython programs.
    Source trees always consulted during codegen:
 
    * ``ROCm/rocm-systems``: @HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV_DISPLAY@
-     — supplies ``hiprtc_runtime.h`` (constructed/copied from this repo).
+     — supplies the HIP, HIPRTC and AMD COMGR headers the bindings are
+     generated from.
    * ``ROCm/llvm-project``: @HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV_DISPLAY@
      — supplies ``clang`` Python bindings compatible with ROCm Clang.
 
@@ -94,13 +95,16 @@ Spotlight
          :width: 240
          :align: center
 
-   .. grid-item-card:: JIT Compilation with HIPRTC and AMD COMGR
+   .. grid-item-card:: JIT Compilation and LLVM IR
 
       Learn how to JIT-compile, link, and inspect HIP kernels at
       runtime --- from the high-level :py:obj:`~.hiprtc` API
       (compile, link, launch) down to the lower-level
       :py:obj:`rocm.comgr` pipeline (HIP source --> LLVM bitcode
-      --> HSA assembly --> code object).
+      --> HSA assembly --> code object) --- and how to work on the
+      IR itself with the LLVM-C bindings in
+      ``rocm.bindings.llvm.c``: parse bitcode, build a module with
+      the IR builder, run pass pipelines, and query targets.
 
       * :doc:`/user_guide/3_jit_compilation`
 

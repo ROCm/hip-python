@@ -148,7 +148,6 @@ LLVMBuildRet(builder, LLVMBuildMul(builder, reloaded, reloaded, "square"))
 
 print_module(mod, "before")
 
-# [literalinclude-verify-module-begin]
 # Verify before optimizing. A 'verify' pass, or any pipeline run with the
 # VerifyEach option, reports a broken module by aborting the process, which
 # no caller can catch; LLVMReturnStatusAction reports the same defect as a
@@ -160,7 +159,6 @@ if status != 0:
     text = str(message)
     LLVMDisposeMessage(message)
     raise RuntimeError(f"module is invalid: {text}")
-# [literalinclude-verify-module-end]
 
 # [literalinclude-run-passes-begin]
 # The options object carries the pipeline's knobs (LLVMPassBuilderOptionsSet*);
