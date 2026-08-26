@@ -79,14 +79,13 @@ from ctypes import (
     c_void_p,
     py_object,
 )
-from itertools import product
 
 import numpy as np
-from numba.core import config, serialize, utils
-
 from numba import mviewbuf
+from numba.core import config, serialize, utils
 from numba.hip import hipconfig
 from numba.hip.hipdrv import hiprtc
+from rocm.bindings.util import paths
 
 from .error import HipRuntimeError, HipSupportError
 
@@ -107,8 +106,9 @@ if USE_NV_BINDING:
     HIP_STREAM_LEGACY = 0  # TODO(HIP/AMD) check if legacy stream can be replaced by default stream
     HIP_STREAM_PER_THREAD = 2
 
-    from rocm.bindings.util.types import Pointer as CUdeviceptr
     from rocm.bindings import hip as _hip
+    from rocm.bindings.util.types import Pointer as CUdeviceptr
+
     hipDeviceptr_t = CUdeviceptr
 
 else:
@@ -178,15 +178,13 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
         _raise_driver_not_found()
 
     # Determine DLL type
-    if sys.platform == "win32":
-        raise NotImplementedError("numba.hip: no support for Windows")
-    elif sys.platform == "darwin":
+    if sys.platform == "darwin":
         raise NotImplementedError("numba.hip: no support for MacOS")
+    elif sys.platform == "win32":
+        dlloader = ctypes.WinDLL
     else:
         # Assume to be *nix like
         dlloader = ctypes.CDLL
-        dldir = [hipconfig.get_rocm_path("lib")]
-        dlnames = ["libamdhip64.so"]
 
     if envpath:
         try:
@@ -203,11 +201,13 @@ def locate_runtime_and_loader():  #: HIP/AMD: modified body
             )
         candidates = [envpath]
     else:
-        # First search for the name in the default library path.
-        # If that is not found, try the specific path.
-        candidates = dlnames + [
-            os.path.join(x, y) for x, y in product(dldir, dlnames)
-        ]
+        # Ask the bindings' resolver rather than assembling a path here: it
+        # covers the installations they support -- the rocm_sdk wheels, an
+        # unpacked ROCm tree named by ROCM_PATH, and the DLLs the Windows GPU
+        # driver puts in System32 -- and knows the file is libamdhip64.so on
+        # Unix but version-suffixed (amdhip64_7.dll) on Windows. Where nothing
+        # is found it hands back the bare name for the loader to search for.
+        candidates = [os.fsdecode(paths.get_library_path("amdhip64"))]
 
     return dlloader, candidates
 
@@ -610,7 +610,9 @@ class Device(object):
         self.attributes = {}
 
         # Get the architecture string
-        props = driver.cudaGetDeviceProperties(0)  # Driver's function wrapper will check for errors
+        props = driver.cudaGetDeviceProperties(
+            0
+        )  # Driver's function wrapper will check for errors
         amdgpu_arch_plus_features = props.gcnArchName.decode("utf-8")
         if hipconfig.DEFAULT_ARCH_WITH_FEATURES:
             self.amdgpu_arch = amdgpu_arch_plus_features

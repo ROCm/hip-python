@@ -44,9 +44,9 @@ Attributes:
 __author__ = "Advanced Micro Devices, Inc."
 
 import logging
-import multiprocessing as mp
 import threading
 
+from numba.hip.util import llvmutils
 from rocm import comgr
 from rocm.bindings.llvm.c.core import (
     LLVMContextCreate,
@@ -74,8 +74,6 @@ from rocm.bindings.llvm.c.targetmachine import (
 )
 from rocm.bindings.llvm.c.transforms import passbuilder
 from rocm.bindings.llvm.c.types import LLVMOpaqueModule
-
-from numba.hip.util import llvmutils
 
 _log = logging.getLogger(__name__)
 
@@ -213,24 +211,6 @@ class AMDGPUTargetInitError(Exception):
 _lock = threading.Lock()
 
 
-def _RUN_PASSES(M, P, TM, OPTS):
-    """
-    Note:
-        As of ROCm 6.0.0 and LLVM 17.0.0, LLVMRunPasses raises
-        an abort signal, which prevents us to capture
-        any error. Furthermore, this forces
-        us to create a child process. We let the child process
-        abort and let the main process report a runtime error.
-    """
-    err = passbuilder.LLVMRunPasses(M, P, TM, OPTS)
-    if err:
-        # TODO dead code, never reached as LLVMRunPasses raises SIGABRT
-        msg = LLVMGetErrorMessage(err)  # consumes the error
-        err_str = f'error: {msg.decode("utf-8")}'  # copies the message
-        LLVMDisposeErrorMessage(msg)
-        raise RuntimeError(f"error: {err_str}")
-
-
 class AMDGPUTargetMachine:
     """Provides access to LLVM AMDGPU target machines for different AMD GPU ISAs.
 
@@ -334,92 +314,84 @@ class AMDGPUTargetMachine:
                 The ``passes`` argument is more stable and should be preferred.
 
         Returns:
-            The optimized module in the input format.
+            The optimized module in the input format. An
+            `rocm.bindings.llvm.c.types.LLVMOpaqueModule` input is optimized
+            in place and returned.
+
+        Note:
+            A pipeline that runs the verifier, ``'verify'`` or any pipeline
+            with the ``VerifyEach`` option, ends a broken module in an abort
+            that no caller can catch. The module is therefore verified via
+            `rocm.bindings.llvm.c.analysis.LLVMVerifyModule` first, which
+            reports the same defect as a return value.
         """
         opts = passbuilder.LLVMCreatePassBuilderOptions()
         option_setter_prefix = "LLVMPassBuilderOptionsSet"
-        for k, v in pass_builder_opts:
-            try:
-                setter = getattr(passbuilder, option_setter_prefix + k)
-            except AttributeError:
-                available_opts = ", ".join(
-                    [
-                        f'{k.replace(option_setter_prefix, "")}'
-                        for k in vars(passbuilder).keys()
-                        if k.startswith(option_setter_prefix)
-                    ]
-                )
-                raise KeyError(
-                    f"unknown pass builder option '{k}', use one of: {available_opts}"
-                )
-            else:
+        try:
+            for k, v in pass_builder_opts.items():
+                try:
+                    setter = getattr(passbuilder, option_setter_prefix + k)
+                except AttributeError:
+                    available_opts = ", ".join(
+                        [
+                            f'{k.replace(option_setter_prefix, "")}'
+                            for k in vars(passbuilder).keys()
+                            if k.startswith(option_setter_prefix)
+                        ]
+                    )
+                    raise KeyError(
+                        f"unknown pass builder option '{k}', use one of: {available_opts}"
+                    ) from None
                 if not isinstance(v, bool):
-                    return ValueError(
+                    raise ValueError(
                         "pass builder option values must be of type 'bool'"
                     )
                 setter(opts, int(v))
 
-        if isinstance(mod, LLVMOpaqueModule):
-            optimized = mod
-            context = None
-        else:
-            context = LLVMContextCreate()
-            (optimized,) = llvmutils._get_module_in_context(
-                context, mod, mod_len
-            )
+            if isinstance(mod, LLVMOpaqueModule):
+                optimized = mod
+                context = None
+            else:
+                context = LLVMContextCreate()
+                (optimized,) = llvmutils._get_module_in_context(
+                    context, mod, mod_len
+                )
 
-        # As LLVMRunPasses aborts the process, we need to run it in a separate
-        # process. The child must SHARE the parent's address space: the args
-        # (the LLVM module / target-machine / pass-builder-option handles) are
-        # live pointers into the parent's heap and are neither picklable (they
-        # are Cython extension types with a non-trivial __cinit__ and no
-        # __reduce__) nor meaningful in a fresh interpreter. Force the "fork"
-        # start method explicitly: CPython 3.14 changed the POSIX default from
-        # "fork" to "forkserver", which pickles the target + args and fails with
-        # "TypeError: no default __reduce__ due to non-trivial __cinit__".
-        process = mp.get_context("fork").Process(
-            target=_RUN_PASSES,
-            args=(
-                optimized,
-                passes.encode("utf-8"),
-                self._target_machine,
-                opts,
-            ),
-        )
-        process.start()
-        process.join()
-        # The child’s exit code. This will be None if the process has not yet terminated.
-        # If the child’s run() method returned normally, the exit code will be 0.
-        # If it terminated via sys.exit() with an integer argument N, the exit code will be N.
-        # If the child terminated due to an exception not caught within run(),
-        # the exit code will be 1. If it was terminated by signal N, the exit code
-        # will be the negative value -N.
-        # https://docs.python.org/3.9/library/multiprocessing.html#multiprocessing.Process.exitcode
-        if process.exitcode != 0:
-            raise RuntimeError(
-                "LLVMRunPasses failed and was aborted; please check error output"
-            )
+            try:
+                llvmutils._verify(optimized)
 
-        if isinstance(mod, LLVMOpaqueModule):
-            result = optimized
-        else:
-            result = (
-                llvmutils.to_bc(optimized)
-                if to_bc
-                else llvmutils.to_ir(optimized)
-            )
+                err = passbuilder.LLVMRunPasses(
+                    optimized,
+                    passes.encode("utf-8"),
+                    self._target_machine,
+                    opts,
+                )
+                if err:
+                    msg = LLVMGetErrorMessage(err)  # consumes the error
+                    err_str = msg.decode("utf-8")  # copies the message
+                    LLVMDisposeErrorMessage(msg)
+                    raise RuntimeError(
+                        f"running passes '{passes}' failed: {err_str}"
+                    )
 
-        # clean up
-        if not isinstance(mod, LLVMOpaqueModule):
-            # LLVMDisposeModule(optimized)  # note: context has owner ship
-            LLVMContextDispose(context)
-        passbuilder.LLVMDisposePassBuilderOptions(opts)
-        return result
+                if isinstance(mod, LLVMOpaqueModule):
+                    return optimized
+                return (
+                    llvmutils._to_bc(optimized)
+                    if to_bc
+                    else llvmutils._to_ir(optimized)
+                )
+            finally:
+                if context is not None:
+                    # LLVMDisposeModule(optimized)  # note: context has ownership
+                    LLVMContextDispose(context)
+        finally:
+            passbuilder.LLVMDisposePassBuilderOptions(opts)
 
     def verify_module(self, ir, ir_len: int = -1):
         """Returns verified LLVM IR in the input format.
 
-        Calls ``self.optimize_llvm_ir`` with ``passes='verify'``.
+        Calls ``self.optimize_module`` with ``passes='verify'``.
 
         Args:
             mod (UTF-8 `str`, or implementor of the Python buffer protocol such as `bytes`, or `rocm.bindings.llvm.c.types.LLVMOpaqueModule`):
@@ -429,7 +401,7 @@ class AMDGPUTargetMachine:
                 be obtained via ``len(mod)``. Not used at all if ``mod`` is an instance of
                 `rocm.bindings.llvm.c.types.LLVMOpaqueModule`.
         See:
-            `~.AMDGPUTargetMachine.optimize_llvm_ir`.
+            `~.AMDGPUTargetMachine.optimize_module`.
         Returns:
             The optimized module in the input format.
         """

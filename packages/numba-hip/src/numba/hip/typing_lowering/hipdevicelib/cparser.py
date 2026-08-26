@@ -22,6 +22,8 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import sys
+
 import rocm.bindings.clang.cindex as ci
 
 
@@ -337,6 +339,20 @@ class TypeHandler:
             yield clang_type.kind
 
 
+# Mangled names taken from the parse are used to name device functions, which
+# are compiled for the AMDGPU target and therefore mangled the Itanium way.
+# Clang mangles according to the parse target's ABI, which is the host's unless
+# said otherwise, and on Windows that is MSVC: '__fdiv_rn' would come back as
+# '?__fdiv_rn@@YAMMM@Z', a name that does not even lex as an identifier in the
+# wrappers generated from it. Naming a target with the Itanium ABI keeps the
+# names usable; the parse itself only ever inspects declarations, so the choice
+# of host architecture does not matter. Every other host already defaults to an
+# Itanium-ABI target, so only Windows needs naming.
+_PARSE_TARGET_ARGS = (
+    ["--target=x86_64-pc-windows-gnu"] if sys.platform == "win32" else []
+)
+
+
 class CParser:
     """Parser for C APIs."""
 
@@ -376,6 +392,7 @@ class CParser:
         self.translation_unit = ci.TranslationUnit.from_source(
             self.filename,
             args=["-x", "c", "-resource-dir", CParser._CLANG_RES_DIR]
+            + _PARSE_TARGET_ARGS
             + self.append_cflags,
             options=(
                 ci.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location

@@ -25,6 +25,7 @@ __author__ = "Advanced Micro Devices, Inc."
 """Filesystem cache for architecture-specific temporary compilation results.
 """
 
+import getpass
 import logging
 import os
 import shutil
@@ -36,10 +37,22 @@ from numba.hip import hipconfig as _hipconfig
 _log = logging.getLogger(__name__)
 
 
+def _user_id() -> str:
+    """Identifies the user, for keeping caches of different users apart.
+
+    The numeric user ID is a POSIX notion; Windows has the account name
+    instead, which serves the same purpose here.
+    """
+    getuid = getattr(os, "getuid", None)
+    if getuid is not None:
+        return str(getuid())
+    return getpass.getuser()
+
+
 def get_cache_dir() -> str:
     """Returns the cache directory."""
     return os.path.join(
-        tempfile.gettempdir(), "numba", "hip", f"uid_{os.getuid()}"
+        tempfile.gettempdir(), "numba", "hip", f"uid_{_user_id()}"
     )
 
 

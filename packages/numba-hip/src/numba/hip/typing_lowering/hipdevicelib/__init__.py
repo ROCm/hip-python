@@ -29,10 +29,13 @@ Attributes:
         TODO document 'unsupported_stubs'
 """
 
+import os
+import sys
 import threading
 from pathlib import Path
 
 import rocm.bindings.clang.cindex as ci
+from rocm.bindings.util import paths as _paths
 
 # isort: off
 from rocm.bindings.llvm.config.llvm_config import (
@@ -62,57 +65,25 @@ _LLVM_VERSION_STRING = (
 )
 
 
-def _highest_version_dir(clang_root: Path):
-    """Return the highest-versioned subdir of a clang resource root, or None."""
-    if clang_root.is_dir():
-        versions = sorted(p for p in clang_root.iterdir() if p.is_dir())
-        if versions:
-            return str(versions[-1])  # e.g. '23' or '23.0.0'
-    return None
-
-
 def _resolve_clang_res_dir(libclang_file):
     """Resolve the clang resource dir.
 
-    The resource dir is always a sibling of libclang: <dir>/clang/<version>.
-    Deriving it from the resolved libclang makes it track the install method
-    (traditional /opt/rocm, TheRock/rocm_sdk wheel, or env override). Falls
-    back to the rocm-sdk-devel tree and then the traditional ROCm layout.
+    Where the directory sits depends on the installation (traditional
+    /opt/rocm, TheRock/rocm_sdk wheel, rocm-sdk-devel tree) and on the
+    platform, so the shared resolver in rocm.bindings answers this, the same
+    one that found libclang above. It is asked about the libclang actually in
+    use, so an override via NUMBA_HIP_LIBCLANG_FILE / _PATH gets the resource
+    directory belonging to it rather than one from another installation.
     """
-    # Primary: sibling of the resolved libclang (covers core-today and the
-    # likely post-fix case where libclang and its resource dir move together).
-    if libclang_file:
-        clang_root = Path(libclang_file).resolve().parent / "clang"
-        res = _highest_version_dir(clang_root)
-        if res:
-            return res
-    # Fallback A: the rocm-sdk-devel tree (covers the "split" case where the
-    # resource dir lives in devel even though libclang was found elsewhere).
-    try:
-        from rocm_sdk._devel import get_devel_root
-
-        res = _highest_version_dir(
-            Path(get_devel_root()) / "lib" / "llvm" / "lib" / "clang"
+    res = _paths.get_clang_resource_dir(libclang_file)
+    if res is None:
+        raise FileNotFoundError(
+            "no clang resource directory found for libclang "
+            f"'{libclang_file}'; expected clang {_LLVM_VERSION_STRING}'s "
+            "headers in a 'clang/<version>' directory of the ROCm "
+            "installation"
         )
-        if res:
-            return res
-    except Exception:
-        pass
-    # Fallback B: traditional /opt/rocm layout.
-    return _hipconfig.get_rocm_path(
-        (  # variant 1
-            "llvm",
-            "lib",
-            "clang",
-            f"{_LLVM_VERSION_MAJOR}.{_LLVM_VERSION_MINOR}.{_LLVM_VERSION_PATCH}",
-        ),
-        (  # variant 2
-            "llvm",
-            "lib",
-            "clang",
-            f"{_LLVM_VERSION_MAJOR}",
-        ),
-    )
+    return res
 
 
 def _setup_libclang():
@@ -127,8 +98,21 @@ def _setup_libclang():
             libclang_file = _hipconfig.LIBCLANG_FILE
             ci.conf.set_library_file(libclang_file)
         elif _hipconfig.LIBCLANG_PATH:
-            # Next: explicit directory override (NUMBA_HIP_LIBCLANG_PATH).
-            matches = sorted(Path(_hipconfig.LIBCLANG_PATH).glob("libclang.so*"))
+            # Next: explicit directory override (NUMBA_HIP_LIBCLANG_PATH). The
+            # file is named libclang.so, with or without a version suffix,
+            # everywhere but Windows, which spells it libclang.dll.
+            patterns = (
+                ["libclang.dll", "clang.dll"]
+                if sys.platform == "win32"
+                else ["libclang.so*"]
+            )
+            matches = [
+                match
+                for pattern in patterns
+                for match in sorted(
+                    Path(_hipconfig.LIBCLANG_PATH).glob(pattern)
+                )
+            ]
             if matches:
                 libclang_file = str(matches[0])
                 ci.conf.set_library_file(libclang_file)
@@ -136,11 +120,9 @@ def _setup_libclang():
                 ci.conf.set_library_path(_hipconfig.LIBCLANG_PATH)
         else:
             # Otherwise reuse the shared rocm-bindings resolver (handles
-            # ROCM_PATH/ROCM_HOME, the rocm_sdk wheel anchor, and the
-            # versioned libclang soname).
-            from rocm.bindings.util.paths import get_library_path
-
-            libclang_file = get_library_path("clang").decode("utf-8")
+            # ROCM_PATH/ROCM_HOME, the rocm_sdk wheel anchor, the versioned
+            # libclang soname, and the Windows DLL names).
+            libclang_file = os.fsdecode(_paths.get_library_path("clang"))
             ci.conf.set_library_file(libclang_file)
         _ = ci.conf.get_cindex_library()  # validate the binding loads
 

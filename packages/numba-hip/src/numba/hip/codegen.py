@@ -184,7 +184,9 @@ class _LinkerDependencyHandler:
                 else:  # assumes HIP C++
                     dep_mod = buf
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
-                ((buf, buf_len), fileext, _) = self._handle_tuple(dependency)
+                ((buf, buf_len), fileext, _, _) = self._handle_tuple(
+                    dependency
+                )
                 if fileext == "ll":  # always assume LLVM IR/BC
                     dep_mod = self._process_buf_for_printing(buf, buf_len)
                 else:  # assumes HIP C++
@@ -275,17 +277,17 @@ class _LinkerDependencyHandler:
                     dep_mod = self._process_buf(buf)
                 else:
                     dep_mod = self._compile_hiprtc_program(
-                        buf, name=dependency
+                        buf, name=os.path.basename(dependency)
                     )
             elif isinstance(dependency, tuple):  # an LLVM IR/BC buffer
-                ((buf, buf_len), fileext, hip_opts) = self._handle_tuple(
+                ((buf, buf_len), fileext, hip_opts, name) = self._handle_tuple(
                     dependency
                 )
                 if fileext == "ll":  # always assume LLVM IR/BC
                     dep_mod = self._process_buf(buf, buf_len)
                 else:
                     dep_mod = self._compile_hiprtc_program(
-                        buf, name=dependency[0], opts=hip_opts
+                        buf, name=name, opts=hip_opts
                     )
             else:
                 raise RuntimeError(
@@ -482,7 +484,12 @@ class _LinkerDependencyHandler:
                 f"{err_begin}too many tuple entries, expected: {max_len}.{valid_formats}"
             )
 
-        return ((buf, buf_len), input_kind, hip_opts)
+        # hipRTC names the program's virtual source file after this, so it must
+        # be a file name and not a path: on Windows the drive letter and the
+        # backslashes make hipRTC fail the compile, and with an empty log.
+        name = os.path.basename(filepath) if is_filepath else "source.hip"
+
+        return ((buf, buf_len), input_kind, hip_opts, name)
 
 
 class HIPCodeLibrary(serialize.ReduceMixin, CodeLibrary):
