@@ -38,14 +38,13 @@ pip install .
 > for types that contain the inner `*const *` pattern (e.g.
 > `const char *const *`). Cython 3.0.x **silently miscompiles** that
 > statement — it parses the cdef but drops the initializer, leaving the
-> local NULL at runtime. The codegen defends against this by emitting
-> the prehoist as two separate statements (bare cdef + assignment), and
-> the downstream build additionally pins `cython >= 3.1.0` so the
-> underlying upstream bug isn't in the toolchain. The fix landed in
-> Cython 3.1.0; 3.1.x and 3.2.x emit the assignment correctly. See
-> `python/interfacegen/test/test_typed_helpers.py` for the
-> regression tests that pin both the codegen split-form behaviour
-> and the trailing-const handling.
+> local NULL at runtime. The fix landed in Cython 3.1.0; 3.1.x and
+> 3.2.x emit the assignment correctly, so the downstream build pins
+> `cython >= 3.1.0`. There is no codegen-side workaround: the
+> generated prehoist uses the combined form, and
+> `python/interfacegen/test/test_typed_helpers.py` pins that (plus the
+> trailing-const handling) in
+> `test_call_arg_hoist_double_const_pointer_uses_combined_form`.
 
 ## Develop in editable mode
 

@@ -20,6 +20,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# The companion `cufile.pyi` is HAND-MAINTAINED: edit it in the same commit
+# as this file. Unlike the other handcoded Cython modules, cufile is not
+# registered in `HIP_PYTHON_STUBGEN_MODULES` and `all_stubs` will not
+# refresh it. Its public surface is almost entirely module-level `cpdef`
+# functions, which `mypy stubgen` can only render as opaque
+# `cython_function_or_method` attributes — that would throw away the module
+# docstring, the enum members and every typed signature that sphinx-autoapi
+# renders into the API reference. See `share/design/BUILDING.md`,
+# "Regenerating stubs for handcoded Cython modules".
+
 """``cuda.bindings.cufile`` interop layer implemented on top of hipFILE.
 
 This is a HAND-WRITTEN Cython module (it is NOT emitted by the hip-python code

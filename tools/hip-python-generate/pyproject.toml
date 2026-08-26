@@ -24,7 +24,7 @@ classifiers = [
 dependencies = [
     # Floor is 3.1.0: Cython 3.0.x miscompiles `cdef T x = <T>expr` for
     # `*const *` types (silently drops the initializer). See
-    # share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md.
+    # share/design/BUILDING.md, "Cython version requirement".
     "cython >= 3.1.0",
     "libclang",
     "pyparsing",

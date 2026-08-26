@@ -1649,6 +1649,14 @@ cdef class ListOfBytes(Pointer):
         so the C pointers remain valid even if the backend retains them. Furthermore,
         the instance's ``self._is_ptr_owner`` C attribute is set to `True`.
 
+        The interning covers the strings, not the array around them: the
+        ``const char**`` array lives exactly as long as this instance, which
+        frees it in ``__dealloc__``. Generated wrappers bind the adapter to a
+        local variable, so the array is alive for the whole C call. If a C
+        function retains the array pointer past its return, the caller must
+        keep the adapter alive too — pass ``ListOfBytes([...])`` and hold that
+        object, rather than a bare `list`.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
         In this case, init code from `~.Pointer` is used and the C attribute
@@ -1855,12 +1863,22 @@ cdef class ListOfPointer(Pointer):
 
     The type can be initialized from the following Python objects:
 
-    * `list` / `tuple` of `bytes`:
+    * `list` / `tuple` of types that can be converted to `~.Pointer`:
 
         A `list` or `tuple` of types that can be converted to `~.Pointer`. In this
         case, this type allocates an array of ``void *`` pointers wherein it stores the
         addresses obtained from the `list`/`tuple` entries. Furthermore, the instance's
         `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfPointer([...])`` and hold that object, rather
+        than a bare `list`. Note also that this type stores addresses without
+        holding references to the objects they belong to, so those objects must
+        be kept alive independently for as long as the C side may dereference
+        them.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -2039,6 +2057,13 @@ cdef class ListOfInt(Pointer):
         In this case, this type allocates an array of C ``int`` values wherein it
         stores the values obtained from the `list`/`tuple` entries. Furthermore, the
         instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfInt([...])`` and hold that object, rather than
+        a bare `list`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -2236,6 +2261,13 @@ cdef class ListOfLong(Pointer):
         stores the values obtained from the `list`/`tuple` entries. Furthermore, the
         instance's `self._is_ptr_owner` C attribute is set to `True` in this case.
 
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfLong([...])`` and hold that object, rather
+        than a bare `list`.
+
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
         In this case, init code from `~.Pointer` is used and the C attribute
@@ -2431,6 +2463,13 @@ cdef class ListOfUnsigned(Pointer):
         In this case, this type allocates an array of C ``unsigned`` values wherein it
         stores the values obtained from the `list`/`tuple` entries. Furthermore, the
         instance's ``self._is_ptr_owner`` C attribute is set to `True` in this case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfUnsigned([...])`` and hold that object, rather
+        than a bare `list`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -2634,6 +2673,13 @@ cdef class ListOfUnsignedLong(Pointer):
         wherein it stores the values obtained from the `list`/`tuple` entries.
         Furthermore, the instance's `self._is_ptr_owner` C attribute is set to `True`
         in this case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfUnsignedLong([...])`` and hold that object,
+        rather than a bare `list`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -2848,6 +2894,13 @@ cdef class ListOfInt64(Pointer):
         it stores the values obtained from the `list`/`tuple` entries. Furthermore,
         the instance's `self._is_ptr_owner` C attribute is set to `True` in this
         case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfInt64([...])`` and hold that object, rather
+        than a bare `list`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 
@@ -3064,6 +3117,13 @@ cdef class ListOfUInt64(Pointer):
         it stores the values obtained from the `list`/`tuple` entries. Furthermore,
         the instance's `self._is_ptr_owner` C attribute is set to `True` in this
         case.
+
+        The array lives exactly as long as this instance, which frees it in
+        ``__dealloc__``. Generated wrappers bind the adapter to a local
+        variable, so the array is alive for the whole C call. If a C function
+        retains the pointer past its return, the caller must keep the adapter
+        alive too — pass ``ListOfUInt64([...])`` and hold that object, rather
+        than a bare `list`.
 
     * `object` that is accepted as input by `~.Pointer.__init__`:
 

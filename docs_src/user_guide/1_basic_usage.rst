@@ -129,11 +129,11 @@ Via :py:obj:`~.hipDeviceGetAttribute`
 You can also obtain some of the properties that appeared in the
 :ref:`previous example <hip_deviceproperties>` plus a number of additional
 properties via the :py:obj:`~.hipDeviceGetAttribute` routine as shown in the
-:ref:`example below <hip_deviceattributes>` (line 32). In the example below,
-we query integer-type device attributes/properties. Therefore, we supply the
-address of a :py:obj:`ctypes.c_int` variable as first argument. The respective
-property, the second argument, is passed as enum constant of type
-:py:obj:`~.hipDeviceAttribute_t`.
+:ref:`example below <hip_deviceattributes>` (line 32). The property to query
+is passed as first argument, as an enum constant of type
+:py:obj:`~.hipDeviceAttribute_t`, and the device number as second argument.
+The attribute is an integer, which the routine returns next to the status
+code; there is no caller-supplied :py:obj:`ctypes.c_int` to pass in.
 
 Running this example will print out the values of all queried device
 attributes before the program prints ``"ok"`` and quits.
@@ -223,8 +223,9 @@ provided by HIP Python module :py:obj:`~.rocm.bindings.hip`. The
       running the kernel (lines 27-30).
    2. A program ``prog`` is then created in line 32 via
       :py:obj:`~.hiprtcCreateProgram`, where we pass ``source`` as first argument,
-      we further give the program a name (note the ``b".."``), specify zero headers
-      and include names (last three arguments).
+      we further give the program a name, specify zero headers
+      and include names (last three arguments). String arguments like these
+      accept a plain :py:obj:`str`; see :ref:`sec_cstr`.
    3. Next we query the architecture name via :py:obj:`~.hipGetDeviceProperties`
       (more details: :ref:`sec_obtaining_device_properties`) and use it in
       lines 39-40, where we specify compile flags (``cflags``) and compile ``prog``

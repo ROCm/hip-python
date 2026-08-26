@@ -50,6 +50,8 @@ The `hip-python` repo distinguishes two kinds of branches:
 
 ### Codegen base branch
 
+The branch that development happens on (`amd-integration`, the default
+`HIP_PYTHON_CODEGEN_BASE_BRANCH` in `ci/internal/generate-bindings.sh`).
 Contains **only handcoded** content:
 
 - All build infrastructure: `cmake/HipPythonBuild.cmake`, every per-package `CMakeLists.txt`, `pyproject.toml` files, the `rocm-bindings-core/version.py.in` template, `setup.cfg`, `MANIFEST.in`.
@@ -59,7 +61,7 @@ Contains **only handcoded** content:
 - The handcoded helper Cython modules `_hip_helpers.{pxd,pyx}` and `_hiprtc_helpers.{pxd,pyx}` in `rocm-bindings-hip`.
 - Documentation, examples, license.
 
-A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc` (`rocm-bindings-hip`); `hipblas`, `hipsolver`, `hiprand`, `hipfft`, `hipsparse` (`rocm-bindings-libraries`); `rccl`, `roctx` (`rocm-bindings-systems`); `amd_comgr`, the LLVM-C suite (`rocm-bindings-compiler`); the CUDA interop layer; and `rocm/version.py` (`rocm-bindings-core`, rendered from `version.py.in`).
+A bare clone of the codegen base branch is **not buildable** — the generator must run into it first to populate the `.pxd`/`.pyx` files for `hip`, `hiprtc` (`rocm-bindings-hip`); `hipblas`, `hipblaslt`, `hipsolver`, `hiprand`, `hipfft`, `hipsparse`, `hipsparselt` (`rocm-bindings-libraries`); `rccl`, `roctx`, `hipfile`, `amdsmi` (`rocm-bindings-systems`); `amd_comgr`, the LLVM-C suite (`rocm-bindings-compiler`); the CUDA interop layer; and `rocm/version.py` (`rocm-bindings-core`, rendered from `version.py.in`).
 
 ### Release branches — `release/rocm-rel-X.Y[.Z]`
 
@@ -79,29 +81,43 @@ from `tools/hip-python-generate/`) writes:
 | Path | Content |
 |---|---|
 | `packages/rocm-bindings-hip/src/rocm/bindings/{,cy}{hip,hiprtc}.{pxd,pyx}` | HIP runtime + RTC bindings |
-| `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipsolver, hiprand, hipfft, hipsparse |
-| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx, hipfile, amdsmi, hsa |
+| `packages/rocm-bindings-libraries/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | hipblas, hipblaslt, hipsolver, hiprand, hipfft, hipsparse, hipsparselt |
+| `packages/rocm-bindings-systems/src/rocm/bindings/{,cy}<lib>.{pxd,pyx}` | rccl, roctx, hipfile, amdsmi |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/{,cy}amd_comgr.{pxd,pyx}` | AMD COMGR |
 | `packages/rocm-bindings-compiler/src/rocm/bindings/llvm/c/**/*.{pxd,pyx}` | LLVM-C suite (~30 modules + transforms + config) |
 | `packages/hip-python-interop/src/cuda/bindings/{,cy}{driver,runtime,nvrtc}.{pxd,pyx}` | CUDA interop layer (HIP-as-CUDA) |
 | `__init__.pxd` files **below** `rocm/bindings/` and `cuda/bindings/` | Cython namespace markers (build-time only, never installed) |
 | `packages/rocm-bindings-libraries/cmake/generated_modules.cmake` | Module list for the libraries package — drives the per-library CMake foreach loop. |
-| `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx, hipfile, amdsmi, hsa). |
+| `packages/rocm-bindings-systems/cmake/generated_modules.cmake` | Module list for the systems package (rccl, roctx, hipfile, amdsmi). |
 | `packages/rocm-bindings-compiler/cmake/generated_modules.cmake` | LLVM-C / transforms / config / COMGR module lists. |
 | `packages/rocm-bindings-core/src/rocm/version.py` | Runtime version module rendered from the handcoded `rocm-bindings-core/version.py.in` template. Exposes the ROCm/HIP versions + commit and codegen provenance (base branch/rev/version, interfacegen version) via `rocm.version`. Like the other generator outputs it is absent on the base branch and committed on release branches by the release commit's `git add packages`. |
 | `packages/rocm-bindings-{hip,libraries,systems,compiler}/cmake/generated_versions.cmake`<br>`packages/hip-python-interop/cmake/generated_versions.cmake` | Version metadata for the docs landing page: ROCm version, HIP version, hip-python base branch/rev/version, interfacegen version, codegen date, and upstream source-tree revs. |
 | `<package>/<rocm-or-cuda>/<…>/<name>.pyi` (high-level modules only) | Type-stub files emitted alongside every high-level `<name>.pxd`/`.pyx` pair. Used by static type checkers (mypy, pyright) and IDEs to resolve symbol signatures without the compiled extensions on `sys.path`. The cy* C-level wrappers do **not** get `.pyi` — they are `cimport`-only and have no honest Python type-system equivalents. Installed alongside the corresponding `.so`. |
+| `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers only) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. The high-level Python modules get **no** wrapper page: `sphinx-autoapi` walks the source trees and emits `python_api/<slash/path>/index` from the `.pyi` stubs itself. |
+| `docs_src/sphinx/_toc.yml.in` | The Sphinx table of contents, rendered from the handcoded `_toc.yml.in.in` template by substituting one discovered module list per `@TOC_ENTRIES_<SECTION>@` placeholder. The handwritten subtrees (user guide, `rocm-bindings-core`, the `hip.*` alias package) are listed inline in the template and pass through unchanged. |
 
 > **Note on handcoded Cython modules.** The handful of handcoded
-> `.pyx` files in `rocm-bindings-core` (`rocm.bindings.util.{types,
-> loader,posixloader}`) and `rocm-bindings-hip` (`_hip_helpers`,
-> `_hiprtc_helpers`) are **not** touched by interfacegen. Their
-> `.pyi` stubs are committed to git and refreshed by a developer-run
-> CMake target backed by `mypy stubgen` — see
+> `.pyx` files in `rocm-bindings-core` (`rocm.bindings.util.types`,
+> plus the `{loader,posixloader,win32loader}` DLL shims) and
+> `rocm-bindings-hip` (`_hip_helpers`, `_hiprtc_helpers`) are **not**
+> touched by interfacegen. Their `.pyi` stubs are committed to git and
+> refreshed by a developer-run CMake target backed by `mypy stubgen`,
+> which stamps each one with an `AUTO-GENERATED` banner. Two of them
+> are excluded from that target: the DLL shims declare only `cdef`
+> functions, so like the cy* wrappers above they are `cimport`-only
+> and ship without a stub at all; and `cuda.bindings.cufile`'s
+> module-level `cpdef` surface is something stubgen cannot render
+> usefully, so its `.pyi` is hand-maintained. See
 > [BUILDING.md](BUILDING.md) §"Regenerating stubs for handcoded
 > Cython modules" for the workflow.
-| `docs_src/python_api/<dotted-module-name>.rst` (high-level modules) | Sphinx wrapper page that points `sphinx-autoapi` at the high-level Python module. One file per generated module (`rocm.bindings.hipblas.rst`, `cuda.bindings.driver.rst`, etc.). |
-| `docs_src/python_api/<dotted-module-name>.rst` (cy* wrappers) | Sphinx wrapper page for each generated `cy<name>.pxd`. Uses `literalinclude` to embed the .pxd source with Cython syntax highlighting — the `.pxd` itself is the readable, source-of-truth contract for downstream Cython users. No autoapi or `.pyi` involved. |
+
+> **Note on documented-but-unbuilt bindings.** A binding that codegen
+> emits but that no wheel compiles would otherwise be documented as if
+> it shipped. `_DOCS_EXCLUDED` in `docs_generator.py` keeps such a
+> module out of the TOC and out of the cy* page emission; the matching
+> `autoapi_ignore` entry in `docs_src/conf.py` keeps sphinx-autoapi
+> from rendering its `.pyi`. Both sides are needed — autoapi reads the
+> source tree, not the TOC.
 
 ### Forbidden outputs (handcoded; generator must NEVER write)
 
@@ -126,7 +142,7 @@ The end-to-end release flow:
 
 1. **Choose the codegen base.**
    ```sh
-   git -C /path/to/hip-python switch codegen/base
+   git -C /path/to/hip-python switch amd-integration
    git -C /path/to/hip-python switch -c release/rocm-rel-X.Y
    ```
 
@@ -149,7 +165,7 @@ The end-to-end release flow:
    - `docs_src/sphinx/_toc.yml.in` (rendered from `_toc.yml.in.in`) and the
      `docs_src/python_api/*.rst` cy* literalinclude pages
 
-3. **Verify the round-trip.** A clean `cmake -S packages -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all six packages with no Cython errors.
+3. **Verify the round-trip.** A clean `cmake -S packages -B build && cmake --build build --target all_wheels` should produce manylinux-compatible wheels for all eight packages with no Cython errors.
 
 4. **Author the release-only `VERSION.in`** embedding the ROCm version
    (writes `VERSION.in = X.Y.Z.@HIP_PYTHON_VERSION@`; `@HIP_PYTHON_VERSION@`
@@ -183,7 +199,7 @@ set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES
 
 # packages/rocm-bindings-systems/cmake/generated_modules.cmake
 set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES
-    rccl roctx hipfile amdsmi hsa)
+    rccl roctx hipfile amdsmi)
 ```
 
 The corresponding `CMakeLists.txt` does:
@@ -233,7 +249,7 @@ tools/hip-python-generate/
     ├── docs_generator.py       Sphinx page + TOC YAML emission
     ├── generators_hip.py       hip + hiprtc generators
     ├── generators_libraries.py hipblas/hipsolver/hiprand/hipfft/hipsparse generators
-    ├── generators_systems.py   rccl/roctx/hipfile/amdsmi/hsa generators
+    ├── generators_systems.py   rccl/roctx/hipfile/amdsmi generators
     ├── generators_compiler.py  amd_comgr + llvm generators
     ├── cuda_interop.py         CUDA interop (driver/runtime/nvrtc) subgenerator
     └── hipify.py               hipify-perl substitution parser
@@ -275,7 +291,7 @@ To run the generator end-to-end against a checked-out codegen base branch:
 ```sh
 # Prereqs: ROCm SDK installed at /opt/rocm.
 cd /path/to/hip-python
-git switch codegen/base
+git switch amd-integration
 
 # One-time install of the codegen tool (now in-tree under tools/):
 cd /path/to/hip-python/tools/hip-python-generate

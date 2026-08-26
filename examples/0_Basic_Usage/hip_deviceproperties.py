@@ -24,8 +24,9 @@ __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 """Query and print every property exposed by ``hipDeviceProp_t``.
 
-Constructs an empty :py:obj:`~.hipDeviceProp_t` instance, populates it
-via :py:obj:`~.hipGetDeviceProperties`, and dumps every named field.
+Takes the :py:obj:`~.hipDeviceProp_t` instance that
+:py:obj:`~.hipGetDeviceProperties` returns for a device number, and dumps
+every named field.
 """
 
 # [literalinclude-begin]

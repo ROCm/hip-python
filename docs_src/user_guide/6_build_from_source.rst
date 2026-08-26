@@ -218,7 +218,7 @@ Linux ``ci/internal/build-wheels.sh`` and drives the same ``all_wheels`` target:
 .. code-block:: powershell
 
    . ci\internal\env-rocm.ps1            # sets ROCM_PATH and PATH
-   python -m pip install -r ci\requirements-build.txt
+   python -m pip install -r ci\internal\requirements-build.txt
    ci\internal\build-wheels.ps1          # add -Light for core + hip + compiler
    ci\internal\test.ps1                  # examples + unit-test suites
 
@@ -298,7 +298,7 @@ What this does in practice:
 - Libraries outside the allowlist (the optional bundled ROCm math
   libraries when present, …) are explicitly excluded — hip-python
   ``dlopen``-resolves these at runtime via the
-  :py:obj:`rocm.bindings.util.loader` shim, so they MUST NOT be
+  ``rocm.bindings.util.loader`` shim, so they MUST NOT be
   bundled into the wheel.
 - The ``manylinux_2_17_x86_64`` (or matching) tag is added to the
   wheel filename, making it pip-installable on systems older than

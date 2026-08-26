@@ -166,8 +166,8 @@ is about to read. That is why such an argument is rendered as two
 locals (`_cy_..._arg_N_obj` holding the adapter, `_cy_..._arg_N`
 holding the pointer) and why
 `interfacegen.cython.CallArgHoist.render_prehoist` is the only
-rendering. The LLVM bindings, which were then the only ones the
-with-gil emitter produces, shipped exactly this bug: a freed `void *[2]` reached
+rendering. The LLVM bindings, the only ones the with-gil emitter
+produces, shipped exactly this bug: a freed `void *[2]` reached
 `LLVMFunctionType` after glibc had overwritten both slots with tcache
 bookkeeping, and the first `LLVMGetParam` on the resulting type
 segfaulted. Coverage lives in
@@ -179,14 +179,6 @@ The retval wrap (`hipError_t(...)`, `T.fromValue(...)`, `T.fromPtr
 inlined directly into the return tuple — there is no
 `_py_<func>__retval` intermediate; the wrap appears once and only
 feeds the return tuple.
-
-The `cdef` holder in region ② keeps a `const` that qualifies a
-*pointee* (`cdef const char * _cy_lto_get_version__retval`): dropping
-it would make Cython warn that the assignment inside the block
-discards the qualifier, and the post-block wrap casts explicitly
-anyway. A `const` *value* return has to lose it, because Cython
-rejects the assignment into a `cdef const T` local ("Assignment to
-const").
 
 The whole arrangement assumes the cy* declaration is `noexcept
 nogil` (or at least `nogil`). Every per-library generator
@@ -200,60 +192,6 @@ options. That emitter drops the `with nogil:` block and keeps the
 retval wrap inline in the call expression, but the argument hoists
 are identical: the hoisting rule is emitter-independent (see
 below).
-
-
-### Per-module `nogil` in the LLVM bindings
-
-The LLVM generator is the one place where the choice is made per
-header rather than per library, because most of LLVM-C is cheap
-accessor traffic (`LLVMGetParam`, `LLVMTypeOf`) where releasing and
-reacquiring the GIL costs more than the call. Ten headers hold the
-calls that do block — parsing and writing bitcode, linking, building
-a target machine, running a pass pipeline, JIT-compiling through
-ORC/MCJIT, and the whole of LTO — and only those opt in:
-
-`Analysis.h`, `BitReader.h`, `BitWriter.h`, `ExecutionEngine.h`,
-`IRReader.h`, `LLJIT.h`, `Linker.h`, `PassBuilder.h`,
-`TargetMachine.h`, `lto.h`.
-
-The list and the modifier logic live in the recipe
-(`llvm_c.nogil_headers` and `llvm_c.nogil_node_init` in
-`support/recipes/rocm.py`); `write_llvm_modules` in
-`generators_compiler.py` passes the factory as that module's
-`node_init`. Everything else in `rocm.bindings.llvm.c` keeps the GIL.
-
-Because the shim raises when the symbol cannot be resolved — libLLVM
-is optional at runtime — each opted-in function needs an exception
-sentinel the caller can test without the GIL, picked from the return
-type:
-
-| Return type | Modifier | Why |
-|---|---|---|
-| pointer | `except? NULL nogil` | `NULL` is the API's own failure value |
-| integral, `LLVMBool` | `except? -1 nogil` | Cython's `bint` is a C `int`, so -1 survives the return |
-| enum | `except? <Enum>-1 nogil` | no `llvm-c` enum declares a negative enumerator, and Cython rejects a bare `-1` against an enum return |
-| `void`, record by value, float | `noexcept nogil` | no free sentinel; see below |
-
-No enum is given a named sentinel because `llvm-c` defines none:
-the constants that read like one (`LLVMDSError` is a diagnostic
-*severity*, `LLVMModuleFlagBehaviorError` a module-flag behaviour,
-`LLVMCodeGenLevelNone` an optimization level) are values their getter
-returns in normal operation, so using one would put a GIL-taking
-`PyErr_Occurred` check on the common path.
-
-`void`, by-value record and floating-point returns have no free
-sentinel at all. The alternative, `except * nogil`, makes the caller
-take the GIL after *every* call just to poll `PyErr_Occurred`, so
-those fall back to `noexcept nogil` as the hip and comgr recipes do.
-The failure still surfaces: Cython aborts such a shim at the raising
-`__init_symbol` and never reaches the call through the NULL function
-pointer, but it reports the exception as unraisable instead of
-propagating it.
-
-Functions that take a callback are left on the with-gil emitter
-whatever their return type. Registering a handler is cheap, so there
-is nothing to gain, and the callback parameter is the only route by
-which LLVM could re-enter the caller's code mid-call.
 
 
 ## Loader error contract — the implicit `except 1` return

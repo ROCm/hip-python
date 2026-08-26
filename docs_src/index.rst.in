@@ -149,6 +149,16 @@ Spotlight
       * :doc:`python_api/cuda/bindings/runtime/index`
       * :doc:`python_api/cuda/bindings/nvrtc/index`
 
+.. note::
+
+   Contributions are welcome. Most of this API is generated from the
+   ROCm\ |trade| C headers, so a fix belongs in the code generator rather
+   than in the emitted bindings. The `contributing guide
+   <https://github.com/ROCm/hip-python/blob/main/CONTRIBUTING.md>`__ in the
+   source repository explains where each kind of change belongs and how to
+   validate it, and :doc:`/user_guide/6_build_from_source` covers building
+   the wheels and these documentation pages yourself.
+
 .. |reg| unicode:: U+000AE .. REGISTERED SIGN
    :ltrim:
 .. |trade| unicode:: U+02122 .. TRADEMARK SIGN

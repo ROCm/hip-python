@@ -686,7 +686,9 @@ before any per-package `python -m build`, or the rendered
   `manylinux_2_17_x86_64`).
 - **C compiler** (GCC or Clang).
 - **Python 3.9+** with `pip>=24.0`, `venv`, and development headers.
-- **CMake ≥ 3.26** and **Ninja ≥ 1.11** recommended.
+- **CMake ≥ 3.26** and **Ninja ≥ 1.11** recommended. 3.26 is also what
+  the `Development.SABIModule` component needs — see
+  [Stable-ABI (abi3) wheels](#stable-abi-abi3-wheels).
 - Python packages: `scikit-build-core>=0.11.2`, `cython>=3.1.0`,
   `build`, `pyproject-metadata>=0.9` (used by the unified build's
   wheel assembler — see
@@ -698,6 +700,107 @@ before any per-package `python -m build`, or the rendered
 - For docs builds: `sphinx`, `sphinx-autoapi`, `rocm-docs-core`, plus the
   rest of `docs_src/sphinx/requirements.txt`.
 - For developer-only stub regeneration (see next section): `mypy`.
+
+## Stable-ABI (abi3) wheels
+
+Ordinarily each compiled wheel is tagged for the exact CPython that
+built it (`cp312-cp312-…`), so supporting four interpreters means four
+builds. Building the extensions against the CPython stable ABI instead
+collapses that to one wheel set per platform, tagged
+`cp<floor>-abi3-<platform>`, which installs on every interpreter from
+`<floor>` upwards.
+
+One CMake variable turns it on, and it behaves identically on Linux and
+Windows:
+
+```sh
+cd packages
+cmake -B build -DHIP_PYTHON_ABI3_FLOOR=3.11
+cmake --build build --target all_wheels
+```
+
+Both CI wrappers pass it for you:
+
+```sh
+USE_SABI=3.11 ci/internal/build-wheels.sh          # Linux
+```
+
+```powershell
+ci\internal\build-wheels.ps1 -UseSabi 3.11         # Windows
+```
+
+`build-wheels.ps1` also reads `USE_SABI` from the environment, so a CI
+job can set that one variable for both platforms. It rejects a
+malformed or too-low floor before the toolchain is even probed; the
+bash script only checks the shape and leaves the rest to CMake.
+
+### Choosing the floor
+
+**The floor must be at least 3.11.** `rocm-bindings-core`'s `types.pyx`
+consumes the buffer protocol (`PyObject_GetBuffer`, `PyBuffer_Release`)
+to accept `bytes`, `bytearray` and NumPy arrays wherever a `Pointer` is
+expected, and those entered the limited API in CPython 3.11. A lower
+floor compiles until it reaches those calls and then fails in the C
+compiler.
+
+It must also be **no newer than the interpreter running the build** —
+you cannot target a stable ABI that the headers you compile against do
+not describe yet. `hip_python_initialize()` in
+`cmake/HipPythonBuild.cmake` checks both the `major.minor` shape and
+this upper bound, since it is the code that knows which Python
+`find_package` found.
+
+The floor does not otherwise constrain the build interpreter: a floor of
+3.11 built under Python 3.14 produces wheels that install and run on
+3.11, 3.12, 3.13 and 3.14 alike.
+
+### How it is wired
+
+- `find_package(Python …)` adds the `Development.SABIModule` component
+  when a floor is set, which is what defines the `Python::SABIModule`
+  target (CMake ≥ 3.26; already the project floor).
+- `Python_add_library(… USE_SABI <floor> …)` defines `Py_LIMITED_API`
+  for the floor (`0x030b0000` for 3.11) and links the stable-ABI import
+  library instead of the version-specific one.
+- The wheel assembler receives `--abi3-floor` and tags the wheel
+  `cp<floor>-abi3-<platform>` instead of `cp<ver>-cp<ver>-<platform>`.
+- The pure-Python packages (`hip-python`, `numba-hip`) are unaffected:
+  they are built by `python -m build` and stay `py3-none-any`.
+
+Package metadata is deliberately not narrowed to the floor:
+`requires-python` remains `>=3.9` because a non-abi3 build of the same
+sources supports it. The wheel tag is what gates installation — pip
+will not install a `cp311-abi3` wheel on 3.10.
+
+### On Windows
+
+Nothing extra is needed, and the two things that could plausibly break
+do not:
+
+- **Linking.** The stable-ABI import library `python3.lib` ships in
+  `<prefix>\libs` with every CPython Windows installation, so
+  `Development.SABIModule` resolves out of the box, and the resulting
+  `.pyd` imports `python3.dll` only. That DLL resolves at import time
+  through CPython's own extension-loading search, with no help from
+  `PATH`.
+- **Module filenames.** Windows has no `.abi3.pyd` import suffix —
+  `importlib.machinery.EXTENSION_SUFFIXES` lists only
+  `.cp3XX-win_amd64.pyd` and `.pyd` — so an abi3 infix would produce an
+  unimportable module. CMake leaves `Python_SOSABI` empty there, so the
+  modules keep their plain `types.pyd` names while the *wheel* still
+  carries the `cp<floor>-abi3-win_amd64` tag.
+
+Prefer `-UseSabi` over hand-writing the CMake flag on Windows. Windows
+PowerShell 5.1 splits an unquoted `-DHIP_PYTHON_ABI3_FLOOR=3.11` on its
+way to a native command into `-DHIP_PYTHON_ABI3_FLOOR=3` plus a stray
+`.11`, and CMake then rejects the floor as `'3'` while warning about an
+extra path. Quoting the whole argument avoids it, which is what the
+script does.
+
+This was validated with MSVC 14.51 and Cython 3.2.9: `rocm-bindings-core`
+and `rocm-bindings-hip` built at floor 3.11 under Python 3.14, then
+installed into 3.12 and 3.13 environments where a host↔device `hipMemcpy`
+roundtrip ran on gfx1103.
 
 ## Cython version requirement
 
@@ -725,36 +828,42 @@ The bug is fixed in Cython 3.1.0 and later; 3.1.x and 3.2.x emit
 the assignment correctly with no warning. The interfacegen repo
 carries unit-test coverage that pins both the bug shape (the
 ``*const *`` pattern) and the trailing-const handling — see
-``test_typed_helpers.py::test_call_arg_hoist_double_const_pointer_uses_split_form``
+``test_typed_helpers.py::test_call_arg_hoist_double_const_pointer_uses_combined_form``
 and the sibling tests around it.
 
-### Defense in depth
+### The floor is the only defense
 
-The interfacegen codegen also defends against the bug by emitting
-the wrapper-bound prehoist as **two separate statements** (bare
-cdef + a separate assignment), which Cython 3.0.x compiles
-correctly. So even on a buggy toolchain the generated bindings
-still run correctly. The 3.1.0 floor declared here is the upstream
-side of the same fix — the codegen split-form is the codegen side.
-Both layers exist so the fix can't silently regress on a future
-toolchain change.
+The codegen emits the combined `cdef T x = <T>expr` form for every
+hoisted call argument — precisely the shape 3.0.x miscompiles. It
+used to split that into a bare `cdef` plus a separate assignment as
+a second layer of defense, but that workaround was removed once the
+floor was in place, and
+``test_call_arg_hoist_double_const_pointer_uses_combined_form`` now
+asserts the split form does not come back. So there is no
+codegen-side fallback: the floor is what stands between a 3.0.x
+toolchain and a segfaulting wrapper.
+
+Not to be confused with the *two-local* split that
+`interfacegen.cython.CallArgHoist.render_prehoist` still emits for
+wrapper-bound arguments (`cdef <wrapper> x_obj = ...` followed by
+`cdef T x = <T>x_obj.getPtr()`). That one keeps the adapter alive
+across the C call and has nothing to do with this Cython bug; see
+[BINDINGS.md](BINDINGS.md) under "GIL semantics — what runs where".
 
 ### What if I have to use Cython 3.0.x
 
-Don't, if you can avoid it. If you absolutely must (e.g. an
-internal toolchain pinned to a specific Cython release), the
-codegen split-form will keep our generated bindings working — but
-any *handcoded* Cython that uses the same `cdef T x = <T>expr`
-shape with `*const *` in `T` will silently fail. Audit handcoded
-`.pyx` files if you go this route.
+Don't. With no codegen-side fallback left, a 3.0.x build produces
+bindings whose `*const *` arguments are NULL locals, which segfault
+in the backend on first dereference — and any *handcoded* Cython
+using the same `cdef T x = <T>expr` shape fails the same way.
 
 ## Regenerating stubs for handcoded Cython modules
 
 A handful of handcoded Cython modules ship in `rocm-bindings-core`
-(`rocm.bindings.util.{types,loader,posixloader}`) and
-`rocm-bindings-hip` (`rocm.bindings._hip_helpers`,
-`rocm.bindings._hiprtc_helpers`). Their `.pyi` type-stub
-counterparts are **committed to git** alongside the `.pyx` so:
+(`rocm.bindings.util.types`) and `rocm-bindings-hip`
+(`rocm.bindings._hip_helpers`, `rocm.bindings._hiprtc_helpers`).
+Their `.pyi` type-stub counterparts are **committed to git**
+alongside the `.pyx` so:
 
 - `sphinx-autoapi` can document them (astroid cannot parse `.pyx`).
 - Static type checkers (mypy, pyright) and IDEs see real signatures.
@@ -765,6 +874,53 @@ The interfacegen-owned packages (`rocm-bindings-hip`'s `hip` and
 `hiprtc`, libraries, systems, compiler, hip-python-interop) get
 their `.pyi` from interfacegen at codegen time — those stubs are
 **not** maintained via the dev workflow described here.
+
+The DLL loaders are handcoded as well but carry **no** stub. Every
+function `rocm.bindings.util.{loader,posixloader,win32loader}`
+declares is `cdef`, so they are reachable only through `cimport` and
+their `.pyi` would contain nothing but `__pyx_capi__` and `__test__`
+— the same rule that keeps the generated `cy*` wrappers stubless.
+They ship as `.pxd`/`.pyx` only.
+
+### The one hand-maintained exception: `cuda.bindings.cufile`
+
+`cuda.bindings.cufile` is handcoded but is deliberately **absent**
+from `HIP_PYTHON_STUBGEN_MODULES`; `all_stubs` will not refresh it.
+Its public surface is almost entirely module-level `cpdef`
+functions, and stubgen can only render those as opaque
+`cython_function_or_method` attributes — running it would throw away
+the module docstring, the enum members and every typed signature
+that sphinx-autoapi renders into the API reference. Edit
+`cufile.pyi` by hand in the same commit as `cufile.pyx`. The
+`tests/stubs` suite checks that the stub still names every public
+symbol the module exposes, which is the drift that reaches users.
+
+### Stubs are generated artifacts — never edit them
+
+Every stub written by this workflow opens with:
+
+```
+# AUTO-GENERATED by `mypy stubgen` from the compiled extension module.
+# Type stubs for <module>. Edits will be overwritten.
+# Regenerate with `ci/docs/regenerate-stubs.sh` after editing the .pyx.
+```
+
+Hand-editing one is always wrong: the next run of the target
+silently reverts it, and in the meantime the published docs describe
+an API that does not exist. `rocm.bindings.util.types` drifted this
+way through four consecutive commits, ending with a `CStr`
+docstring that contradicted the implementation. Nothing re-runs
+stubgen in CI to catch that — the banner is the whole guard, and
+`tests/stubs` covers only the hand-maintained `cufile` stub.
+
+`cmake/hip_python_postprocess_stub.py` adds that banner and also
+strips the Cython version out of the stub: stubgen renders
+module-level `cpdef` objects as
+`_cython_<major>_<minor>_<patch>.cython_function_or_method`, which
+would otherwise make the committed `.pyi` depend on whichever Cython
+the developer happened to have installed. It is rewritten to
+`Callable[..., Any]`, so the same `.pyx` yields a byte-identical
+`.pyi` on any Cython 3.x.
 
 ### Developer workflow
 
@@ -787,6 +943,16 @@ The regenerated `.pyi` lands in the source tree next to the `.pyx`.
 Inspect the diff with `git diff packages/rocm-bindings-*/src/rocm/...`,
 then commit `<module>.pyx` and `<module>.pyi` together.
 
+`ci/docs/regenerate-stubs.sh` wraps the same flow.
+
+Configure that tree **without** `HIP_PYTHON_ABI3_FLOOR`. An extension
+built against the CPython limited API tells stubgen much less about
+itself: Cython replaces the per-method docstrings — the ones
+sphinx-autoapi publishes — with CPython's generic text. Such a stub
+looks plausible in a diff, so `hip_python_postprocess_stub.py`
+detects the limited-API build and fails rather than let one reach the
+source tree.
+
 ### What is NOT triggered
 
 - `pip install rocm-bindings-core` (from wheel or sdist) — uses the
@@ -805,7 +971,7 @@ The list of modules is repo-spanning and lives in **one place**:
 line of the form:
 
 ```
-"<package-shortname>|<dotted-module>|<source-pyi-relative-dir>|<cython-target>"
+"<package-shortname>|<source-pyi-relative-dir>|<cython-target>"
 ```
 
 `<package-shortname>` matches the `HIP_PYTHON_BUILD_<NAME>` option
@@ -816,6 +982,14 @@ disabled in this configure. The dispatch loop below the list calls
 `cmake/HipPythonBuild.cmake`) for each entry and aggregates them
 into per-package `<pkg>_stubs` targets and the repo-wide
 `all_stubs` target.
+
+The dotted module name is **not** part of the entry: it is read back
+from the target's `HIP_PYTHON_MODULE_NAME` property, set by
+`hip_python_add_cython_module()`. Spelling it out here would be
+wrong for any target whose module name differs per platform — a
+hardcoded Linux name for `rocm_bindings_core_platform_loader`, which
+compiles `posixloader` on Linux and `win32loader` on Windows, used to
+make `core_stubs` fail outright on Windows.
 
 Per-package `CMakeLists.txt` files do not contain any stubgen
 wiring — the single list is the authoritative source.
@@ -882,6 +1056,11 @@ cd packages && cmake -B build && cmake --build build --target all_wheels -j$(npr
 
 # Production manylinux wheels:
 cd packages && cmake -B build -DHIP_PYTHON_AUDITWHEEL_REPAIR=ON
+cmake --build build --target all_wheels -j$(nproc)
+
+# One stable-ABI wheel set for Python 3.11+ instead of one per version
+# (see "Stable-ABI (abi3) wheels"):
+cd packages && cmake -B build -DHIP_PYTHON_ABI3_FLOOR=3.11
 cmake --build build --target all_wheels -j$(nproc)
 
 # Skip the compiler package (faster; doesn't need libLLVM):

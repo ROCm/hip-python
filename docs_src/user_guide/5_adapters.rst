@@ -91,6 +91,107 @@ The type is typically used as argument in the following scenarios:
 * As place-holder whenever a complicated type expression of pointer type has
   not been analyzed yet.
 
+.. _sec_cstr:
+
+:py:obj:`~.types.CStr`
+----------------------
+
+A C ``char *`` is, in the overwhelming majority of C APIs, a NUL-terminated
+string. HIP Python's code generator therefore uses the
+:py:obj:`~.types.CStr` adapter --- and not the generic
+:py:obj:`~.types.Pointer` --- for ``char *`` arguments, ``char *`` return
+values, and ``char[]`` record fields.
+
+You can pass a Python :py:obj:`str` wherever such an argument is expected;
+the adapter UTF-8 encodes it for you, so byte-string literals and manual
+``.encode("utf-8")`` calls are not needed:
+
+.. code-block:: python
+   :caption: Passing ``str`` Where the C API Expects a ``char *``
+
+   from rocm.bindings import hip, hiprtc
+
+   err, prog = hiprtc.hiprtcCreateProgram(source, "my_program", 0, [], [])
+   # ...
+   err, kernel = hip.hipModuleGetFunction(module, "my_kernel")
+
+The adapter can be initialized from the following Python objects:
+
+* :py:obj:`ctypes.c_void_p`:
+
+  Takes the pointer address ``pyobj.value``. Length information must be
+  obtained via ``strlen`` in this case. (This type must be checked before the
+  buffer protocol because :py:obj:`ctypes.c_void_p` is also identified as a
+  Python buffer.)
+
+* :py:obj:`str`:
+
+  UTF-8 encoded, then interned (see the note below). The adapter's pointer
+  refers to the encoded bytes.
+
+* :py:obj:`bytes`:
+
+  Interned as-is (see the note below).
+
+* :py:obj:`object` that implements the
+  `Python buffer protocol <https://docs.python.org/3/c-api/buffer.html>`__,
+  e.g. :py:obj:`bytearray`, :py:obj:`memoryview`, or a NumPy array:
+
+  If the object represents a simple contiguous array, the adapter acquires the
+  buffer handle and takes the buffer's address. It releases the handle at time
+  of destruction. (:py:obj:`bytes` also implements this protocol but is
+  intercepted by the dedicated branch above.)
+
+* :py:obj:`object` that is accepted as input by the ``__init__`` routine of
+  :py:obj:`~.Pointer`.
+
+Type checks are performed in the above order.
+
+.. note::
+
+   :py:obj:`str` and :py:obj:`bytes` inputs are *interned*: the adapter keeps
+   the encoded bytes in the class-level ``CStr._retained_inputs``
+   dictionary for the lifetime of the program. The C pointer handed to the
+   backend therefore stays valid even after the adapter instance is collected,
+   and even if the backend retains the pointer past the call's return --- the
+   COMGR compile cache behind :py:obj:`rocm.bindings.hiprtc` does exactly
+   that. You do not have to keep the Python string alive yourself.
+
+   Repeated calls with equal content reuse the same canonical bytes object,
+   and therefore the same C pointer, so backend caches keyed on pointer
+   identity still hit. The table grows only with the number of *distinct*
+   string contents ever passed.
+
+.. warning::
+
+   The pin above applies to :py:obj:`str` and :py:obj:`bytes` only. A
+   buffer-protocol source (:py:obj:`bytearray`, a NumPy array, …) is pinned
+   for the adapter instance's lifetime alone. If the C library stores the
+   pointer and your adapter then goes out of scope, you can get memory
+   errors --- pass a :py:obj:`str` / :py:obj:`bytes`, or hold a Python-side
+   reference for as long as the backend may dereference the pointer.
+
+CStr: Usage in HIP Python
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The adapter appears in three roles:
+
+* As **input** adapter for string arguments, e.g. the program name and source
+  of :py:obj:`~.hiprtcCreateProgram`, the kernel name of
+  :py:obj:`~.hipModuleGetFunction`, and the module, function, and value names
+  throughout the LLVM-C bindings in :py:obj:`rocm.bindings.llvm.c`.
+
+* As **return value** for functions that return a ``char *``, e.g.
+  :py:obj:`~.hipGetErrorString`. Use :py:obj:`str` or :py:obj:`bytes` on the
+  result to decode it; the type also implements the buffer protocol.
+
+* As **binding-allocated output buffer**. Where the C API expects the caller
+  to supply a ``char *`` buffer plus its size ---
+  :py:obj:`~.hipDeviceGetName`, :py:obj:`~.hipDeviceGetPCIBusId`, and the log
+  buffers of :py:obj:`~.hipGraphInstantiate` --- HIP Python allocates the
+  buffer for you and returns it as a :py:obj:`~.types.CStr` in the result
+  tuple. There is no output argument to pass in these cases.
+
 .. _sec_device_array:
 
 :py:obj:`~.types.DeviceArray`
@@ -185,7 +286,7 @@ The adapter types
 
 are used for simple Python ``list`` or ``tuple`` objects whose elements are
 
-* :py:obj:`bytes`,
+* :py:obj:`str`, :py:obj:`bytes`, or :py:obj:`~.types.CStr`,
 * can be used to construct a :py:obj:`~.types.Pointer`,
 * can be converted to the C types ``int``, ``long``, ``unsigned``, ``unsigned long``, respectively,
 * or can be converted to the C types ``int64_t``, ``uint64_t``, respectively.
@@ -204,6 +305,23 @@ The types can be initialized from the following Python objects:
   In this case, init code from :py:obj:`~.Pointer` is used and the C owner flag
   remains unset. See :py:obj:`~.Pointer` for more information.
 
+.. note::
+
+   The allocated array lives exactly as long as the adapter instance. HIP
+   Python's generated wrappers bind the adapter to a local variable and so
+   keep it alive across the C call, which is all a call-duration argument
+   needs. If a C function instead *retains* the pointer past its return, you
+   must hold the adapter yourself: construct it explicitly ---
+   ``rocm.bindings.util.types.ListOfPointer([...])`` --- and keep that object
+   referenced for as long as the backend may dereference it, rather than
+   passing a bare :py:obj:`list`.
+
+   String elements are the one exception: :py:obj:`str` and :py:obj:`bytes`
+   entries of a :py:obj:`~.types.ListOfBytes` are interned exactly like
+   :py:obj:`~.types.CStr` inputs (see :ref:`sec_cstr`), so the *strings* they
+   point to are pinned for the program's lifetime even though the pointer
+   array around them is not.
+
 List Types: Usage in HIP Python
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -211,6 +329,10 @@ HIP Python employs the :py:obj:`~.types.ListOfBytes` type in scenarios
 were a list of C ``const char *`` is expected,
 and the :py:obj:`~.types.ListOfPointer` type where a list of C pointer types
 is expected.
+
+As with :py:obj:`~.types.CStr`, the entries of such a string list may be plain
+:py:obj:`str` objects; they are UTF-8 encoded for you. Byte-string literals
+are still accepted.
 
 The type :py:obj:`~.types.ListOfBytes` is for example used to convert input
 Python types in the following routines:

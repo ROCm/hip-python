@@ -118,11 +118,13 @@ header-tuple extraction edge cases.
 
 The generator now tolerates libclang 17+ AST shapes and
 pyparsing 3.0+ APIs (previously pinned to older versions). The
-Cython floor moved to `>=3.1.0` with a documented workaround
-for the 3.0.x `*const *` codegen bug. `share/design/UPSTREAM_BUGS.md`
-files were added for hipblaslt + hipsparselt C-includability
-issues, HIP / amdsmi doxygen pointer-intent mistags, and the
-in-depth hipblaslt follow-up. Always-consulted source trees
+Cython floor moved to `>=3.1.0` for the 3.0.x `*const *` codegen
+bug (see `share/design/BUILDING.md` under "Cython version
+requirement"). Upstream-bug notes were recorded for hipblaslt +
+hipsparselt C-includability issues, HIP / amdsmi doxygen
+pointer-intent mistags, and the in-depth hipblaslt follow-up —
+the workarounds live in the per-library recipes.
+Always-consulted source trees
 (rocm-systems, llvm-project) now produce a generator warning
 when their commit hash can't be recorded.
 

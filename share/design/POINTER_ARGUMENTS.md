@@ -710,3 +710,103 @@ API (OpenGL, Vulkan, OpenCL), and every ROCm runtime entry point
 (`hipError_t hipFoo(…, T* out)`) follow it. interfacegen exploits the inverse:
 a single non-const pointer parameter on a status-returning function is almost
 always that OUT slot.
+
+
+## 10. How long the memory behind a pointer argument lives
+
+Choosing the adapter (sections 4.2, 4.5, 4.6) settles what the callee
+receives. It does not settle how long that memory stays valid, which is a
+separate question with three answers in the current bindings.
+
+**Tier 1 — call duration (the default).** An adapter constructed from a Python
+`list`/`tuple` mallocs an array, and `__dealloc__` frees it when the adapter
+dies. The generated wrapper binds the adapter to a `_cy_<func>__arg_N_obj`
+local, so it is still referenced when the C call executes and dies at the
+wrapper's return (see BINDINGS.md, "GIL semantics — what runs where"; this is
+the guarantee whose absence produced the `LLVMFunctionType` use-after-free).
+Every array argument is on this tier. It is exactly right for a callee that
+reads the array during the call and keeps nothing.
+
+**Tier 2 — callee-retained until an explicit destroy.** Some APIs store the
+caller's pointer in a library-owned object and dereference it later, on an
+unrelated call. Tier 1 is not enough for these: the array is freed at the
+wrapper's return, long before the second call. Today nothing in the codegen
+recognizes this tier; see the audit below.
+
+**Tier 3 — program-lifetime interning (strings only).** `CStr` and
+`ListOfBytes` put the canonical encoded `bytes` of every `str`/`bytes` input
+into a class-level `_retained_inputs` dict, so those pointers are valid
+forever. This exists because the COMGR compile cache behind hipRTC retains
+source and option strings past the call and even keys on pointer identity.
+The cost is bounded: the table grows with the number of *distinct* string
+contents, and repeated calls with equal content reuse one entry.
+
+Arrays are deliberately *not* interned. A string has value identity — two
+calls with the same source text are the same table entry — whereas an array
+built for a call has call identity: its contents are pointers to that call's
+objects. A global array table would therefore grow once per call rather than
+once per distinct value, which is a leak rather than a cache. That asymmetry
+is why tier 3 does not generalize, and why the interning in `ListOfBytes`
+pins the elements while leaving the pointer array on tier 1.
+
+### Retention audit
+
+The functions below are the candidates for tier 2 — each takes a pointer or
+array the vendor library may hold past the call's return. None has been
+confirmed against vendor sources yet; this is the list to work through, not a
+list of known bugs.
+
+| Function | Argument shape |
+|---|---|
+| `hipLinkCreate` | option arrays for a link state that outlives the call |
+| `hipLinkAddData`, `hipLinkAddFile` | per-input option arrays, consumed at `hipLinkComplete` |
+| `hipMemcpyBatchAsync` | source/destination/size arrays read by the async engine |
+| `hipMemPrefetchBatchAsync`, `hipMemDiscardBatchAsync`, `hipMemDiscardAndPrefetchBatchAsync` | batch descriptor arrays, likewise async |
+| `hipDrvMemDiscardBatchAsync`, `hipDrvMemDiscardAndPrefetchBatchAsync` | as above, driver-level variants |
+| `hipSignalExternalSemaphoresAsync`, `hipWaitExternalSemaphoresAsync` | semaphore and parameter arrays, read after enqueue |
+| `LLVMRunFunction` | the `LLVMGenericValueRef` array for the interpreted call |
+
+What "past the call's return" means differs by group. For the async entry
+points it means "until the stream reaches the operation", so the adapter must
+outlive the stream operation rather than the wrapper; for `hipLinkCreate` and
+`hipLinkAddData` / `hipLinkAddFile` it means "until `hipLinkComplete`", scoped
+to the link state rather than to a stream.
+
+Either way this is a caller obligation before it is a codegen one, and the same
+obligation a C caller carries: everything handed to an async function — the
+array adapter, the `Pointer` over a host buffer, the object that owns that
+memory — has to stay alive until the caller synchronizes. The bindings cannot
+infer where that point is, so the rule for callers is to hold the adapter in a
+variable (rather than passing a bare `list` that dies at the call) until they
+synchronize. The mechanisms below only make that easier to get right where the
+retaining object is identifiable.
+
+### The two mechanisms, and their division of labour
+
+Two fixes are available, and it is easy to reach for the wrong one.
+
+A **capturing adapter type** is selected per parameter by
+`ptr_complicated_type_handler`. That hook already redirects individual
+parameters — `_make_llvm_ptr_handler` in
+`tools/hip-python-generate/src/hip_python_codegen/generators_compiler.py` maps
+`controls.llvm_c.is_listofpointer_param(node)` to `ListOfPointer` — so a
+`Capturing*` variant costs one predicate plus one line in that closure, with no
+emitter change and no change to the generated call shape. What it buys: the
+array's *targets* stay alive as long as the adapter, held by a `cdef object`
+reference to the source list instead of by a process-global table. That is the
+bounded replacement for the `_retained_inputs` tables, and it brings lists in
+line with what `Pointer` already does for buffer-protocol inputs via
+`_py_buffer`.
+
+A **keepalive on the owning wrapper** is prescribed per parameter (`node_init`
+marks the parm; the emitter attaches the adapter to the returned or passed C
+object after the call). What it buys: the *adapter itself* outliving the
+wrapper's return, scoped to the C object that retains the pointer.
+
+The distinction worth writing down: capturing extends the inputs' life to the
+adapter's life; it does not extend the adapter's life to the callee's needs. A
+capturing type alone therefore does not make a retaining API safe — a
+function-local adapter still dies at return — unless it self-interns, which
+reintroduces the per-call growth that tier 3 avoids. Conversely a keepalive
+alone leaves the elements pinned by the global tables. Tier 2 needs the
+keepalive; replacing tier 3 with something bounded needs the capturing type.
