@@ -781,8 +781,10 @@ The floor does not otherwise constrain the build interpreter: a floor of
   library instead of the version-specific one.
 - The wheel assembler receives `--abi3-floor` and tags the wheel
   `cp<floor>-abi3-<platform>` instead of `cp<ver>-cp<ver>-<platform>`.
-- The pure-Python packages (`hip-python`, `numba-hip`) are unaffected:
-  they are built by `python -m build` and stay `py3-none-any`.
+- The packages with no compiled sources (`hip-python`, `numba-hip`) are
+  unaffected: they are built by `python -m build` and keep their `py3-none`
+  interpreter tag. `hip-python` stays `py3-none-any`; `numba-hip` carries a
+  platform tag because its `setup.py` declares the distribution non-pure.
 
 Package metadata is deliberately not narrowed to the floor:
 `requires-python` remains `>=3.9` because a non-abi3 build of the same

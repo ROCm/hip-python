@@ -102,3 +102,25 @@ function get_almalinux_manylinux_python3_bin_dir() {
   local min=$(echo "$default_python_version" | cut -d "." -f 2)
   printf "/opt/python/cp${maj}${min}-cp${maj}${min}/bin"
 }
+
+# Local addition, no upstream counterpart: the same path, but checked.
+#
+# Prints the bin directory of the manylinux CPython of the given version and
+# fails when the image does not carry that interpreter, naming the ones it
+# does. The wheel matrix asks for several versions in a row, and which of them
+# a given ROCm-flavoured manylinux base ships is not obvious from the outside.
+function get_manylinux_python_bin() {
+  local version=${1:?get_manylinux_python_bin needs a CPython version, e.g. 3.12}
+  local bin_dir
+  bin_dir=$(get_almalinux_manylinux_python3_bin_dir "${version}")
+
+  if [[ ! -x "${bin_dir}/python${version}" ]]; then
+    local present
+    present=$(ls -d /opt/python/cp*-cp*/ 2>/dev/null | xargs -r -n1 basename | tr '\n' ' ')
+    echo "ERROR: no CPython ${version} in this image; ${bin_dir}/python${version} is missing." >&2
+    echo "       Interpreters present: ${present:-none, this is not a manylinux image}" >&2
+    return 1
+  fi
+
+  printf '%s' "${bin_dir}"
+}

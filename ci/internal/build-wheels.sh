@@ -1,4 +1,26 @@
 #!/usr/bin/env bash
+# MIT License
+#
+# Copyright (c) 2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 set -xeu
 
 # Build hip-python wheels.
@@ -39,6 +61,10 @@ set -xeu
 #   BUILD_ARTIFACTS_DIR  where wheels land (HIP_PYTHON_WHEEL_OUTPUT_DIR)
 #
 # Optional env:
+#   HIP_PYTHON_PROJECT_DIR    default hip_python. Name of the checkout
+#                             directory under SRC_DIR. CI systems that clone
+#                             the repository under its GitHub name pass
+#                             "hip-python" instead of copying the tree
 #   ROCM_PATH                 default /opt/rocm
 #   ROCM_VERSION              default 7.13.0 for the codegen metadata. Set,
 #                             it also prefixes the wheel version on a branch
@@ -78,7 +104,7 @@ set -xeu
 #                             use the buffer protocol, which is only in the
 #                             stable ABI since CPython 3.11). "no" disables it.
 
-project_dir=hip_python
+project_dir=${HIP_PYTHON_PROJECT_DIR:-hip_python}
 
 ### resolved paths
 
