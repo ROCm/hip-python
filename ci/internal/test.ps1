@@ -212,9 +212,7 @@ from rocm.bindings import hip
 err, props = hip.hipGetDeviceProperties(0)
 if int(err) != 0:
     raise SystemExit('hipGetDeviceProperties failed: ' + str(err))
-name = props.gcnArchName
-name = name.decode() if isinstance(name, (bytes, bytearray)) else bytes(name).decode()
-print(name.split(chr(0))[0].split(':')[0])
+print(props.gcnArchName.split(':')[0])
 '@)
         if ($LASTEXITCODE -ne 0 -or -not $GfxArch) {
             throw "Could not query the GPU target. Pass -GfxArch (e.g. -GfxArch gfx1103)."

@@ -80,7 +80,7 @@ extern "C" __global__ void scale_vector(float factor, int n, short unused1, int 
 prog = hip_check(hiprtc.hiprtcCreateProgram(source, "scale_vector", 0, [], []))
 
 props = hip_check(hip.hipGetDeviceProperties(0))
-arch = props.gcnArchName.decode("utf-8")
+arch = props.gcnArchName
 
 print(f"Compiling kernel for {arch}")
 

@@ -155,6 +155,6 @@ if __name__ in ("__test__", "__main__"):
     )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName.decode("utf-8")
+    arch = props.gcnArchName
     kernel_prog = HipProgram("kernel", arch, kernel_hip)
     print(kernel_prog.get_llvm_ir().decode("utf-8"))

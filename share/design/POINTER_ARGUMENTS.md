@@ -144,6 +144,11 @@ otherwise never be reached. An IN `char **` (an argv-style array of strings)
 is intentionally **not** matched, so it is never clobbered into a single
 `CStr`.
 
+A record field declared as a *fixed-size* `char[N]` is a different case
+and never reaches this handler: it is read at its declared extent and
+returned as `bytes`, or as `str` where the field holds text. See
+"Fixed-size char fields" in `BINDINGS.md`.
+
 ### 4.3 Binding-allocated OUT string buffers (`hipDeviceGetName`)
 
 Some functions are *caller-allocated* in C — the caller hands in a `char *`

@@ -43,7 +43,6 @@ from interfacegen.support.recipes import rocm as controls
 from interfacegen.support.recipes.control import ParmIntent
 from interfacegen.tree import MacroDefinition, Node, Parm
 
-
 # Cython-only: char* OUT buffers the binding allocates (CStr.malloc) and
 # RETURNS, sized by a by-value length input. In C these are caller-allocated
 # (Fortran keeps them as plain OUT); the returned-CStr form is a Python
@@ -54,6 +53,23 @@ _CSTR_OUT_BUFFERS = {
     ("hipDeviceGetPCIBusId", "pciBusId"): "len",
     ("hipGraphInstantiate", "pLogBuffer"): "bufferSize",
 }
+
+# Fixed-size char fields that hold text, and so are returned as ``str``
+# trimmed at the first NUL rather than as the full extent in bytes. Only
+# HIP's two device-description strings qualify: `hipUUID_t.bytes`, the
+# `luid`, the `hipIpcMemHandle_st` / `hipIpcEventHandle_st` `reserved`
+# payloads, the `pad`s and the `hipMemFabricHandle_st` `data` are all
+# opaque, and numba round-trips the IPC handles as bytes.
+#
+# Keyed on the C tag, which is what these callbacks see: the record is
+# `hipDeviceProp_tR0600` in the header and only becomes `hipDeviceProp_t`
+# through the recipe's renamer, so keying the Cython name would no-op.
+_TEXT_CHAR_ARRAYS = frozenset(
+    {
+        ("hipDeviceProp_tR0600", "name"),
+        ("hipDeviceProp_tR0600", "gcnArchName"),
+    }
+)
 
 
 def _toclassname(name: str) -> str:
@@ -88,9 +104,7 @@ def generate_hip(
 
     def hip_ptr_complicated_type_handler(parm: Node):
         if (parm.parent.name, parm.name) == ("hipModuleLaunchKernel", "extra"):
-            return (
-                f"rocm.bindings._hip_helpers.{_toclassname(parm.parent.name)}_{parm.name}"
-            )
+            return f"rocm.bindings._hip_helpers.{_toclassname(parm.parent.name)}_{parm.name}"
         if (parm.parent.name, parm.name) in (
             ("hipMalloc", "ptr"),
             ("hipExtMallocWithFlags", "ptr"),
@@ -134,6 +148,9 @@ def generate_hip(
                 node.parent.python_body_prepend_before_c_interface_call(
                     f"{node.name}.malloc({size_name})"
                 )
+        elif isinstance(node, interfacegen.tree.Field):
+            if (node.parent.name, node.name) in _TEXT_CHAR_ARRAYS:
+                node.is_text_char_array = True
 
     def renamer(name: str):
         return interfacegen.cython.DEFAULT_RENAMER(controls.hip.renamer(name))
@@ -225,7 +242,9 @@ def generate_hiprtc(
                 "hiprtcLinkCreate",
                 "option_ptr",
             ):
-                return "rocm.bindings._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
+                return (
+                    "rocm.bindings._hiprtc_helpers.HiprtcLinkCreate_option_ptr"
+                )
             if (node.parent.name, node.name) == (
                 "hiprtcLinkCreate",
                 "option_vals_pptr",

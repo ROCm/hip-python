@@ -133,29 +133,41 @@ def _make_error_subclass(name, code):
 
 # Per-code subclasses consumers may catch by name.
 NVMLError_Uninitialized = _make_error_subclass(
-    "NVMLError_Uninitialized", NVML_ERROR_UNINITIALIZED)
+    "NVMLError_Uninitialized", NVML_ERROR_UNINITIALIZED
+)
 NVMLError_InvalidArgument = _make_error_subclass(
-    "NVMLError_InvalidArgument", NVML_ERROR_INVALID_ARGUMENT)
+    "NVMLError_InvalidArgument", NVML_ERROR_INVALID_ARGUMENT
+)
 NVMLError_NotSupported = _make_error_subclass(
-    "NVMLError_NotSupported", NVML_ERROR_NOT_SUPPORTED)
+    "NVMLError_NotSupported", NVML_ERROR_NOT_SUPPORTED
+)
 NVMLError_NoPermission = _make_error_subclass(
-    "NVMLError_NoPermission", NVML_ERROR_NO_PERMISSION)
+    "NVMLError_NoPermission", NVML_ERROR_NO_PERMISSION
+)
 NVMLError_NotFound = _make_error_subclass(
-    "NVMLError_NotFound", NVML_ERROR_NOT_FOUND)
+    "NVMLError_NotFound", NVML_ERROR_NOT_FOUND
+)
 NVMLError_InsufficientSize = _make_error_subclass(
-    "NVMLError_InsufficientSize", NVML_ERROR_INSUFFICIENT_SIZE)
+    "NVMLError_InsufficientSize", NVML_ERROR_INSUFFICIENT_SIZE
+)
 NVMLError_DriverNotLoaded = _make_error_subclass(
-    "NVMLError_DriverNotLoaded", NVML_ERROR_DRIVER_NOT_LOADED)
+    "NVMLError_DriverNotLoaded", NVML_ERROR_DRIVER_NOT_LOADED
+)
 NVMLError_Timeout = _make_error_subclass(
-    "NVMLError_Timeout", NVML_ERROR_TIMEOUT)
+    "NVMLError_Timeout", NVML_ERROR_TIMEOUT
+)
 NVMLError_GpuIsLost = _make_error_subclass(
-    "NVMLError_GpuIsLost", NVML_ERROR_GPU_IS_LOST)
+    "NVMLError_GpuIsLost", NVML_ERROR_GPU_IS_LOST
+)
 NVMLError_LibraryNotFound = _make_error_subclass(
-    "NVMLError_LibraryNotFound", NVML_ERROR_LIBRARY_NOT_FOUND)
+    "NVMLError_LibraryNotFound", NVML_ERROR_LIBRARY_NOT_FOUND
+)
 NVMLError_FunctionNotFound = _make_error_subclass(
-    "NVMLError_FunctionNotFound", NVML_ERROR_FUNCTION_NOT_FOUND)
+    "NVMLError_FunctionNotFound", NVML_ERROR_FUNCTION_NOT_FOUND
+)
 NVMLError_Unknown = _make_error_subclass(
-    "NVMLError_Unknown", NVML_ERROR_UNKNOWN)
+    "NVMLError_Unknown", NVML_ERROR_UNKNOWN
+)
 
 _NVML_ERROR_SUBCLASSES = {
     cls.value: cls
@@ -193,7 +205,11 @@ def _status_int(call_result):
     ``rocm.bindings.amdsmi`` functions return either a bare ``amdsmi_status_t``
     or a tuple whose first element is the status.
     """
-    status = call_result[0] if isinstance(call_result, (tuple, list)) else call_result
+    status = (
+        call_result[0]
+        if isinstance(call_result, (tuple, list))
+        else call_result
+    )
     return int(status)
 
 
@@ -202,7 +218,10 @@ def _check(call_result, what=""):
     status = _status_int(call_result)
     if status != _OK:
         code = _AMDSMI_TO_NVML.get(status, NVML_ERROR_UNKNOWN)
-        raise NVMLError(code, msg=f"{what or 'amdsmi call'} failed (amdsmi status {status})")
+        raise NVMLError(
+            code,
+            msg=f"{what or 'amdsmi call'} failed (amdsmi status {status})",
+        )
     return call_result
 
 
@@ -316,7 +335,10 @@ _devices = []  # ordered list of _NvmlDevice, index == NVML device ordinal
 
 def _ensure_initialized():
     if _init_count <= 0:
-        raise NVMLError(NVML_ERROR_UNINITIALIZED, msg="NVML was not successfully initialized")
+        raise NVMLError(
+            NVML_ERROR_UNINITIALIZED,
+            msg="NVML was not successfully initialized",
+        )
 
 
 def _enumerate_gpus():
@@ -328,20 +350,28 @@ def _enumerate_gpus():
     gpu_type = int(amdsmi.processor_type_t.AMDSMI_PROCESSOR_TYPE_AMD_GPU)
 
     socket_count = (ctypes.c_uint * 1)()
-    _check(amdsmi.amdsmi_get_socket_handles(socket_count, None), "amdsmi_get_socket_handles")
+    _check(
+        amdsmi.amdsmi_get_socket_handles(socket_count, None),
+        "amdsmi_get_socket_handles",
+    )
     n_sockets = socket_count[0]
     if n_sockets == 0:
         return []
     socket_arr = (ctypes.c_void_p * n_sockets)()
     socket_count[0] = n_sockets
-    _check(amdsmi.amdsmi_get_socket_handles(socket_count, socket_arr), "amdsmi_get_socket_handles")
+    _check(
+        amdsmi.amdsmi_get_socket_handles(socket_count, socket_arr),
+        "amdsmi_get_socket_handles",
+    )
 
     handles = []
     for s in range(n_sockets):
         socket_handle = ctypes.c_void_p(socket_arr[s])
         proc_count = (ctypes.c_uint * 1)()
         _check(
-            amdsmi.amdsmi_get_processor_handles(socket_handle, proc_count, None),
+            amdsmi.amdsmi_get_processor_handles(
+                socket_handle, proc_count, None
+            ),
             "amdsmi_get_processor_handles",
         )
         n_procs = proc_count[0]
@@ -350,7 +380,9 @@ def _enumerate_gpus():
         proc_arr = (ctypes.c_void_p * n_procs)()
         proc_count[0] = n_procs
         _check(
-            amdsmi.amdsmi_get_processor_handles(socket_handle, proc_count, proc_arr),
+            amdsmi.amdsmi_get_processor_handles(
+                socket_handle, proc_count, proc_arr
+            ),
             "amdsmi_get_processor_handles",
         )
         for p in range(n_procs):
@@ -463,7 +495,9 @@ def nvmlDeviceGetHandleByIndex(index):
     _ensure_initialized()
     index = int(index)
     if index < 0 or index >= len(_devices):
-        raise NVMLError(NVML_ERROR_INVALID_ARGUMENT, msg=f"invalid device index {index}")
+        raise NVMLError(
+            NVML_ERROR_INVALID_ARGUMENT, msg=f"invalid device index {index}"
+        )
     return _devices[index]
 
 
@@ -487,12 +521,12 @@ def nvmlDeviceGetHandleByUUID(uuid):
     # Accept both bare and ``GPU-`` prefixed UUIDs.
     candidates = {target}
     if target.startswith("GPU-"):
-        candidates.add(target[len("GPU-"):])
+        candidates.add(target[len("GPU-") :])
     else:
         candidates.add("GPU-" + target)
     for dev in _devices:
         dev_uuid = nvmlDeviceGetUUID(dev)
-        if dev_uuid in candidates or dev_uuid[len("GPU-"):] in candidates:
+        if dev_uuid in candidates or dev_uuid[len("GPU-") :] in candidates:
             return dev
     raise NVMLError(NVML_ERROR_NOT_FOUND, msg=f"no device with UUID {uuid!r}")
 
@@ -586,19 +620,14 @@ def nvmlDeviceGetMigDeviceHandleByIndex(device, index):
             always, since ROCm has no MIG.
     """
     _ensure_initialized()
-    raise NVMLError(NVML_ERROR_NOT_SUPPORTED, msg="MIG is not supported on ROCm")
+    raise NVMLError(
+        NVML_ERROR_NOT_SUPPORTED, msg="MIG is not supported on ROCm"
+    )
 
 
 # ---------------------------------------------------------------------------
 # Device queries.
 # ---------------------------------------------------------------------------
-
-
-def _decode_cstr(value):
-    """Decode a NUL-terminated byte field returned by AMD SMI structs."""
-    if isinstance(value, bytes):
-        return value.split(b"\x00", 1)[0].decode("utf-8", "replace")
-    return str(value)
 
 
 def nvmlDeviceGetMemoryInfo(handle):
@@ -647,14 +676,13 @@ def nvmlDeviceGetName(handle):
         amdsmi.amdsmi_get_gpu_asic_info(handle._handle),
         "amdsmi_get_gpu_asic_info",
     )[1]
-    name = _decode_cstr(info.market_name)
-    if name:
-        return name
+    if info.market_name:
+        return info.market_name
     board = _check(
         amdsmi.amdsmi_get_gpu_board_info(handle._handle),
         "amdsmi_get_gpu_board_info",
     )[1]
-    return _decode_cstr(board.product_name)
+    return board.product_name
 
 
 def nvmlDeviceGetUUID(handle):
@@ -744,7 +772,9 @@ def nvmlDeviceGetPowerUsage(handle):
     if watts in (_UINT32_MAX, _UINT16_MAX):
         watts = int(getattr(info, "average_socket_power", _UINT32_MAX))
     if watts in (_UINT32_MAX, _UINT16_MAX):
-        raise NVMLError(NVML_ERROR_NOT_SUPPORTED, msg="power telemetry not supported")
+        raise NVMLError(
+            NVML_ERROR_NOT_SUPPORTED, msg="power telemetry not supported"
+        )
     return watts * 1000
 
 
@@ -808,7 +838,9 @@ def nvmlDeviceGetCpuAffinity(handle, cpuSetSize):
     _ensure_initialized()
     cpu_set_size = int(cpuSetSize)
     if cpu_set_size < 1:
-        raise NVMLError(NVML_ERROR_INVALID_ARGUMENT, msg="'cpuSetSize' must be positive")
+        raise NVMLError(
+            NVML_ERROR_INVALID_ARGUMENT, msg="'cpuSetSize' must be positive"
+        )
     get_affinity = getattr(amdsmi, "amdsmi_get_cpu_affinity_with_scope", None)
     if get_affinity is None:
         raise NVMLError(

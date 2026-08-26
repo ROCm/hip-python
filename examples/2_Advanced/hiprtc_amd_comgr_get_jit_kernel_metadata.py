@@ -247,7 +247,7 @@ if __name__ in ("__test__", "__main__"):
     _, num_devices = hip.hipGetDeviceCount()
     if autodetect_arch and num_devices > 0:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        arch = props.gcnArchName.decode()
+        arch = props.gcnArchName
 
     print(f"\n###  Properties of selected target (arch={arch}):\n\n```yaml")
     gpugen = arch.split(":")[0]

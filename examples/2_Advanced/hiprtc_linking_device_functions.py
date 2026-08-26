@@ -90,7 +90,7 @@ class HiprtcProgram:
 
     def _get_arch(self) -> str:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        return props.gcnArchName.decode("utf-8")
+        return props.gcnArchName
 
     def compile_to_llvm_bc(self):
         # [literalinclude-hiprtc-compile-rdc-begin]

@@ -65,7 +65,7 @@ extern "C" __global__ void print_tid() {
 prog = hip_check(hiprtc.hiprtcCreateProgram(source, "print_tid", 0, [], []))
 
 props = hip_check(hip.hipGetDeviceProperties(0))
-arch = props.gcnArchName.decode("utf-8")
+arch = props.gcnArchName
 
 print(f"Compiling kernel for {arch}")
 

@@ -53,24 +53,24 @@ from ._doxygen import *  # noqa: F401,F403
 from ._mixins import *  # noqa: F401,F403
 
 __all__ = [
-    'Root',
-    'MacroDefinition',
-    'Typed',
-    'Field',
-    'ParentIsRecordMixin',
-    'Record',
-    'Struct',
-    'Union',
-    'AnonymousStruct',
-    'AnonymousUnion',
-    'Enum',
-    'AnonymousEnum',
-    'Typedef',
-    'ConstantArray',
-    'FunctionPointer',
-    'TypedefedFunctionPointer',
-    'AnonymousFunctionPointer',
-    'Parm',
+    "Root",
+    "MacroDefinition",
+    "Typed",
+    "Field",
+    "ParentIsRecordMixin",
+    "Record",
+    "Struct",
+    "Union",
+    "AnonymousStruct",
+    "AnonymousUnion",
+    "Enum",
+    "AnonymousEnum",
+    "Typedef",
+    "ConstantArray",
+    "FunctionPointer",
+    "TypedefedFunctionPointer",
+    "AnonymousFunctionPointer",
+    "Parm",
 ]
 
 
@@ -207,8 +207,12 @@ class MacroDefinition(tree.MacroDefinition, CythonMixin):
         return self.render_c_interface(is_decl=False)
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         """Macro constants render as `<name>: Any` (no type info — the
         macro_type callback is best-effort and we don't pretend
@@ -429,6 +433,12 @@ class Field(tree.Field, CythonMixin, Typed):
         self.ptr_complicated_type_handler = (
             CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER()
         )
+        # Whether a fixed-size char field holds text, which only the library
+        # knows: the C type is the same either way. Recipes and generators set
+        # it through ``node_init``. False means the field is returned as its
+        # full extent in bytes, so a char field added by a version bump can
+        # never silently arrive decoded.
+        self.is_text_char_array = False
 
     @property
     def cython_repr(self):
@@ -461,6 +471,11 @@ class Field(tree.Field, CythonMixin, Typed):
         # pointer-to-record) falls back to a generic ``Pointer``
         # accessor. Incomplete arrays are treated as pointers here.
         is_pointer = self.get_pointer_degree(incomplete_array=True) > 0
+        # Rank-1 char arrays get their own branch ahead of the generic
+        # basic-type array one: Cython converts a bare ``char[N]`` with
+        # ``strlen``, which reads past the field when it holds no NUL.
+        # The extent turns that into a counted conversion.
+        array_extent = self.char_constantarray_extent()
 
         return template.substitute(
             record_cname=record_cname,
@@ -483,6 +498,9 @@ class Field(tree.Field, CythonMixin, Typed):
             is_basic_type_constantarray=self.is_basic_type_constantarray(
                 rank=1
             ),
+            is_char_constantarray=array_extent is not None,
+            array_extent=array_extent,
+            is_text_char_array=self.is_text_char_array,
             is_record=self.is_record,
             is_enum=self.is_enum,
             is_enum_constantarray=self.is_enum_constantarray,
@@ -523,8 +541,12 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         raise RuntimeError("cannot be instantiated")
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
@@ -626,7 +648,9 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
 
-    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
+    def render_python_interface_impl(
+        self, cprefix: str, *, module_opts: dict
+    ) -> str:
         """Render the implementation part for the Python interface.
 
         Note:
@@ -710,8 +734,12 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
         CythonMixin.__init__(self)
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
@@ -916,7 +944,9 @@ class Typedef(tree.Typedef, CythonMixin, Typed):
             degree=(0, -1)
         ) or self.is_pointer_to_enum(degree=(0, -1))
 
-    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
+    def render_python_interface_impl(
+        self, cprefix: str, *, module_opts: dict
+    ) -> str:
 
         name = self.cython_global_name
         if self.emits_python_alias():
@@ -973,7 +1003,9 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
             util_types_prefix=self.util_types_prefix,
         )
 
-    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
+    def render_python_interface_impl(
+        self, cprefix: str, *, module_opts: dict
+    ) -> str:
         global indent
         name = self.cython_global_name
         template = tempita.Template(
@@ -997,8 +1029,12 @@ class ConstantArray(tree.ConstantArray, CythonMixin):
 class FunctionPointer(CythonMixin):
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         return self._render_pyi_class_stub(cprefix, override_name, base)
 
@@ -1027,7 +1063,9 @@ class FunctionPointer(CythonMixin):
             util_types_prefix=self.util_types_prefix,
         )
 
-    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
+    def render_python_interface_impl(
+        self, cprefix: str, *, module_opts: dict
+    ) -> str:
 
         name = self.cython_global_name
         cname = cprefix + name
@@ -1091,4 +1129,3 @@ class Parm(tree.Parm, CythonMixin, Typed):
             return f"{parts[0]}{name}){parts[1]}"
         else:
             return f"{typename} {name}"
-

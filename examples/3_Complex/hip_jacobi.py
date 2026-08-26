@@ -72,7 +72,7 @@ class GpuOffload:
 
     def _get_arch(self) -> str:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        return props.gcnArchName.decode("utf-8")
+        return props.gcnArchName
 
     def compile_kernels(self):
         prog = hip_check(

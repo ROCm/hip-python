@@ -721,6 +721,44 @@ class Typed:
         )
         return result and (rank == dims or (rank < 0 and -dims <= rank))
 
+    def char_constantarray_extent(self):
+        """The declared extent of a rank-1 constant array of chars.
+
+        Returns:
+            int|None:
+                The number of elements, or None if this is not a
+                one-dimensional constant array with a char element type.
+
+        Note:
+            Backends must bound the read of such a field at this extent.
+            A ``char[N]`` decays to ``char*`` in most languages, so a
+            terminator-based conversion reads past the field whenever the
+            data fills the array without a NUL.
+
+        Note:
+            All char flavours count, signed and unsigned alike: the C type
+            says nothing about whether the payload is text or opaque bytes,
+            and both need the same bound.
+        """
+        from clang.cindex import TypeKind
+
+        (result, dims) = self.typehandler.is_constantarray_of_kind_or_category(
+            type_kind=(
+                TypeKind.CHAR_S,
+                TypeKind.CHAR_U,
+                TypeKind.SCHAR,
+                TypeKind.UCHAR,
+            )
+        )
+        if not result or dims != 1:
+            return None
+        for layer_type in self.typehandler.walk_clang_type_layers(
+            postorder=True, canonical=True
+        ):
+            if layer_type.kind == TypeKind.CONSTANTARRAY:
+                return layer_type.get_array_size()
+        return None
+
     @property
     def is_char_incompletearray(self):
         """If this is an incomplete array of chars."""

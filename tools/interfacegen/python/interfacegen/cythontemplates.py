@@ -356,6 +356,39 @@ def {{attr}}(self):
 @{{attr}}.setter
 def {{attr}}(self, object value):
     self.set_{{attr}}(0,value)
+{{elif is_char_constantarray}}
+def get_{{attr}}(self, i):
+{{if is_text_char_array}}
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+
+    Returns the text in the field, a buffer of {{array_extent}} bytes:
+    everything up to the first NUL, or all of it if there is none. Decoded
+    as UTF-8, with undecodable bytes replaced rather than raising.
+    \"""
+    return {{util_types_prefix}}to_str_n(&{{element_ptr}}[i].{{attr}}[0], {{array_extent}})
+{{else}}
+    \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.
+
+    Returns all {{array_extent}} bytes of the field, its declared extent.
+    The read is counted, so it stays inside the field even when the data
+    carries no NUL terminator; a terminator, and anything behind it, is
+    part of the value.
+    \"""
+    return <bytes>({{element_ptr}}[i].{{attr}}[:{{array_extent}}])
+{{endif}}
+# TODO add setters
+#def set_{{attr}}(self, i, {{typename}} value):
+#    \"""Set value ``{{attr}}`` of ``{{element_ptr}}[i]``.
+#    \"""
+#    {{element_ptr}}[i].{{attr}} = value
+@property
+def {{attr}}(self):
+    \"""{{brief_comment}}\"""
+    return self.get_{{attr}}(0)
+# TODO add setters
+#@{{attr}}.setter
+#def {{attr}}(self, {{typename}} value):
+#    self.set_{{attr}}(0,value)
 {{elif is_basic_type_constantarray}}
 def get_{{attr}}(self, i):
     \"""Get value of ``{{attr}}`` of ``{{element_ptr}}[i]``.

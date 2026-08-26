@@ -31,7 +31,7 @@ from rocm.version import ROCM_VERSION, ROCM_VERSION_TUPLE
 device_printf_works = ROCM_VERSION_TUPLE[0:2] != (5, 5)
 
 _, props = hiprt.hipGetDeviceProperties(0)
-gpugen = props.gcnArchName.decode("utf-8").split(":")[0]
+gpugen = props.gcnArchName.split(":")[0]
 have_compatible_gpu_target = gpugen == "gfx90a"
 have_rccl_support = gpugen not in ("gfx1151",)
 

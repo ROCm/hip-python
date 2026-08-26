@@ -90,6 +90,110 @@ def _make_status_node_init(prefix, status_type: str, success_const: str):
     return _init
 
 
+def _chain_node_init(*inits):
+    """Run several ``node_init`` callbacks over every node, in order.
+
+    A module gets one ``node_init``, so a generator that already overrides
+    function modifiers cannot also flag fields without composing the two.
+    """
+
+    def _init(node):
+        for init in inits:
+            init(node)
+
+    return _init
+
+
+# AMD SMI's fixed-size char fields that hold text, and so are returned as
+# ``str`` trimmed at the first NUL rather than as the full extent in bytes.
+# Nearly every one of them is a `[256]` name, version or identifier string.
+#
+# What is deliberately absent: `amdsmi_cper_guid_t.b`, an `unsigned char[16]`
+# raw GUID, and the four `amdsmi_cper_hdr_t` identifiers. `signature[4]` holds
+# "CPER" with no room for a terminator, and `record_id`, `platform_id` and
+# `creator_id` are binary, so all five stay bytes.
+_AMDSMI_TEXT_CHAR_ARRAYS = frozenset(
+    {
+        ("amdsmi_asic_info_t", "asic_serial"),
+        ("amdsmi_asic_info_t", "market_name"),
+        ("amdsmi_asic_info_t", "vendor_name"),
+        ("amdsmi_board_info_t", "fru_id"),
+        ("amdsmi_board_info_t", "manufacturer_name"),
+        ("amdsmi_board_info_t", "model_number"),
+        ("amdsmi_board_info_t", "product_name"),
+        ("amdsmi_board_info_t", "product_serial"),
+        ("amdsmi_cpu_info_t", "asic_serial"),
+        ("amdsmi_cpu_info_t", "model_name"),
+        ("amdsmi_cpu_info_t", "vendor_name"),
+        ("amdsmi_dpm_policy_entry_t", "policy_description"),
+        ("amdsmi_driver_info_t", "driver_date"),
+        ("amdsmi_driver_info_t", "driver_name"),
+        ("amdsmi_driver_info_t", "driver_version"),
+        # The UUID as text, a [256] buffer, not the 16 raw bytes.
+        ("amdsmi_enumeration_info_t", "hip_uuid"),
+        ("amdsmi_evt_notification_data_t", "message"),
+        ("amdsmi_fabric_label_t", "text"),
+        ("amdsmi_name_value_t", "name"),
+        ("amdsmi_nic_asic_info_t", "part_number"),
+        ("amdsmi_nic_asic_info_t", "permanent_address"),
+        ("amdsmi_nic_asic_info_t", "product_name"),
+        ("amdsmi_nic_asic_info_t", "serial_number"),
+        ("amdsmi_nic_asic_info_t", "vendor_name"),
+        ("amdsmi_nic_bus_info_t", "pcie_interface_version"),
+        ("amdsmi_nic_bus_info_t", "slot_type"),
+        ("amdsmi_nic_driver_info_t", "name"),
+        ("amdsmi_nic_driver_info_t", "version"),
+        ("amdsmi_nic_fw_t", "name"),
+        ("amdsmi_nic_fw_t", "version"),
+        ("amdsmi_nic_numa_info_t", "affinity"),
+        ("amdsmi_nic_port_t", "autoneg"),
+        ("amdsmi_nic_port_t", "flavour"),
+        ("amdsmi_nic_port_t", "link_state"),
+        ("amdsmi_nic_port_t", "mac_address"),
+        ("amdsmi_nic_port_t", "netdev"),
+        ("amdsmi_nic_port_t", "pause_autoneg"),
+        ("amdsmi_nic_port_t", "pause_rx"),
+        ("amdsmi_nic_port_t", "pause_tx"),
+        ("amdsmi_nic_port_t", "type"),
+        ("amdsmi_nic_rdma_dev_info_t", "fw_ver"),
+        ("amdsmi_nic_rdma_dev_info_t", "node_guid"),
+        ("amdsmi_nic_rdma_dev_info_t", "node_type"),
+        ("amdsmi_nic_rdma_dev_info_t", "rdma_dev"),
+        ("amdsmi_nic_rdma_dev_info_t", "sys_image_guid"),
+        ("amdsmi_nic_rdma_port_info_t", "netdev"),
+        ("amdsmi_nic_rdma_port_info_t", "state"),
+        ("amdsmi_nic_stat_t", "name"),
+        ("amdsmi_proc_info_by_pid_t", "container_name"),
+        ("amdsmi_proc_info_by_pid_t", "name"),
+        ("amdsmi_proc_info_t", "container_name"),
+        ("amdsmi_proc_info_t", "name"),
+        ("amdsmi_uma_carveout_option_t", "description"),
+        ("amdsmi_vbios_info_t", "boot_firmware"),
+        ("amdsmi_vbios_info_t", "build_date"),
+        ("amdsmi_vbios_info_t", "name"),
+        ("amdsmi_vbios_info_t", "part_number"),
+        ("amdsmi_vbios_info_t", "version"),
+        ("amdsmi_vram_info_t", "vram_vendor"),
+    }
+)
+
+
+def _make_text_char_array_node_init(text_fields):
+    """Per-Field override: mark the fixed-size char fields that hold text.
+
+    ``text_fields`` holds ``(record, field)`` pairs under the names the C
+    header uses. Everything not listed keeps the counted ``bytes``, so a
+    field added by a version bump cannot arrive silently decoded.
+    """
+
+    def _init(node):
+        if isinstance(node, interfacegen.tree.Field):
+            if (node.parent.name, node.name) in text_fields:
+                node.is_text_char_array = True
+
+    return _init
+
+
 def generate_rccl(
     *,
     include_dir: str,
@@ -541,8 +645,11 @@ def generate_amdsmi(
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? AMDSMI_STATUS_INTERNAL_EXCEPTION nogil",
         error_return_value_lazy_loader="AMDSMI_STATUS_INTERNAL_EXCEPTION",
-        node_init=_make_status_node_init(
-            "amdsmi", "amdsmi_status_t", "AMDSMI_STATUS_SUCCESS"
+        node_init=_chain_node_init(
+            _make_status_node_init(
+                "amdsmi", "amdsmi_status_t", "AMDSMI_STATUS_SUCCESS"
+            ),
+            _make_text_char_array_node_init(_AMDSMI_TEXT_CHAR_ARRAYS),
         ),
         node_filter=controls.amdsmi.node_filter,
         macro_type=controls.amdsmi.macro_type,

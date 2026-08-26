@@ -73,7 +73,7 @@ class Device:
         """
         err, handle = hip.hipDeviceGetUuid(self._id)
         _check(err)
-        raw = bytes(handle.get_bytes(0))[:16]
+        raw = handle.get_bytes(0)
         stripped = raw.rstrip(b"\x00")
         try:
             text = stripped.decode("ascii")

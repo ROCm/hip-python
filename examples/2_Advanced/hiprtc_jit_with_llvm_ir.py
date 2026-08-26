@@ -167,7 +167,7 @@ if __name__ in ("__test__", "__main__"):
     # )
 
     props = hip_check(hip.hipGetDeviceProperties(0))
-    arch = props.gcnArchName.decode("utf-8")
+    arch = props.gcnArchName
     gpugen = arch.split(":")[0]
     if gpugen not in kernel_llvm_ir:
         supported_gpugens = ", ".join(

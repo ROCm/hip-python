@@ -283,7 +283,7 @@ amdhsa.version:
     _, count = hip.hipGetDeviceCount()
     if count > 0:
         props = hip_check(hip.hipGetDeviceProperties(0))
-        if arch == props.gcnArchName.decode().split(":")[0]:
+        if arch == props.gcnArchName.split(":")[0]:
             module = hip_check(hip.hipModuleLoadData(kernel_prog.code_obj))
             kernel = hip_check(
                 hip.hipModuleGetFunction(module, "_Z6squarePfi")

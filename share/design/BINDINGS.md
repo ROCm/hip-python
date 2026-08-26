@@ -129,6 +129,45 @@ _always_return_tuple": False}` in `generators_compiler.py`'s
 convention, so its wrappers return bare values, matching upstream.
 
 
+## Fixed-size char fields — a counted read, `bytes` or `str`
+
+A record field declared `char name[256]` is not a string pointer, and
+the getter must not treat it as one. Left to Cython, the array decays
+to `char *` and the conversion is `__Pyx_PyBytes_FromString`, i.e.
+`strlen`: a field whose data fills the declared extent has no
+terminator to stop at, so the read continues into whatever follows the
+field. `hipUUID_t.bytes`, 16 raw bytes, returned 17 or more of them
+depending on the neighbouring memory.
+
+Every such getter therefore slices at the declared extent, which
+Cython compiles to `__Pyx_PyBytes_FromStringAndSize` and never calls
+`strlen`:
+
+```cython
+    def get_bytes(self, i):
+        return <bytes>((<cyhip.hipUUID_t*>self._ptr)[i].bytes[:16])
+```
+
+Fields that hold text get a `str` instead, trimmed at the first NUL
+within the extent by `rocm.bindings.util.types.to_str_n` (a `memchr`
+for the stop, then Cython's slice-decode; invalid bytes are replaced
+rather than raising out of a property getter):
+
+```cython
+    def get_gcnArchName(self, i):
+        return rocm.bindings.util.types.to_str_n(
+            &(<cyhip.hipDeviceProp_t*>self._ptr)[i].gcnArchName[0], 256)
+```
+
+Which fields those are is a per-library decision, so it lives in the
+generators (`_TEXT_CHAR_ARRAYS` in `generators_hip.py`,
+`_AMDSMI_TEXT_CHAR_ARRAYS` in `generators_systems.py`) and reaches the
+emitter as the `is_text_char_array` flag on the field. The flag
+defaults to `False`, so a field that a ROCm version bump adds arrives
+as counted `bytes` until someone decides it is text — GUIDs, padding
+and opaque handles stay `bytes` by construction.
+
+
 ## GIL semantics — what runs where
 
 The high-level wrapper alternates between GIL-held and

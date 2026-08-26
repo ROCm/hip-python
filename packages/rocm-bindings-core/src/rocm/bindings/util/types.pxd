@@ -22,6 +22,31 @@
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
+from libc.string cimport memchr
+
+
+cdef inline str to_str_n(const char* p, Py_ssize_t n):
+    """Text up to the first NUL within ``n`` bytes, or all ``n`` bytes.
+
+    For the fixed-size char fields of the ROCm structs, where the extent is
+    the size of the buffer and says nothing about the length of the string in
+    it. A vendor may or may not terminate the text, so both cases have to
+    read the same, and neither may read beyond the field: ``memchr`` bounds
+    the search the way ``strlen`` does not.
+
+    Undecodable bytes become U+FFFD. Strict decoding would let a malformed
+    vendor field raise ``UnicodeDecodeError`` out of a property getter, which
+    is worse than a replacement character in a name or a version string.
+
+    Note:
+        The slice bound reaches Cython's own slice-decode path, which calls
+        the UTF-8 codec directly with an explicit stop and so needs no
+        intermediate ``bytes``.
+    """
+    cdef const char* nul = <const char*>memchr(p, 0, n)
+    return p[:(n if nul == NULL else nul - p)].decode("utf-8", "replace")
+
+
 cdef class Pointer:
     cdef void* _ptr
     cdef Py_buffer _py_buffer

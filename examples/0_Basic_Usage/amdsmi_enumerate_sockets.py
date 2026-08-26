@@ -130,10 +130,7 @@ try:
 
     for index, processor_handle in enumerate(gpus):
         asic = amdsmi_check(amdsmi.amdsmi_get_gpu_asic_info(processor_handle))
-        name = asic.market_name
-        if isinstance(name, bytes):
-            name = name.split(b"\x00", 1)[0].decode("utf-8", "replace")
-        print(f"  GPU {index}: {name}")
+        print(f"  GPU {index}: {asic.market_name}")
 finally:
     amdsmi_check(amdsmi.amdsmi_shut_down())
 print("ok")

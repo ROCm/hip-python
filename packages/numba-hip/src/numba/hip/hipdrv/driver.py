@@ -613,7 +613,7 @@ class Device(object):
         props = driver.cudaGetDeviceProperties(
             0
         )  # Driver's function wrapper will check for errors
-        amdgpu_arch_plus_features = props.gcnArchName.decode("utf-8")
+        amdgpu_arch_plus_features = props.gcnArchName
         if hipconfig.DEFAULT_ARCH_WITH_FEATURES:
             self.amdgpu_arch = amdgpu_arch_plus_features
         else:
