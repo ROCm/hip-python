@@ -20,8 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 import re
 
+import clang.cindex
 import pyparsing as pyp
 from interfacegen.cparser import TypeHandler
 from interfacegen.support.recipes import generic
@@ -2421,6 +2423,150 @@ class llvm_c:
             return header_relpath in node.render_location()
 
         return _filter
+
+    #: Basenames of the `llvm-c` headers whose functions release the GIL
+    #: around the C call (see `nogil_node_init`).
+    #:
+    #: These hold the calls that run long enough for other threads to
+    #: profit: code generation, optimization pipelines, module linking,
+    #: bitcode/IR parsing and serialization, verification, and the
+    #: MCJIT/LLJIT entry points that compile on demand (a
+    #: `LLVMGetFunctionAddress` lookup materializes everything reachable
+    #: from the symbol). The remaining headers -- `Core.h`,
+    #: `DebugInfo.h`, `Orc.h`, `Object.h`, `Support.h`, `Remarks.h`, ...
+    #: -- are IR builders and getters where the GIL round trip would
+    #: cost more than the call itself.
+    nogil_headers = (
+        "Analysis.h",
+        "BitReader.h",
+        "BitWriter.h",
+        "ExecutionEngine.h",
+        "IRReader.h",
+        "LLJIT.h",
+        "Linker.h",
+        "PassBuilder.h",
+        "TargetMachine.h",
+        "lto.h",
+    )
+
+    @staticmethod
+    def is_nogil_header(header_relpath: str) -> bool:
+        """Whether `header_relpath` (e.g. `llvm-c/Transforms/PassBuilder.h`)
+        is one of :py:attr:`nogil_headers`."""
+        return os.path.basename(header_relpath) in llvm_c.nogil_headers
+
+    @staticmethod
+    def _enum_sentinel(node: Function):
+        """Returns the `except?` sentinel for an enum-returning function,
+        or `None` if the enum leaves no value out of band.
+
+        The sentinel is -1 cast to the enum type. Cython rejects a bare
+        `-1` against an enum return ("Exception value incompatible with
+        function return type"), hence the cast, and -1 is out of band for
+        every enum in these headers: not one of the 43 named `llvm-c`
+        enums declares a negative enumerator, and the 21 that functions
+        return sit in ranges like `LLVMIntPredicate` 32..41 and
+        `lto_symbol_attributes` 31..32768.
+
+        Naming a constant the C API itself defines as out-of-band would
+        read better, but `llvm-c` has none. The spellings that look the
+        part are all values their getter returns in normal operation:
+        `LLVMDSError` is a diagnostic *severity*,
+        `LLVMModuleFlagBehaviorError` a module-flag behaviour, and
+        `LLVMCodeGenLevelNone` / `LLVMTailCallKindNone` /
+        `LTO_DEBUG_MODEL_NONE` ordinary settings. Using one of those
+        would stay correct -- `except?` re-checks `PyErr_Occurred` -- but
+        would put a GIL-taking check on the common return path.
+
+        A future header that does declare -1 gets `None`, which drops the
+        function to `noexcept nogil` rather than silently mistaking a
+        valid return for a failed symbol load.
+        """
+        enum_node = node.lookup_innermost_type()
+        cursor = getattr(enum_node, "cursor", None)
+        if cursor is not None:
+            for child in cursor.get_children():
+                if (
+                    child.kind == clang.cindex.CursorKind.ENUM_CONSTANT_DECL
+                    and child.enum_value == -1
+                ):
+                    return None
+        return f"<{node.cython_global_typename}>-1"
+
+    @staticmethod
+    def _nogil_modifiers(node: Function):
+        """Returns the `(modifiers, error_return_value)` pair that makes
+        `node`'s lazy-loader shim `nogil`-callable.
+
+        A shim raises when the symbol cannot be resolved -- libLLVM is
+        optional at runtime, and the LLVM chapter of the user guide
+        documents that first-call failure as the way a missing library
+        surfaces. Keeping that behaviour under `nogil` needs an exception
+        sentinel the caller can test without holding the GIL, chosen from
+        the return type:
+
+        * pointers get `NULL`,
+        * integral and boolean returns get `-1` (Cython's `bint` is a C
+          `int`, so -1 survives the return),
+        * enums get -1 cast to the enum type (see
+          :py:meth:`_enum_sentinel`).
+
+        `void` returns, by-value records and floating-point returns have
+        no free sentinel. The alternative there, `except *`, forces the
+        caller to take the GIL after *every* call just to poll
+        `PyErr_Occurred`, so those fall back to `noexcept nogil` as the
+        hip and comgr recipes do. Cython still aborts such a shim at the
+        raising `__init_symbol` -- the call through the NULL function
+        pointer is not reached -- but reports the failure as an unraisable
+        exception instead of propagating it.
+        """
+        if node.is_any_pointer:
+            return " except? NULL nogil", "NULL"
+        if node.is_enum:
+            sentinel = llvm_c._enum_sentinel(node)
+            if sentinel is not None:
+                return f" except? {sentinel} nogil", sentinel
+        if node.is_basic_type:
+            kind = next(
+                node.typehandler.clang_type_layer_kinds(canonical=True)
+            )
+            if not TypeHandler.match_float_type(kind):
+                return " except? -1 nogil", "-1"
+        return " noexcept nogil", None
+
+    @staticmethod
+    def nogil_node_init(header_relpath: str):
+        """Returns a node_init closure that opts `header_relpath`'s
+        functions into the with-nogil emitter.
+
+        The emitter is selected by the presence of `nogil` in a function's
+        `modifiers_lazy_loader` (see `interfacegen.cython._function`), so
+        marking the declaration is all it takes to move the C call into a
+        `with nogil:` block; argument conversion and return-value wrapping
+        stay under the GIL either way.
+
+        Functions taking a callback are left alone. Registering one is
+        cheap, so there is nothing to gain, and the parameter is the only
+        route by which LLVM could re-enter the caller's code mid-call.
+        (Handlers registered elsewhere -- a diagnostic handler firing
+        during a parse, say -- are unaffected: the bindings only accept
+        raw C function pointers, and a `ctypes` callback reacquires the
+        GIL itself.)
+        """
+        in_scope = llvm_c.location_filter(header_relpath)
+
+        def _node_init(node: Node):
+            if not isinstance(node, Function):
+                return
+            if not in_scope(node):
+                return
+            if node._has_funptr_parm:
+                return
+            modifiers, error_return_value = llvm_c._nogil_modifiers(node)
+            node.modifiers_lazy_loader = modifiers
+            node.error_return_value_lazy_loader = error_return_value
+
+        return _node_init
 
 
 class llvm_config:

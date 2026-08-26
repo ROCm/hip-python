@@ -81,7 +81,9 @@ def generate_amd_comgr(
         error_return_value_lazy_loader="AMD_COMGR_STATUS_ERROR",
         cflags=generator_args,
     )
-    generator.python_interface_decl_prolog += "cimport rocm.bindings.util.types\n"
+    generator.python_interface_decl_prolog += (
+        "cimport rocm.bindings.util.types\n"
+    )
     return generator
 
 
@@ -93,23 +95,25 @@ def _make_llvm_ptr_handler(default_ptr_handler, util_types_prefix):
     to default_ptr_handler for everything else. Mirrors the closure body
     in the legacy generate_llvm.create_generator (lines 117-135).
     """
+
     def _handler(node):
         if controls.llvm_c.is_listofpointer_param(node):
             return f"{util_types_prefix}ListOfPointer"
         if controls.llvm_c.is_ndbuffer_return(node):
             return f"{util_types_prefix}NDBuffer"
         return default_ptr_handler(node)
+
     return _handler
 
 
 def write_llvm_modules(
     *,
-    output_dir: str,                # = .../rocm-bindings-compiler/rocm/bindings
-    include_dir: str,               # = <rocm_path>/llvm/include
+    output_dir: str,  # = .../rocm-bindings-compiler/rocm/bindings
+    include_dir: str,  # = <rocm_path>/llvm/include
     runtime_linking: bool,
     generator_args: list,
     default_ptr_handler,
-    **_ignored,                     # absorbs header_relpath/header_content (always None for llvm)
+    **_ignored,  # absorbs header_relpath/header_content (always None for llvm)
 ):
     """Build every rocm.bindings.llvm.* module and write them to disk.
 
@@ -133,7 +137,9 @@ def write_llvm_modules(
         return False
 
     inctree = it.build_include_tree(
-        include_dir, py_namespace="rocm.bindings", filter=filter,
+        include_dir,
+        py_namespace="rocm.bindings",
+        filter=filter,
     )
     inctree.find_node(name="llvm-c").py_split_at_char("-")
 
@@ -154,7 +160,8 @@ def write_llvm_modules(
             ptr_rank=controls.llvm_c.ptr_rank,
             ptr_parm_intent=controls.llvm_c.ptr_parm_intent,
             ptr_complicated_type_handler=_make_llvm_ptr_handler(
-                default_ptr_handler, util_types_prefix,
+                default_ptr_handler,
+                util_types_prefix,
             ),
             cflags=generator_args,
         )
@@ -166,6 +173,10 @@ def write_llvm_modules(
             kwargs["macro_type"] = controls.llvm_config.macro_type
         else:
             kwargs["node_filter"] = controls.llvm_c.location_filter(relpath)
+            if controls.llvm_c.is_nogil_header(relpath):
+                # Compilation, linking, parsing and JIT materialization
+                # run long enough to hand the GIL to other threads.
+                kwargs["node_init"] = controls.llvm_c.nogil_node_init(relpath)
         gen = CythonModuleGenerator(
             node.py_global_name,
             include_dir,
@@ -175,7 +186,9 @@ def write_llvm_modules(
             dll="libLLVM.so",
             **kwargs,
         )
-        gen.python_interface_decl_prolog += "cimport rocm.bindings.util.types\n"
+        gen.python_interface_decl_prolog += (
+            "cimport rocm.bindings.util.types\n"
+        )
         node.codegen = gen
 
     # Resolve cross-package cimports now that every node has its codegen.
@@ -201,7 +214,7 @@ def write_llvm_modules(
             continue
         sub_path = node.parent.py_global_path
         if sub_path.startswith(_PREFIX_TO_STRIP):
-            sub_path = sub_path[len(_PREFIX_TO_STRIP):]
+            sub_path = sub_path[len(_PREFIX_TO_STRIP) :]
         target = os.path.join(output_dir, sub_path)
         os.makedirs(target, exist_ok=True)
         node.codegen.write_module_files(output_dir=target)

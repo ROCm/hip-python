@@ -1090,6 +1090,52 @@ def test_nogil_any_pointer_retval_wrap_post_block(tmp_path):
     ), f"Pointer.fromPtr must not appear in nogil body:\n{nogil_line}"
 
 
+def test_nogil_const_pointer_retval_holder_keeps_const(tmp_path):
+    """A `const T *` return keeps the qualifier on the cdef holder.
+
+    The const belongs to the pointee, so the local is still assignable
+    inside the block, and declaring it as plain `T *` would make Cython
+    warn that the assignment discards the qualifier. The post-block
+    wraps cast explicitly, which stays legal.
+    """
+    header = """
+    typedef struct opaque_st { int x; } opaque_t;
+    const char* op_const_str(int x);
+    const void* op_const_void(int x);
+    const opaque_t* op_const_rec(int x);
+    """
+    pyx = _emit_nogil_pyx(header, module_name="mod_nc", tmp_path=tmp_path)
+    for name, holder in (
+        ("op_const_str", "cdef const char * _cy_op_const_str__retval"),
+        ("op_const_void", "cdef const void * _cy_op_const_void__retval"),
+        (
+            "op_const_rec",
+            "cdef const cymod_nc.opaque_st * _cy_op_const_rec__retval",
+        ),
+    ):
+        body = _extract_function_body(pyx, name)
+        assert holder in body, (
+            f"const-pointer retval holder must keep the qualifier, "
+            f"expected {holder!r}:\n{body}"
+        )
+        _assert_no_python_in_nogil_call(_nogil_block_body(body))
+
+
+def test_nogil_const_value_retval_holder_drops_const(tmp_path):
+    """A const *value* return drops the qualifier: Cython rejects the
+    assignment into a `cdef const T` local ("Assignment to const").
+    """
+    pyx = _emit_nogil_pyx(
+        "const int op_const_int(int x);",
+        module_name="mod_nci",
+        tmp_path=tmp_path,
+    )
+    body = _extract_function_body(pyx, "op_const_int")
+    assert (
+        "cdef int _cy_op_const_int__retval" in body
+    ), f"const value retval holder must drop the qualifier:\n{body}"
+
+
 def test_nogil_with_gil_mode_hoists_args_and_inlines_retval_wrap(tmp_path):
     """When `modifiers_lazy_loader` does NOT contain ``nogil``, the
     with-gil emitter is selected: no `with nogil:` block and the Python

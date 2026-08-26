@@ -1325,13 +1325,21 @@ cdef void* {funptr_name} = NULL
         # cprefix (skipping primitives like ``int`` / ``void``) so
         # the cdef declaration unambiguously names the C type.
         if not self.is_void:
-            # Use the no-const form: Cython rejects `cdef const T var
-            # = expr` ("Assignment to const") even though that is the
-            # initialization form. The cdef local just receives the
-            # value; const-correctness on the C call boundary is
-            # already enforced by the cy* declaration.
+            # A const *value* return has to lose the qualifier: Cython
+            # rejects the assignment into `cdef const T var` ("Assignment
+            # to const") even though the local only ever receives the
+            # value, and const-correctness on the C call boundary is
+            # already enforced by the cy* declaration. A pointer return
+            # keeps it -- there the const belongs to the pointee, so the
+            # local stays assignable, and dropping it makes Cython warn
+            # that the assignment discards the qualifier.
+            retval_typename = (
+                self.cython_global_typename
+                if self.is_any_pointer
+                else self.cython_global_typename_no_const
+            )
             retval_c_type = Function._add_module_cprefix(
-                self.cython_global_typename_no_const,
+                retval_typename,
                 cprefix,
             )
             lines.append(f"cdef {retval_c_type} {cy_retval}")

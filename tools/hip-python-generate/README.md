@@ -68,9 +68,14 @@ or `--rocm-llvm-project-dir` must be provided.
 > `cimport rocm.bindings.cyhipblaslt` will need to compile their
 > extension as C++ until the upstream header is fixed.
 >
-> **†experimental** — `hipblaslt`, `hipsparselt`, `hiptensor`, and
-> `hipdnn_backend` are newly added and marked experimental for
-> one release cycle. Pointer parameter classification (OUT vs INOUT)
+> **†experimental** — `hipblaslt` and `hipsparselt` are newly added and
+> marked experimental for one release cycle. `hiptensor` and
+> `hipdnn_backend` are generated but compiled into no wheel: they are
+> absent from `HIP_PYTHON_ALL_LIBRARIES` in the
+> `rocm-bindings-libraries` CMakeLists, and `_DOCS_EXCLUDED` in
+> `docs_generator.py` (plus `autoapi_ignore` in `docs_src/conf.py`)
+> keeps them out of the documentation.
+> Pointer parameter classification (OUT vs INOUT)
 > is heuristic and subject to re-tuning based on user feedback;
 > other interface aspects (return values, opaque handles, scalar
 > types) are stable. File issues at the hip-python tracker for any

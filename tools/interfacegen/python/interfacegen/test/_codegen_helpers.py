@@ -44,6 +44,7 @@ def make_generator(
     dll: str = None,
     typedef_aliases: dict = None,
     typedef_specs: dict = None,
+    node_init=None,
 ):
     """Build a CythonModuleGenerator backed by an in-memory header.
 
@@ -57,6 +58,10 @@ def make_generator(
     ``"nogil"``) or the with-gil emitter (anything else, including the
     default empty string). Tests that assert on ``with nogil:`` shape
     must pass ``modifiers_lazy_loader=" noexcept nogil"``.
+
+    ``node_init`` is the per-node hook recipes use to override those
+    modifiers function by function; it runs after the module-wide
+    defaults have been applied.
     """
     kw = dict(
         node_filter=node_filter,
@@ -67,6 +72,8 @@ def make_generator(
     )
     if renamer is not None:
         kw["renamer"] = renamer
+    if node_init is not None:
+        kw["node_init"] = node_init
     if typedef_aliases is not None:
         kw["typedef_aliases"] = typedef_aliases
     if typedef_specs is not None:

@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+### Per-header `nogil` for the LLVM recipe
+
+`llvm_c` in `support/recipes/rocm.py` gained `nogil_headers`,
+`is_nogil_header()` and a `nogil_node_init(header_relpath)` factory.
+The factory marks a header's functions `nogil` in
+`modifiers_lazy_loader` — which is what selects the with-nogil emitter
+— and picks the exception sentinel from the return type: `except? NULL`
+for pointers, `except? -1` for integral and boolean returns, `except?
+<Enum>-1` for enums, and `noexcept` where nothing is left out of band
+(`void`, records by value, floats). Functions taking a callback are
+skipped.
+
+The enum sentinel is a cast rather than a named constant because
+`llvm-c` defines none: of its 43 named enums, not one declares a
+negative enumerator, and the constants that read like an error marker
+(`LLVMDSError`, `LLVMModuleFlagBehaviorError`, `LLVMCodeGenLevelNone`)
+are values their getter returns in normal operation, so naming one
+would put a GIL-taking `PyErr_Occurred` check on the common path. An
+enum that does declare -1 falls back to `noexcept nogil` instead of
+mistaking a valid return for a failed symbol load.
+
+### `nogil` retval holder keeps a pointee's `const`
+
+The with-nogil emitter declared the retval holder with all `const`
+stripped, so a `const char *` return produced `cdef char * _cy_..
+._retval` and Cython warned that the assignment inside the block
+discards the qualifier — 14 warnings in the LLVM bindings once those
+modules started releasing the GIL. The qualifier is now kept for
+pointer returns, where it belongs to the pointee and leaves the local
+assignable; a `const` *value* return still drops it, since Cython
+rejects the assignment into a `cdef const T` local.
+
 ### Retired commit-count versioning
 
 Removed the commit-count machinery from `support/gitversion.py`

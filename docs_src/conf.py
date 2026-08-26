@@ -137,6 +137,12 @@ autoapi_dirs = [
     os.path.join(_PACKAGES_ROOT, "hip-python", "src", "hip"),
 ]
 autoapi_root = "python_api"
+# hiptensor and hipdnn_backend are emitted by codegen but compiled into no
+# wheel, so their stubs must not become API pages. The code generator drops
+# them from the TOC (`_DOCS_EXCLUDED` in docs_generator.py); autoapi walks
+# the source tree instead of the TOC, so it needs its own exclusion or it
+# renders them as orphan pages.
+autoapi_ignore = ["*/hiptensor.pyi", "*/hipdnn_backend.pyi"]
 autoapi_keep_files = True
 autoapi_add_toctree_entry = False  # the per-package _toc.yml manages TOC
 autoapi_member_order = "bysource"
