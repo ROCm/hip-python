@@ -785,8 +785,14 @@ cdef class NDBuffer(Pointer):
             Stores a pointer to the data of the original Python object.
         _py_buffer_acquired (`bool`, protected):
             Stores a pointer to the data of the original Python object.
-        __dict__ (`dict`, protected):
-            Dict with member ``__cuda_array_interface__``.
+        _cuda_array_interface (`dict`, protected):
+            The CUDA array interface metadata, handed out as a copy by
+            `~.NDBuffer.__cuda_array_interface__`.
+        _pybuffer_obj (`object`, protected):
+            Keeps the exporter of a wrapped `Py_buffer` alive.
+        _typestr_bytes (`bytes`, protected):
+            NUL-terminated format string handed to consumers of this
+            Python buffer. Must stay alive as long as any view exists.
         _itemsize (``size_t``, protected):
             Stores the itemsize. The item size is not member of
             ``__cuda_array_interface__``.
@@ -987,28 +993,28 @@ cdef class NDBuffer(Pointer):
         self.__view_count = 0
         self._py_buffer_shape = NULL
         self._itemsize = 1
+        self._pybuffer_obj = None
+        self._typestr_bytes = None
         # NOTE: See: https://docs.scipy.org/doc/numpy-1.13.0/reference/
         #       arrays.interface.html for info on `typestr`.
-        self.__dict__ = dict(
-            __cuda_array_interface__ = dict(
-               shape=(1,),  # by default assume a single byte
-               typestr="B",
-               data=(None, False),  # 1: data pointer as int (long int), 2: read-only
-               strides=None,
-               offset=0,
-               mask=None,
-               version=3,
-               # numba
-               stream=None,
-            )
+        self._cuda_array_interface = dict(
+            shape=(1,),  # by default assume a single byte
+            typestr="B",
+            data=(None, False),  # 1: data pointer as int (long int), 2: read-only
+            strides=None,
+            offset=0,
+            mask=None,
+            version=3,
+            # numba
+            stream=None,
         )
 
     cdef _set_ptr(self, void* ptr):
         """Set `self._ptr` C member and 'data' field of CUDA array interface
         """
-        cdef tuple old_data = self.__dict__["__cuda_array_interface__"]["data"]
+        cdef tuple old_data = self._cuda_array_interface["data"]
         self._ptr = ptr
-        self.__dict__["__cuda_array_interface__"]["data"] = (
+        self._cuda_array_interface["data"] = (
             cpython.long.PyLong_FromVoidPtr(ptr), old_data[1]
         )
 
@@ -1026,7 +1032,7 @@ cdef class NDBuffer(Pointer):
             set_bounds
         """
         cdef size_t rank = 0
-        for r in self.__dict__["__cuda_array_interface__"]["shape"]:
+        for r in self._cuda_array_interface["shape"]:
             if r > 1:
                 rank += 1
         return rank
@@ -1092,7 +1098,7 @@ cdef class NDBuffer(Pointer):
                 raise KeyError(f"allowed keyword arguments are: {allowed_keys_str}")
 
         force_new_shape = kwargs.get("_force", False)
-        shape = old_shape = self.__dict__["__cuda_array_interface__"]["shape"]
+        shape = old_shape = self._cuda_array_interface["shape"]
         if "shape" in kwargs:
             shape = kwargs["shape"]
             if not len(shape):
@@ -1100,10 +1106,10 @@ cdef class NDBuffer(Pointer):
             for i in shape:
                 if not isinstance(i, int):
                     raise TypeError("'shape': entries must be int")
-            # self.__dict__["__cuda_array_interface__"]["shape"] = shape
+            # self._cuda_array_interface["shape"] = shape
         if "typestr" in kwargs:
             typestr = kwargs["typestr"]
-            self.__dict__["__cuda_array_interface__"]["typestr"] = typestr
+            self._cuda_array_interface["typestr"] = typestr
             itemsize = self._numpy_typestr_to_bytes(typestr)
             if itemsize < 0:
                 if typestr not in self.NUMPY_CHAR_CODES:
@@ -1132,16 +1138,15 @@ cdef class NDBuffer(Pointer):
                                       +"cuda_array_interface.html")
                 elif stream < 0:
                     return ValueError("'stream': expected positive integer")
-                self.__dict__["__cuda_array_interface__"]["stream"] = stream
+                self._cuda_array_interface["stream"] = stream
             else:
-                self.__dict__["__cuda_array_interface__"]["stream"] =\
-                    int(Pointer.fromPyobj(stream))
+                self._cuda_array_interface["stream"] = int(Pointer.fromPyobj(stream))
         if "read_only" in kwargs:
             read_only = kwargs["read_only"]
             if not isinstance(read_only, bool):
                 raise ValueError("'read_only:' expected bool")
-            old_data = self.__dict__["__cuda_array_interface__"]["data"]
-            self.__dict__["__cuda_array_interface__"]["data"] = (old_data[0], read_only)
+            old_data = self._cuda_array_interface["data"]
+            self._cuda_array_interface["data"] = (old_data[0], read_only)
 
         if itemsize > 0 or shape != old_shape:
             old_num_bytes = self._itemsize * math.prod(old_shape)
@@ -1150,7 +1155,7 @@ cdef class NDBuffer(Pointer):
             new_num_bytes = itemsize * math.prod(shape)
             if old_num_bytes == new_num_bytes or force_new_shape:
                 self._itemsize = itemsize
-                self.__dict__["__cuda_array_interface__"]["shape"] = shape
+                self._cuda_array_interface["shape"] = shape
             else:
                 raise ValueError("new shape would change buffer size information:"
                                  + " {old_num_bytes} B -> {new_num_bytes} B."
@@ -1205,7 +1210,7 @@ cdef class NDBuffer(Pointer):
                 shape=tuple(shape),
                 read_only=read_only,
             )
-            self.__dict__["__pybuffer_obj"] = self._py_buffer.obj
+            self._pybuffer_obj = self._py_buffer.obj
         elif cuda_array_interface is not None:
             if "data" not in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__'"
@@ -1329,7 +1334,7 @@ cdef class NDBuffer(Pointer):
         cdef size_t stride = 1
         cdef size_t offset = 0
         cdef bint next_slice_yields_contiguous = True
-        cdef tuple shape = self.__dict__["__cuda_array_interface__"]["shape"]
+        cdef tuple shape = self._cuda_array_interface["shape"]
         cdef size_t len_shape = len(shape)
         cdef list result_shape = list()  # elements will be appended
         cdef list expanded_subscript = list()
@@ -1387,13 +1392,6 @@ cdef class NDBuffer(Pointer):
             stream=self.stream_as_int,
         )
 
-    def __getattribute__(self, key):
-        """Synchronize interface data whenever it is accessed.
-        """
-        if key == "__cuda_array_interface__":
-            self._set_ptr(self._ptr)
-        return super().__getattribute__(key)
-
     def __getbuffer__(self, Py_buffer *buffer, int flags):
         """Buffer protocol routine for acquiring a view on this NDBuffer's data.
 
@@ -1418,9 +1416,9 @@ cdef class NDBuffer(Pointer):
             self._py_buffer_shape[i] = cpython.long.PyLong_AsSsize_t(shape[i])
 
         buffer.buf = <char *>(self._ptr)
-        self.__dict__["__typestr_bytes"] = self.typestr.encode(
-            "utf-8")+b"\x00"  # NUL-terminated, reference must stay alive
-        buffer.format = cpython.bytes.PyBytes_AsString(self.__dict__["__typestr_bytes"])
+        # NUL-terminated, reference must stay alive
+        self._typestr_bytes = self.typestr.encode("utf-8") + b"\x00"
+        buffer.format = cpython.bytes.PyBytes_AsString(self._typestr_bytes)
         buffer.internal = NULL  # for storing context for dealloc
         buffer.itemsize = self._itemsize
         buffer.ndim = ndim
@@ -1444,19 +1442,19 @@ cdef class NDBuffer(Pointer):
     def typestr(self):
         """The type string (see CUDA array interface specification).
         """
-        return self.__dict__["__cuda_array_interface__"]["typestr"]
+        return self._cuda_array_interface["typestr"]
 
     @property
     def shape(self):
         """A tuple of int (or long) representing the size of each dimension.
         """
-        return self.__dict__["__cuda_array_interface__"]["shape"]
+        return self._cuda_array_interface["shape"]
 
     @property
     def size(self):
         """Product of the `~.shape` entries.
         """
-        return math.prod(self.__dict__["__cuda_array_interface__"]["shape"])
+        return math.prod(self._cuda_array_interface["shape"])
 
     @property
     def itemsize(self):
@@ -1468,13 +1466,30 @@ cdef class NDBuffer(Pointer):
     def is_read_only(self):
         """If the data is read only, i.e. must not be modified.
         """
-        return self.__dict__["__cuda_array_interface__"]["data"][1]
+        return self._cuda_array_interface["data"][1]
 
     @property
     def stream_as_int(self):
         """Returns the stream address as integer value.
         """
-        return self.__dict__["__cuda_array_interface__"]["stream"]
+        return self._cuda_array_interface["stream"]
+
+    @property
+    def __cuda_array_interface__(self):
+        """This buffer's CUDA array interface, as a `dict`.
+
+        See:
+            https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html
+
+        Note:
+            The result is a shallow copy, so a consumer may add or overwrite
+            entries -- as `numba` does with 'strides' -- without disturbing
+            this buffer. Use `~.NDBuffer.configure` to change the buffer
+            itself. Every value is immutable, hence the shallow copy
+            isolates the caller completely.
+        """
+        self._set_ptr(self._ptr)  # the 'data' entry must be current
+        return dict(self._cuda_array_interface)
 
     def __init__(self, object pyobj):
         """Constructor.
@@ -1554,8 +1569,14 @@ cdef class DeviceArray(NDBuffer):
             Stores a pointer to the data of the original Python object.
         _itemsize (``size_t``, protected):
             Stores the itemsize.
-        __dict__ (`dict`, protected):
-            Dict with member ``__cuda_array_interface__``.
+        _cuda_array_interface (`dict`, protected):
+            The CUDA array interface metadata, handed out as a copy by
+            `~.NDBuffer.__cuda_array_interface__`.
+        _pybuffer_obj (`object`, protected):
+            Keeps the exporter of a wrapped `Py_buffer` alive.
+        _typestr_bytes (`bytes`, protected):
+            NUL-terminated format string handed to consumers of this
+            Python buffer. Must stay alive as long as any view exists.
     """  # no-cython-lint
     # C members declared in declaration part ``types.pxd``
 

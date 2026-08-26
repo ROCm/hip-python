@@ -876,6 +876,28 @@ bindings whose `*const *` arguments are NULL locals, which segfault
 in the backend on first dereference — and any *handcoded* Cython
 using the same `cdef T x = <T>expr` shape fails the same way.
 
+### No `__dict__` on an extension type (Cython 3.3.0)
+
+There is no upper bound, but 3.3.0 does remove one pattern. It
+merged [cython#7823](https://github.com/cython/cython/pull/7823),
+which rejects any access to the special attribute `__dict__` on a
+`cdef class` with `Illegal use of special attribute __dict__`.
+
+`NDBuffer` in `rocm.bindings.util.types` used to declare
+`cdef dict __dict__` and keep three unrelated things in it: its CUDA
+array interface, a keep-alive reference for a wrapped buffer's
+exporter, and the NUL-terminated format string handed to
+`Py_buffer` consumers. Those are now three typed `cdef` members, and
+`__cuda_array_interface__` is a property that returns a copy of the
+interface dict. Consumers are unaffected — `numba` and CuPy both
+produce the protocol from a property and read it through `hasattr`
+and `getattr`, which resolve identically.
+
+So the floor stays at 3.1.0: a property plus typed members compiles
+on every 3.x. If you write new handcoded Cython, use a named `cdef`
+member rather than an instance dict, or the build breaks on 3.3.0
+and later.
+
 ## Regenerating stubs for handcoded Cython modules
 
 A handful of handcoded Cython modules ship in `rocm-bindings-core`

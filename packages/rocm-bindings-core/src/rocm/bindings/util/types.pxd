@@ -90,7 +90,9 @@ cdef class CStr(Pointer):
 
 cdef class NDBuffer(Pointer):
     cdef size_t _itemsize  # itemsize is not part of the CUDA array interface
-    cdef dict __dict__
+    cdef dict _cuda_array_interface
+    cdef object _pybuffer_obj  # keeps a wrapped exporter alive
+    cdef bytes _typestr_bytes  # NUL-terminated, outlives the Py_buffer
     cdef Py_ssize_t* _py_buffer_shape  # shape info for this Python buffer
     cdef int __view_count  # For counting the current number of views
 

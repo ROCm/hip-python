@@ -201,6 +201,14 @@ documented for the first time.
   (`LLVMFunctionType`, `LLVMGetParamTypes`, `LLVMGetParams`,
   `LLVMRunFunction`): the argument buffer was freed before the call ran,
   so the callee read or wrote memory the allocator had already reused.
+- **`NDBuffer` instances no longer carry a Python instance dict**, so
+  `vars(buf)` and assigning an arbitrary attribute now raise. Reading
+  `buf.__cuda_array_interface__` is unchanged, including through
+  `hasattr` and `getattr`, which is how `numba` and CuPy consume it.
+- **The dict `NDBuffer.__cuda_array_interface__` returns is a copy.**
+  Adding or overwriting an entry — as `numba` does with `'strides'` —
+  no longer alters the buffer it came from. Use
+  `NDBuffer.configure` to change the buffer itself.
 
 #### Codegen
 
