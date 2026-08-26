@@ -469,6 +469,57 @@ int main(void) { return 0; }
   set(${out_var} ${_available} PARENT_SCOPE)
 endfunction()
 
+# Narrow a list of modules down to the ones the codegen emitted sources for.
+#
+# A no-op unless the codegen was allowed to leave a library out: either
+# HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS is on, which lets it skip a library
+# whose header the ROCm at hand never shipped, or HIP_PYTHON_CODEGEN_SKIP_LIBRARIES
+# names one. Either skip has to carry through here: `hip_python_add_cython_module`
+# names the .pyx as an absolute dependency, so a module with no source configures
+# cleanly and then fails the build with a missing-dependency error. The
+# availability probe above does not catch it either -- with no .pxd in the tree
+# there is no header to probe, and the module is kept.
+#
+# With neither set nothing is dropped, so a source that went missing for any
+# other reason still fails the build rather than quietly leaving the wheel.
+#
+#   hip_python_filter_generated_modules(SELECTED
+#     SOURCE_DIR <dir holding <module>.pyx>
+#     MODULES <module>...)
+function(hip_python_filter_generated_modules out_var)
+  cmake_parse_arguments(ARG "" "SOURCE_DIR" "MODULES" ${ARGN})
+
+  # Quoted, because a package configured on its own never defines the cache
+  # entry, and an unquoted undefined variable compares as its own name.
+  if(NOT HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS
+     AND "${HIP_PYTHON_CODEGEN_SKIP_LIBRARIES}" STREQUAL "")
+    set(${out_var} ${ARG_MODULES} PARENT_SCOPE)
+    return()
+  endif()
+
+  set(_available)
+  set(_skipped)
+  foreach(_module IN LISTS ARG_MODULES)
+    # Both halves: each module builds a cy<module> C-level and a <module>
+    # high-level extension, and the codegen writes them together.
+    if(EXISTS "${ARG_SOURCE_DIR}/${_module}.pyx"
+       AND EXISTS "${ARG_SOURCE_DIR}/cy${_module}.pyx")
+      list(APPEND _available "${_module}")
+    else()
+      list(APPEND _skipped "${_module}")
+    endif()
+  endforeach()
+
+  if(_skipped)
+    string(REPLACE ";" ", " _skipped_text "${_skipped}")
+    message(STATUS
+      "hip-python: skipping modules the codegen generated no sources for: "
+      "${_skipped_text}")
+  endif()
+
+  set(${out_var} ${_available} PARENT_SCOPE)
+endfunction()
+
 function(hip_python_collect_cython_depends out_var)
   set(_files)
   foreach(_pattern IN LISTS ARGN)

@@ -40,7 +40,9 @@ set -xeu
 #
 # Optional env:
 #   ROCM_PATH                 default /opt/rocm
-#   ROCM_VERSION              default 7.13.0
+#   ROCM_VERSION              default 7.13.0 for the codegen metadata. Set,
+#                             it also prefixes the wheel version on a branch
+#                             that has no VERSION.in of its own
 #   ROCM_SYSTEMS_DIR          ${SRC_DIR}/rocm-systems if it exists
 #   ROCM_LIBRARIES_DIR        ${SRC_DIR}/rocm-libraries if it exists
 #   ROCM_LLVM_PROJECT_DIR     ${SRC_DIR}/llvm-project if it exists
@@ -51,6 +53,18 @@ set -xeu
 #   SKIP_CODEGEN              default true (skip step 1; consume
 #                             already-generated content). Set to
 #                             "false" to re-run codegen.
+#   HIP_PYTHON_ALLOW_MISSING_HEADERS
+#                             default false. "true" forwards
+#                             -DHIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS=ON,
+#                             which lets the codegen skip a library whose
+#                             header this ROCm never shipped and drops that
+#                             library from the build. For building against an
+#                             older ROCm; off, a missing header is fatal.
+#   HIP_PYTHON_SKIP_LIBRARIES default empty. Comma-separated libraries not to
+#                             generate, by name, e.g.
+#                             'hiptensor,hipdnn_backend'. Forwarded as
+#                             -DHIP_PYTHON_CODEGEN_SKIP_LIBRARIES and dropped
+#                             from the build the same way a missing header is.
 #   LIGHT_MODE                default false. If "true", build only
 #                             core + hip + compiler (skips libraries,
 #                             systems, interop).
@@ -121,6 +135,26 @@ fi
 rm -rf ${build_dir}
 mkdir -p ${BUILD_DIR}
 cp -av ${src_dir} ${build_dir}
+
+### release-shaped version
+#
+# A release branch commits VERSION.in and cmake renders VERSION from it;
+# everywhere else VERSION is the bare HIP_PYTHON_VERSION, which is below
+# numba-hip's committed dependency floor (>=7.2.3, a release version). Its
+# install then cannot resolve against the wheels this build just produced
+# and pip goes looking on the index instead. Author the same template the
+# release path writes, from the ROCm this build is against, so these wheels
+# carry the version they would carry if the branch were released.
+#
+# Written into the working copy, so a run leaves the checkout clean. Only
+# when the branch has no VERSION.in of its own: a release branch's template
+# names the ROCm its bindings were generated for, which stays the right
+# answer even when the container carries a newer one. And keyed on the
+# environment variable rather than the rocm_version resolved above, whose
+# default would have a build that was never told which ROCm claim one.
+if [[ ! -f "${build_dir}/VERSION.in" && -n "${ROCM_VERSION:-}" ]]; then
+  bash "${build_dir}/ci/internal/prepare-release.sh" "${ROCM_VERSION}" "${build_dir}"
+fi
 
 ### venv with build deps
 
@@ -223,6 +257,18 @@ fi
 # it.
 if [[ -n "${rocm_llvm_project_dir}" ]]; then
   cmake_args+=(-DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=${rocm_llvm_project_dir})
+fi
+
+# Also outside the codegen block: the option is read by the codegen and by the
+# package module loops, and a tree generated with skips has libraries missing
+# their sources whether this run regenerates it or consumes it as it stands.
+if [[ "${HIP_PYTHON_ALLOW_MISSING_HEADERS:-false}" == "true" ]]; then
+  cmake_args+=(-DHIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS=ON)
+fi
+# Same reasoning, and quoted: the list is comma-separated so that cmake passes
+# it on as one value rather than expanding it the way it would a ;-list.
+if [[ -n "${HIP_PYTHON_SKIP_LIBRARIES:-}" ]]; then
+  cmake_args+=("-DHIP_PYTHON_CODEGEN_SKIP_LIBRARIES=${HIP_PYTHON_SKIP_LIBRARIES}")
 fi
 
 # Add compiler launcher if sccache is enabled

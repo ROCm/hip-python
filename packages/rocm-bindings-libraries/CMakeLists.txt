@@ -99,6 +99,14 @@ if(MSVC)
   list(APPEND _hp_defs_hipsparse "HIPSPARSE_DEPRECATED=")
 endif()
 
+# Drop libraries the codegen skipped for want of a header (opt-in; see
+# hip_python_filter_generated_modules). Ahead of the availability probe below
+# because a skipped library has no .pxd for the probe to read a header from.
+hip_python_filter_generated_modules(HIP_PYTHON_SELECTED_LIBRARIES
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings"
+  MODULES ${HIP_PYTHON_SELECTED_LIBRARIES}
+)
+
 # Skip libraries this ROCm install cannot build (see
 # hip_python_filter_available_modules). On Windows this drops hipsparselt,
 # whose header ships without the hipsparselt-export.h it includes.

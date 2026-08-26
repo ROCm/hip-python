@@ -89,6 +89,14 @@ set(SYSTEMS_INCLUDE_DIRS
 # rocm-bindings-hip.
 hip_python_append_sibling_includes(SYSTEMS_INCLUDE_DIRS)
 
+# Drop system modules the codegen skipped for want of a header (opt-in; see
+# hip_python_filter_generated_modules). Ahead of the availability probe below
+# because a skipped module has no .pxd for the probe to read a header from.
+hip_python_filter_generated_modules(HIP_PYTHON_SELECTED_SYSTEMS
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/rocm/bindings"
+  MODULES ${HIP_PYTHON_SELECTED_SYSTEMS}
+)
+
 # Skip system modules this ROCm install cannot build (see
 # hip_python_filter_available_modules). hipfile was already dropped above via
 # find_package; this covers the rest. Every module in this package is absent

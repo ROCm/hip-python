@@ -231,7 +231,13 @@ skips regeneration on no-op reconfigures; pass
 `-DHIP_PYTHON_FORCE_CODEGEN=ON` to force a re-run. Optional header-source
 overrides: `HIP_PYTHON_ROCM_SYSTEMS_DIR`, `HIP_PYTHON_ROCM_LIBRARIES_DIR`,
 `HIP_PYTHON_ROCM_LLVM_PROJECT_DIR`, `HIP_PYTHON_CLANG_RESOURCE_DIR`,
-`HIP_PYTHON_CODEGEN_INCLUDE`. See [CODEGEN.md](CODEGEN.md).
+`HIP_PYTHON_CODEGEN_INCLUDE`. Against an older ROCm,
+`-DHIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS=ON` turns a library whose
+header that release never shipped into a skip: the codegen leaves it out
+and the package loops build only what was generated.
+`-DHIP_PYTHON_CODEGEN_SKIP_LIBRARIES=hiptensor,hipdnn_backend` leaves
+named libraries out the same way, whatever the reason. See
+[CODEGEN.md](CODEGEN.md).
 
 numba-hip (`numba_hip_wheel` / `numba_hip_sdist`) is a pure-Python
 package with its own independent version (not mirrored from the repo-root
@@ -542,6 +548,8 @@ nvrtc) are stable across releases.
 | `HIP_PYTHON_ROCM_VERSION` | _(empty)_ | ROCm version for codegen (`--rocm-version`); required when `HIP_PYTHON_RUN_CODEGEN=ON`. |
 | `HIP_PYTHON_ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | ROCm install passed to codegen (`--rocm-path`). |
 | `HIP_PYTHON_FORCE_CODEGEN` | `OFF` | Bypass the codegen stamp guard and force regeneration. |
+| `HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS` | `OFF` | Skip a library whose header the ROCm at hand does not carry (`--allow-missing-headers`) and drop it from the build, rather than failing. For building against an older ROCm. |
+| `HIP_PYTHON_CODEGEN_SKIP_LIBRARIES` | _(empty)_ | Comma-separated libraries not to generate, by name (`--skip-libraries`), e.g. `hiptensor,hipdnn_backend`. Dropped from the build the same way a missing header is. An unknown name fails the codegen. |
 | `HIP_PYTHON_WHEEL_OUTPUT_DIR` | `${CMAKE_BINARY_DIR}/dist` | Where `*.whl` files land. |
 | `ROCM_PATH` | `/opt/rocm` (or `$ROCM_PATH`/`$ROCM_HOME`) | ROCm SDK location. |
 | `HIP_PLATFORM` | `amd` | Only `amd` and `hcc` are supported. |
@@ -626,6 +634,15 @@ renders the repo-root `VERSION` from it:
   (`@ONLY`) with `HIP_PYTHON_VERSION` substituted in.
 - **Development branches** have no `VERSION.in`, so `VERSION` is the
   `HIP_PYTHON_VERSION` value verbatim.
+
+`ci/internal/build-wheels.sh` narrows that second case: when the branch
+has no `VERSION.in` and `ROCM_VERSION` is set, it authors one into its
+working copy through the same `ci/internal/prepare-release.sh` the
+release path uses, so a wheel built against a ROCm names it. Only a build
+that was never told which ROCm it is for keeps the bare version. That
+also keeps the wheels installable as a set: `packages/numba-hip` pins its
+siblings at `>=7.2.3`, a release version, which a bare `0.0.1` cannot
+satisfy.
 
 `HIP_PYTHON_VERSION` and (on release branches) `VERSION.in` are tracked;
 the rendered `VERSION` and per-package copies are gitignored. Override

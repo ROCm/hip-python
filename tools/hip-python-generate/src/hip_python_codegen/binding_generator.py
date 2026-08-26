@@ -679,12 +679,19 @@ def _worker_generate_library(
     generator_args: list,
     rocm_version_tuple: tuple,
     log_path: str,
+    allow_missing_headers: bool = False,
 ):
     """Worker that runs in a subprocess to generate one library's bindings.
 
+    Args:
+        allow_missing_headers: report "skipped" instead of "error" when the
+          library's header is nowhere to be found, which is what an older ROCm
+          looks like for a library it never shipped. Passed in rather than read
+          from opts because this runs in its own process.
+
     Returns:
         (libname, log_path, elapsed_seconds, status, module_names, error_msg)
-        - status: "ok" or "error".
+        - status: "ok", "skipped" or "error".
         - module_names: list[str] of dotted names for multi-module libraries
           (currently: llvm); None for single-module libraries. Surfaced so
           the orchestrator can populate `llvm_modules` in its result dict
@@ -746,13 +753,25 @@ def _worker_generate_library(
             module_names = callable_(**kwargs)  # returns list[str]
         else:
             # Single-module library: standard two-step.
-            header_path, header_content = resolve_header_path(
-                header_relpath,
-                rocm_inc,
-                rocm_systems_dir,
-                rocm_libraries_dir,
-                rocm_llvm_project_dir,
-            )
+            #
+            # Only this call is guarded: a header that is nowhere to be found
+            # means the ROCm at hand predates the library, while a
+            # FileNotFoundError from anywhere below is a real fault.
+            try:
+                header_path, header_content = resolve_header_path(
+                    header_relpath,
+                    rocm_inc,
+                    rocm_systems_dir,
+                    rocm_libraries_dir,
+                    rocm_llvm_project_dir,
+                )
+            except FileNotFoundError as e:
+                if not allow_missing_headers:
+                    raise
+                logging.warning(f"Skipping '{libname}': {e}")
+                elapsed = time.time() - start
+                fh.close()
+                return (libname, log_path, elapsed, "skipped", None, str(e))
             include_dir = _resolve_include_dir(header_path, header_relpath)
 
             # Persist any patched header content to the wheel's
@@ -1043,6 +1062,56 @@ _PKG_TO_DIR = {
     "compiler": ("rocm-bindings-compiler", "src", "rocm", "bindings"),
 }
 
+# The reason recorded for a library the caller asked not to generate, as
+# opposed to one this ROCm has no header for. Written to skipped.txt, where CI
+# reads it back to tell the two apart.
+SKIPPED_BY_REQUEST = "skipped by request"
+
+
+def _parse_skip_libraries(value):
+    """Turn the --skip-libraries value into a set of library names.
+
+    Accepts a string or a list of them (the flag is repeatable), splits every
+    element on commas and tolerates surrounding whitespace and empty elements,
+    so `"a, b,"` is a two-name list rather than an error. This is the only
+    place the comma is understood; every hop above passes the value on whole.
+    """
+    if value is None:
+        return set()
+    if isinstance(value, str):
+        value = [value]
+    return {
+        name.strip()
+        for element in value
+        for name in element.split(",")
+        if name.strip()
+    }
+
+
+def _resolve_skip_libraries(lib_names, value):
+    """Split the libraries named on --skip-libraries off `lib_names`.
+
+    Returns the names left to generate and the requested ones that were in
+    `lib_names` to begin with. A name no generator is registered for fails
+    here rather than skipping nothing quietly, and every such name is reported
+    at once: a codegen that took ten minutes to get this far should not have to
+    be repeated once per typo.
+    """
+    requested = _parse_skip_libraries(value)
+    unknown = sorted(requested - set(AVAILABLE_GENERATORS))
+    if unknown:
+        avail = ", ".join(f"'{a}'" for a in sorted(AVAILABLE_GENERATORS))
+        raise KeyError(
+            "--skip-libraries names "
+            f"{', '.join(repr(name) for name in unknown)}, which no code "
+            f"generator is registered for; please choose from: {avail}."
+        )
+    # Only what this run was going to generate anyway is worth reporting as
+    # skipped. Naming a library whose wheel is not in the selection is
+    # harmless -- it was never going to be built -- so it is dropped here.
+    requested &= set(lib_names)
+    return [name for name in lib_names if name not in requested], requested
+
 
 def generate(opts):  # noqa: C901
     """Run HIP + interop subgenerators against the modern hip-python layout.
@@ -1136,6 +1205,10 @@ def generate(opts):  # noqa: C901
         if pkg_short in selected_wheels
     ]
 
+    lib_names, requested_skips = _resolve_skip_libraries(
+        lib_names, getattr(opts, "skip_libraries", None)
+    )
+
     # Pre-create the per-package output dirs so write_module_files can
     # drop files in straight away.
     pkg_dirs = {
@@ -1179,6 +1252,13 @@ def generate(opts):  # noqa: C901
     log_dir = tempfile.mkdtemp(prefix=f"hip_python_codegen_{os.getpid()}_")
     log_paths = {}
     errors = {}
+    # Libraries not generated although their wheel was selected: asked for by
+    # name on --skip-libraries, or missing a header in this ROCm and forgiven
+    # because --allow-missing-headers was passed. Kept apart from `errors`:
+    # these do not fail the run, but they must not be described as generated
+    # either.
+    skipped = {name: SKIPPED_BY_REQUEST for name in requested_skips}
+    allow_missing_headers = getattr(opts, "allow_missing_headers", False)
     multi_module_names = (
         {}
     )  # libname -> list[str] (for llvm and other multi-module libs)
@@ -1226,8 +1306,15 @@ def generate(opts):  # noqa: C901
                     rocm_llvm_project_dir,
                 )
             except FileNotFoundError as e:
+                # Gated like the worker's, so the two paths agree on what a
+                # missing header means. hip and hiprtc run here, and a ROCm
+                # without their headers is a broken installation rather than
+                # an old one -- worth failing for unless asked otherwise.
+                if not allow_missing_headers:
+                    raise
                 _log.warning(f"Skipping '{libname}': {e}")
                 print(f"[skip] {libname}: header not found", file=sys.stderr)
+                skipped[libname] = str(e)
                 return
             include_dir = _resolve_include_dir(header_path, header_relpath)
             # Persist any patched header content to the wheel's
@@ -1298,6 +1385,7 @@ def generate(opts):  # noqa: C901
                     generator_args,
                     rocm_version_tuple,
                     log_path,
+                    allow_missing_headers,
                 )
                 futures[future] = libname
 
@@ -1320,6 +1408,9 @@ def generate(opts):  # noqa: C901
                     if mod_names:
                         multi_module_names[lib] = mod_names
                     print(f"[done] {lib} ({elapsed:.1f}s)", file=sys.stderr)
+                elif status == "skipped":
+                    skipped[lib] = err
+                    print(f"[skip] {lib}: header not found", file=sys.stderr)
                 else:
                     errors[lib] = err
                     print(
@@ -1350,14 +1441,19 @@ def generate(opts):  # noqa: C901
 
     # Return data the orchestrator may want (e.g. version metadata for
     # cmake/generated_versions.cmake; per-package module lists).
+    #
+    # Built from what came out of the run rather than from what was asked for:
+    # these lists reach cmake/generated_modules.cmake and the sphinx page
+    # writers, and neither should name a module no file was emitted for.
+    generated = [n for n in lib_names if n not in skipped]
     libraries_modules = [
-        n for n in lib_names if AVAILABLE_GENERATORS[n][1] == "libraries"
+        n for n in generated if AVAILABLE_GENERATORS[n][1] == "libraries"
     ]
     systems_modules = [
-        n for n in lib_names if AVAILABLE_GENERATORS[n][1] == "systems"
+        n for n in generated if AVAILABLE_GENERATORS[n][1] == "systems"
     ]
     compiler_modules = [
-        n for n in lib_names if AVAILABLE_GENERATORS[n][1] == "compiler"
+        n for n in generated if AVAILABLE_GENERATORS[n][1] == "compiler"
     ]
     # Multi-module libraries (currently: llvm) emit several Cython
     # modules per AVAILABLE_GENERATORS entry. Their dotted names are
@@ -1365,16 +1461,31 @@ def generate(opts):  # noqa: C901
     # into multi_module_names. Codegen.py reads `llvm_modules` to
     # bucket entries into HIP_PYTHON_LLVM_C_MODULES, etc.
     llvm_modules = multi_module_names.get("llvm", [])
+
+    # Alongside the per-library logs, so the CI step that collects that
+    # directory picks the list up without a second mechanism.
+    if skipped:
+        with open(
+            os.path.join(log_dir, "skipped.txt"), "w", encoding="utf-8"
+        ) as f:
+            for libname in sorted(skipped):
+                # One line per library: a missing-header message lists the
+                # paths it searched one per line, and a reader of this file
+                # takes a line for an entry.
+                reason = " ".join(str(skipped[libname]).split())
+                f.write(f"{libname}: {reason}\n")
+
     return dict(
         rocm_version=rocm_version_tuple,
         hip_version=hip_version_tuple,
-        hip_modules=lib_names,
+        hip_modules=generated,
         libraries_modules=libraries_modules,
         systems_modules=systems_modules,
         compiler_modules=compiler_modules,
         llvm_modules=llvm_modules,
         log_paths=log_paths,
         errors=errors,
+        skipped=skipped,
     )
 
 

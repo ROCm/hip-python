@@ -327,6 +327,49 @@ several minutes up to ~30 min depending on core count. A stamp guard
 skips it on no-op reconfigures; pass `-DHIP_PYTHON_FORCE_CODEGEN=ON` to
 force a re-run. See BUILDING.md "Optional configure-time code generation".
 
+## Generating against an older ROCm
+
+A ROCm release ships no header for a library that did not exist yet, and
+the generator treats a header it cannot find as a failure — one missing
+header fails the whole run, and under `HIP_PYTHON_RUN_CODEGEN` that is a
+`FATAL_ERROR` during configure.
+
+`--allow-missing-headers` (or `-DHIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS=ON`,
+or `HIP_PYTHON_ALLOW_MISSING_HEADERS=true` for the CI scripts) makes that
+one condition a per-library skip instead. The skipped libraries are named
+at the end of the run and listed in `skipped.txt` in the per-library log
+directory, they drop out of the emitted module lists, and the package
+`CMakeLists.txt` loops leave out anything the run generated no sources
+for. Every other generation failure stays fatal, and with the flag off
+nothing changes.
+
+It is opt-in for a reason: without it, a ROCm install that is simply
+broken or half-unpacked fails loudly instead of quietly producing wheels
+with libraries missing.
+
+## Leaving a library out by name
+
+`--skip-libraries hiptensor,hipdnn_backend` (or
+`-DHIP_PYTHON_CODEGEN_SKIP_LIBRARIES=hiptensor,hipdnn_backend`, or
+`HIP_PYTHON_SKIP_LIBRARIES=hiptensor,hipdnn_backend` for the CI scripts)
+drops the named libraries from the run. They are reported as skipped, and
+the build drops them, exactly as a missing header does — `skipped.txt`
+records the reason as `skipped by request`, so the two are told apart.
+
+The names are the keys of `AVAILABLE_GENERATORS`, and one that is not a
+key fails the run rather than skipping nothing: every unknown name is
+reported at once. The separator is a comma at every hop, because a
+semicolon is CMake's list separator and would not arrive whole. The flag
+is repeatable, so `--skip-libraries a --skip-libraries b` says the same
+as `--skip-libraries a,b`.
+
+This is finer than `--exclude`, which takes wheel names. Reach for it
+when a library fails to generate for a reason that is not a missing
+header — a header that includes a CMake-generated file absent from a
+source tree, say — and the run should still produce the other wheels.
+Leaving an entry commented out of `AVAILABLE_GENERATORS`, the other way
+to the same end, changes it for everyone rather than for one run.
+
 After this, `packages/build/dist/` (or whatever `HIP_PYTHON_WHEEL_OUTPUT_DIR` points to) contains the wheels.
 
 ## See also

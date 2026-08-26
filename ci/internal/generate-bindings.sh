@@ -44,6 +44,18 @@ set -xeu
 #                               restored before regeneration so the diff
 #                               reflects only the generator's output.
 #                               default amd-integration
+#   HIP_PYTHON_ALLOW_MISSING_HEADERS
+#                               'true' passes --allow-missing-headers, which
+#                               turns a library whose header this ROCm never
+#                               shipped into a skip rather than a failure. For
+#                               generating against an older ROCm; leave it off
+#                               and a missing header stays an error.
+#                               default false
+#   HIP_PYTHON_SKIP_LIBRARIES   comma-separated libraries not to generate, by
+#                               name, e.g. 'hiptensor,hipdnn_backend'. Passed
+#                               on whole as --skip-libraries; an unknown name
+#                               fails the run.
+#                               default empty
 
 ### resolved paths
 
@@ -57,6 +69,8 @@ rocm_llvm_project_dir=${ROCM_LLVM_PROJECT_DIR:-${SRC_DIR}/rocm_llvm_project}
 interfacegen_dir=${INTERFACEGEN_DIR:-${src_dir}/tools/interfacegen}
 hip_python_codegen_dir=${HIP_PYTHON_CODEGEN_DIR:-${src_dir}/tools/hip-python-generate}
 base_branch=${HIP_PYTHON_CODEGEN_BASE_BRANCH:-amd-integration}
+allow_missing_headers=${HIP_PYTHON_ALLOW_MISSING_HEADERS:-false}
+skip_libraries=${HIP_PYTHON_SKIP_LIBRARIES:-}
 
 ### prepare an isolated working copy
 
@@ -94,15 +108,25 @@ python3 -m pip install "libclang>=18,<19"
 # run. Capture the generator's exit status (rather than letting `set -e` bail
 # out here) so the remaining steps still run and the partial tree is fully
 # populated; the captured status is re-raised at the very end of the script.
+generate_args=(
+  ${build_dir}
+  --rocm-version ${ROCM_VERSION}
+  --rocm-path ${rocm_path}
+  --rocm-systems-dir ${rocm_systems_dir}
+  --rocm-libraries-dir ${rocm_libraries_dir}
+  --rocm-llvm-project-dir ${rocm_llvm_project_dir}
+  --license-path ${build_dir}/LICENSE
+)
+if [[ "${allow_missing_headers}" == "true" ]]; then
+  generate_args+=(--allow-missing-headers)
+fi
+# Quoted: the generator takes the comma-separated list as one argument.
+if [[ -n "${skip_libraries}" ]]; then
+  generate_args+=(--skip-libraries "${skip_libraries}")
+fi
+
 gen_rc=0
-hip-python-generate ${build_dir} \
-  --rocm-version ${ROCM_VERSION} \
-  --rocm-path ${rocm_path} \
-  --rocm-systems-dir ${rocm_systems_dir} \
-  --rocm-libraries-dir ${rocm_libraries_dir} \
-  --rocm-llvm-project-dir ${rocm_llvm_project_dir} \
-  --license-path ${build_dir}/LICENSE \
-  || gen_rc=$?
+hip-python-generate "${generate_args[@]}" || gen_rc=$?
 if [[ ${gen_rc} -ne 0 ]]; then
   echo "[warn] some libraries failed to generate; continuing to produce the most complete partial tree possible (see the per-library logs above)"
 fi

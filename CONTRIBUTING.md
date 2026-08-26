@@ -138,6 +138,13 @@ Disabling works the same way in reverse: comment out the
 the binding from codegen, from the build, and from the documentation at
 once.
 
+To leave a library out of one run rather than for everyone, name it on
+`--skip-libraries` (`-DHIP_PYTHON_CODEGEN_SKIP_LIBRARIES=...` through
+cmake, `HIP_PYTHON_SKIP_LIBRARIES=...` through the CI scripts, `skip=...`
+in a `/full test` comment). It is reported as skipped and dropped from
+the build the same way a library with no header in this ROCm is; see
+[CODEGEN.md](share/design/CODEGEN.md).
+
 Removing a binding from the *documentation* only — for a library that is
 generated but not compiled into any wheel — is a separate switch:
 `_DOCS_EXCLUDED` in

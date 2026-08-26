@@ -45,6 +45,18 @@ set(HIP_PYTHON_CLANG_RESOURCE_DIR "" CACHE PATH
 set(HIP_PYTHON_CODEGEN_INCLUDE "" CACHE STRING
     "Optional space/;-separated subset of wheels to generate (--include): hip libraries systems compiler")
 
+# Declared above the early return below because the packages read it too: a
+# library the codegen skipped has no sources to compile, so their module loops
+# drop it rather than failing on a target with no .pyx.
+option(HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS
+  "Skip a library whose header the ROCm at hand does not carry, instead of failing the codegen and the build"
+  OFF)
+# Comma-separated, not ;-separated: a semicolon would make cmake treat the
+# value as a list and expand it into several arguments on the way to the
+# codegen, which takes the whole list as one option.
+set(HIP_PYTHON_CODEGEN_SKIP_LIBRARIES "" CACHE STRING
+    "Optional comma-separated libraries not to generate by name (--skip-libraries), e.g. hiptensor,hipdnn_backend")
+
 if(NOT HIP_PYTHON_RUN_CODEGEN)
   return()
 endif()
@@ -91,12 +103,21 @@ if(NOT HIP_PYTHON_CODEGEN_INCLUDE STREQUAL "")
   separate_arguments(_hip_python_codegen_include_list NATIVE_COMMAND "${_hip_python_codegen_include}")
   list(APPEND _hip_python_codegen_optional_flags --include ${_hip_python_codegen_include_list})
 endif()
+if(HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS)
+  list(APPEND _hip_python_codegen_optional_flags --allow-missing-headers)
+endif()
+# Quoted, and only when non-empty: an empty value would append a bare
+# --skip-libraries that swallows whatever flag follows it.
+if(NOT "${HIP_PYTHON_CODEGEN_SKIP_LIBRARIES}" STREQUAL "")
+  list(APPEND _hip_python_codegen_optional_flags
+       --skip-libraries "${HIP_PYTHON_CODEGEN_SKIP_LIBRARIES}")
+endif()
 
 # Stamp guard: only (re)run when forced, when the input signature
 # changed, or when a generated module list is missing. libclang parsing
 # is expensive, so we avoid re-running on every no-op reconfigure.
 set(_hip_python_codegen_signature
-    "v1|${HIP_PYTHON_ROCM_VERSION}|${HIP_PYTHON_ROCM_PATH}|${HIP_PYTHON_ROCM_SYSTEMS_DIR}|${HIP_PYTHON_ROCM_LIBRARIES_DIR}|${HIP_PYTHON_ROCM_LLVM_PROJECT_DIR}|${HIP_PYTHON_CLANG_RESOURCE_DIR}|${HIP_PYTHON_CODEGEN_INCLUDE}")
+    "v1|${HIP_PYTHON_ROCM_VERSION}|${HIP_PYTHON_ROCM_PATH}|${HIP_PYTHON_ROCM_SYSTEMS_DIR}|${HIP_PYTHON_ROCM_LIBRARIES_DIR}|${HIP_PYTHON_ROCM_LLVM_PROJECT_DIR}|${HIP_PYTHON_CLANG_RESOURCE_DIR}|${HIP_PYTHON_CODEGEN_INCLUDE}|${HIP_PYTHON_CODEGEN_ALLOW_MISSING_HEADERS}|${HIP_PYTHON_CODEGEN_SKIP_LIBRARIES}")
 string(SHA256 _hip_python_codegen_signature_hash "${_hip_python_codegen_signature}")
 set(_hip_python_codegen_stamp "${CMAKE_BINARY_DIR}/hip_python_codegen.stamp")
 

@@ -2,9 +2,10 @@
 #
 # Copyright (c) 2026 Advanced Micro Devices, Inc.
 #
-# The code generator's own test suite. It parses synthetic headers with
-# libclang and asserts on the Cython it renders, so it needs neither a GPU nor
-# a ROCm installation -- which is why it belongs here rather than in
+# The code generator's own test suites: interfacegen, which parses synthetic
+# headers with libclang and asserts on the Cython it renders, and the codegen
+# around it, which decides what to generate at all. Neither needs a GPU or a
+# ROCm installation -- which is why they belong here rather than in
 # ci/internal/test.sh, where every suite waits for a device to be attached.
 # The plain `python` container below is what keeps that honest.
 #
@@ -81,3 +82,9 @@ jobs:
       # test that stopped running for a worse reason.
       - name: Run the interfacegen suite
         run: pytest -v -rs tools/interfacegen/python/interfacegen/test
+
+      # Its own step so a failure names which of the two suites broke. This one
+      # covers the orchestration around the generators -- library selection and
+      # the like -- which needs neither a device nor a ROCm tree either.
+      - name: Run the codegen suite
+        run: pytest -v -rs tools/hip-python-generate/test

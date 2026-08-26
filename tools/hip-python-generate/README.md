@@ -41,6 +41,8 @@ into `<output_dir>/packages/<package>/...`.
 | `--clang-resource-dir PATH` | auto from `--rocm-path` | libclang resource directory. Override only for non-standard clang installs. |
 | `--include WHEEL [WHEEL ...]` | all four | Wheels to generate: any of `hip`, `libraries`, `systems`, `compiler`. |
 | `--exclude WHEEL [WHEEL ...]` | none | Wheels to skip. Subtracted from `--include`. |
+| `--skip-libraries NAME[,NAME...]` | none | Libraries to skip, by name rather than by wheel, e.g. `hiptensor,hipdnn_backend`. Repeatable. An unknown name fails the run. |
+| `--allow-missing-headers` | off | Skip a library whose header this ROCm never shipped instead of failing. Every other generation failure stays fatal. |
 | `--no-rt-linking` | off | Bind directly against named shared libraries instead of resolving at runtime. |
 | `--license-path PATH` | none | License header to embed in generated files. |
 | `--generator-args ARGS ...` | empty | Extra args passed through to libclang. |
