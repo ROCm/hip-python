@@ -29,9 +29,7 @@ assertion narrowed to what is achievable today.
 import re
 
 import pytest
-
 from _codegen_helpers import make_generator, write_module
-
 
 # ---------------------------------------------------------------------------
 # Shape catalog
@@ -146,12 +144,32 @@ typedef struct {
 # (`typedef struct foo { … } foo_t;` → emits `cdef struct foo:`),
 # or the typedef alias when no tag is given.
 CASES = [
-    pytest.param(SHAPE_PLAIN_STRUCT, "plain_props_t", id="plain_struct_with_bitfields"),
-    pytest.param(SHAPE_AMDSMI_BDF_T, "my_bdf_t", id="amdsmi_bdf_t_named_plus_anon_nested"),
-    pytest.param(SHAPE_HIP_EXTERNAL_MEM, "ext_mem_desc_st", id="hip_external_mem_anon_union_named_inner_struct"),
-    pytest.param(SHAPE_TAGGED_UNION_WITH_NESTED, "batch_op_params_union", id="tagged_union_named_struct_anon_union_inside"),
-    pytest.param(SHAPE_DEEP_NESTED_ANONYMOUS, "deep_anon_t", id="three_level_anonymous_nesting"),
-    pytest.param(SHAPE_VOID_PTR_ARRAY_FIELD, "topology_t", id="void_typedef_array_field"),
+    pytest.param(
+        SHAPE_PLAIN_STRUCT, "plain_props_t", id="plain_struct_with_bitfields"
+    ),
+    pytest.param(
+        SHAPE_AMDSMI_BDF_T,
+        "my_bdf_t",
+        id="amdsmi_bdf_t_named_plus_anon_nested",
+    ),
+    pytest.param(
+        SHAPE_HIP_EXTERNAL_MEM,
+        "ext_mem_desc_st",
+        id="hip_external_mem_anon_union_named_inner_struct",
+    ),
+    pytest.param(
+        SHAPE_TAGGED_UNION_WITH_NESTED,
+        "batch_op_params_union",
+        id="tagged_union_named_struct_anon_union_inside",
+    ),
+    pytest.param(
+        SHAPE_DEEP_NESTED_ANONYMOUS,
+        "deep_anon_t",
+        id="three_level_anonymous_nesting",
+    ),
+    pytest.param(
+        SHAPE_VOID_PTR_ARRAY_FIELD, "topology_t", id="void_typedef_array_field"
+    ),
 ]
 
 
@@ -171,12 +189,31 @@ _DEF_RE = re.compile(
 # primitives + qualifiers). Anything else referenced as a type must
 # be defined in the same file (the closure check).
 _PRIMITIVE_TOKENS = {
-    "void", "char", "short", "int", "long", "float", "double",
-    "signed", "unsigned", "const", "volatile", "_Bool",
-    "size_t", "ssize_t", "ptrdiff_t",
-    "uint8_t", "uint16_t", "uint32_t", "uint64_t",
-    "int8_t", "int16_t", "int32_t", "int64_t",
-    "intptr_t", "uintptr_t",
+    "void",
+    "char",
+    "short",
+    "int",
+    "long",
+    "float",
+    "double",
+    "signed",
+    "unsigned",
+    "const",
+    "volatile",
+    "_Bool",
+    "size_t",
+    "ssize_t",
+    "ptrdiff_t",
+    "uint8_t",
+    "uint16_t",
+    "uint32_t",
+    "uint64_t",
+    "int8_t",
+    "int16_t",
+    "int32_t",
+    "int64_t",
+    "intptr_t",
+    "uintptr_t",
     "bint",
 }
 
@@ -251,7 +288,9 @@ def _all_referenced_types_defined(pxd: str) -> None:
 
 
 @pytest.mark.parametrize("header_text,outer_type", CASES)
-def test_nested_record_shape_emits_clean_cython(header_text, outer_type, tmp_path):
+def test_nested_record_shape_emits_clean_cython(
+    header_text, outer_type, tmp_path
+):
     """Generate the synthetic header and assert the two file-level invariants."""
     gen = make_generator(header_text, module_name="mod_shape")
     files = write_module(gen, tmp_path)
@@ -281,9 +320,9 @@ def test_amdsmi_bdf_named_inner_struct_definition_emitted(tmp_path):
     `cdef struct my_bdf_t_bdf_:`."""
     gen = make_generator(SHAPE_AMDSMI_BDF_T, module_name="mod_bdf")
     pxd = write_module(gen, tmp_path)["cymod_bdf.pxd"]
-    assert re.search(r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd), (
-        f"named-nested struct definition missing; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+my_bdf_t_bdf_\b", pxd
+    ), f"named-nested struct definition missing; pxd:\n{pxd}"
 
 
 def test_amdsmi_bdf_anonymous_inner_struct_gets_indexed_name(tmp_path):
@@ -291,9 +330,9 @@ def test_amdsmi_bdf_anonymous_inner_struct_gets_indexed_name(tmp_path):
     `<parent>_struct_<N>` name (not the libclang pseudo-spelling)."""
     gen = make_generator(SHAPE_AMDSMI_BDF_T, module_name="mod_bdf2")
     pxd = write_module(gen, tmp_path)["cymod_bdf2.pxd"]
-    assert re.search(r"\bcdef\s+struct\s+my_bdf_t_struct_\d+\b", pxd), (
-        f"anonymous-nested struct missing or got pseudo-spelling; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+my_bdf_t_struct_\d+\b", pxd
+    ), f"anonymous-nested struct missing or got pseudo-spelling; pxd:\n{pxd}"
 
 
 def test_void_typedef_array_field_suffix_after_name(tmp_path):
@@ -301,12 +340,12 @@ def test_void_typedef_array_field_suffix_after_name(tmp_path):
     (suffix after name), not `void *[8] list`."""
     gen = make_generator(SHAPE_VOID_PTR_ARRAY_FIELD, module_name="mod_topo")
     pxd = write_module(gen, tmp_path)["cymod_topo.pxd"]
-    assert re.search(r"void\s*\*\s*list\s*\[\s*8\s*\]", pxd), (
-        f"expected `void *list[8]` shape; pxd:\n{pxd}"
-    )
-    assert not re.search(r"void\s*\*\s*\[\s*8\s*\]\s*list", pxd), (
-        f"emitted broken `void *[8] list` shape; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"void\s*\*\s*list\s*\[\s*8\s*\]", pxd
+    ), f"expected `void *list[8]` shape; pxd:\n{pxd}"
+    assert not re.search(
+        r"void\s*\*\s*\[\s*8\s*\]\s*list", pxd
+    ), f"emitted broken `void *[8] list` shape; pxd:\n{pxd}"
 
 
 SHAPE_SIMPLE_RECORD = """
@@ -331,9 +370,9 @@ def test_record_wrapper_emits_owning_allocate(tmp_path):
     pyx = write_module(gen, tmp_path)["mod_alloc.pyx"]
 
     # Signature with the count=1 default.
-    assert re.search(r"def\s+allocate\(\s*Py_ssize_t\s+count\s*=\s*1\s*\)", pyx), (
-        f"record wrapper missing `def allocate(Py_ssize_t count=1)`; pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"def\s+allocate\(\s*Py_ssize_t\s+count\s*=\s*1\s*\)", pyx
+    ), f"record wrapper missing `def allocate(Py_ssize_t count=1)`; pyx:\n{pyx}"
     # count < 1 (0 and negatives) is rejected — records have no empty-buffer concept.
     assert re.search(
         r"if\s+count\s*<\s*1\s*:\s*\n\s*raise\s+ValueError\(\s*\"'count' must be positive\"\s*\)",
@@ -341,15 +380,17 @@ def test_record_wrapper_emits_owning_allocate(tmp_path):
     ), f"record allocate must raise for count < 1; pyx:\n{pyx}"
     # Owned, zero-initialized count-element allocation. The record's C name
     # is cprefixed in the emitted pyx (e.g. `cymod_alloc.point_t`).
-    assert re.search(r"stdlib\.malloc\(\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)", pyx), (
-        f"record allocate must malloc count*sizeof(record); pyx:\n{pyx}"
-    )
-    assert re.search(r"string\.memset\(\s*wrapper\._ptr\s*,\s*0\s*,\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)", pyx), (
-        f"record allocate must zero-initialize the buffer; pyx:\n{pyx}"
-    )
-    assert re.search(r"wrapper\._is_ptr_owner\s*=\s*True", pyx), (
-        f"record allocate must take ownership (free on dealloc); pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"stdlib\.malloc\(\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)",
+        pyx,
+    ), f"record allocate must malloc count*sizeof(record); pyx:\n{pyx}"
+    assert re.search(
+        r"string\.memset\(\s*wrapper\._ptr\s*,\s*0\s*,\s*count\s*\*\s*sizeof\((?:\w+\.)?point_t\)\s*\)",
+        pyx,
+    ), f"record allocate must zero-initialize the buffer; pyx:\n{pyx}"
+    assert re.search(
+        r"wrapper\._is_ptr_owner\s*=\s*True", pyx
+    ), f"record allocate must take ownership (free on dealloc); pyx:\n{pyx}"
 
 
 # ---------------------------------------------------------------------------
@@ -441,9 +482,9 @@ def test_anon_typedef_enum_uses_ctypedef(tmp_path):
     gen = make_generator(SHAPE_ANON_TYPEDEF_ENUM, module_name="mod_anon_e")
     pxd = write_module(gen, tmp_path)["cymod_anon_e.pxd"]
 
-    assert re.search(r"\bctypedef\s+enum\s+foo_status_t\s*:", pxd), (
-        f"expected `ctypedef enum foo_status_t:`, got pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bctypedef\s+enum\s+foo_status_t\s*:", pxd
+    ), f"expected `ctypedef enum foo_status_t:`, got pxd:\n{pxd}"
     assert not re.search(r"\bcdef\s+enum\s+foo_status_t\s*:", pxd), (
         f"regression: emitted `cdef enum foo_status_t:` for an anonymous "
         f"typedef enum. The generated C would reference `enum foo_status_t`, "
@@ -459,9 +500,9 @@ def test_tagged_enum_no_typedef_uses_cdef(tmp_path):
     """
     gen = make_generator(SHAPE_TAGGED_ENUM_NO_TYPEDEF, module_name="mod_tag_e")
     pxd = write_module(gen, tmp_path)["cymod_tag_e.pxd"]
-    assert re.search(r"\bcdef\s+enum\s+bar_status\s*:", pxd), (
-        f"expected `cdef enum bar_status:`, got pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+enum\s+bar_status\s*:", pxd
+    ), f"expected `cdef enum bar_status:`, got pxd:\n{pxd}"
 
 
 def test_tagged_enum_with_same_name_typedef_uses_cdef(tmp_path):
@@ -470,11 +511,13 @@ def test_tagged_enum_with_same_name_typedef_uses_cdef(tmp_path):
     Sanity: when the typedef alias matches an existing real tag, the
     `enum X` reference IS valid in C, so `cdef enum` is correct.
     """
-    gen = make_generator(SHAPE_TAGGED_ENUM_WITH_SAME_NAME_TYPEDEF, module_name="mod_baz")
-    pxd = write_module(gen, tmp_path)["cymod_baz.pxd"]
-    assert re.search(r"\bcdef\s+enum\s+baz_status\s*:", pxd), (
-        f"expected `cdef enum baz_status:`, got pxd:\n{pxd}"
+    gen = make_generator(
+        SHAPE_TAGGED_ENUM_WITH_SAME_NAME_TYPEDEF, module_name="mod_baz"
     )
+    pxd = write_module(gen, tmp_path)["cymod_baz.pxd"]
+    assert re.search(
+        r"\bcdef\s+enum\s+baz_status\s*:", pxd
+    ), f"expected `cdef enum baz_status:`, got pxd:\n{pxd}"
 
 
 def test_anon_typedef_struct_uses_ctypedef(tmp_path):
@@ -486,9 +529,9 @@ def test_anon_typedef_struct_uses_ctypedef(tmp_path):
     """
     gen = make_generator(SHAPE_ANON_TYPEDEF_STRUCT, module_name="mod_anon_s")
     pxd = write_module(gen, tmp_path)["cymod_anon_s.pxd"]
-    assert re.search(r"\bctypedef\s+struct\s+dims_t\s*:", pxd), (
-        f"expected `ctypedef struct dims_t:` for anonymous-typedef struct; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bctypedef\s+struct\s+dims_t\s*:", pxd
+    ), f"expected `ctypedef struct dims_t:` for anonymous-typedef struct; pxd:\n{pxd}"
 
 
 def test_anon_typedef_union_uses_ctypedef(tmp_path):
@@ -498,9 +541,9 @@ def test_anon_typedef_union_uses_ctypedef(tmp_path):
     """
     gen = make_generator(SHAPE_ANON_TYPEDEF_UNION, module_name="mod_anon_u")
     pxd = write_module(gen, tmp_path)["cymod_anon_u.pxd"]
-    assert re.search(r"\bctypedef\s+union\s+bits_t\s*:", pxd), (
-        f"expected `ctypedef union bits_t:` for anonymous-typedef union; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bctypedef\s+union\s+bits_t\s*:", pxd
+    ), f"expected `ctypedef union bits_t:` for anonymous-typedef union; pxd:\n{pxd}"
 
 
 # ---------------------------------------------------------------------------
@@ -615,20 +658,24 @@ def test_anon_typedef_enum_via_include_uses_ctypedef(tmp_path):
     must be detected through the include boundary, not just at the
     top-level cursor of the parsed file.
     """
-    # Place the inner header alongside the parsed one in the unsaved
-    # files set so libclang can resolve `#include "inner_enum.h"`.
+    # Both headers go to disk: a quoted `#include` resolves relative to
+    # the directory of the including file, which an unsaved in-memory
+    # `input.h` does not have, so libclang answered
+    # `'inner_enum.h' file not found` and the enum never entered the tree.
+    from interfacegen import cython, treefactory
     from interfacegen.cparser import CParser
-    from interfacegen import treefactory, cython
-    parser = CParser(
-        "input.h",
-        unsaved_files=[
-            ("input.h", SHAPE_ANON_TYPEDEF_ENUM_VIA_INCLUDE),
-            ("./inner_enum.h", INNER_ENUM_HEADER),
-        ],
-    )
+
+    (tmp_path / "inner_enum.h").write_text(INNER_ENUM_HEADER, encoding="utf-8")
+    outer = tmp_path / "input.h"
+    outer.write_text(SHAPE_ANON_TYPEDEF_ENUM_VIA_INCLUDE, encoding="utf-8")
+    parser = CParser(str(outer))
     parser.parse()
+    assert not [
+        d for d in parser.translation_unit.diagnostics if d.severity >= 3
+    ], "header pair did not parse cleanly"
     root = treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
     # Pull the Enum node directly so we can inspect its flag — the
     # write_module path filters by file location and would suppress
@@ -638,11 +685,9 @@ def test_anon_typedef_enum_via_include_uses_ctypedef(tmp_path):
         if isinstance(n, cython.Enum) and n.name == "inner_status_t":
             inner_status = n
             break
-    if inner_status is None:
-        pytest.xfail(
-            "node_filter dropped the inner-include enum — cross-include "
-            "anonymous-typedef detection needs node_filter relaxation"
-        )
+    assert (
+        inner_status is not None
+    ), "inner enum from the included header did not reach the tree"
     head = inner_status._render_c_interface_head()
     assert re.search(r"\bctypedef\s+enum\s+inner_status_t\s*:", head), (
         f"regression: inner enum from included header not classified as "
@@ -661,10 +706,9 @@ def test_hip_vector_type_uint4_field_bearing_definition(tmp_path):
     # Definition present, with all four fields.
     assert re.search(
         r"\b(?:cdef|ctypedef)\s+struct\s+uint4\s*:\s*\n(?:.*\n){3,}.*unsigned\s+int\s+w",
-        pxd, re.MULTILINE,
-    ), (
-        f"uint4 struct definition is missing or truncated; pxd:\n{pxd}"
-    )
+        pxd,
+        re.MULTILINE,
+    ), f"uint4 struct definition is missing or truncated; pxd:\n{pxd}"
 
 
 def test_triple_pointer_const_middle_codegen_does_not_crash(tmp_path):
@@ -674,18 +718,20 @@ def test_triple_pointer_const_middle_codegen_does_not_crash(tmp_path):
     emitted — possibly as IN/INOUT instead of OUT, which the user
     can fix manually using the docstring's original C signature.
     """
-    gen = make_generator(SHAPE_TRIPLE_POINTER_CONST_MIDDLE, module_name="mod_triple")
+    gen = make_generator(
+        SHAPE_TRIPLE_POINTER_CONST_MIDDLE, module_name="mod_triple"
+    )
     files = write_module(gen, tmp_path)
     pxd = files["cymod_triple.pxd"]
     pyx = files["mod_triple.pyx"]
     # Function must be present in BOTH the cy* declaration AND the
     # high-level Python module.
-    assert re.search(r"\bhipStreamGetCaptureInfo_v2\b", pxd), (
-        f"function decl missing from cymod_triple.pxd; pxd:\n{pxd}"
-    )
-    assert re.search(r"\bhipStreamGetCaptureInfo_v2\b", pyx), (
-        f"function impl missing from mod_triple.pyx; pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"\bhipStreamGetCaptureInfo_v2\b", pxd
+    ), f"function decl missing from cymod_triple.pxd; pxd:\n{pxd}"
+    assert re.search(
+        r"\bhipStreamGetCaptureInfo_v2\b", pyx
+    ), f"function impl missing from mod_triple.pyx; pyx:\n{pyx}"
 
 
 def test_pointer_const_array_codegen_does_not_crash(tmp_path):
@@ -696,12 +742,12 @@ def test_pointer_const_array_codegen_does_not_crash(tmp_path):
     files = write_module(gen, tmp_path)
     pxd = files["cymod_pca.pxd"]
     pyx = files["mod_pca.pyx"]
-    assert re.search(r"\bf_const_ptr_array\b", pxd), (
-        f"function decl missing from cymod_pca.pxd; pxd:\n{pxd}"
-    )
-    assert re.search(r"\bf_const_ptr_array\b", pyx), (
-        f"function impl missing from mod_pca.pyx; pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"\bf_const_ptr_array\b", pxd
+    ), f"function decl missing from cymod_pca.pxd; pxd:\n{pxd}"
+    assert re.search(
+        r"\bf_const_ptr_array\b", pyx
+    ), f"function impl missing from mod_pca.pyx; pyx:\n{pyx}"
 
 
 # ---------------------------------------------------------------------------
@@ -809,16 +855,14 @@ def _nogil_block_body(body: str) -> str:
         if stripped.endswith("with nogil:"):
             with_indent = len(line) - len(line.lstrip())
             captured = []
-            for sub in lines[i + 1:]:
+            for sub in lines[i + 1 :]:
                 sub_indent = len(sub) - len(sub.lstrip())
                 if sub.strip() == "":
                     continue
                 if sub_indent <= with_indent:
                     break
                 captured.append(sub.strip())
-            assert captured, (
-                f"`with nogil:` block has no body in:\n{body}"
-            )
+            assert captured, f"`with nogil:` block has no body in:\n{body}"
             return " ".join(captured)
     raise AssertionError(f"no `with nogil:` block in body:\n{body}")
 
@@ -849,35 +893,37 @@ def test_nogil_void_retval_no_args(tmp_path):
     """void f(void) — block has no cdef retval, single bare cy* call."""
     pyx = _emit_nogil_pyx(
         "void op_void(void);",
-        module_name="mod_nv", tmp_path=tmp_path,
+        module_name="mod_nv",
+        tmp_path=tmp_path,
     )
     body = _extract_function_body(pyx, "op_void")
     assert "with nogil:" in body, f"missing nogil block:\n{body}"
     # No cdef retval declaration for void.
-    assert "_cy_op_void__retval" not in body, (
-        f"void retval should not produce a cdef holder:\n{body}"
-    )
+    assert (
+        "_cy_op_void__retval" not in body
+    ), f"void retval should not produce a cdef holder:\n{body}"
     nogil_line = _nogil_block_body(body)
-    assert "cymod_nv.op_void(" in nogil_line, (
-        f"cy* call missing inside nogil block:\n{nogil_line}"
-    )
+    assert (
+        "cymod_nv.op_void(" in nogil_line
+    ), f"cy* call missing inside nogil block:\n{nogil_line}"
 
 
 def test_nogil_basic_retval_basic_arg(tmp_path):
     """int f(int) — cdef int retval, no hoist, _cy_R returned bare."""
     pyx = _emit_nogil_pyx(
         "int op_basic(int x);",
-        module_name="mod_nb", tmp_path=tmp_path,
+        module_name="mod_nb",
+        tmp_path=tmp_path,
     )
     body = _extract_function_body(pyx, "op_basic")
-    assert "cdef int _cy_op_basic__retval" in body, (
-        f"missing cdef retval:\n{body}"
-    )
+    assert (
+        "cdef int _cy_op_basic__retval" in body
+    ), f"missing cdef retval:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
-    assert "_cy_op_basic__retval = cymod_nb.op_basic(x)" in nogil_line, (
-        f"basic-typed parm should be inline; got:\n{nogil_line}"
-    )
+    assert (
+        "_cy_op_basic__retval = cymod_nb.op_basic(x)" in nogil_line
+    ), f"basic-typed parm should be inline; got:\n{nogil_line}"
     # Basic retval is its own Python value — return bare _cy_R, no wrap.
     assert re.search(
         r"return\s+_cy_op_basic__retval\b", body
@@ -904,9 +950,9 @@ def test_nogil_enum_retval_enum_arg(tmp_path):
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
     # The cy* call must reference the hoisted symbol, not k.value.
-    assert "_cy_op_enum__arg_0" in nogil_line, (
-        f"cy* call must use hoisted symbol; got:\n{nogil_line}"
-    )
+    assert (
+        "_cy_op_enum__arg_0" in nogil_line
+    ), f"cy* call must use hoisted symbol; got:\n{nogil_line}"
     # IntEnum constructor wrap is post-block in the return tuple.
     assert re.search(
         r"return\s+status_t\(_cy_op_enum__retval\)",
@@ -948,9 +994,9 @@ def test_nogil_inout_record_pointer_hoists_fromPyobj(tmp_path):
     ), f"missing cprefix-prefixed pointer extract from bound wrapper:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
-    assert "_cy_op_inout__arg_0" in nogil_line, (
-        f"cy* call must use hoisted symbol; got:\n{nogil_line}"
-    )
+    assert (
+        "_cy_op_inout__arg_0" in nogil_line
+    ), f"cy* call must use hoisted symbol; got:\n{nogil_line}"
 
 
 def test_nogil_out_ptr_typed_prolog_inline_addressof(tmp_path):
@@ -977,9 +1023,9 @@ def test_nogil_out_ptr_typed_prolog_inline_addressof(tmp_path):
         body,
     ), f"missing typed prolog wrapper construction:\n{body}"
     # No hoist line: the address-of stays inline inside the block.
-    assert "_cy_op_out__arg_0" not in body, (
-        f"OUT-ptr should not be hoisted when prolog is typed:\n{body}"
-    )
+    assert (
+        "_cy_op_out__arg_0" not in body
+    ), f"OUT-ptr should not be hoisted when prolog is typed:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
     assert "<int *>out_x._ptr" in nogil_line, (
@@ -1017,9 +1063,9 @@ def test_nogil_record_by_value_arg_hoists_dereferenced_value(tmp_path):
     ), f"missing cprefix-prefixed record-by-value extract from bound wrapper:\n{body}"
     nogil_line = _nogil_block_body(body)
     _assert_no_python_in_nogil_call(nogil_line)
-    assert "_cy_op_rec__arg_0" in nogil_line, (
-        f"cy* call must reference hoisted record value; got:\n{nogil_line}"
-    )
+    assert (
+        "_cy_op_rec__arg_0" in nogil_line
+    ), f"cy* call must reference hoisted record value; got:\n{nogil_line}"
 
 
 def test_nogil_any_pointer_retval_wrap_post_block(tmp_path):
@@ -1039,16 +1085,19 @@ def test_nogil_any_pointer_retval_wrap_post_block(tmp_path):
         body,
     ), f"any-pointer retval wrap must be post-block:\n{body}"
     # And must NOT live inside the nogil block.
-    assert ".fromPtr(" not in nogil_line, (
-        f"Pointer.fromPtr must not appear in nogil body:\n{nogil_line}"
-    )
+    assert (
+        ".fromPtr(" not in nogil_line
+    ), f"Pointer.fromPtr must not appear in nogil body:\n{nogil_line}"
 
 
-def test_nogil_with_gil_mode_keeps_inline_emission(tmp_path):
+def test_nogil_with_gil_mode_hoists_args_and_inlines_retval_wrap(tmp_path):
     """When `modifiers_lazy_loader` does NOT contain ``nogil``, the
-    with-gil emitter is selected: no hoists, no `with nogil:` block,
-    inline single-line cy* call + Python wrap. Both modes are valid
-    first-class options of the dispatcher.
+    with-gil emitter is selected: no `with nogil:` block and the Python
+    retval wrap stays inline in the call expression. Argument hoisting
+    is emitter-independent, so the IntEnum arg is still bound to a
+    named local before the call — holding the GIL does not extend the
+    life of a wrapper temporary, so there is only one arg rendering.
+    Both modes are valid first-class options of the dispatcher.
     """
     header = """
     typedef enum { OK = 0 } status_t;
@@ -1059,16 +1108,20 @@ def test_nogil_with_gil_mode_keeps_inline_emission(tmp_path):
     gen = make_generator(header, module_name="mod_wg")
     files = write_module(gen, tmp_path)
     body = _extract_function_body(files["mod_wg.pyx"], "op_with_gil")
-    assert "with nogil:" not in body, (
-        f"with-gil mode must not emit `with nogil:`:\n{body}"
-    )
-    assert "_cy_op_with_gil__arg_" not in body, (
-        f"with-gil mode must not hoist args:\n{body}"
-    )
-    # Inline `.value` on the IntEnum argument is the with-gil shape.
-    assert "k.value" in body, (
-        f"with-gil should keep `.value` inline:\n{body}"
-    )
+    assert (
+        "with nogil:" not in body
+    ), f"with-gil mode must not emit `with nogil:`:\n{body}"
+    assert (
+        "cdef cymod_wg.kind_t _cy_op_with_gil__arg_0 = k.value" in body
+    ), f"with-gil mode must hoist the IntEnum arg:\n{body}"
+    assert (
+        "cymod_wg.op_with_gil(_cy_op_with_gil__arg_0)" in body
+    ), f"cy* call must reference the hoisted local:\n{body}"
+    # The retval wrap remains inline in the call expression — that is
+    # what distinguishes this emitter from the with-nogil one.
+    assert (
+        "status_t(cymod_wg.op_with_gil(" in body
+    ), f"with-gil should keep the retval wrap inline:\n{body}"
 
 
 # ---------------------------------------------------------------------------
@@ -1131,7 +1184,9 @@ typedef struct {
 """
 
 
-def test_hipfile_nested_anon_records_emitted_under_strict_prefix_filter(tmp_path):
+def test_hipfile_nested_anon_records_emitted_under_strict_prefix_filter(
+    tmp_path,
+):
     """Under a strict `hipFile`-prefix filter, all nested anonymous
     records must still be emitted (inheriting their top-most enclosing
     typedef's admission) so the parent fields don't dangle.
@@ -1148,16 +1203,16 @@ def test_hipfile_nested_anon_records_emitted_under_strict_prefix_filter(tmp_path
     pxd = write_module(gen, tmp_path)["cymod_hf.pxd"]
 
     # 1-level anon struct + anon union.
-    assert re.search(r"\bcdef\s+struct\s+hipFileDriverProps_struct_\d+\b", pxd), (
-        f"anon-nested struct hipFileDriverProps_struct_N missing; pxd:\n{pxd}"
-    )
-    assert re.search(r"\bcdef\s+union\s+hipFileDescr_union_\d+\b", pxd), (
-        f"anon-nested union hipFileDescr_union_N missing; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+hipFileDriverProps_struct_\d+\b", pxd
+    ), f"anon-nested struct hipFileDriverProps_struct_N missing; pxd:\n{pxd}"
+    assert re.search(
+        r"\bcdef\s+union\s+hipFileDescr_union_\d+\b", pxd
+    ), f"anon-nested union hipFileDescr_union_N missing; pxd:\n{pxd}"
     # 2-level: anon union wrapping an anon struct.
-    assert re.search(r"\bcdef\s+union\s+hipFileIOParams_union_\d+\b", pxd), (
-        f"anon-nested union hipFileIOParams_union_N missing; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+union\s+hipFileIOParams_union_\d+\b", pxd
+    ), f"anon-nested union hipFileIOParams_union_N missing; pxd:\n{pxd}"
     assert re.search(
         r"\bcdef\s+struct\s+hipFileIOParams_union_\d+_struct_\d+\b", pxd
     ), (
@@ -1185,7 +1240,9 @@ typedef struct {
 """
 
 
-def test_anon_funptr_in_nested_record_emitted_under_strict_prefix_filter(tmp_path):
+def test_anon_funptr_in_nested_record_emitted_under_strict_prefix_filter(
+    tmp_path,
+):
     """An inline anonymous function pointer nested inside a nested
     anonymous record is admitted via the top-most enclosing type, even
     though its immediate parent (the nested `..._struct_N`) fails the
@@ -1200,9 +1257,9 @@ def test_anon_funptr_in_nested_record_emitted_under_strict_prefix_filter(tmp_pat
     pxd = write_module(gen, tmp_path)["cymod_hf_fp.pxd"]
 
     # The enclosing nested anon struct is emitted.
-    assert re.search(r"\bcdef\s+struct\s+hipFileOpsTable_struct_\d+\b", pxd), (
-        f"nested anon struct hipFileOpsTable_struct_N missing; pxd:\n{pxd}"
-    )
+    assert re.search(
+        r"\bcdef\s+struct\s+hipFileOpsTable_struct_\d+\b", pxd
+    ), f"nested anon struct hipFileOpsTable_struct_N missing; pxd:\n{pxd}"
     # The anonymous funptr ctypedef is emitted (definition form
     # `ctypedef <ret> (*<...>anon_funptr_N)(...)`).
     assert re.search(
@@ -1266,15 +1323,17 @@ def test_pointer_to_record_field_emits_typed_accessor(tmp_path):
 
     Locks the fix for hipFileDescr.fs_ops being silently dropped.
     """
-    gen = make_generator(SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_rec")
+    gen = make_generator(
+        SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_rec"
+    )
     pyx = write_module(gen, tmp_path)["mod_ptr_rec.pyx"]
 
-    assert re.search(r"def\s+get_ops\(self, i\):", pyx), (
-        f"pointer-to-record field missing get_ops; pyx:\n{pyx}"
-    )
-    assert re.search(r"def\s+set_ops\(self, i, object value\):", pyx), (
-        f"pointer-to-record field missing set_ops; pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"def\s+get_ops\(self, i\):", pyx
+    ), f"pointer-to-record field missing get_ops; pyx:\n{pyx}"
+    assert re.search(
+        r"def\s+set_ops\(self, i, object value\):", pyx
+    ), f"pointer-to-record field missing set_ops; pyx:\n{pyx}"
     # Getter is typed on the pointee wrapper (rec_ops), cast via void*.
     assert re.search(
         r"return\s+rec_ops\.fromPtr\(<void\*>.*\.ops\)", pyx
@@ -1287,14 +1346,14 @@ def test_pointer_to_record_field_emits_typed_accessor(tmp_path):
         pyx,
     ), f"set_ops must cast to the cprefixed pointee type; pyx:\n{pyx}"
     # Property + setter.
-    assert re.search(r"def\s+ops\(self\):", pyx), (
-        f"pointer-to-record field missing `ops` property; pyx:\n{pyx}"
-    )
+    assert re.search(
+        r"def\s+ops\(self\):", pyx
+    ), f"pointer-to-record field missing `ops` property; pyx:\n{pyx}"
     assert "@ops.setter" in pyx, f"missing `@ops.setter`; pyx:\n{pyx}"
     # Included in PROPERTIES().
-    assert '"ops"' in _properties_list(pyx, "kind", "ops"), (
-        f"`ops` missing from PROPERTIES(); pyx:\n{pyx}"
-    )
+    assert '"ops"' in _properties_list(
+        pyx, "kind", "ops"
+    ), f"`ops` missing from PROPERTIES(); pyx:\n{pyx}"
 
 
 def test_unhandled_pointer_field_falls_back_to_generic_pointer(tmp_path):
@@ -1302,7 +1361,9 @@ def test_unhandled_pointer_field_falls_back_to_generic_pointer(tmp_path):
     pointers, degree>=2 pointers, ...) fall back to the generic
     `<util>.types.Pointer` accessor and still appear in PROPERTIES().
     """
-    gen = make_generator(SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_gen")
+    gen = make_generator(
+        SHAPE_POINTER_TO_RECORD_FIELD, module_name="mod_ptr_gen"
+    )
     pyx = write_module(gen, tmp_path)["mod_ptr_gen.pyx"]
 
     # Function-pointer field -> generic Pointer.
@@ -1322,6 +1383,6 @@ def test_unhandled_pointer_field_falls_back_to_generic_pointer(tmp_path):
 
     # Both are exposed as properties in PROPERTIES().
     lst = _properties_list(pyx, "cb", "table")
-    assert '"cb"' in lst and '"table"' in lst, (
-        f"`cb`/`table` missing from PROPERTIES(); pyx:\n{pyx}"
-    )
+    assert (
+        '"cb"' in lst and '"table"' in lst
+    ), f"`cb`/`table` missing from PROPERTIES(); pyx:\n{pyx}"

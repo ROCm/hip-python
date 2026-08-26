@@ -42,16 +42,18 @@ import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
-from . import cuda_interop as cuda_interop_layer_gen
-from . import generators_compiler
-from . import generators_hip
-from . import generators_libraries
-from . import generators_systems
-from .hipify import parse_hipify_perl
-
 import interfacegen
 from interfacegen import template_renderer
 from interfacegen.cython import CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER
+
+from . import cuda_interop as cuda_interop_layer_gen
+from . import (
+    generators_compiler,
+    generators_hip,
+    generators_libraries,
+    generators_systems,
+)
+from .hipify import parse_hipify_perl
 
 interfacegen.enable_logging(logging.INFO)
 _log = logging.getLogger("interfacegen")
@@ -104,20 +106,27 @@ def get_systems_header(header_relpath: str, rocm_systems_dir: str):
 
     # Special handling for RCCL template
     if header_relpath == "rccl/rccl.h":
-        template_path = os.path.join(rocm_systems_dir, "projects/rccl/src/nccl.h.in")
+        template_path = os.path.join(
+            rocm_systems_dir, "projects/rccl/src/nccl.h.in"
+        )
         if os.path.exists(template_path):
             # Parse version and render
-            version_mk = os.path.join(rocm_systems_dir, "projects/rccl/makefiles/version.mk")
+            version_mk = os.path.join(
+                rocm_systems_dir, "projects/rccl/makefiles/version.mk"
+            )
             try:
                 variables = template_renderer.parse_rccl_version(version_mk)
-                content = template_renderer.render_template(template_path, variables)
+                content = template_renderer.render_template(
+                    template_path, variables
+                )
                 # Return a *virtual* abspath that matches the install layout
                 # (`rccl/rccl.h`). _resolve_include_dir() strips
                 # `rccl/rccl.h` from this to derive the include dir;
                 # libclang receives the same path via unsaved_files so the
                 # in-memory content is served when the file is parsed.
                 virtual_abspath = os.path.join(
-                    rocm_systems_dir, "projects/rccl/src/rccl/rccl.h",
+                    rocm_systems_dir,
+                    "projects/rccl/src/rccl/rccl.h",
                 )
                 return (virtual_abspath, content)
             except (FileNotFoundError, ValueError) as e:
@@ -192,17 +201,25 @@ def get_llvm_header(header_relpath: str, rocm_llvm_project_dir: str):
 
     # Handle amd_comgr.h.in template
     if header_relpath == "amd_comgr/amd_comgr.h":
-        template_path = os.path.join(rocm_llvm_project_dir, "amd/comgr/include/amd_comgr.h.in")
+        template_path = os.path.join(
+            rocm_llvm_project_dir, "amd/comgr/include/amd_comgr.h.in"
+        )
         if os.path.exists(template_path):
-            version_txt = os.path.join(rocm_llvm_project_dir, "amd/comgr/VERSION.txt")
+            version_txt = os.path.join(
+                rocm_llvm_project_dir, "amd/comgr/VERSION.txt"
+            )
             try:
                 variables = template_renderer.parse_comgr_version(version_txt)
                 # Add additional CMake variables that might be in template
-                variables.update({
-                    "AMD_COMGR_EXPORT_DECORATOR": "",  # Empty for Python bindings
-                    "AMD_COMGR_DEPRECATED": "",
-                })
-                content = template_renderer.render_template(template_path, variables)
+                variables.update(
+                    {
+                        "AMD_COMGR_EXPORT_DECORATOR": "",  # Empty for Python bindings
+                        "AMD_COMGR_DEPRECATED": "",
+                    }
+                )
+                content = template_renderer.render_template(
+                    template_path, variables
+                )
                 # Return a *virtual* abspath that matches the install layout
                 # (`amd_comgr/amd_comgr.h`). _resolve_include_dir() strips
                 # `amd_comgr/amd_comgr.h` from this to derive the include dir;
@@ -291,7 +308,9 @@ def _neutralize_rocrand_c_fallback(content: str) -> str:
     return new_content
 
 
-def _apply_header_workarounds(header_relpath: str, header_path: str, content: str | None):
+def _apply_header_workarounds(
+    header_relpath: str, header_path: str, content: str | None
+):
     """Apply per-header source patches before libclang sees the file.
 
     Returns (path, content). If `content` is None on entry, reads
@@ -350,7 +369,7 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
     """
     if header_relpath == "hipblaslt/hipblaslt.h":
         if content is None:
-            with open(header_path) as f:
+            with open(header_path, encoding="utf-8") as f:
                 content = f.read()
         # Strip the four problematic includes:
         #   <memory>/<regex>/<vector> — C++ stdlib, unused.
@@ -379,11 +398,17 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
         # enum `= N` values and the guarded `hipblasLtMatmulAlgo_t algo`
         # field are left untouched. The initialized value is irrelevant to
         # the binding (the struct is caller-allocated and callee-filled).
-        for decl in ("size_t workspaceSize", "hipblasStatus_t state", "float wavesCount"):
-            content = re.sub(re.escape(decl) + r"\s*=\s*[^;]+;", decl + ";", content)
+        for decl in (
+            "size_t workspaceSize",
+            "hipblasStatus_t state",
+            "float wavesCount",
+        ):
+            content = re.sub(
+                re.escape(decl) + r"\s*=\s*[^;]+;", decl + ";", content
+            )
     elif header_relpath == "hipsparselt/hipsparselt.h":
         if content is None:
-            with open(header_path) as f:
+            with open(header_path, encoding="utf-8") as f:
                 content = f.read()
         for bad in (
             "#include <hip/hip_bfloat16.h>",
@@ -392,7 +417,7 @@ def _apply_header_workarounds(header_relpath: str, header_path: str, content: st
             content = content.replace(bad, _stripped_include_marker(bad))
     elif header_relpath == "rocrand/rocrand.h":
         if content is None:
-            with open(header_path) as f:
+            with open(header_path, encoding="utf-8") as f:
                 content = f.read()
         content = _neutralize_rocrand_c_fallback(content)
     return (header_path, content)
@@ -421,7 +446,7 @@ def _persist_shim_header(
         output_dir, "packages", package, SHIM_INCLUDES_SUBDIR, header_relpath
     )
     os.makedirs(os.path.dirname(shim_path), exist_ok=True)
-    with open(shim_path, "w") as f:
+    with open(shim_path, "w", encoding="utf-8") as f:
         f.write(content)
     _log.info(f"  wrote shim header: {shim_path}")
 
@@ -481,7 +506,7 @@ def resolve_header_path(
     rocm_inc: str | None,
     rocm_systems_dir: str | None,
     rocm_libraries_dir: str | None,
-    rocm_llvm_project_dir: str | None
+    rocm_llvm_project_dir: str | None,
 ):
     """Resolve header file path from candidate locations with precedence.
 
@@ -528,22 +553,30 @@ def resolve_header_path(
             located = result
 
     if located is not None:
-        return _apply_header_workarounds(header_relpath, located[0], located[1])
+        return _apply_header_workarounds(
+            header_relpath, located[0], located[1]
+        )
 
     # Build error message with all checked locations
     candidates = []
     if rocm_inc:
         candidates.append(os.path.join(rocm_inc, header_relpath))
     if rocm_systems_dir:
-        candidates.append(f"{rocm_systems_dir}/projects/*/{{include,inc,src}}/{header_relpath}")
+        candidates.append(
+            f"{rocm_systems_dir}/projects/*/{{include,inc,src}}/{header_relpath}"
+        )
     if rocm_libraries_dir:
-        candidates.append(f"{rocm_libraries_dir}/projects/*/library/include/{header_relpath}")
+        candidates.append(
+            f"{rocm_libraries_dir}/projects/*/library/include/{header_relpath}"
+        )
     if rocm_llvm_project_dir:
-        candidates.append(f"{rocm_llvm_project_dir}/amd/*/include/{header_relpath}")
+        candidates.append(
+            f"{rocm_llvm_project_dir}/amd/*/include/{header_relpath}"
+        )
 
     raise FileNotFoundError(
-        f"Header '{header_relpath}' not found in any candidate location:\n" +
-        "\n".join(f"  - {c}" for c in candidates)
+        f"Header '{header_relpath}' not found in any candidate location:\n"
+        + "\n".join(f"  - {c}" for c in candidates)
     )
 
 
@@ -618,8 +651,17 @@ def build_generator_include_paths(
 
 
 def _resolve_include_dir(header_path: str, header_relpath: str) -> str:
-    """Strip header_relpath from header_path to get the include base dir."""
-    rel_components = header_relpath.count(os.sep) + 1
+    """Strip header_relpath from header_path to get the include base dir.
+
+    The relpaths are written POSIX-style throughout this module
+    ("hip/hip_runtime.h", "hipdnn/backend/hipdnn_backend.h"), so their depth
+    must be counted on "/" rather than on os.sep -- counting os.sep on Windows
+    finds no separator at all and strips one component too few, leaving the
+    header's own directory on the include dir.
+    """
+    rel_components = len(
+        header_relpath.replace("\\", "/").strip("/").split("/")
+    )
     include_dir = header_path
     for _ in range(rel_components):
         include_dir = os.path.dirname(include_dir)
@@ -668,7 +710,9 @@ def _worker_generate_library(
     start = time.time()
     try:
         callable_, pkg_short, header_relpath = AVAILABLE_GENERATORS[libname]
-        pkg_dir = os.path.join(output_dir_root, "packages", *_PKG_TO_DIR[pkg_short])
+        pkg_dir = os.path.join(
+            output_dir_root, "packages", *_PKG_TO_DIR[pkg_short]
+        )
         Path(pkg_dir).mkdir(parents=True, exist_ok=True)
 
         if header_relpath is None:
@@ -679,7 +723,19 @@ def _worker_generate_library(
                 raise RuntimeError(
                     f"'{libname}' requires --rocm-path to derive llvm/include"
                 )
-            include_dir = os.path.join(os.path.dirname(rocm_inc), "llvm", "include")
+            # ROCm keeps LLVM under `llvm/` on Linux but under `lib/llvm/` on
+            # Windows. Probe both rather than assuming, otherwise the tree walk
+            # below silently finds no headers.
+            rocm_root = os.path.dirname(rocm_inc)
+            for _llvm_rel in (("llvm", "include"), ("lib", "llvm", "include")):
+                include_dir = os.path.join(rocm_root, *_llvm_rel)
+                if os.path.isdir(include_dir):
+                    break
+            else:
+                raise RuntimeError(
+                    f"'{libname}': no LLVM include dir under {rocm_root} "
+                    "(tried llvm/include and lib/llvm/include)"
+                )
             kwargs = dict(
                 output_dir=pkg_dir,
                 include_dir=include_dir,
@@ -750,8 +806,6 @@ def _worker_generate_library(
         elapsed = time.time() - start
         fh.close()
         return (libname, log_path, elapsed, "error", None, str(e))
-
-
 
 
 # NOTE: helpers that previously wrote `_version.py.in`, `__init__.py`,
@@ -896,24 +950,64 @@ def generate_cuda_interop_layer_files(
 # output into the right `packages/rocm-bindings-<pkg>/...` directory.
 AVAILABLE_GENERATORS = {
     # rocm-bindings-hip
-    "hip":       (generators_hip.generate_hip,             "hip",       "hip/hip_runtime.h"),
-    "hiprtc":    (generators_hip.generate_hiprtc,          "hip",       "hip/hiprtc.h"),
+    "hip": (generators_hip.generate_hip, "hip", "hip/hip_runtime.h"),
+    "hiprtc": (generators_hip.generate_hiprtc, "hip", "hip/hiprtc.h"),
     # rocm-bindings-systems
-    "rccl":      (generators_systems.generate_rccl,        "systems",   "rccl/rccl.h"),
-    "roctx":     (generators_systems.generate_roctx,       "systems",   "roctracer/roctx.h"),
-    "hipfile":   (generators_systems.generate_hipfile,     "systems",   "hipfile.h"),
-    "amdsmi":    (generators_systems.generate_amdsmi,      "systems",   "amd_smi/amdsmi.h"),
+    "rccl": (generators_systems.generate_rccl, "systems", "rccl/rccl.h"),
+    "roctx": (
+        generators_systems.generate_roctx,
+        "systems",
+        "roctracer/roctx.h",
+    ),
+    "hipfile": (generators_systems.generate_hipfile, "systems", "hipfile.h"),
+    "amdsmi": (
+        generators_systems.generate_amdsmi,
+        "systems",
+        "amd_smi/amdsmi.h",
+    ),
     # "hsa" binding disabled — excluded from codegen/build/docs.
     # "hsa":       (generators_systems.generate_hsa,         "systems",   "hsa/hsa_ext_amd.h"),
     # rocm-bindings-libraries
-    "hipblas":     (generators_libraries.generate_hipblas,     "libraries", "hipblas/hipblas.h"),
-    "hipblaslt":   (generators_libraries.generate_hipblaslt,   "libraries", "hipblaslt/hipblaslt.h"),
-    "hiprand":     (generators_libraries.generate_hiprand,     "libraries", "hiprand/hiprand.h"),
-    "hipfft":      (generators_libraries.generate_hipfft,      "libraries", "hipfft/hipfft.h"),
-    "hipsparse":   (generators_libraries.generate_hipsparse,   "libraries", "hipsparse/hipsparse.h"),
-    "hipsparselt": (generators_libraries.generate_hipsparselt, "libraries", "hipsparselt/hipsparselt.h"),
-    "hipsolver":   (generators_libraries.generate_hipsolver,   "libraries", "hipsolver/hipsolver.h"),
-    "hiptensor":   (generators_libraries.generate_hiptensor,   "libraries", "hiptensor/hiptensor.h"),
+    "hipblas": (
+        generators_libraries.generate_hipblas,
+        "libraries",
+        "hipblas/hipblas.h",
+    ),
+    "hipblaslt": (
+        generators_libraries.generate_hipblaslt,
+        "libraries",
+        "hipblaslt/hipblaslt.h",
+    ),
+    "hiprand": (
+        generators_libraries.generate_hiprand,
+        "libraries",
+        "hiprand/hiprand.h",
+    ),
+    "hipfft": (
+        generators_libraries.generate_hipfft,
+        "libraries",
+        "hipfft/hipfft.h",
+    ),
+    "hipsparse": (
+        generators_libraries.generate_hipsparse,
+        "libraries",
+        "hipsparse/hipsparse.h",
+    ),
+    "hipsparselt": (
+        generators_libraries.generate_hipsparselt,
+        "libraries",
+        "hipsparselt/hipsparselt.h",
+    ),
+    "hipsolver": (
+        generators_libraries.generate_hipsolver,
+        "libraries",
+        "hipsolver/hipsolver.h",
+    ),
+    "hiptensor": (
+        generators_libraries.generate_hiptensor,
+        "libraries",
+        "hiptensor/hiptensor.h",
+    ),
     # `hipdnn/backend/hipdnn_backend.h` is the install-dir layout
     # (`/opt/rocm/include/hipdnn/backend/hipdnn_backend.h`). Don't be
     # tempted to use the source-tree relative path
@@ -925,20 +1019,28 @@ AVAILABLE_GENERATORS = {
     # Reading from the install dir keeps the export header next to
     # the umbrella header where the relative `#include "..."` finds
     # it.
-    "hipdnn_backend": (generators_libraries.generate_hipdnn_backend, "libraries", "hipdnn/backend/hipdnn_backend.h"),
+    "hipdnn_backend": (
+        generators_libraries.generate_hipdnn_backend,
+        "libraries",
+        "hipdnn/backend/hipdnn_backend.h",
+    ),
     # rocm-bindings-compiler — both formerly their own recipes; now
     # libraries inside the hip recipe. amd_comgr is single-header;
     # llvm is multi-module (header_relpath=None signals the orchestrator
     # to pass output_dir instead of resolving a single header).
-    "amd_comgr": (generators_compiler.generate_amd_comgr,  "compiler",  "amd_comgr/amd_comgr.h"),
-    "llvm":      (generators_compiler.write_llvm_modules,  "compiler",  None),
+    "amd_comgr": (
+        generators_compiler.generate_amd_comgr,
+        "compiler",
+        "amd_comgr/amd_comgr.h",
+    ),
+    "llvm": (generators_compiler.write_llvm_modules, "compiler", None),
 }
 
 _PKG_TO_DIR = {
-    "hip":       ("rocm-bindings-hip",       "src", "rocm", "bindings"),
+    "hip": ("rocm-bindings-hip", "src", "rocm", "bindings"),
     "libraries": ("rocm-bindings-libraries", "src", "rocm", "bindings"),
-    "systems":   ("rocm-bindings-systems",   "src", "rocm", "bindings"),
-    "compiler":  ("rocm-bindings-compiler",  "src", "rocm", "bindings"),
+    "systems": ("rocm-bindings-systems", "src", "rocm", "bindings"),
+    "compiler": ("rocm-bindings-compiler", "src", "rocm", "bindings"),
 }
 
 
@@ -957,18 +1059,36 @@ def generate(opts):  # noqa: C901
     """
     output_dir = opts.output_dir
     # Support both rocm_path and repository directories
-    rocm_inc = os.path.join(opts.rocm_path, "include") if opts.rocm_path else None
+    rocm_inc = (
+        os.path.join(opts.rocm_path, "include") if opts.rocm_path else None
+    )
     rocm_systems_dir = opts.rocm_systems_dir
     rocm_libraries_dir = opts.rocm_libraries_dir
     rocm_llvm_project_dir = opts.rocm_llvm_project_dir
     runtime_linking = opts.runtime_linking
 
-    # hipify-perl is optional now (only needed for CUDA interop)
+    # hipify-perl is optional (only needed for CUDA interop).
+    #
+    # The script itself lives in libexec/hipify; ROCm additionally symlinks it
+    # into bin/ on Unix, but a Windows install has only the libexec copy. Look
+    # in both, and honour the "optional" above by degrading to an empty map
+    # rather than aborting the whole run when neither is present.
+    hip_2_cuda = {}
     if opts.rocm_path:
-        hipify_perl_path = os.path.join(opts.rocm_path, "bin", "hipify-perl")
-        (_, hip_2_cuda) = parse_hipify_perl(hipify_perl_path)
-    else:
-        hip_2_cuda = {}  # Empty if no CUDA interop
+        for _rel in (
+            ("bin", "hipify-perl"),
+            ("libexec", "hipify", "hipify-perl"),
+        ):
+            hipify_perl_path = os.path.join(opts.rocm_path, *_rel)
+            if os.path.exists(hipify_perl_path):
+                (_, hip_2_cuda) = parse_hipify_perl(hipify_perl_path)
+                break
+        else:
+            print(
+                f"[warn] hipify-perl not found under {opts.rocm_path}; "
+                "CUDA interop symbol mapping will be empty",
+                file=sys.stderr,
+            )
 
     rocm_v = opts.rocm_version.split(".")
     rocm_version_tuple = (int(rocm_v[0]), int(rocm_v[1]), int(rocm_v[2]))
@@ -979,7 +1099,10 @@ def generate(opts):  # noqa: C901
     # The codegen always targets AMD; no nvidia path is exercised in practice.
     generator_args = list(opts.generator_args or [])
     generator_args += build_generator_include_paths(
-        rocm_inc, rocm_systems_dir, rocm_libraries_dir, rocm_llvm_project_dir,
+        rocm_inc,
+        rocm_systems_dir,
+        rocm_libraries_dir,
+        rocm_llvm_project_dir,
     )
 
     if not opts.clang_resource_dir:
@@ -1004,7 +1127,12 @@ def generate(opts):  # noqa: C901
     # when its wheel is in the (include - exclude) set.
     selected_wheels = set(opts.include) - set(opts.exclude)
     lib_names = [
-        name for name, (_callable, pkg_short, _relpath) in AVAILABLE_GENERATORS.items()
+        name
+        for name, (
+            _callable,
+            pkg_short,
+            _relpath,
+        ) in AVAILABLE_GENERATORS.items()
         if pkg_short in selected_wheels
     ]
 
@@ -1019,7 +1147,9 @@ def generate(opts):  # noqa: C901
     )
     for d in pkg_dirs.values():
         Path(d).mkdir(parents=True, exist_ok=True)
-    Path(os.path.join(cuda_output_dir, "bindings")).mkdir(parents=True, exist_ok=True)
+    Path(os.path.join(cuda_output_dir, "bindings")).mkdir(
+        parents=True, exist_ok=True
+    )
 
     # The cuda interop layer needs the hip + hiprtc generators to wire
     # up its alias bindings. We capture them as we walk the lib list so
@@ -1049,7 +1179,9 @@ def generate(opts):  # noqa: C901
     log_dir = tempfile.mkdtemp(prefix=f"hip_python_codegen_{os.getpid()}_")
     log_paths = {}
     errors = {}
-    multi_module_names = {}  # libname -> list[str] (for llvm and other multi-module libs)
+    multi_module_names = (
+        {}
+    )  # libname -> list[str] (for llvm and other multi-module libs)
 
     print(f"[info] per-library logs: {log_dir}", file=sys.stderr)
 
@@ -1061,7 +1193,9 @@ def generate(opts):  # noqa: C901
         print(f"[start] {libname}", file=sys.stderr)
         start = time.time()
         try:
-            callable_, pkg_short, header_relpath = AVAILABLE_GENERATORS[libname]
+            callable_, pkg_short, header_relpath = AVAILABLE_GENERATORS[
+                libname
+            ]
             if header_relpath is None:
                 # Multi-module library (currently: llvm). Callable owns
                 # both the build and the writing.
@@ -1071,7 +1205,9 @@ def generate(opts):  # noqa: C901
                         file=sys.stderr,
                     )
                     return
-                include_dir = os.path.join(os.path.dirname(rocm_inc), "llvm", "include")
+                include_dir = os.path.join(
+                    os.path.dirname(rocm_inc), "llvm", "include"
+                )
                 kwargs = dict(common_kwargs)
                 kwargs["output_dir"] = pkg_dirs[pkg_short]
                 kwargs["include_dir"] = include_dir
@@ -1083,8 +1219,11 @@ def generate(opts):  # noqa: C901
                 return
             try:
                 header_path, header_content = resolve_header_path(
-                    header_relpath, rocm_inc, rocm_systems_dir,
-                    rocm_libraries_dir, rocm_llvm_project_dir,
+                    header_relpath,
+                    rocm_inc,
+                    rocm_systems_dir,
+                    rocm_libraries_dir,
+                    rocm_llvm_project_dir,
                 )
             except FileNotFoundError as e:
                 _log.warning(f"Skipping '{libname}': {e}")
@@ -1149,9 +1288,15 @@ def generate(opts):  # noqa: C901
                 print(f"[start] {libname}", file=sys.stderr)
                 future = pool.submit(
                     _worker_generate_library,
-                    libname, output_dir, rocm_inc, rocm_systems_dir,
-                    rocm_libraries_dir, rocm_llvm_project_dir,
-                    runtime_linking, generator_args, rocm_version_tuple,
+                    libname,
+                    output_dir,
+                    rocm_inc,
+                    rocm_systems_dir,
+                    rocm_libraries_dir,
+                    rocm_llvm_project_dir,
+                    runtime_linking,
+                    generator_args,
+                    rocm_version_tuple,
                     log_path,
                 )
                 futures[future] = libname
@@ -1164,7 +1309,9 @@ def generate(opts):  # noqa: C901
             for future in as_completed(futures):
                 libname = futures[future]
                 try:
-                    (lib, _lp, elapsed, status, mod_names, err) = future.result()
+                    (lib, _lp, elapsed, status, mod_names, err) = (
+                        future.result()
+                    )
                 except Exception as e:
                     errors[libname] = str(e)
                     print(f"[error] {libname}: {e}", file=sys.stderr)
@@ -1175,7 +1322,10 @@ def generate(opts):  # noqa: C901
                     print(f"[done] {lib} ({elapsed:.1f}s)", file=sys.stderr)
                 else:
                     errors[lib] = err
-                    print(f"[error] {lib} ({elapsed:.1f}s): {err}", file=sys.stderr)
+                    print(
+                        f"[error] {lib} ({elapsed:.1f}s): {err}",
+                        file=sys.stderr,
+                    )
     else:
         # Nothing to parallelize — run everything sequentially.
         for libname in sequential_libs:
@@ -1185,7 +1335,7 @@ def generate(opts):  # noqa: C901
     license_path = opts.license_path or os.path.join(
         os.path.dirname(__file__), "..", "..", "..", "LICENSE"
     )
-    with open(license_path, "r") as licensefile:
+    with open(license_path, "r", encoding="utf-8") as licensefile:
         license_text = "".join(
             f"# {ln}\n" for ln in licensefile.read().rstrip().splitlines()
         )
@@ -1248,9 +1398,7 @@ NAMESPACE_MARKER_BODY = (
 # nested `rocm/bindings/llvm/**` tree) so type checkers and sphinx-autoapi see
 # a stub for the namespace package. Unlike the `.pxd` marker this one IS
 # installed (the owning wheel ships its own subfolder markers).
-NAMESPACE_PYI_MARKER_BODY = (
-    "# Namespace package stub — auto-generated by the hip-python code generator.\n"
-)
+NAMESPACE_PYI_MARKER_BODY = "# Namespace package stub — auto-generated by the hip-python code generator.\n"
 
 _AUTOGEN_HEADER = (
     "# AUTO-GENERATED by the hip-python code generator. Do not edit by hand.\n"
@@ -1274,11 +1422,46 @@ def write_namespace_markers(opts, recipe_results):
     markers, since the other binding roots are flat.
     """
     package_roots = [
-        os.path.join(opts.output_dir, "packages", "rocm-bindings-hip", "src", "rocm", "bindings"),
-        os.path.join(opts.output_dir, "packages", "rocm-bindings-libraries", "src", "rocm", "bindings"),
-        os.path.join(opts.output_dir, "packages", "rocm-bindings-systems", "src", "rocm", "bindings"),
-        os.path.join(opts.output_dir, "packages", "rocm-bindings-compiler", "src", "rocm", "bindings"),
-        os.path.join(opts.output_dir, "packages", "hip-python-interop", "src", "cuda", "bindings"),
+        os.path.join(
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-hip",
+            "src",
+            "rocm",
+            "bindings",
+        ),
+        os.path.join(
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-libraries",
+            "src",
+            "rocm",
+            "bindings",
+        ),
+        os.path.join(
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-systems",
+            "src",
+            "rocm",
+            "bindings",
+        ),
+        os.path.join(
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-compiler",
+            "src",
+            "rocm",
+            "bindings",
+        ),
+        os.path.join(
+            opts.output_dir,
+            "packages",
+            "hip-python-interop",
+            "src",
+            "cuda",
+            "bindings",
+        ),
     ]
     for root in package_roots:
         if not os.path.isdir(root):
@@ -1329,25 +1512,35 @@ def write_cmake_module_lists(opts, recipe_results):
     if hip_result is not None:
         libs = hip_result.get("libraries_modules") or []
         path = os.path.join(
-            opts.output_dir, "packages", "rocm-bindings-libraries", "cmake",
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-libraries",
+            "cmake",
             "generated_modules.cmake",
         )
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(_AUTOGEN_HEADER)
-            f.write(f"set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES\n    {' '.join(libs)})\n")
+            f.write(
+                f"set(HIP_PYTHON_LIBRARIES_GENERATED_MODULES\n    {' '.join(libs)})\n"
+            )
 
     # rocm-bindings-systems
     if hip_result is not None:
         sys_libs = hip_result.get("systems_modules") or []
         path = os.path.join(
-            opts.output_dir, "packages", "rocm-bindings-systems", "cmake",
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-systems",
+            "cmake",
             "generated_modules.cmake",
         )
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(_AUTOGEN_HEADER)
-            f.write(f"set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES\n    {' '.join(sys_libs)})\n")
+            f.write(
+                f"set(HIP_PYTHON_SYSTEMS_GENERATED_MODULES\n    {' '.join(sys_libs)})\n"
+            )
 
     # rocm-bindings-compiler
     # llvm modules now flow through the hip recipe (multi-module library
@@ -1359,14 +1552,22 @@ def write_cmake_module_lists(opts, recipe_results):
     comgr_modules = recipe_results.get("hip", {}).get("compiler_modules") or []
     if llvm_modules or comgr_modules:
         path = os.path.join(
-            opts.output_dir, "packages", "rocm-bindings-compiler", "cmake",
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-compiler",
+            "cmake",
             "generated_modules.cmake",
         )
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
         # Subdivide LLVM modules by their on-disk subdirectory.
         c_modules, transforms_modules, config_modules = [], [], []
         compiler_root = os.path.join(
-            opts.output_dir, "packages", "rocm-bindings-compiler", "rocm", "bindings", "llvm",
+            opts.output_dir,
+            "packages",
+            "rocm-bindings-compiler",
+            "rocm",
+            "bindings",
+            "llvm",
         )
         for m in llvm_modules:
             # llvm_modules is a list of py_global_name strings like
@@ -1376,7 +1577,9 @@ def write_cmake_module_lists(opts, recipe_results):
                 idx = parts.index("llvm")
             except ValueError:
                 continue
-            tail = parts[idx + 1:]  # e.g. ["c", "core"], ["c", "transforms", "passbuilder"]
+            tail = parts[
+                idx + 1 :
+            ]  # e.g. ["c", "core"], ["c", "transforms", "passbuilder"]
             if not tail:
                 continue
             leaf = tail[-1]
@@ -1386,13 +1589,16 @@ def write_cmake_module_lists(opts, recipe_results):
                 config_modules.append(leaf)
             elif "c" in tail:
                 c_modules.append(leaf)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(_AUTOGEN_HEADER)
             for var, lst in (
                 ("HIP_PYTHON_LLVM_C_MODULES", c_modules),
                 ("HIP_PYTHON_LLVM_C_TRANSFORMS_MODULES", transforms_modules),
                 ("HIP_PYTHON_LLVM_CONFIG_MODULES", config_modules),
-                ("HIP_PYTHON_COMGR_MODULES", [m.split(".")[-1] for m in comgr_modules]),
+                (
+                    "HIP_PYTHON_COMGR_MODULES",
+                    [m.split(".")[-1] for m in comgr_modules],
+                ),
             ):
                 f.write(f"set({var}\n    {' '.join(lst)})\n\n")
 
@@ -1450,7 +1656,11 @@ def write_cmake_version_files(opts, recipe_results):
     hip_version = recipe_results.get("hip", {}).get("hip_version")
     if hip_version:
         major, minor, patch, githash = hip_version
-        hip_version_str = f"{major}.{minor}.{patch}-{githash}" if githash else f"{major}.{minor}.{patch}"
+        hip_version_str = (
+            f"{major}.{minor}.{patch}-{githash}"
+            if githash
+            else f"{major}.{minor}.{patch}"
+        )
         hip_commit = githash or ""
     else:
         hip_version_str = ""
@@ -1496,8 +1706,10 @@ def write_cmake_version_files(opts, recipe_results):
             return ""
         try:
             return subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], cwd=path,
-                text=True, stderr=subprocess.DEVNULL,
+                ["git", "rev-parse", "HEAD"],
+                cwd=path,
+                text=True,
+                stderr=subprocess.DEVNULL,
             ).strip()
         except Exception:
             return ""
@@ -1508,11 +1720,16 @@ def write_cmake_version_files(opts, recipe_results):
         getattr(opts, "rocm_llvm_project_dir", None)
     )
     for _label, _path, _rev in (
-        ("--rocm-systems-dir",
-         getattr(opts, "rocm_systems_dir", None), rocm_systems_rev),
-        ("--rocm-llvm-project-dir",
-         getattr(opts, "rocm_llvm_project_dir", None),
-         rocm_llvm_project_rev),
+        (
+            "--rocm-systems-dir",
+            getattr(opts, "rocm_systems_dir", None),
+            rocm_systems_rev,
+        ),
+        (
+            "--rocm-llvm-project-dir",
+            getattr(opts, "rocm_llvm_project_dir", None),
+            rocm_llvm_project_rev,
+        ),
     ):
         if not _path:
             print(
@@ -1533,7 +1750,8 @@ def write_cmake_version_files(opts, recipe_results):
     # date (which would change every time someone rebuilds docs).
     codegen_date = (
         datetime.datetime.now(datetime.timezone.utc)
-        .replace(microsecond=0).isoformat()
+        .replace(microsecond=0)
+        .isoformat()
     )
 
     # Render the runtime version module from the committed template.
@@ -1561,10 +1779,20 @@ def write_cmake_version_files(opts, recipe_results):
         + f'set(HIP_PYTHON_GENERATED_ROCM_SYSTEMS_REV     "{rocm_systems_rev}")\n'
         + f'set(HIP_PYTHON_GENERATED_ROCM_LLVM_PROJECT_REV "{rocm_llvm_project_rev}")\n'
     )
-    for pkg in ("rocm-bindings-hip", "rocm-bindings-libraries",
-                "rocm-bindings-systems", "rocm-bindings-compiler",
-                "hip-python-interop"):
-        path = os.path.join(opts.output_dir, "packages", pkg, "cmake", "generated_versions.cmake")
+    for pkg in (
+        "rocm-bindings-hip",
+        "rocm-bindings-libraries",
+        "rocm-bindings-systems",
+        "rocm-bindings-compiler",
+        "hip-python-interop",
+    ):
+        path = os.path.join(
+            opts.output_dir,
+            "packages",
+            pkg,
+            "cmake",
+            "generated_versions.cmake",
+        )
         Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(body)

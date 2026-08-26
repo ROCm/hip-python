@@ -46,14 +46,14 @@ from ..support import cython as support
 from ..support.recipes import control
 
 _log = logging.getLogger("interfacegen")
-from . import _defaults, _doxygen, _mixins, _entities
+from . import _defaults, _doxygen, _entities, _mixins
 from ._defaults import *  # noqa: F401,F403
 from ._doxygen import *  # noqa: F401,F403
-from ._mixins import *  # noqa: F401,F403
 from ._entities import *  # noqa: F401,F403
+from ._mixins import *  # noqa: F401,F403
 
 __all__ = [
-    'Function',
+    "Function",
 ]
 
 
@@ -73,7 +73,7 @@ class Function(tree.Function, CythonMixin, Typed):
         # Full hand-written overrides for the high-level Python interface.
         # When set (typically by a recipe ``node_init``), they let the
         # generator emit a verbatim ``def`` body / docstring for this one
-        # function instead of the mechanical emitter output. 
+        # function instead of the mechanical emitter output.
         # Both default to ``None`` (no override).
         self.python_interface_impl_override = None
         self.python_docstring_override = None
@@ -201,8 +201,11 @@ cdef void* {funptr_name} = NULL
     # flake8: noqa: C901
     # TODO break function apart to reduce complexity
     def _render_python_docstring(
-        self, out_arg_names: list, parm_python_types: dict,
-        *, module_opts: dict = None,
+        self,
+        out_arg_names: list,
+        parm_python_types: dict,
+        *,
+        module_opts: dict = None,
     ):
         """Converts doxygen comment to a Python docstring using the doxyparser API.
 
@@ -261,9 +264,12 @@ cdef void* {funptr_name} = NULL
                 # tokens[1] is the return value name; it may have been
                 # markdown-quoted in the header (`` `FOO` ``).
                 retval_name = str(section.tokens[1]).strip("`")
-                descr = self._render_doxygen_section_body(
-                    section, outer_indent=""
-                ).strip().lstrip("-* \t").strip()
+                descr = (
+                    self._render_doxygen_section_body(section, outer_indent="")
+                    .strip()
+                    .lstrip("-* \t")
+                    .strip()
+                )
                 entry = self.to_sphinx_pyobj(retval_name)
                 if descr:
                     entry += f": {descr}"
@@ -407,9 +413,8 @@ cdef void* {funptr_name} = NULL
 
         if len(docstring_returns):
             docstring_body += "\nReturns:\n"
-            if (
-                len(docstring_returns) > 1
-                or _module_opts.get("python_interface_always_return_tuple", False)
+            if len(docstring_returns) > 1 or _module_opts.get(
+                "python_interface_always_return_tuple", False
             ):
                 docstring_body += f"{single_level_indent}A {self.to_sphinx_pyobj('tuple')} of size {len(docstring_returns)} that contains (in that order):\n\n"
                 prefix = "* "
@@ -510,28 +515,21 @@ cdef void* {funptr_name} = NULL
             []
         )  # arguments that are passed to the C interface
         # Parallel list to c_interface_call_args. Each entry is either
-        # None (the corresponding call_arg is pure-C and stays inline
-        # inside `with nogil:`) or a complete `cdef <T> _cy_<f>__arg_N
-        # = <expr>` line that runs PRE-`with nogil:` to materialize a
-        # Python-touching expression (IntEnum .value lookup, fromPyobj
-        # factory call, Pointer wrapper construction, etc.) into a
-        # typed C local. The nogil emitter consumes this list; the
-        # with-gil emitter ignores it (everything is inline).
+        # None (the corresponding call_arg is inline in the cy* call) or
+        # a complete `cdef <T> _cy_<f>__arg_N = <expr>` line that runs
+        # before the call to materialize a Python-touching expression
+        # (IntEnum .value lookup, fromPyobj factory call, Pointer
+        # wrapper construction, etc.) into a typed C local. Both
+        # emitters consume this list.
         c_interface_prehoist = []
         prolog = []  # additional code before the C interface call
-
-        # Hoisting is only useful when the cy* call will be wrapped
-        # in `with nogil:` — for the with-gil emission path, the
-        # original expression is fine inline (the GIL is held
-        # throughout), and an unrendered hoist would leave a dangling
-        # symbol reference in the call args. Drives _append_call_arg's
-        # behavior below.
-        nogil_mode = "nogil" in (self.modifiers_lazy_loader or "")
 
         def _with_cprefix(c_type: str) -> str:
             return Function._add_module_cprefix(c_type, cprefix)
 
-        def _append_call_arg(passthrough: str = None, *, hoist: CallArgHoist = None):
+        def _append_call_arg(
+            passthrough: str = None, *, hoist: CallArgHoist = None
+        ):
             """Register one parameter passed to the cy* C call.
 
             Exactly one of ``passthrough`` / ``hoist`` must be given.
@@ -544,29 +542,32 @@ cdef void* {funptr_name} = NULL
 
             ``hoist`` form — the argument touches Python (e.g.
             ``Wrapper.fromPyobj(arg).getPtr()`` or ``parm.value`` on
-            an IntEnum). Behaviour depends on the emitter mode:
+            an IntEnum). It is always rendered as a pre-call ``cdef <T>
+            _cy_<func>__arg_N = <expr>`` line appended to
+            ``c_interface_prehoist``, with the symbol appended to
+            ``c_interface_call_args``.
 
-            * Under ``with nogil:`` (``nogil_mode``), the hoist's
-              ``render_prehoist`` line(s) are appended to
-              ``c_interface_prehoist`` and the auto-generated symbol
-              ``_cy_<func>__arg_N`` is appended to
-              ``c_interface_call_args``. The cy* call sees only a typed
-              C value. Wrapper-bound hoists also emit a ``_obj`` cdef
-              binding so the wrapper outlives the with-nogil block.
+            The rule is emitter-independent: anything derived from
+            Python gets a named local, only pure-C expressions stay
+            inline. Two reasons, either of which suffices:
 
-            * Under the with-gil emitter, the GIL is held throughout
-              the cy* call so no hoist is needed; the hoist's
-              :pymeth:`CallArgHoist.inline_expr` is appended verbatim.
+            * Nothing that touches Python may run inside ``with
+              nogil:``, so the with-nogil emitter needs the value
+              materialized before the block.
+
+            * A wrapper-bound hoist borrows memory owned by a wrapper
+              temporary, and Cython releases that temporary before the
+              cy* call runs — with the GIL held just as much as without
+              it. Only the pre-call form (which binds the wrapper to an
+              ``_obj`` local) keeps the memory alive across the call;
+              see :class:`CallArgHoist`.
             """
-            assert (passthrough is None) ^ (hoist is None), (
-                "_append_call_arg: exactly one of passthrough / hoist required"
-            )
-            if hoist is None or not nogil_mode:
+            assert (passthrough is None) ^ (
+                hoist is None
+            ), "_append_call_arg: exactly one of passthrough / hoist required"
+            if hoist is None:
                 c_interface_prehoist.append(None)
-                c_interface_call_args.append(
-                    passthrough if passthrough is not None
-                    else hoist.inline_expr()
-                )
+                c_interface_call_args.append(passthrough)
             else:
                 arg_idx = len(c_interface_call_args)
                 arg_name = f"_cy_{self.cython_name}__arg_{arg_idx}"
@@ -600,10 +601,16 @@ cdef void* {funptr_name} = NULL
                 parm.is_pointer_to_basic_type(degree=1)
                 and parm.actual_rank == 0
             ):
-                typehandler = parm.typehandler.create_from_layer(
-                    1, canonical=True
-                )
-                parm_typename = typehandler.clang_type.spelling
+                # Take the base spelling from the same renderer that produced
+                # the parameter's type in the .pxd. Reading the canonical
+                # pointee's spelling off libclang instead would reintroduce the
+                # host's data model here (`size_t *` declared in the .pxd
+                # against an `unsigned long long` local on Windows, an
+                # `unsigned long` one on Linux), and Cython rejects the
+                # resulting pointer mismatch.
+                parm_typename = parm.render_type(
+                    parm.sep, parm.renamer, prefer_canonical=True
+                ).base_typename
                 prolog.append(f"cdef {parm_typename} {parm_name}")
                 out_args.append(parm_name)  # TODO modify for char* pointer
                 # Pure C: address-of a cdef-local typed scalar.
@@ -731,7 +738,9 @@ cdef void* {funptr_name} = NULL
                 _log.error(
                     f"<{self.render_location()}> function {self.name}: parm {parm_name}: not handled, canonical C type: '{canonical}'"
                 )
-                raise CodegenUnsupportedPattern(self.name, parm_name, canonical)
+                raise CodegenUnsupportedPattern(
+                    self.name, parm_name, canonical
+                )
 
         def emit_datahandle_(
             parm_typename: str, parm: tree.Parm, cprefix: str = ""
@@ -770,13 +779,15 @@ cdef void* {funptr_name} = NULL
             # directly for the hoist type — _with_cprefix would
             # blindly add the outer cy* prefix even to primitive
             # types.
-            _append_call_arg(hoist=CallArgHoist(
-                c_type=f"{cprefix}{parm_typename}",
-                wrapper_class=handler_name,
-                wrapper_factory=f"{handler_name}.fromPyobj({parm_name})",
-                pointer_extract="getPtr()",
-                cast_open=f"<{cprefix}{parm_typename}>",
-            ))
+            _append_call_arg(
+                hoist=CallArgHoist(
+                    c_type=f"{cprefix}{parm_typename}",
+                    wrapper_class=handler_name,
+                    wrapper_factory=f"{handler_name}.fromPyobj({parm_name})",
+                    pointer_extract="getPtr()",
+                    cast_open=f"<{cprefix}{parm_typename}>",
+                )
+            )
             parm_python_types[parm.name] = f"{handler_name}/object"
 
         def emit_data_handle_for_ptr_to_void_basic_enum_(
@@ -858,13 +869,15 @@ cdef void* {funptr_name} = NULL
                 # cprefix-prefixed cy* type so Cython sees the C
                 # struct / typedef from the cy* module rather than
                 # the same-named Python wrapper class in this file.
-                _append_call_arg(hoist=CallArgHoist(
-                    c_type=c_type,
-                    wrapper_class=parm_typename,
-                    wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
-                    pointer_extract=pointer_extract,
-                    cast_open=cast_open,
-                ))
+                _append_call_arg(
+                    hoist=CallArgHoist(
+                        c_type=c_type,
+                        wrapper_class=parm_typename,
+                        wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
+                        pointer_extract=pointer_extract,
+                        cast_open=cast_open,
+                    )
+                )
             elif parm.is_pointer_to_constantarray_of_basic_type(
                 degree=1, incomplete_array=True
             ):
@@ -879,12 +892,16 @@ cdef void* {funptr_name} = NULL
                         f"{parm_typename}/object"  # use original name as key
                     )
                     # Same hoist rationale as above.
-                    _append_call_arg(hoist=CallArgHoist(
-                        c_type=_with_cprefix(parm.cython_global_typename_no_const),
-                        wrapper_class=parm_typename,
-                        wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
-                        pointer_extract="getElementPtr()",
-                    ))
+                    _append_call_arg(
+                        hoist=CallArgHoist(
+                            c_type=_with_cprefix(
+                                parm.cython_global_typename_no_const
+                            ),
+                            wrapper_class=parm_typename,
+                            wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
+                            pointer_extract="getElementPtr()",
+                        )
+                    )
                 else:  # type has no wrapper class, emit default handler
                     parm_typename = parm.cython_global_typename
                     emit_datahandle_(parm_typename, parm, "")
@@ -941,13 +958,15 @@ cdef void* {funptr_name} = NULL
                 )
                 sig_args.append(f"object {parm_name}")
                 parm_python_types[parm.name] = f"{parm_typename}/object"
-                _append_call_arg(hoist=CallArgHoist(
-                    c_type=c_type,
-                    wrapper_class=parm_typename,
-                    wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
-                    pointer_extract="getPtr()",
-                    cast_open=f"<{c_type}>",
-                ))
+                _append_call_arg(
+                    hoist=CallArgHoist(
+                        c_type=c_type,
+                        wrapper_class=parm_typename,
+                        wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
+                        pointer_extract="getPtr()",
+                        cast_open=f"<{c_type}>",
+                    )
+                )
 
         def handle_value_parm_(parm: Parm):
             if parm.is_autoconverted_by_cython:
@@ -981,16 +1000,22 @@ cdef void* {funptr_name} = NULL
                 # file). No wrapper temporary involved (the IntEnum
                 # is already bound to the function's `parm_name`
                 # local), so a plain hoist suffices.
-                _append_call_arg(hoist=CallArgHoist(
-                    c_type=_with_cprefix(parm.cython_global_typename_no_const),
-                    plain_expr=f"{parm_name}.value",
-                ))
+                _append_call_arg(
+                    hoist=CallArgHoist(
+                        c_type=_with_cprefix(
+                            parm.cython_global_typename_no_const
+                        ),
+                        plain_expr=f"{parm_name}.value",
+                    )
+                )
                 # Use the no_const spelling so the rendered docstring's
                 # `:py:obj:` reference doesn't carry a leading `const`
                 # (the Python-facing type doesn't have C cv-qualifiers
                 # — `const hiptensorWorksizePreference_t` would format
                 # as a broken `:py:obj:\`.const ...\`` link).
-                parm_python_types[parm.name] = parm.cython_global_typename_no_const
+                parm_python_types[parm.name] = (
+                    parm.cython_global_typename_no_const
+                )
             elif parm.is_record or parm.is_basic_type_constantarray():
                 parm_typename = parm.lookup_innermost_type().cython_name
                 sig_args.append(f"object {parm_name}")
@@ -1000,12 +1025,16 @@ cdef void* {funptr_name} = NULL
                 # Use the cprefix-prefixed cy* struct type so the cdef
                 # local names the C struct, not the same-named Python
                 # wrapper class in this file.
-                _append_call_arg(hoist=CallArgHoist(
-                    c_type=_with_cprefix(parm.cython_global_typename_no_const),
-                    wrapper_class=parm_typename,
-                    wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
-                    pointer_extract="getElementPtr()[0]",
-                ))
+                _append_call_arg(
+                    hoist=CallArgHoist(
+                        c_type=_with_cprefix(
+                            parm.cython_global_typename_no_const
+                        ),
+                        wrapper_class=parm_typename,
+                        wrapper_factory=f"{parm_typename}.fromPyobj({parm_name})",
+                        pointer_extract="getElementPtr()[0]",
+                    )
+                )
                 parm_python_types[parm.name] = parm_typename
             else:
                 assert False, "should not be entered"
@@ -1123,24 +1152,39 @@ cdef void* {funptr_name} = NULL
         """
         if "nogil" in (self.modifiers_lazy_loader or ""):
             return self._render_python_interface_c_interface_call_with_nogil(
-                cprefix, call_args, prehoist, out_args,
+                cprefix,
+                call_args,
+                prehoist,
+                out_args,
             )
         return self._render_python_interface_c_interface_call_with_gil(
-            cprefix, call_args, out_args,
+            cprefix,
+            call_args,
+            prehoist,
+            out_args,
         )
 
     def _render_python_interface_c_interface_call_with_gil(
-        self, cprefix: str, call_args: list, out_args: list
+        self, cprefix: str, call_args: list, prehoist: list, out_args: list
     ):
-        """With-GIL emission: single-line cy* call + inline Python wrap.
+        """With-GIL emission: cy* call + inline Python wrap, preceded by
+        the pre-call argument bindings.
 
         Used when the cy* function declaration is not
         ``nogil``-callable — every expression runs with the GIL held
-        throughout, so no hoist is needed and the call/wrap can be
-        inlined into the return tuple. This mode is appropriate when
-        the cy* call itself may touch Python (e.g. via a callback) and
-        therefore must hold the GIL.
+        throughout, so the call/wrap can be inlined into the return
+        tuple. This mode is appropriate when the cy* call itself may
+        touch Python (e.g. via a callback) and therefore must hold the
+        GIL.
+
+        Holding the GIL does not extend the life of an argument's
+        wrapper temporary, so this emitter uses the same pre-call
+        ``cdef`` lines as the with-nogil one (see
+        :class:`CallArgHoist`); they are emitted here ahead of the
+        call. Only the retval wrap differs: it stays inline in the call
+        expression, since the GIL is held there.
         """
+        lines = [entry for entry in prehoist if entry is not None]
         typename = self.cython_global_typename
         retvalname = self._python_interface_retval
         retvalname_or_none = (
@@ -1152,13 +1196,13 @@ cdef void* {funptr_name} = NULL
         )
 
         if self.is_void:
-            return c_interface_call
+            lines.append(c_interface_call)
         elif self.is_basic_type:
             out_args.insert(0, retvalname)
-            return f"cdef {typename} {retvalname} = {c_interface_call}"
+            lines.append(f"cdef {typename} {retvalname} = {c_interface_call}")
         elif self.is_enum:
             out_args.insert(0, retvalname)
-            return f"{retvalname} = {typename}({c_interface_call})"
+            lines.append(f"{retvalname} = {typename}({c_interface_call})")
         elif self.is_record:
             out_args.insert(0, retvalname)
             innermost_typename = (
@@ -1166,7 +1210,9 @@ cdef void* {funptr_name} = NULL
             )
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.
-            return f"{retvalname} = {innermost_typename}.fromValue({c_interface_call})"
+            lines.append(
+                f"{retvalname} = {innermost_typename}.fromValue({c_interface_call})"
+            )
         elif self.is_pointer_to_record():
             out_args.insert(0, retvalname_or_none)
             innermost_typename = (
@@ -1174,22 +1220,27 @@ cdef void* {funptr_name} = NULL
             )
             # Using the innermost type ensures that the return value handler is a cdef class and not a Python object
             # that was inserted because of a typedef.
-            return f"{retvalname} = {innermost_typename}.fromPtr({c_interface_call})"
+            lines.append(
+                f"{retvalname} = {innermost_typename}.fromPtr({c_interface_call})"
+            )
         elif self.is_pointer_to_char(
             degree=1
         ):  # TODO adapt to use ptr complicated type handler, result might be buffer
             out_args.insert(0, retvalname_or_none)
             handler = self.ptr_complicated_type_handler(self)
-            return (
+            lines.append(
                 f"{retvalname} = {handler}.fromPtr(<void*>{c_interface_call})"
             )
         elif self.is_any_pointer:
             out_args.insert(0, retvalname_or_none)
-            return f"{retvalname} = {self.util_types_prefix}Pointer.fromPtr(<void*>{c_interface_call})"
+            lines.append(
+                f"{retvalname} = {self.util_types_prefix}Pointer.fromPtr(<void*>{c_interface_call})"
+            )
         else:
             msg = "<{self.render_location()}> function {self.name}: return value type could not be classified."
             _log.warning(msg)
             raise RuntimeError(msg)
+        return "\n".join(lines)
 
     def _format_retval_wrap(self, cy_retval: str) -> str:
         """Return the inline expression that wraps the C-level
@@ -1213,11 +1264,15 @@ cdef void* {funptr_name} = NULL
             # IntEnum.__call__ goes through Python — must be post-block.
             return f"{self.cython_global_typename}({cy_retval})"
         if self.is_record:
-            innermost_typename = self.lookup_innermost_type().cython_global_name
+            innermost_typename = (
+                self.lookup_innermost_type().cython_global_name
+            )
             # T.fromValue is a Python wrapper construction — needs GIL.
             return f"{innermost_typename}.fromValue({cy_retval})"
         if self.is_pointer_to_record():
-            innermost_typename = self.lookup_innermost_type().cython_global_name
+            innermost_typename = (
+                self.lookup_innermost_type().cython_global_name
+            )
             return (
                 f"None if {cy_retval} == NULL else "
                 f"{innermost_typename}.fromPtr({cy_retval})"
@@ -1276,7 +1331,8 @@ cdef void* {funptr_name} = NULL
             # value; const-correctness on the C call boundary is
             # already enforced by the cy* declaration.
             retval_c_type = Function._add_module_cprefix(
-                self.cython_global_typename_no_const, cprefix,
+                self.cython_global_typename_no_const,
+                cprefix,
             )
             lines.append(f"cdef {retval_c_type} {cy_retval}")
 
@@ -1318,7 +1374,9 @@ cdef void* {funptr_name} = NULL
             indent,
         )
 
-    def render_python_interface_impl(self, cprefix: str, *, module_opts: dict) -> str:
+    def render_python_interface_impl(
+        self, cprefix: str, *, module_opts: dict
+    ) -> str:
         """Public API for generating the full Python interface."""
         # Verbatim body override (set by a recipe node_init): emit the
         # hand-written ``def`` as-is, but still register the symbol in
@@ -1326,7 +1384,7 @@ cdef void* {funptr_name} = NULL
         if self.python_interface_impl_override is not None:
             module_opts["all"].append(self.cython_global_name)
             return self.python_interface_impl_override
-        
+
         (
             fully_specified,
             sig_args,
@@ -1342,7 +1400,8 @@ cdef void* {funptr_name} = NULL
             f"def {self.cython_name}({', '.join(sig_args)}):\n"
             + textwrap.indent(
                 self._render_python_docstring(
-                    [p.name for p in out_parms], parm_python_types,
+                    [p.name for p in out_parms],
+                    parm_python_types,
                     module_opts=module_opts,
                 ),
                 indent,
@@ -1364,7 +1423,10 @@ cdef void* {funptr_name} = NULL
             # via textwrap.indent so both shapes land correctly inside
             # the function body.
             emission = self._render_python_interface_c_interface_call(
-                cprefix, call_args, prehoist, out_args,
+                cprefix,
+                call_args,
+                prehoist,
+                out_args,
             )
             result += textwrap.indent(emission, indent).rstrip() + "\n"
             if len(epilog):
@@ -1379,7 +1441,9 @@ cdef void* {funptr_name} = NULL
                 comma = ","
                 result += f"{indent}return ({comma.join(out_args)})\n"
             elif len(out_args):
-                if module_opts.get("python_interface_always_return_tuple", False):
+                if module_opts.get(
+                    "python_interface_always_return_tuple", False
+                ):
                     result += f"{indent}return ({out_args[0]},)\n"
                 else:
                     result += f"{indent}return {out_args[0]}\n"
@@ -1396,8 +1460,12 @@ cdef void* {funptr_name} = NULL
     # ------------------------------------------------------------------
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         """Function override of `CythonMixin.render_pyi_stub`.
 
@@ -1439,7 +1507,8 @@ cdef void* {funptr_name} = NULL
                 py_params.append(pname)
         try:
             docstring = self._render_python_docstring(
-                [p.name for p in out_parms], parm_python_types,
+                [p.name for p in out_parms],
+                parm_python_types,
                 module_opts=module_opts,
             )
         except Exception:
@@ -1471,4 +1540,3 @@ def _pyi_split_sig_arg(sig_arg: str):
         ctype, name = parts
     name = name.lstrip("*")
     return (ctype.strip() if ctype else None, name.strip(), default)
-

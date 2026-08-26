@@ -11,10 +11,8 @@ codegen pipeline and independently of the legacy token-based renderer.
 """
 
 import pytest
-
-from interfacegen import cython, tree, typerender
-
 from _codegen_helpers import build_root, find_function
+from interfacegen import cython, tree, typerender
 
 
 def _identity_renamer(name):
@@ -135,7 +133,8 @@ def test_array_shapes(ctype, expected_decl, field_name, expected_field):
     header = f"struct S {{ {ctype} _x; }};"
     root = build_root(header)
     field = next(
-        n for n in root.walk(postorder=False)
+        n
+        for n in root.walk(postorder=False)
         if isinstance(n, cython.Field) and n.name == "_x"
     )
     rendered = typerender.render(
@@ -255,7 +254,8 @@ def test_field_decl_positions_array_after_name_for_pointer_array():
     header = "struct S { void *items[8]; };"
     root = build_root(header)
     field = next(
-        n for n in root.walk(postorder=False)
+        n
+        for n in root.walk(postorder=False)
         if isinstance(n, cython.Field) and n.name == "items"
     )
     rendered = typerender.render(
@@ -342,6 +342,94 @@ def test_typedef_basic_uses_typeref_when_not_prefer_canonical():
     assert rendered.cython_decl() == "int32"
 
 
+# ---------------------------------------------------------------------------
+# Fixed-width integer typedefs
+#
+# These must survive canonicalization: Clang spells uint64_t as
+# ``unsigned long`` on LP64 Linux and ``unsigned long long`` on LLP64 Windows,
+# so canonicalizing would bake the codegen host's data model into bindings that
+# are generated once and compiled everywhere.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "ctype",
+    [
+        "uint8_t",
+        "uint16_t",
+        "uint32_t",
+        "uint64_t",
+        "int8_t",
+        "int16_t",
+        "int32_t",
+        "int64_t",
+        "intptr_t",
+        "uintptr_t",
+        "size_t",
+        "ptrdiff_t",
+    ],
+)
+def test_fixed_width_typedef_survives_canonicalization(ctype):
+    header = f"""
+    #include <stdint.h>
+    #include <stddef.h>
+    void f({ctype} x);
+    """
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.cython_decl() == ctype
+
+
+@pytest.mark.parametrize(
+    "decl,expected",
+    [
+        ("size_t *x", "size_t *"),
+        ("const size_t *x", "const size_t *"),
+        ("uint64_t **x", "uint64_t **"),
+        ("uint32_t x[4]", "uint32_t[4]"),
+    ],
+)
+def test_fixed_width_typedef_kept_under_outer_layers(decl, expected):
+    header = f"""
+    #include <stdint.h>
+    #include <stddef.h>
+    void f({decl});
+    """
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.cython_decl() == expected
+
+
+def test_alias_of_fixed_width_typedef_keeps_the_width():
+    """An alias adds no width information, so the fixed-width name it wraps is
+    the meaningful spelling to emit."""
+    header = """
+    #include <stdint.h>
+    typedef uint64_t handle_t;
+    void f(handle_t x);
+    """
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.cython_decl() == "uint64_t"
+
+
+def test_plain_integer_spelling_is_not_rewritten():
+    """Only the typedefs are substituted. A header that genuinely says
+    ``unsigned long`` means the platform's long and must stay that way."""
+    header = "void f(unsigned long x);"
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.cython_decl() == "unsigned long"
+
+
+def test_fixed_width_typedef_keeps_canonical_leaf_metadata():
+    """Only the spelling changes: the autoconversion machinery downstream keys
+    off the canonical leaf kind, which must still describe the real type."""
+    header = """
+    #include <stdint.h>
+    void f(uint64_t x);
+    """
+    rendered = _parm_render(header, "f", 0, prefer_canonical=True)
+    assert rendered.base_typename == "uint64_t"
+    assert rendered.is_base_unsigned is True
+
+
 def test_typedef_struct_uses_struct_name():
     """For tagged ``typedef struct foo_s {...} Foo;``, libclang resolves the
     TYPE_REF on a ``Foo *`` parameter to the inner struct (``foo_s``), not
@@ -408,7 +496,8 @@ def test_void_typedef_array_field_decl():
     """
     root = build_root(header)
     field = next(
-        n for n in root.walk(postorder=False)
+        n
+        for n in root.walk(postorder=False)
         if isinstance(n, cython.Field) and n.name == "list"
     )
     rendered = typerender.render(
@@ -425,7 +514,8 @@ def test_struct_pointer_typedef_array_field_decl():
     """
     root = build_root(header)
     field = next(
-        n for n in root.walk(postorder=False)
+        n
+        for n in root.walk(postorder=False)
         if isinstance(n, cython.Field) and n.name == "arr"
     )
     rendered = typerender.render(
@@ -447,8 +537,11 @@ def test_renamer_applied_to_typeref_name():
     """
     rendered = _parm_render(header, "f", 0)
     rendered_with_renamer = typerender.render(
-        rendered.layers and _parm_render.__self__ if False else
-        find_function(build_root(header), "f").get_parm(0),
+        (
+            rendered.layers and _parm_render.__self__
+            if False
+            else find_function(build_root(header), "f").get_parm(0)
+        ),
         sep="_",
         renamer=lambda n: n + "_t",
     )

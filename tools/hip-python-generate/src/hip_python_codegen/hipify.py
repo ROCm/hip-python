@@ -55,7 +55,7 @@ def parse_hipify_perl(hipify_perl_path: str):
     # print(p_mapping_str)
     p_mapping = re.compile(p_mapping_str)
 
-    with open(hipify_perl_path, "r") as infile:
+    with open(hipify_perl_path, "r", encoding="utf-8") as infile:
         for ln in infile.readlines():
             for m in p_mapping.finditer(ln):
                 cuda = m.group("cuda") or m.group("cuda2") or m.group("cuda3")

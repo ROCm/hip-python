@@ -20,7 +20,6 @@ import pytest
 # shared scaffolding importable.
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 from _codegen_helpers import build_root  # noqa: E402
-
 from interfacegen import cython  # noqa: E402
 
 
@@ -32,7 +31,8 @@ def _field_decl(header, field_name, render_name=None):
     """Build the tree, find ``<field_name>``, return ``field_decl(...)``."""
     root = build_root(header)
     field = next(
-        n for n in root.walk(postorder=False)
+        n
+        for n in root.walk(postorder=False)
         if isinstance(n, cython.Field) and n.name == field_name
     )
     rendered = field.render_type(
@@ -49,18 +49,15 @@ def _field_decl(header, field_name, render_name=None):
         ("void *x", "void * x"),
         ("const int *x", "const int * x"),
         ("char **x", "char ** x"),
-
         # Single-dim arrays — suffix follows the name (no space before ``[``).
         ("int x[8]", "int x[8]"),
         ("void *x[8]", "void * x[8]"),
         ("void *x[256]", "void * x[256]"),
         ("const int *x[16]", "const int * x[16]"),
-
         # Multi-dim arrays — every trailing ``[N]`` follows the name.
         ("int x[8][16]", "int x[8][16]"),
         ("void *x[8][16]", "void * x[8][16]"),
         ("char x[3][4][5]", "char x[3][4][5]"),
-
         # Pointer-to-pointer with array suffix.
         ("char **x[2]", "char ** x[2]"),
     ],
@@ -90,9 +87,9 @@ def test_field_decl_re_renders_valid_c_declarator():
     ]
     for header, name, want in cases:
         got = _field_decl(header, name)
-        assert got == want, (
-            f"header={header!r} name={name!r} got={got!r} want={want!r}"
-        )
+        assert (
+            got == want
+        ), f"header={header!r} name={name!r} got={got!r} want={want!r}"
 
 
 # ---------------------------------------------------------------------------
@@ -111,7 +108,6 @@ def test_field_decl_re_renders_valid_c_declarator():
 import os  # noqa: E402
 
 from _codegen_helpers import make_generator  # noqa: E402
-
 
 _HEADER_FOR_HAS_SYMBOL = """
 int example_func(int x);
@@ -139,31 +135,32 @@ def test_has_symbol_emitted_under_runtime_linking(tmp_path):
     files = _write_module(gen, tmp_path)
 
     pxd = files["cyhsmod.pxd"]
-    assert "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil" in pxd, (
-        f"expected `__hsmod_has_symbol` declaration in cy*.pxd; full pxd:\n{pxd}"
-    )
+    assert (
+        "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil" in pxd
+    ), f"expected `__hsmod_has_symbol` declaration in cy*.pxd; full pxd:\n{pxd}"
 
     cy_pyx = files["cyhsmod.pyx"]
-    assert "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil:" in cy_pyx, (
-        f"expected `__hsmod_has_symbol` impl in cy*.pyx; full pyx:\n{cy_pyx}"
-    )
+    assert (
+        "cdef bint __hsmod_has_symbol(const char* name) noexcept nogil:"
+        in cy_pyx
+    ), f"expected `__hsmod_has_symbol` impl in cy*.pyx; full pyx:\n{cy_pyx}"
     # Sanity: the impl actually delegates to loader.has_symbol.
-    assert "loader.has_symbol(" in cy_pyx, (
-        f"expected delegation to loader.has_symbol; full pyx:\n{cy_pyx}"
-    )
+    assert (
+        "loader.has_symbol(" in cy_pyx
+    ), f"expected delegation to loader.has_symbol; full pyx:\n{cy_pyx}"
 
     py_pyx = files["hsmod.pyx"]
-    assert "def has_symbol(name) -> bool" in py_pyx, (
-        f"expected python-visible `has_symbol` def; full pyx:\n{py_pyx}"
-    )
+    assert (
+        "def has_symbol(name) -> bool" in py_pyx
+    ), f"expected python-visible `has_symbol` def; full pyx:\n{py_pyx}"
     # And the python wrapper must call into the module-tagged cy* helper.
-    assert "cyhsmod.__hsmod_has_symbol" in py_pyx, (
-        f"expected python wrapper to call cyhsmod.__hsmod_has_symbol; full pyx:\n{py_pyx}"
-    )
+    assert (
+        "cyhsmod.__hsmod_has_symbol" in py_pyx
+    ), f"expected python wrapper to call cyhsmod.__hsmod_has_symbol; full pyx:\n{py_pyx}"
     # And `has_symbol` must show up in __all__.
-    assert '"has_symbol"' in py_pyx, (
-        f"expected `has_symbol` in __all__; full pyx:\n{py_pyx}"
-    )
+    assert (
+        '"has_symbol"' in py_pyx
+    ), f"expected `has_symbol` in __all__; full pyx:\n{py_pyx}"
 
 
 def test_has_symbol_omitted_without_runtime_linking(tmp_path):
@@ -176,33 +173,33 @@ def test_has_symbol_omitted_without_runtime_linking(tmp_path):
     files = _write_module(gen, tmp_path)
 
     pxd = files["cyhsmod_off.pxd"]
-    assert "__has_symbol" not in pxd, (
-        f"`__has_symbol` should NOT be declared without runtime_linking; pxd:\n{pxd}"
-    )
+    assert (
+        "__has_symbol" not in pxd
+    ), f"`__has_symbol` should NOT be declared without runtime_linking; pxd:\n{pxd}"
     py_pyx = files["hsmod_off.pyx"]
-    assert "def has_symbol(" not in py_pyx, (
-        f"`has_symbol` should NOT be emitted without runtime_linking; pyx:\n{py_pyx}"
-    )
+    assert (
+        "def has_symbol(" not in py_pyx
+    ), f"`has_symbol` should NOT be emitted without runtime_linking; pyx:\n{py_pyx}"
 
 
 # ---------------------------------------------------------------------------
-# Unit tests for `cython.CallArgHoist` — the structured pre-block hoist
+# Unit tests for `cython.CallArgHoist` — the structured pre-call hoist
 # descriptor used by `Function._render_python_interface_c_interface_call`'s
-# `_append_call_arg`. Locks down both shapes (plain / wrapper-bound) and
-# the inline-form fallback used by the with-gil emitter.
+# `_append_call_arg`. Locks down both shapes (plain / wrapper-bound).
+# `render_prehoist` is the only renderer: both emitters bind every
+# Python-derived argument to a named local before the cy* call.
 # ---------------------------------------------------------------------------
 
 
 def test_call_arg_hoist_plain_renders_single_cdef():
     """A plain hoist (no python wrapper temporary, e.g.
     ``IntEnumParm.value``) renders as a single ``cdef <T> arg = expr``
-    line and its inline form is just the expression.
+    line.
     """
     h = cython.CallArgHoist(
         c_type="cyhip.hipMemcpyKind",
         plain_expr="kind.value",
     )
-    assert h.inline_expr() == "kind.value"
     assert h.render_prehoist("_cy_f__arg_3") == (
         "cdef cyhip.hipMemcpyKind _cy_f__arg_3 = kind.value"
     )
@@ -211,8 +208,12 @@ def test_call_arg_hoist_plain_renders_single_cdef():
 def test_call_arg_hoist_wrapper_bound_splits_into_two_cdefs():
     """A wrapper-bound hoist (Python wrapper temporary owns the C
     buffer the pointer references) renders two cdef lines: one typed
-    cdef-class binding for the wrapper (so it outlives the with-nogil
-    block) and one cdef for the extracted pointer.
+    cdef-class binding for the wrapper (so it outlives the call) and
+    one cdef for the extracted pointer.
+
+    There is no inline alternative: Cython releases the wrapper
+    temporary before the C call runs whether or not the GIL is held,
+    which is why `render_prehoist` is the only renderer.
 
     Both cdefs use the combined ``cdef T x = <T>expr`` form. The
     former bare-cdef + separate-assignment split for the ``*const *``
@@ -237,12 +238,6 @@ def test_call_arg_hoist_wrapper_bound_splits_into_two_cdefs():
         "<const char *const *>_cy_f__arg_2_obj.getPtr()"
     )
     assert out == expected
-    # Inline form (with-gil emitter) is the equivalent single
-    # expression — wrapper temporary lives for the call duration.
-    assert h.inline_expr() == (
-        "<const char *const *>"
-        "rocm.bindings.util.types.ListOfBytes.fromPyobj(options).getPtr()"
-    )
 
 
 def test_call_arg_hoist_wrapper_bound_records_by_value_dereferences():
@@ -277,9 +272,9 @@ def test_call_arg_hoist_double_const_pointer_uses_combined_form():
     the generator used to split it into a bare ``cdef T x`` plus a
     separate ``x = <T>expr`` assignment. That workaround was removed
     once the project pinned a Cython >= 3.1.0 build floor (3.1+
-    compiles the combined form correctly). The historical workaround
-    and the cross-version repro live in
-    ``share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md``.
+    compiles the combined form correctly). The upstream bug and the
+    floor it motivates are documented in ``share/design/BUILDING.md``
+    under "Cython version requirement".
     """
     h = cython.CallArgHoist(
         c_type="const char *const *",
@@ -296,9 +291,9 @@ def test_call_arg_hoist_double_const_pointer_uses_combined_form():
     )
     # The former split form (bare cdef + separate assignment) must
     # NOT reappear.
-    assert "cdef const char *const * _cy_arg_2\n_cy_arg_2 = " not in rendered, (
-        f"render_prehoist regressed to the obsolete split form:\n{rendered}"
-    )
+    assert (
+        "cdef const char *const * _cy_arg_2\n_cy_arg_2 = " not in rendered
+    ), f"render_prehoist regressed to the obsolete split form:\n{rendered}"
 
 
 def test_call_arg_hoist_trailing_const_strips_const():
@@ -342,9 +337,9 @@ def test_call_arg_hoist_trailing_const_strips_const():
         "cdef void * _cy_arg_1 = "
         "<void *const>_cy_arg_1_obj.getPtr()"
     )
-    assert rendered == expected, (
-        f"trailing-const must be stripped from cdef local, got:\n{rendered}"
-    )
+    assert (
+        rendered == expected
+    ), f"trailing-const must be stripped from cdef local, got:\n{rendered}"
     # The const-qualified cdef must NOT be emitted (Cython rejects).
     assert "cdef void *const _cy_arg_1" not in rendered, (
         f"trailing-const cdef must be stripped (Cython rejects const "
@@ -366,9 +361,9 @@ def test_call_arg_hoist_const_substring_in_identifier_not_stripped():
     )
     rendered = h.render_prehoist("_cy_arg_0")
     # The cdef type must be unchanged from the c_type — no strip.
-    assert "cdef constellation_t * _cy_arg_0" in rendered, (
-        f"identifier ending in 'const' must not be stripped, got:\n{rendered}"
-    )
+    assert (
+        "cdef constellation_t * _cy_arg_0" in rendered
+    ), f"identifier ending in 'const' must not be stripped, got:\n{rendered}"
 
 
 def test_call_arg_hoist_rejects_mixed_or_empty_init():

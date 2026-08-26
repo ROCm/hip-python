@@ -100,7 +100,10 @@ def generate_cuda_interop_module_files(
     cuda_global_module_as_tuple = cuda_global_module_name.split(".")
     # Modern layout: <repo_root>/packages/hip-python-interop/src/<cuda parts>/
     cuda_parent_package_dir = os.path.join(
-        output_dir, "packages", "hip-python-interop", "src",
+        output_dir,
+        "packages",
+        "hip-python-interop",
+        "src",
         *(cuda_global_module_as_tuple[:-1]),
     )
     cuda_parent_package = ".".join(cuda_global_module_as_tuple[:-1])
@@ -450,17 +453,11 @@ def generate_cuda_interop_module_files(
                     ]
                     all.append(cuda_name)
                     if isinstance(node, Function):
-                        cuda_pyi_entries.append(
-                            (cuda_name, "function", node)
-                        )
+                        cuda_pyi_entries.append((cuda_name, "function", node))
                     elif isinstance(node, MacroDefinition):
-                        cuda_pyi_entries.append(
-                            (cuda_name, "macro", node)
-                        )
+                        cuda_pyi_entries.append((cuda_name, "macro", node))
                     else:  # Typedef pointing to record/basic/void
-                        cuda_pyi_entries.append(
-                            (cuda_name, "plain", None)
-                        )
+                        cuda_pyi_entries.append((cuda_name, "plain", None))
                 elif isinstance(node, Typedef) and (
                     node.is_pointer_to_basic_type(degree=(0, -1))
                     or node.is_pointer_to_void(degree=(0, -1))
@@ -500,11 +497,11 @@ def generate_cuda_interop_module_files(
     c_interface_decl_path = os.path.join(
         cuda_parent_package_dir, f"{cuda_cmodule_prefix}{cuda_module_name}.pxd"
     )
-    with open(c_interface_decl_path, "w") as outfile:
+    with open(c_interface_decl_path, "w", encoding="utf-8") as outfile:
         outfile.write("\n".join(c_interface_decl_part))
-    with open(python_interface_decl_path, "w") as outfile:
+    with open(python_interface_decl_path, "w", encoding="utf-8") as outfile:
         outfile.write("\n".join(python_interface_decl_part))
-    with open(python_interface_impl_path, "w") as outfile:
+    with open(python_interface_impl_path, "w", encoding="utf-8") as outfile:
         DOCSTRING_ATTRIBS = ""
         for attribute in docstring_attributes:
             if isinstance(attribute, tuple):
@@ -560,30 +557,30 @@ def generate_cuda_interop_module_files(
         elif kind == "class":
             hip_node, base = payload
             stub = hip_node.render_pyi_stub(
-                hip_cprefix, override_name=entry_name, base=base,
+                hip_cprefix,
+                override_name=entry_name,
+                base=base,
             )
             if stub:
                 pyi_lines.extend(stub)
             else:
-                pyi_lines.append(
-                    f"class {entry_name}({base}):"
-                )
+                pyi_lines.append(f"class {entry_name}({base}):")
                 pyi_lines.append(
                     "    def __init__(self, *args, **kwargs): ..."
                 )
         elif kind == "function":
             stub = payload.render_pyi_stub(
-                hip_cprefix, override_name=entry_name,
+                hip_cprefix,
+                override_name=entry_name,
             )
             if stub:
                 pyi_lines.extend(stub)
             else:
-                pyi_lines.append(
-                    f"def {entry_name}(*args, **kwargs): ..."
-                )
+                pyi_lines.append(f"def {entry_name}(*args, **kwargs): ...")
         elif kind == "macro":
             stub = payload.render_pyi_stub(
-                hip_cprefix, override_name=entry_name,
+                hip_cprefix,
+                override_name=entry_name,
             )
             if stub:
                 pyi_lines.extend(stub)
@@ -597,8 +594,6 @@ def generate_cuda_interop_module_files(
             pyi_lines.append(f"    {n!r},")
         pyi_lines.append("]")
     pyi_lines.append("")
-    pyi_path = os.path.join(
-        cuda_parent_package_dir, f"{cuda_module_name}.pyi"
-    )
-    with open(pyi_path, "w") as outfile:
+    pyi_path = os.path.join(cuda_parent_package_dir, f"{cuda_module_name}.pyi")
+    with open(pyi_path, "w", encoding="utf-8") as outfile:
         outfile.write("\n".join(pyi_lines))

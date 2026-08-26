@@ -1426,7 +1426,7 @@ class hiptensor:
         is a single-element OUT (the function writes one ``uint64_t``).
         Without this override the generic ``array_with_length_param``
         rule would flag it as rank=1 and the Python wrapper would
-        return a ``ListOfUnsignedLong`` instead of a plain ``int``.
+        return a ``ListOfUInt64`` instead of a plain ``int``.
         """
         if isinstance(node, Parm) and node.name == "workspaceSizeEstimate":
             return 0

@@ -64,6 +64,11 @@ where = ["python"]
 # include = []
 # exclude = []
 
+[tool.setuptools.package-data]
+# The fallback builtin headers are data, so setuptools drops them from the
+# wheel unless they are named here; a parse then silently loses size_t.
+interfacegen = ["builtin_includes/*.h", "builtin_includes/README.md"]
+
 [tool.black]
 line-length = 79
 include = '\.pyi?$'

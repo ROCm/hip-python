@@ -178,6 +178,8 @@ def render(
     renamer: typing.Callable[[str], str] = lambda n: n,
     prefer_canonical: bool = False,
     local_name_only: bool = False,
+    typedef_aliases: typing.Mapping[str, str] = None,
+    typedef_specs: typing.Mapping[str, tuple] = None,
 ) -> RenderedType:
     """Walk ``typed``'s Clang type via :class:`TypeHandler` and produce a
     :class:`RenderedType` with the typeref identifier substituted in place
@@ -195,6 +197,10 @@ def render(
       ``typeref.global_name(sep)``, run through ``renamer``) is the base.
     * Otherwise, the canonical leaf spelling (with the leading ``const``
       stripped — re-emitted by the renderer) is the base.
+
+    ``typedef_aliases`` and ``typedef_specs`` extend the fixed-width
+    preservation below to library-specific typedefs; see
+    :func:`fixed_width_typedef`.
     """
     use_canonical = (
         prefer_canonical
@@ -207,6 +213,8 @@ def render(
         sep=sep,
         renamer=renamer,
         local_name_only=local_name_only,
+        typedef_aliases=typedef_aliases,
+        typedef_specs=typedef_specs,
     )
 
 
@@ -216,6 +224,8 @@ def render_clang_type(
     sep: str = "_",
     renamer: typing.Callable[[str], str] = lambda n: n,
     local_name_only: bool = False,
+    typedef_aliases: typing.Mapping[str, str] = None,
+    typedef_specs: typing.Mapping[str, tuple] = None,
 ) -> RenderedType:
     """Same as :func:`render` but takes a Clang type + optional typeref
     directly. Used by callers that don't have a full ``Typed`` instance
@@ -231,6 +241,11 @@ def render_clang_type(
     leaf_layer: clang.cindex.Type
     outer_layer_clang: typing.List[clang.cindex.Type]
 
+    # Survives canonicalization so the emitted width does not depend on the
+    # host codegen ran on.
+    pinned = fixed_width_typedef(clang_type, typedef_aliases, typedef_specs)
+    fixed_width = pinned[0] if pinned is not None else None
+
     if typeref is not None and getattr(typeref, "cursor", None) is not None:
         typeref_canonical = typeref.cursor.type.get_canonical()
         typeref_essential = [
@@ -244,17 +259,16 @@ def render_clang_type(
             outer_layer_clang = parent_essential[:split]
             leaf_layer = parent_essential[split]
             ref_name = (
-                typeref.name if local_name_only
-                else typeref.global_name(sep)
+                typeref.name if local_name_only else typeref.global_name(sep)
             )
             base_typename = renamer(ref_name)
         else:
-            outer_layer_clang, leaf_layer, base_typename = (
-                _canonical_split(parent_essential)
+            outer_layer_clang, leaf_layer, base_typename = _canonical_split(
+                parent_essential, fixed_width
             )
     else:
         outer_layer_clang, leaf_layer, base_typename = _canonical_split(
-            parent_essential
+            parent_essential, fixed_width
         )
 
     raw_layers = [_layer_from_clang_type(ct) for ct in outer_layer_clang]
@@ -314,7 +328,7 @@ def _walk_canonical(clang_type: clang.cindex.Type):
     yield from th.walk_clang_type_layers(canonical=True)
 
 
-def _canonical_split(parent_essential):
+def _canonical_split(parent_essential, fixed_width_name: str = None):
     """Use the deepest layer as the leaf and its bare canonical spelling as
     the base. Caller must have filtered out passthrough layers already.
 
@@ -322,11 +336,129 @@ def _canonical_split(parent_essential):
     (``struct`` / ``union`` / ``enum``) is preserved when no typeref
     substitution applies, matching the legacy code path which only stripped
     those keywords inside the typeref-substitution branch.
+
+    ``fixed_width_name`` overrides the canonical spelling; see
+    :func:`fixed_width_typedef` for why that is necessary.
     """
     leaf_layer = parent_essential[-1]
     outer = parent_essential[:-1]
-    base_typename = _canonical_leaf_verbatim(leaf_layer)
+    base_typename = fixed_width_name or _canonical_leaf_verbatim(leaf_layer)
     return outer, leaf_layer, base_typename
+
+
+#: What each width-pinning integer typedef promises, as ``(signed, bits)``.
+#: Cython knows all of these names: ``size_t``, ``ssize_t`` and ``ptrdiff_t``
+#: are builtins, and the rest arrive through the ``from libc.stdint cimport *``
+#: that every generated module's prolog emits.
+#:
+#: The pointer-width entries claim 64 bits because every platform hip-python
+#: supports is 64-bit (LP64 Linux, LLP64 Windows); that assumption lives here
+#: and nowhere else.
+FIXED_WIDTH_INT_SPECS = {
+    "int8_t": (True, 8),
+    "uint8_t": (False, 8),
+    "int16_t": (True, 16),
+    "uint16_t": (False, 16),
+    "int32_t": (True, 32),
+    "uint32_t": (False, 32),
+    "int64_t": (True, 64),
+    "uint64_t": (False, 64),
+    "ssize_t": (True, 64),
+    "size_t": (False, 64),
+    "ptrdiff_t": (True, 64),
+    "intptr_t": (True, 64),
+    "uintptr_t": (False, 64),
+}
+
+#: Integer typedefs whose whole purpose is to pin a width (or to track the
+#: platform's pointer/index width).
+FIXED_WIDTH_INT_TYPEDEFS = frozenset(FIXED_WIDTH_INT_SPECS)
+
+#: How to spell a width that a module pinned itself. Every generated prolog
+#: cimports these, so Cython knows them -- a library typedef such as ``hoff_t``
+#: it does not.
+FIXED_WIDTH_INT_SPELLINGS = {
+    (True, 8): "int8_t",
+    (False, 8): "uint8_t",
+    (True, 16): "int16_t",
+    (False, 16): "uint16_t",
+    (True, 32): "int32_t",
+    (False, 32): "uint32_t",
+    (True, 64): "int64_t",
+    (False, 64): "uint64_t",
+}
+
+
+def fixed_width_typedef(
+    clang_type: clang.cindex.Type,
+    typedef_aliases: typing.Mapping[str, str] = None,
+    typedef_specs: typing.Mapping[str, tuple] = None,
+) -> tuple:
+    """The width ``clang_type``'s leaf pins, as ``(spelling, (signed, bits))``.
+
+    Returns None when the declaration pins no width, i.e. when it names a plain
+    C integer (or is not an integer at all).
+
+    Canonicalizing these typedefs away would bake the *codegen host's* data
+    model into the generated bindings. Clang resolves ``uint64_t`` to
+    ``unsigned long`` on LP64 Linux but to ``unsigned long long`` on LLP64
+    Windows, and ``unsigned long`` is 32 bits there -- so bindings generated on
+    Linux and compiled on Windows would pass a 32-bit value where the header
+    says 64, truncating arguments and letting the callee write 8 bytes into the
+    4-byte stack slot behind every ``size_t *`` out-parameter.
+
+    Both halves of the answer come out of this one lookup on purpose. The
+    ``spelling`` is what the renderer emits and the spec is what the wrapper
+    dispatch selects on; resolving them separately is what let the ``.pxd`` and
+    the chosen wrapper disagree about a width in the first place.
+
+    Two per-module maps extend the built-in table for library typedefs that pin
+    a width without being part of ``<stdint.h>`` (hipFILE's ``hoff_t``, ...),
+    for which Cython has no declaration of its own:
+
+    * ``typedef_specs`` states the width directly (``{"hoff_t": (True, 64)}``);
+      the stdint spelling denoting it is emitted.
+    * ``typedef_aliases`` names an existing stdint typedef to spell it like
+      (``{"hoff_t": "int64_t"}``) and inherits that typedef's width.
+
+    Only the leaf is considered. Outer pointer and array layers are rendered
+    separately by the caller from the canonical walk, so they are skipped here.
+    """
+    for layer in _walk_declared(clang_type):
+        kind = layer.kind
+        if cparser.TypeHandler.match_typedef_type(kind):
+            name = layer.spelling
+            if name.startswith("const "):
+                name = name[len("const ") :]
+            if typedef_specs and name in typedef_specs:
+                spec = tuple(typedef_specs[name])
+                return (FIXED_WIDTH_INT_SPELLINGS[spec], spec)
+            if name in FIXED_WIDTH_INT_SPECS:
+                return (name, FIXED_WIDTH_INT_SPECS[name])
+            if typedef_aliases and name in typedef_aliases:
+                alias = typedef_aliases[name]
+                return (alias, FIXED_WIDTH_INT_SPECS[alias])
+            # Some other alias (``hipError_t``, ``amd_comgr_status_t``, ...);
+            # keep descending in case it wraps one of ours.
+            continue
+        if (
+            cparser.TypeHandler.match_pointer_type(kind)
+            or cparser.TypeHandler.match_arraylike_type(kind)
+            or cparser.TypeHandler.match_elaborated_type(kind)
+        ):
+            continue
+        break
+    return None
+
+
+def _walk_declared(clang_type: clang.cindex.Type):
+    """Yield each layer of ``clang_type`` as written, outer-to-inner.
+
+    The counterpart to :func:`_walk_canonical`: typedef layers are yielded
+    rather than resolved away.
+    """
+    th = cparser.TypeHandler(clang_type)
+    yield from th.walk_clang_type_layers(canonical=False)
 
 
 def _is_passthrough_layer(ct: clang.cindex.Type) -> bool:
@@ -342,7 +474,7 @@ def _canonical_leaf_verbatim(leaf: clang.cindex.Type) -> str:
     kept them verbatim when no typeref substitution applied."""
     spelling = leaf.spelling
     if spelling.startswith("const "):
-        spelling = spelling[len("const "):]
+        spelling = spelling[len("const ") :]
     return spelling
 
 
@@ -363,6 +495,4 @@ def _layer_from_clang_type(ct: clang.cindex.Type) -> TypeLayer:
         return TypeLayer(kind="ptr")
     if cparser.TypeHandler.match_arraylike_type(ct.kind):
         return TypeLayer(kind="array", array_size="")
-    raise RuntimeError(
-        f"unexpected outer layer kind in typerender: {ct.kind}"
-    )
+    raise RuntimeError(f"unexpected outer layer kind in typerender: {ct.kind}")

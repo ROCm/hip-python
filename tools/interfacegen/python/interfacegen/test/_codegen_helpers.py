@@ -42,6 +42,8 @@ def make_generator(
     modifiers_lazy_loader: str = "",
     runtime_linking: bool = False,
     dll: str = None,
+    typedef_aliases: dict = None,
+    typedef_specs: dict = None,
 ):
     """Build a CythonModuleGenerator backed by an in-memory header.
 
@@ -65,6 +67,10 @@ def make_generator(
     )
     if renamer is not None:
         kw["renamer"] = renamer
+    if typedef_aliases is not None:
+        kw["typedef_aliases"] = typedef_aliases
+    if typedef_specs is not None:
+        kw["typedef_specs"] = typedef_specs
     return cython.CythonModuleGenerator(
         module_name,
         include_dir=None,
@@ -85,7 +91,9 @@ def write_module(generator, tmp_path) -> dict:
     generator.write_module_files(out_dir)
     out = {}
     for fname in os.listdir(out_dir):
-        with open(os.path.join(out_dir, fname)) as fh:
+        # The emitters write UTF-8 (doxygen comments carry non-ASCII
+        # punctuation); reading back with the locale codec fails on Windows.
+        with open(os.path.join(out_dir, fname), encoding="utf-8") as fh:
             out[fname] = fh.read()
     return out
 

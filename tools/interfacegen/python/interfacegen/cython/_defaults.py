@@ -41,36 +41,36 @@ import typing
 
 import clang.cindex
 
-from .. import cparser, cythontemplates, doxyparser, tree
+from .. import cparser, cythontemplates, doxyparser, tree, typerender
 from ..support import cython as support
 from ..support.recipes import control
 
 _log = logging.getLogger("interfacegen")
 
 __all__ = [
-    'indent',
-    'restricted_names',
-    'c_interface_funptr_name_template',
-    'python_interface_retval_template',
-    'python_interface_int_enum_base_class',
-    'python_interface_int_enum_base_class_name_template',
-    'python_interface_record_properties_name',
-    'python_interface_pyobj_role_template',
-    'default_c_interface_decl_prolog',
-    'default_c_interface_impl_prolog',
-    'default_python_interface_decl_prolog',
-    'default_python_interface_impl_prolog',
-    'LICENSE_TEXT',
-    'CodegenUnsupportedPattern',
-    'CYTHON_AUTOCONV_FROM_PYTHON_TYPES',
-    'CYTHON_AUTOCONV_TO_PYTHON_TYPES',
-    'DEFAULT_RENAMER',
-    'DEFAULT_RAW_COMMENT_CLEANER',
-    'DEFAULT_DOCSTRING_CLEANER',
-    '_escape_for_triple_quoted_docstring',
-    'DEFAULT_MACRO_TYPE',
-    'CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER',
-    'CallArgHoist',
+    "indent",
+    "restricted_names",
+    "c_interface_funptr_name_template",
+    "python_interface_retval_template",
+    "python_interface_int_enum_base_class",
+    "python_interface_int_enum_base_class_name_template",
+    "python_interface_record_properties_name",
+    "python_interface_pyobj_role_template",
+    "default_c_interface_decl_prolog",
+    "default_c_interface_impl_prolog",
+    "default_python_interface_decl_prolog",
+    "default_python_interface_impl_prolog",
+    "LICENSE_TEXT",
+    "CodegenUnsupportedPattern",
+    "CYTHON_AUTOCONV_FROM_PYTHON_TYPES",
+    "CYTHON_AUTOCONV_TO_PYTHON_TYPES",
+    "DEFAULT_RENAMER",
+    "DEFAULT_RAW_COMMENT_CLEANER",
+    "DEFAULT_DOCSTRING_CLEANER",
+    "_escape_for_triple_quoted_docstring",
+    "DEFAULT_MACRO_TYPE",
+    "CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER",
+    "CallArgHoist",
 ]
 
 indent = " " * 4
@@ -86,7 +86,9 @@ class CodegenUnsupportedPattern(Exception):
     without grepping log lines.
     """
 
-    def __init__(self, function_name: str, parm_name: str, canonical_type: str):
+    def __init__(
+        self, function_name: str, parm_name: str, canonical_type: str
+    ):
         self.function_name = function_name
         self.parm_name = parm_name
         self.canonical_type = canonical_type
@@ -94,6 +96,7 @@ class CodegenUnsupportedPattern(Exception):
             f"function {function_name}: parm {parm_name}: not handled, "
             f"canonical C type: '{canonical_type}'"
         )
+
 
 restricted_names = keyword.kwlist + [
     "cdef",
@@ -134,7 +137,13 @@ def CYTHON_AUTOCONV_FROM_PYTHON_TYPES(canonical_ctype: str):
         ["char", "[]"],
     ]:
         return ("bytes",)
-    elif tokens in (["char"], ["short"], ["int"], ["long"], ["long", "long"]):
+    elif tokens in (
+        ["char"],
+        ["short"],
+        ["int"],
+        ["long"],
+        ["long", "long"],
+    ) or tokens in ([n] for n in typerender.FIXED_WIDTH_INT_TYPEDEFS):
         return ("int",)  # no long in Python 3 anymore
     elif tokens[0] == "_Bool":  # C version of 'bool', 'bool' is a C++ type
         return ("bint",)
@@ -189,8 +198,7 @@ def CYTHON_AUTOCONV_TO_PYTHON_TYPES(canonical_ctype: str):
         ["int"],
         ["long"],
         ["long", "long"],
-        ["size_t"],
-    ):
+    ) or tokens in ([n] for n in typerender.FIXED_WIDTH_INT_TYPEDEFS):
         return "int"  # no long in Python 3 anymore
     elif tokens in [
         ["float"],
@@ -287,6 +295,19 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
             # ``char *`` (``CHAR_S``) is a NUL-terminated string, handled
             # above; enums / records / ``void *`` don't match the numeric
             # kinds below and stay ``Pointer``.
+            #
+            # A declaration that pins a width answers first. The canonical
+            # kinds below cannot: clang resolves ``size_t`` to ``ULONG`` on
+            # LP64 and ``ULONGLONG`` on LLP64, so dispatching on them would
+            # pick the wrapper by the host codegen ran on -- and a
+            # ``PointerToUnsignedLong`` allocates 4 bytes on Windows for a
+            # slot the callee writes 8 into.
+            pinned = node.fixed_width_typedef()
+            if pinned is not None:
+                if pinned[1] == (True, 64):
+                    return f"{util_types_prefix}PointerToInt64"
+                if pinned[1] == (False, 64):
+                    return f"{util_types_prefix}PointerToUInt64"
             innermost_type_kind = next(
                 node.clang_type_layer_kinds(postorder=-1, canonical=True)
             )
@@ -299,6 +320,17 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
             elif innermost_type_kind == clang.cindex.TypeKind.ULONG:
                 return f"{util_types_prefix}PointerToUnsignedLong"
         if node.actual_rank == 1:
+            # Same rule as the rank-0 block above: the pinned width wins over
+            # the host's canonical kind. The 8/16/32-bit specs have no wrapper
+            # and fall through; ``int32_t`` / ``uint32_t`` then land on
+            # ``ListOfInt`` / ``ListOfUnsigned``, which are 32 bits on both
+            # data models and stay correct.
+            pinned = node.fixed_width_typedef()
+            if pinned is not None:
+                if pinned[1] == (True, 64):
+                    return f"{util_types_prefix}ListOfInt64"
+                if pinned[1] == (False, 64):
+                    return f"{util_types_prefix}ListOfUInt64"
             innermost_type_kind = next(
                 node.clang_type_layer_kinds(postorder=-1, canonical=True)
             )
@@ -351,8 +383,8 @@ def CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(util_types_prefix: str = ""):
 
 
 class CallArgHoist:
-    """Structured description of a single pre-block hoist line emitted
-    before a ``with nogil:`` cy* call.
+    """Structured description of a single pre-call hoist line emitted
+    before the cy* call, in both emitters.
 
     Two shapes are supported.
 
@@ -366,17 +398,27 @@ class CallArgHoist:
        that the resulting C pointer references (e.g.
        ``ListOfBytes.fromPyobj(options)`` allocates the ``char**``
        array). Binding *only* the raw pointer to a cdef local would let
-       Python release the wrapper at end-of-statement, and the with-nogil
-       cy* call would dereference dangling memory. Split the chain so
-       the wrapper outlives the with-nogil block::
+       Python release the wrapper at end-of-statement, and the cy* call
+       would dereference dangling memory. The chain is split across two
+       locals so the wrapper outlives the call::
 
            cdef <wrapper_class> _cy_<f>__arg_N_obj = <wrapper_factory>
            cdef <c_type> _cy_<f>__arg_N = <cast_open><obj>.<pointer_extract><cast_close>
 
-    The with-gil emitter has no lifetime concern (the GIL is held the
-    whole time and the wrapper temporary lives as long as the C call's
-    enclosing expression). For that path :pymeth:`inline_expr` returns
-    the single-expression form so the call arg can be appended verbatim.
+    Note this two-local split is about lifetime and is unrelated to the
+    historical Cython ``*const *`` statement split discussed in
+    :pymeth:`render_prehoist`.
+
+    Holding the GIL across the call does not make an inline
+    single-expression rendering safe, which is why there is only one
+    renderer. Cython drops an intermediate object as soon as the object
+    itself is no longer needed, which is the moment ``pointer_extract``
+    returns — the generated C decrefs the wrapper on the line *before*
+    the cy* call, so ``__dealloc__`` frees the array and the callee
+    reads freed memory. For a two-element ``void *`` array glibc
+    overwrites both slots with tcache bookkeeping, which is how a freed
+    array reached ``LLVMFunctionType`` as two junk type pointers and
+    killed ``LLVMGetParam``.
     """
 
     def __init__(
@@ -394,33 +436,28 @@ class CallArgHoist:
         self.cast_open = cast_open
         self.cast_close = cast_close
         if plain_expr is not None:
-            assert wrapper_class is None and wrapper_factory is None and \
-                pointer_extract is None, (
-                    "plain_expr and wrapper-bound fields are mutually exclusive"
-                )
+            assert (
+                wrapper_class is None
+                and wrapper_factory is None
+                and pointer_extract is None
+            ), "plain_expr and wrapper-bound fields are mutually exclusive"
             self.plain_expr = plain_expr
             self.wrapper_class = None
             self.wrapper_factory = None
             self.pointer_extract = None
         else:
-            assert wrapper_class is not None and wrapper_factory is not None \
-                and pointer_extract is not None, (
-                    "wrapper-bound hoist requires wrapper_class, "
-                    "wrapper_factory, and pointer_extract"
-                )
+            assert (
+                wrapper_class is not None
+                and wrapper_factory is not None
+                and pointer_extract is not None
+            ), (
+                "wrapper-bound hoist requires wrapper_class, "
+                "wrapper_factory, and pointer_extract"
+            )
             self.wrapper_class = wrapper_class
             self.wrapper_factory = wrapper_factory
             self.pointer_extract = pointer_extract
             self.plain_expr = None
-
-    def inline_expr(self) -> str:
-        """Single-line form for the with-gil emitter (no hoist needed)."""
-        if self.plain_expr is not None:
-            return self.plain_expr
-        return (
-            f"{self.cast_open}{self.wrapper_factory}."
-            f"{self.pointer_extract}{self.cast_close}"
-        )
 
     # Strip a trailing ``const`` qualifier (with surrounding whitespace)
     # from the END of a c_type — e.g. ``void *const`` → ``void *``,
@@ -434,7 +471,7 @@ class CallArgHoist:
     _STRIP_TRAILING_CONST = re.compile(r"\s*\bconst\b\s*$")
 
     def render_prehoist(self, arg_name: str) -> str:
-        """Multi-line form for the with-nogil emitter.
+        """The only rendering, used by both emitters.
 
         Emits the combined ``cdef T x = <T>expr`` form. This relies on
         the project-wide Cython >= 3.1.0 build floor (pinned in every
@@ -443,9 +480,9 @@ class CallArgHoist:
         ``const char *const *``), dropping the initializer and leaving
         a NULL local. 3.1+ compiles that form correctly, so the
         former bare-cdef + separate-assignment split is no longer
-        needed. The historical workaround (and the Cython repro) is
-        preserved in
-        ``share/design/UPSTREAM_BUGS/cython_const_pointer_initializer_bug.md``.
+        needed. The upstream bug and the floor it motivates are
+        documented in ``share/design/BUILDING.md`` under "Cython
+        version requirement".
 
         One transformation remains:
 
@@ -467,7 +504,9 @@ class CallArgHoist:
         if self.plain_expr is not None:
             return f"cdef {self.c_type} {arg_name} = {self.plain_expr}"
         obj_name = f"{arg_name}_obj"
-        prefix = f"cdef {self.wrapper_class} {obj_name} = {self.wrapper_factory}\n"
+        prefix = (
+            f"cdef {self.wrapper_class} {obj_name} = {self.wrapper_factory}\n"
+        )
         rhs = f"{self.cast_open}{obj_name}.{self.pointer_extract}{self.cast_close}"
         cdef_type = self._STRIP_TRAILING_CONST.sub("", self.c_type)
         return f"{prefix}cdef {cdef_type} {arg_name} = {rhs}"
@@ -516,4 +555,3 @@ import enum
 # would only make the names available to runtime attribute access.
 cimport rocm.bindings.util.types
 """
-

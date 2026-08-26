@@ -22,11 +22,21 @@
 
 __author__ = "Advanced Micro Devices, Inc."
 
+import os
 import typing
 
 import clang.cindex
 
 from .typehandler import TypeHandler
+
+BUILTIN_INCLUDE_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "builtin_includes"
+)
+"""Fallback for the headers clang itself supplies (``stddef.h`` et al.).
+
+Used only when the caller names no ``-resource-dir``; see the directory's
+README for why the PyPI ``libclang`` wheel needs it.
+"""
 
 
 def walk_cursors(root: clang.cindex.Cursor, postorder=False):
@@ -82,17 +92,66 @@ class CParser:
 
     def parse(self):
         """Parse the specified file."""
-        # print(self._append_cflags)
-        self.translation_unit = clang.cindex.TranslationUnit.from_source(
-            self.filename,
-            args=["-x", "c"] + self.append_cflags,
-            options=(
-                clang.cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES
-                | clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location
-            ),
-            unsaved_files=self.unsaved_files,
-        )
+        args = ["-x", "c"] + self.append_cflags
+        if "-resource-dir" not in args:
+            args += ["-isystem", BUILTIN_INCLUDE_DIR]
+        try:
+            self.translation_unit = clang.cindex.TranslationUnit.from_source(
+                self.filename,
+                args=args,
+                options=(
+                    clang.cindex.TranslationUnit.PARSE_SKIP_FUNCTION_BODIES
+                    | clang.cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD  # keeps the macro defs as "fake" nodes without location
+                ),
+                unsaved_files=self.unsaved_files,
+            )
+        except clang.cindex.TranslationUnitLoadError as err:
+            # libclang reports only "Error parsing translation unit", which says
+            # nothing about the cause. Name the inputs so the failure is
+            # actionable -- a missing header and a bad flag look identical
+            # otherwise.
+            raise clang.cindex.TranslationUnitLoadError(
+                f"{err}\n"
+                f"  file:  {self.filename}\n"
+                f"  exists: {os.path.exists(self.filename)}\n"
+                f"  unsaved: "
+                f"{[f for f, _ in self.unsaved_files] if self.unsaved_files else []}\n"
+                f"  args:  {args}"
+            ) from err
+        self._reject_fatal_diagnostics(args)
         return self
+
+    def _reject_fatal_diagnostics(self, args: list):
+        """Raise if the parse hit a diagnostic clang rates as fatal.
+
+        A header clang cannot open is the motivating case. It does not fail
+        the parse: clang recovers, and an undeclared ``size_t`` becomes
+        ``int``, so the generator emits a 32-bit binding for a 64-bit API with
+        nothing having gone visibly wrong.
+
+        Only ``Fatal`` counts. Errors one step below it are routine and
+        deliberate here -- declarations written to exercise the renderer's
+        recovery path, and real headers such as ``hiprand.h`` that do not
+        parse cleanly in isolation yet still yield the declarations the
+        generator needs.
+        """
+        if os.environ.get("INTERFACEGEN_ALLOW_FATAL_DIAGNOSTICS"):
+            return
+        fatal = [
+            d
+            for d in self.translation_unit.diagnostics
+            if d.severity >= clang.cindex.Diagnostic.Fatal
+        ]
+        if not fatal:
+            return
+        raise clang.cindex.TranslationUnitLoadError(
+            "fatal diagnostics while parsing; the resulting AST would carry "
+            "recovered types rather than the declared ones.\n"
+            + "".join(f"  {d.location}: {d.spelling}\n" for d in fatal)
+            + f"  file:  {self.filename}\n"
+            f"  args:  {args}\n"
+            "  Set INTERFACEGEN_ALLOW_FATAL_DIAGNOSTICS=1 to parse anyway."
+        )
 
     def walk_cursors(self, cursor=None, postorder=False):
         """Yields a tuple per cursor that consists of the cursor's level and the cursor.

@@ -133,6 +133,7 @@ class Node:
         # libclang 17+ shim: detect anonymous-typedef inner types whose
         # spelling now carries the typedef name.
         import clang.cindex
+
         kind = getattr(self.cursor, "kind", None)
         prefix = {
             clang.cindex.CursorKind.ENUM_DECL: "enum ",
@@ -345,6 +346,11 @@ class Typed:
         (typeref-based ``struct Foo``/``enum Bar``/``union Baz`` rewrite,
         per-pointer qualifier preservation, incomplete-array → pointer
         decay).
+
+        The typedef maps the backend attached to this node (if any) travel
+        with it rather than through every caller's argument list, the way
+        ``renamer`` does — every renderer call in the Cython backend wants the
+        same module-wide maps.
         """
         from . import typerender
 
@@ -354,6 +360,27 @@ class Typed:
             renamer=renamer,
             prefer_canonical=prefer_canonical,
             local_name_only=local_name_only,
+            typedef_aliases=getattr(self, "typedef_aliases", None),
+            typedef_specs=getattr(self, "typedef_specs", None),
+        )
+
+    def fixed_width_typedef(self):
+        """The ``(spelling, (signed, bits))`` this type's leaf pins, or None.
+
+        The one place to ask what a declaration promises about width, rather
+        than what clang canonicalized it to on the host the generator ran on.
+
+        It lives here rather than on ``cparser.TypeHandler`` because the latter
+        is built from a clang type alone and cannot see the per-module typedef
+        maps — an accessor there would silently miss a library typedef such as
+        ``hoff_t``, and ``cparser`` should stay a faithful mirror of libclang.
+        """
+        from . import typerender
+
+        return typerender.fixed_width_typedef(
+            self.typehandler.clang_type,
+            getattr(self, "typedef_aliases", None),
+            getattr(self, "typedef_specs", None),
         )
 
     def global_typename(
@@ -982,8 +1009,8 @@ class Typedef(Type, Typed):
             return False
         return layers[1] in (
             clang.cindex.TypeKind.ELABORATED,  # libclang ≤16
-            clang.cindex.TypeKind.RECORD,      # libclang ≥17 (struct/union)
-            clang.cindex.TypeKind.ENUM,        # libclang ≥17
+            clang.cindex.TypeKind.RECORD,  # libclang ≥17 (struct/union)
+            clang.cindex.TypeKind.ENUM,  # libclang ≥17
         )
 
     @staticmethod

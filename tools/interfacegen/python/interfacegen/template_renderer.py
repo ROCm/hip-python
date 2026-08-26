@@ -45,18 +45,22 @@ def parse_rccl_version(version_mk_path: str) -> Dict[str, int]:
         ValueError: If version parsing fails
     """
     if not os.path.exists(version_mk_path):
-        raise FileNotFoundError(f"RCCL version file not found: {version_mk_path}")
+        raise FileNotFoundError(
+            f"RCCL version file not found: {version_mk_path}"
+        )
 
-    with open(version_mk_path, 'r') as f:
+    with open(version_mk_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # Parse Makefile-style assignments: NCCL_MAJOR := 2
-    major_match = re.search(r'NCCL_MAJOR\s*:=\s*(\d+)', content)
-    minor_match = re.search(r'NCCL_MINOR\s*:=\s*(\d+)', content)
-    patch_match = re.search(r'NCCL_PATCH\s*:=\s*(\d+)', content)
+    major_match = re.search(r"NCCL_MAJOR\s*:=\s*(\d+)", content)
+    minor_match = re.search(r"NCCL_MINOR\s*:=\s*(\d+)", content)
+    patch_match = re.search(r"NCCL_PATCH\s*:=\s*(\d+)", content)
 
     if not all([major_match, minor_match, patch_match]):
-        raise ValueError(f"Failed to parse RCCL version from {version_mk_path}")
+        raise ValueError(
+            f"Failed to parse RCCL version from {version_mk_path}"
+        )
 
     major = int(major_match.group(1))
     minor = int(minor_match.group(1))
@@ -84,13 +88,15 @@ def parse_comgr_version(version_txt_path: str) -> Dict[str, str]:
         ValueError: If version format is invalid
     """
     if not os.path.exists(version_txt_path):
-        raise FileNotFoundError(f"COMGR version file not found: {version_txt_path}")
+        raise FileNotFoundError(
+            f"COMGR version file not found: {version_txt_path}"
+        )
 
-    with open(version_txt_path, 'r') as f:
+    with open(version_txt_path, "r", encoding="utf-8") as f:
         version_str = f.read().strip()
 
     # Parse version string: "2.8.0"
-    parts = version_str.split('.')
+    parts = version_str.split(".")
     if len(parts) != 3:
         raise ValueError(f"Invalid COMGR version format: {version_str}")
 
@@ -119,7 +125,7 @@ def render_template(template_path: str, variables: Dict[str, any]) -> str:
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"Template not found: {template_path}")
 
-    with open(template_path, 'r') as f:
+    with open(template_path, "r", encoding="utf-8") as f:
         content = f.read()
 
     # Convert all values to strings

@@ -234,43 +234,67 @@ contributors don't try to use them):
 - `restrict` — aliasing hint, no direction signal.
 - `volatile` — memory-model qualifier, no direction or shape signal.
 
-### 4.5 Numeric rank-1 buffers map to `ListOf*` by element kind
+### 4.5 Numeric rank-1 buffers map to `ListOf*` by element width
 
 Once a pointer parameter is classified as rank-1 (a sized buffer, not a
 scalar slot), the Cython complicated-type handler
 (`CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER` in
 `interfacegen/cython/_defaults.py`) picks the `rocm.bindings.util.types`
-wrapper from the **innermost canonical clang `TypeKind`** of the pointee:
+wrapper for the pointee. It asks **two questions in order**:
 
-| Innermost `TypeKind` | C element type    | Wrapper              |
-|----------------------|-------------------|----------------------|
-| `INT`                | `int`             | `ListOfInt`          |
-| `LONG`               | `long` (`off_t`/`hoff_t`/`ssize_t`/`int64_t`) | `ListOfLong` |
-| `UINT`               | `unsigned`        | `ListOfUnsigned`     |
-| `ULONG`              | `unsigned long` (`size_t`) | `ListOfUnsignedLong` |
-| `CHAR_S`             | `char`            | `CStr` (see §4)      |
-| `VOID` (degree ≥ 2)  | `void*` slot      | `ListOfPointer`      |
+1. **Does the declaration pin a width?** `node.fixed_width_typedef()`
+   (`tree.Typed` → `typerender.fixed_width_typedef`) returns
+   `(spelling, (signed, bits))` for `int64_t` / `ssize_t` / `ptrdiff_t` /
+   `intptr_t` / `uint64_t` / `size_t` / `uintptr_t`, plus whatever a module
+   declared through `typedef_aliases` / `typedef_specs` (§4.7).
+2. **Otherwise**, the **innermost canonical clang `TypeKind`** of the pointee.
 
-Anything without a matching branch falls through to the generic
-`Pointer`. The `LONG` → `ListOfLong` row exists so signed-`long` buffers
-(notably hipFILE's `hoff_t*`/`ssize_t*` offset params) are list-
-constructible sequences, consistent with `size_t*` → `ListOfUnsignedLong`,
-instead of an opaque `Pointer`.
+| Pinned spec / `TypeKind` | C element type    | Wrapper              |
+|--------------------------|-------------------|----------------------|
+| `(True, 64)`             | `int64_t`, `ssize_t`, `ptrdiff_t`, `intptr_t` | `ListOfInt64` |
+| `(False, 64)`            | `uint64_t`, `size_t`, `uintptr_t` | `ListOfUInt64` |
+| `INT`                    | `int` (also `int32_t`) | `ListOfInt`     |
+| `LONG`                   | `long`            | `ListOfLong`         |
+| `UINT`                   | `unsigned` (also `uint32_t`) | `ListOfUnsigned` |
+| `ULONG`                  | `unsigned long`   | `ListOfUnsignedLong` |
+| `CHAR_S`                 | `char`            | `CStr` (see §4)      |
+| `VOID` (degree ≥ 2)      | `void*` slot      | `ListOfPointer`      |
+
+Anything without a matching branch falls through to the generic `Pointer`.
+
+The width question comes first because the canonical kind cannot answer it:
+clang resolves `size_t` to `ULONG` on LP64 Linux and to `ULONGLONG` on LLP64
+Windows, so a kind-only dispatch picks the wrapper by the data model of the
+host codegen ran on. The generated tree ships from one host and is compiled on
+all of them, and `unsigned long` is 32 bits on Windows — so
+`ListOfUnsignedLong` there allocates 4 bytes per element for a buffer the
+callee writes 8-byte elements into. `ListOfInt64` / `ListOfUInt64` are 64 bits
+on both data models.
+
+The 8/16/32-bit specs have no wrapper and fall through to the kinds, which is
+correct: `int32_t` / `uint32_t` canonicalize to `INT` / `UINT` on every
+supported platform, and `ListOfInt` / `ListOfUnsigned` are 32 bits there. The
+`LONG` → `ListOfLong` and `ULONG` → `ListOfUnsignedLong` rows now serve only
+declarations that genuinely say `long`, where wrapper and declaration agree
+whatever the data model.
 
 ### 4.6 Numeric rank-0 scalar pointers map to `PointerTo*`
 
 A caller-allocated **rank-0** typed scalar pointer (a `T *` that points
 at a *single* value, not a sized buffer) is wrapped by a `PointerTo*`
 class — a **length-1 specialization of the matching `ListOf*`** (e.g.
-`PointerToLong(ListOfLong)`). The same handler picks it, gated on
-`node.actual_rank == 0`, `isinstance(node, Parm)`, and pointer degree 1:
+`PointerToInt64(ListOfInt64)`). The same handler picks it by the same two
+questions as §4.5, gated on `node.actual_rank == 0`,
+`isinstance(node, Parm)`, and pointer degree 1:
 
-| Innermost `TypeKind` | C element type              | Wrapper                 |
-|----------------------|-----------------------------|-------------------------|
-| `INT`                | `int`                       | `PointerToInt`          |
-| `LONG`               | `long` (`ssize_t`/`int64_t`)| `PointerToLong`         |
-| `UINT`               | `unsigned`                  | `PointerToUnsigned`     |
-| `ULONG`              | `unsigned long` (`size_t`)  | `PointerToUnsignedLong` |
+| Pinned spec / `TypeKind` | C element type              | Wrapper                 |
+|--------------------------|-----------------------------|-------------------------|
+| `(True, 64)`             | `int64_t`, `ssize_t`, `ptrdiff_t`, `intptr_t` | `PointerToInt64` |
+| `(False, 64)`            | `uint64_t`, `size_t`, `uintptr_t` | `PointerToUInt64` |
+| `INT`                    | `int`                       | `PointerToInt`          |
+| `LONG`                   | `long`                      | `PointerToLong`         |
+| `UINT`                   | `unsigned`                  | `PointerToUnsigned`     |
+| `ULONG`                  | `unsigned long`             | `PointerToUnsignedLong` |
 
 This applies to caller-allocated `IN` / `INOUT` / caller-allocated `OUT`
 scalar slots. A *callee-allocated* rank-0 scalar `OUT`
@@ -282,11 +306,35 @@ records, and `void *` don't match the numeric kinds and stay `Pointer`.
 The wrapper gives the single slot an ergonomic surface: `allocate()`
 defaults to one element, and a `.value` property reads/writes slot 0. The
 canonical use is hipFILE's async `bytes_read_p` / `bytes_written_p`
-(`ssize_t*`, caller-allocated `@param[out]` written by the stream after
-the call returns): the caller does `p = PointerToLong.allocate()`, passes
-`p`, synchronizes, then reads `p.value` — where a plain `Pointer` would
-have been opaque and a `ListOfLong` would have misleadingly implied a
-buffer.
+(`hoff_t*` aliased to `int64_t`, caller-allocated `@param[out]` written by
+the stream after the call returns): the caller does
+`p = PointerToInt64.allocate()`, passes `p`, synchronizes, then reads
+`p.value` — where a plain `Pointer` would have been opaque and a
+`ListOfInt64` would have misleadingly implied a buffer. Sizing that one slot
+correctly is not cosmetic: the callee writes 8 bytes into it, so a 4-byte
+allocation corrupts the heap.
+
+### 4.7 A module can declare the width of its own typedefs
+
+Libraries define width-carrying typedefs that are not part of `<stdint.h>` —
+hipFILE's `hoff_t` is `off_t` on POSIX and `__int64` on Windows. Clang
+canonicalizes those to the host's spelling, so the generator takes the fact
+from the recipe instead, through either of two per-module maps on
+`CythonBackend` / `CythonModuleGenerator`:
+
+- `typedef_aliases={"hoff_t": "int64_t"}` — spell it like this stdint typedef
+  and inherit its width.
+- `typedef_specs={"hoff_t": (True, 64)}` — the fact itself; the stdint typedef
+  denoting that width is what gets emitted.
+
+Both feed the single `fixed_width_typedef` lookup, which returns the spelling
+and the spec together. That pairing is deliberate: a module cannot declare a
+width without also fixing what lands in the `.pxd`, so the wrapper and the
+declaration cannot disagree. Entries are validated when the backend is
+constructed — an alias must name a known typedef, a spec must be a known
+`(signed, bits)`, and no typedef may appear in both maps — because an entry
+that silently resolved to nothing would restore the very mismatch these maps
+remove.
 
 ## 5. Module layout
 

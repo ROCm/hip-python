@@ -50,7 +50,7 @@ def _collect_includes_per_file(filepath: str):
     global include_pattern
     includes = []
     include_expr = re.compile(include_pattern)
-    with open(filepath, "r") as infile:
+    with open(filepath, "r", encoding="utf-8") as infile:
         for line in infile.readlines():
             match = include_expr.match(line)
             if match:

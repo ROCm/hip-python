@@ -86,6 +86,7 @@ def _make_status_node_init(prefix, status_type: str, success_const: str):
                     status_type,
                     f"Always returns `~.{status_type}.{success_const}`.",
                 )
+
     return _init
 
 
@@ -229,6 +230,19 @@ _HIPFILE_SCALAR_OUT_PARMS = frozenset(
 )
 
 
+# hipfile.h spells its file/buffer offsets ``hoff_t``, which is ``off_t`` on
+# POSIX and ``__int64`` on Windows. Neither is part of <stdint.h>, so the
+# renderer would canonicalize it to the codegen host's type -- ``long`` on LP64,
+# ``long long`` on LLP64 -- and the generated tree, produced once and compiled
+# everywhere, would carry a 32-bit declaration for a 64-bit offset on Windows.
+# It also leaves the hand-written consumers (the overrides below, the
+# cuda-interop cufile module) with no spelling they can use on both platforms,
+# since Cython compares pointer types by identity. ``int64_t`` denotes the very
+# same C type as ``hoff_t`` on every platform hip-python supports, and Cython
+# already knows it through the stdint cimport in every generated prolog.
+_HIPFILE_TYPEDEF_ALIASES = {"hoff_t": "int64_t"}
+
+
 def _hipfile_ptr_parm_intent(parm):
     """Force ``OUT_CALLEE_ALLOCATED`` on the untagged hipFILE getter outputs
     (see ``_HIPFILE_CSTR_OUT_BUFFERS`` / ``_HIPFILE_SCALAR_OUT_PARMS``);
@@ -237,7 +251,10 @@ def _hipfile_ptr_parm_intent(parm):
     parent = parm.parent
     if parent is not None:
         key = (parent.name, parm.name)
-        if key in _HIPFILE_CSTR_OUT_BUFFERS or key in _HIPFILE_SCALAR_OUT_PARMS:
+        if (
+            key in _HIPFILE_CSTR_OUT_BUFFERS
+            or key in _HIPFILE_SCALAR_OUT_PARMS
+        ):
             return ParmIntent.OUT_CALLEE_ALLOCATED
     return controls.hipfile.ptr_parm_intent(parm)
 
@@ -283,7 +300,10 @@ def _hipfile_node_init(node):
     """
     if isinstance(node, interfacegen.tree.Parm):
         parent = node.parent
-        if parent is not None and (parent.name, node.name) in _HIPFILE_CSTR_OUT_BUFFERS:
+        if (
+            parent is not None
+            and (parent.name, node.name) in _HIPFILE_CSTR_OUT_BUFFERS
+        ):
             size_name = _HIPFILE_CSTR_OUT_BUFFERS[(parent.name, node.name)]
             parent.python_body_prepend_before_c_interface_call(
                 f"{node.name}.malloc({size_name})"
@@ -333,26 +353,28 @@ def _hipfile_node_init(node):
             """'''
         )
         body = textwrap.dedent(
-            '''\
+            """\
             cdef rocm.bindings.util.types.Pointer _cy_hipFileRead__arg_0_obj = rocm.bindings.util.types.Pointer.fromPyobj(fh)
             cdef void * _cy_hipFileRead__arg_0 = <void *>_cy_hipFileRead__arg_0_obj.getPtr()
             cdef rocm.bindings.util.types.Pointer _cy_hipFileRead__arg_1_obj = rocm.bindings.util.types.Pointer.fromPyobj(buffer_base)
             cdef void * _cy_hipFileRead__arg_1 = <void *>_cy_hipFileRead__arg_1_obj.getPtr()
-            cdef long _cy_hipFileRead__retval
+            cdef ssize_t _cy_hipFileRead__retval
             cdef int _cy_hipFileRead__err
             cdef int _cy_hipFileRead__hip_drv_err
             with nogil:
                 _cy_hipFileRead__retval = cyhipfile.hipFileRead(_cy_hipFileRead__arg_0,_cy_hipFileRead__arg_1,size,file_offset,buffer_offset)
                 _cy_hipFileRead__err = errno
                 _cy_hipFileRead__hip_drv_err = <int>hipPeekAtLastError()
-            return (_cy_hipFileRead__retval,_cy_hipFileRead__err,_cy_hipFileRead__hip_drv_err)'''
+            return (_cy_hipFileRead__retval,_cy_hipFileRead__err,_cy_hipFileRead__hip_drv_err)"""
         )
         node.python_docstring_override = docstring
         node.python_interface_impl_override = (
             "@cython.embedsignature(True)\n"
-            "def hipFileRead(object fh, object buffer_base, unsigned long size, long file_offset, long buffer_offset):\n"
-            + textwrap.indent(docstring, ind).rstrip() + "\n"
-            + textwrap.indent(body, ind).rstrip() + "\n"
+            "def hipFileRead(object fh, object buffer_base, size_t size, int64_t file_offset, int64_t buffer_offset):\n"
+            + textwrap.indent(docstring, ind).rstrip()
+            + "\n"
+            + textwrap.indent(body, ind).rstrip()
+            + "\n"
         )
     elif node.name == "hipFileWrite":
         docstring = textwrap.dedent(
@@ -395,26 +417,28 @@ def _hipfile_node_init(node):
             """'''
         )
         body = textwrap.dedent(
-            '''\
+            """\
             cdef rocm.bindings.util.types.Pointer _cy_hipFileWrite__arg_0_obj = rocm.bindings.util.types.Pointer.fromPyobj(fh)
             cdef void * _cy_hipFileWrite__arg_0 = <void *>_cy_hipFileWrite__arg_0_obj.getPtr()
             cdef rocm.bindings.util.types.Pointer _cy_hipFileWrite__arg_1_obj = rocm.bindings.util.types.Pointer.fromPyobj(buffer_base)
             cdef const void * _cy_hipFileWrite__arg_1 = <const void *>_cy_hipFileWrite__arg_1_obj.getPtr()
-            cdef long _cy_hipFileWrite__retval
+            cdef ssize_t _cy_hipFileWrite__retval
             cdef int _cy_hipFileWrite__err
             cdef int _cy_hipFileWrite__hip_drv_err
             with nogil:
                 _cy_hipFileWrite__retval = cyhipfile.hipFileWrite(_cy_hipFileWrite__arg_0,_cy_hipFileWrite__arg_1,size,file_offset,buffer_offset)
                 _cy_hipFileWrite__err = errno
                 _cy_hipFileWrite__hip_drv_err = <int>hipPeekAtLastError()
-            return (_cy_hipFileWrite__retval,_cy_hipFileWrite__err,_cy_hipFileWrite__hip_drv_err)'''
+            return (_cy_hipFileWrite__retval,_cy_hipFileWrite__err,_cy_hipFileWrite__hip_drv_err)"""
         )
         node.python_docstring_override = docstring
         node.python_interface_impl_override = (
             "@cython.embedsignature(True)\n"
-            "def hipFileWrite(object fh, object buffer_base, unsigned long size, long file_offset, long buffer_offset):\n"
-            + textwrap.indent(docstring, ind).rstrip() + "\n"
-            + textwrap.indent(body, ind).rstrip() + "\n"
+            "def hipFileWrite(object fh, object buffer_base, size_t size, int64_t file_offset, int64_t buffer_offset):\n"
+            + textwrap.indent(docstring, ind).rstrip()
+            + "\n"
+            + textwrap.indent(body, ind).rstrip()
+            + "\n"
         )
 
 
@@ -448,6 +472,7 @@ def generate_hipfile(
         ptr_parm_intent=_hipfile_ptr_parm_intent,
         ptr_rank=controls.hipfile.ptr_rank,
         ptr_complicated_type_handler=default_ptr_handler,
+        typedef_aliases=_HIPFILE_TYPEDEF_ALIASES,
         cflags=generator_args,
     )
     # hipfile.h uses ``hipStream_t`` / ``hipError_t`` from the HIP runtime

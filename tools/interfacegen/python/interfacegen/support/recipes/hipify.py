@@ -41,7 +41,7 @@ def parse_hipify_perl(hipify_perl_path: str):
     cuda2hip = {}
     hip2cuda = {}
     p_subst = re.compile(r'subst\s*\(\s*"(?P<cuda>\w+)"\s*,\s*"(?P<hip>\w+)"')
-    with open(hipify_perl_path, "r") as infile:
+    with open(hipify_perl_path, "r", encoding="utf-8") as infile:
         for ln in infile.readlines():
             for m in p_subst.finditer(ln):
                 cuda = m.group("cuda")

@@ -41,22 +41,53 @@ import typing
 
 import clang.cindex
 
-from .. import cparser, cythontemplates, doxyparser, tree
+from .. import cparser, cythontemplates, doxyparser, tree, typerender
 from ..support import cython as support
 from ..support.recipes import control
 
 _log = logging.getLogger("interfacegen")
-from . import _defaults, _doxygen, _mixins, _entities, _function
+from . import _defaults, _doxygen, _entities, _function, _mixins
 from ._defaults import *  # noqa: F401,F403
 from ._doxygen import *  # noqa: F401,F403
-from ._mixins import *  # noqa: F401,F403
 from ._entities import *  # noqa: F401,F403
 from ._function import *  # noqa: F401,F403
+from ._mixins import *  # noqa: F401,F403
 
 __all__ = [
-    'CythonBackend',
-    'CythonModuleGenerator',
+    "CythonBackend",
+    "CythonModuleGenerator",
 ]
+
+
+def _check_typedef_maps(typedef_aliases: dict, typedef_specs: dict):
+    """Reject per-module width declarations that cannot be resolved.
+
+    An entry that silently resolves to nothing is worse than no entry at all:
+    the typedef keeps the codegen host's canonical spelling and the wrapper
+    dispatch keeps picking a wrapper by the host's data model, which is exactly
+    the mismatch these maps exist to remove. So a recipe typo fails loudly here
+    rather than in a shipped ``.pxd``.
+    """
+    for name, target in (typedef_aliases or {}).items():
+        if target not in typerender.FIXED_WIDTH_INT_SPECS:
+            raise ValueError(
+                f"typedef_aliases['{name}']: '{target}' is not a known "
+                "fixed-width integer typedef "
+                f"({sorted(typerender.FIXED_WIDTH_INT_SPECS)})"
+            )
+    for name, spec in (typedef_specs or {}).items():
+        if tuple(spec) not in typerender.FIXED_WIDTH_INT_SPELLINGS:
+            raise ValueError(
+                f"typedef_specs['{name}']: {spec} is not a known "
+                "(signed, bits) integer spec "
+                f"({sorted(typerender.FIXED_WIDTH_INT_SPELLINGS)})"
+            )
+    both = set(typedef_aliases or ()) & set(typedef_specs or ())
+    if both:
+        raise ValueError(
+            "typedefs declared in both 'typedef_aliases' and "
+            f"'typedef_specs': {sorted(both)}"
+        )
 
 
 class CythonBackend:
@@ -101,6 +132,8 @@ class CythonBackend:
         docstring_cleaner: callable = DEFAULT_DOCSTRING_CLEANER,
         node_init: callable = lambda node: None,
         module_opts: dict = None,
+        typedef_aliases: dict = None,
+        typedef_specs: dict = None,
     ):
         """Constructor.
 
@@ -134,6 +167,20 @@ class CythonBackend:
                 A handler that infers a type for complicated pointer types.
                 Selects `CREATE_DEFAULT_PTR_COMPLICATED_TYPE_HANDLER(f"{util_pkg}.types.")`
                 if the default value `None` is not overwritten with a user callback.
+            typedef_aliases (dict, optional):
+                Maps library typedefs that pin a width but are not part of
+                ``<stdint.h>`` to the stdint name denoting the same C type
+                everywhere, e.g. ``{"hoff_t": "int64_t"}``. Without an entry
+                such a typedef is canonicalized to the codegen host's spelling
+                (``long`` on LP64, ``long long`` on LLP64), which no
+                hand-written consumer can then name portably. See
+                ``interfacegen.typerender.fixed_width_typedef``.
+            typedef_specs (dict, optional):
+                The same fact stated directly, as ``(signed, bits)``, e.g.
+                ``{"hoff_t": (True, 64)}``. The stdint typedef denoting that
+                width is emitted, so an entry here pins the spelling as well as
+                the width. Use ``typedef_aliases`` when an existing stdint name
+                says it more readably; a typedef must not appear in both maps.
         Note:
             Argument 'root' has no type hint in order to prevent a circular inclusion error.
             Instead an assertion is used in the body that checks if the type is `tree.Root`.
@@ -143,7 +190,9 @@ class CythonBackend:
         self.filename = filename
         self.util_pkg = util_pkg
         self.module_opts = dict(module_opts) if module_opts else {}
-        self.module_opts.setdefault("python_interface_always_return_tuple", False)
+        self.module_opts.setdefault(
+            "python_interface_always_return_tuple", False
+        )
         self.modifiers_lazy_loader = modifiers_lazy_loader
         self.error_return_value_lazy_loader = error_return_value_lazy_loader
         self.node_filter = node_filter
@@ -162,6 +211,15 @@ class CythonBackend:
         self.raw_comment_cleaner = raw_comment_cleaner
         self.docstring_cleaner = docstring_cleaner
         self.node_init = node_init
+        _check_typedef_maps(typedef_aliases, typedef_specs)
+        self.typedef_aliases = (
+            dict(typedef_aliases) if typedef_aliases else None
+        )
+        self.typedef_specs = (
+            {n: tuple(s) for n, s in typedef_specs.items()}
+            if typedef_specs
+            else None
+        )
 
         self.initialize_nodes()
 
@@ -179,6 +237,8 @@ class CythonBackend:
                 setattr(node, "sep", "_")
                 # set user callbacks
                 setattr(node, "renamer", self.renamer)
+                setattr(node, "typedef_aliases", self.typedef_aliases)
+                setattr(node, "typedef_specs", self.typedef_specs)
                 setattr(node, "raw_comment_cleaner", self.raw_comment_cleaner)
                 setattr(node, "docstring_cleaner", self.docstring_cleaner)
                 if isinstance(node, MacroDefinition):
@@ -252,6 +312,7 @@ class CythonBackend:
         Returns the set of ``Record.name`` values to admit transitively.
         """
         from .. import tree
+
         wanted = set()
         for node in self.root.walk(postorder=True):
             if isinstance(node, tree.Typedef) and self.node_filter(node):
@@ -283,6 +344,7 @@ class CythonBackend:
         ``walk_filtered_nodes``.
         """
         from .. import tree
+
         top = node
         while top.parent is not None and not isinstance(top.parent, tree.Root):
             top = top.parent
@@ -320,6 +382,7 @@ class CythonBackend:
             HSA's ``hsa_iterate_agents`` exhibit these shapes.
         """
         from .. import tree
+
         transitive_records = self._transitively_admitted_records()
         for node in self.root.walk(postorder=True):
             if isinstance(node, CythonMixin):
@@ -336,12 +399,13 @@ class CythonBackend:
                     # enclosing declaration. ``top is not node`` excludes
                     # top-level nodes (a rejected top-level type stays
                     # rejected); the walk handles arbitrary nesting depth.
-                    if (
-                        not admitted
-                        and isinstance(
-                            node,
-                            (tree.Record, tree.Enum, tree.AnonymousFunctionPointer),
-                        )
+                    if not admitted and isinstance(
+                        node,
+                        (
+                            tree.Record,
+                            tree.Enum,
+                            tree.AnonymousFunctionPointer,
+                        ),
                     ):
                         top = self._topmost_ancestor(node)
                         if top is not node and self.node_filter(top):
@@ -477,7 +541,9 @@ class CythonBackend:
                 result.append(textwrap.indent(contrib, curr_indent))
         return result
 
-    def create_c_interface_impl_part(self, dll: str, util_pkg: str, module_name: str):
+    def create_c_interface_impl_part(
+        self, dll: str, util_pkg: str, module_name: str
+    ):
         result = []
         lib_handle = "_lib_handle"
         # Module-unique name for the only pxd-exported helper. Prevents the
@@ -494,7 +560,7 @@ class CythonBackend:
                 dll_stem = dll_stem[: -len(_suffix)]
                 break
         if dll_stem.startswith("lib"):
-            dll_stem = dll_stem[len("lib"):]
+            dll_stem = dll_stem[len("lib") :]
         result.append(
             textwrap.dedent(
                 f"""\
@@ -630,7 +696,8 @@ class CythonBackend:
         module_opts["docstring_attributes"] = []
         for node in self.walk_filtered_nodes():
             contrib = node.render_python_interface_impl(
-                cprefix=cprefix, module_opts=module_opts,
+                cprefix=cprefix,
+                module_opts=module_opts,
             )
             if contrib is not None:
                 result.append(contrib)
@@ -673,8 +740,9 @@ class CythonBackend:
             # `__<module>_has_symbol` cdef helper (declared in the matching
             # cy*.pxd; see `render_c_interface_decl_part`) which
             # handles lazy DLL initialisation and never raises.
-            prefix_parts.append(textwrap.dedent(
-                f"""\
+            prefix_parts.append(
+                textwrap.dedent(
+                    f"""\
                 def has_symbol(name) -> bool:
                     r\"\"\"Probe whether the runtime-linked DLL exports a symbol.
 
@@ -699,7 +767,8 @@ class CythonBackend:
                         raise TypeError("name must be str, bytes, or bytearray")
                     return {cython_c_bindings_module}.__{module_name}_has_symbol(<const char*>name_bytes)
                 """
-            ))
+                )
+            )
             all = list(all) + ["has_symbol"]
         result = (
             ("\n\n".join(prefix_parts) + "\n\n" if prefix_parts else "")
@@ -762,7 +831,9 @@ class CythonModuleGenerator:
         global default_c_interface_decl_prolog
         global default_python_interface_decl_prolog
         self.module_opts = dict(module_opts) if module_opts else {}
-        self.module_opts.setdefault("python_interface_always_return_tuple", False)
+        self.module_opts.setdefault(
+            "python_interface_always_return_tuple", False
+        )
         self.global_module_name = global_module_name
 
         parts = global_module_name.split(".")
@@ -839,7 +910,9 @@ class CythonModuleGenerator:
             + f"\ncimport {self.pkg_name}.{cy_module_name} as {cy_module_name}\n\n"
         )
 
-        with open(f"{output_dir}/{cy_module_name}.pxd", "w") as outfile:
+        with open(
+            f"{output_dir}/{cy_module_name}.pxd", "w", encoding="utf-8"
+        ) as outfile:
             outfile.write(self.c_interface_decl_prolog)
             outfile.write(
                 self.backend.render_c_interface_decl_part(
@@ -848,7 +921,9 @@ class CythonModuleGenerator:
                 )
             )
             outfile.write(self.c_interface_decl_epilog)
-        with open(f"{output_dir}/{cy_module_name}.pyx", "w") as outfile:
+        with open(
+            f"{output_dir}/{cy_module_name}.pyx", "w", encoding="utf-8"
+        ) as outfile:
             outfile.write(self.c_interface_impl_prolog)
             outfile.write(
                 self.backend.render_c_interface_impl_part(
@@ -859,14 +934,18 @@ class CythonModuleGenerator:
                 )
             )
             outfile.write(self.c_interface_impl_epilog)
-        with open(f"{output_dir}/{module_name}.pxd", "w") as outfile:
+        with open(
+            f"{output_dir}/{module_name}.pxd", "w", encoding="utf-8"
+        ) as outfile:
             outfile.write(python_interface_decl_prolog)
             outfile.write(
                 self.backend.render_python_interface_decl_part(cy_module_name)
             )
             outfile.write(self.python_interface_decl_epilog)
 
-        with open(f"{output_dir}/{module_name}.pyx", "w") as outfile:
+        with open(
+            f"{output_dir}/{module_name}.pyx", "w", encoding="utf-8"
+        ) as outfile:
             (
                 content,
                 docstring_attributes,
@@ -899,7 +978,9 @@ class CythonModuleGenerator:
         # The cy<name> C-level wrapper is cimport-only and deliberately
         # not stubbed (mapping void*/const char*/function-pointer typedefs
         # to fake Python type signatures would mislead).
-        with open(f"{output_dir}/{module_name}.pyi", "w") as outfile:
+        with open(
+            f"{output_dir}/{module_name}.pyi", "w", encoding="utf-8"
+        ) as outfile:
             outfile.write(self._render_pyi_stub(f"{cy_module_name}."))
 
     def _render_pyi_stub(self, cprefix: str) -> str:
@@ -926,14 +1007,17 @@ class CythonModuleGenerator:
                 continue
             try:
                 rendered_name = (
-                    node.renamer(name) if callable(getattr(node, "renamer", None)) else name
+                    node.renamer(name)
+                    if callable(getattr(node, "renamer", None))
+                    else name
                 )
             except Exception:
                 rendered_name = name
             if not rendered_name or not rendered_name.isidentifier():
                 continue
             stub = node.render_pyi_stub(
-                cprefix, override_name=rendered_name,
+                cprefix,
+                override_name=rendered_name,
                 module_opts=self.module_opts,
             )
             if not stub:
