@@ -45,6 +45,11 @@
 # -rs (report skip reasons) is passed throughout: it is the only thing that makes
 # a Windows log distinguishable from a run that silently tested nothing.
 #
+# The suite headers and the closing summary table go to the success stream, not
+# to the host, so that `test.ps1 ... 2>&1 | Tee-Object test.log` captures them.
+# Write-Host bypasses every stream, which would leave a log holding raw pytest
+# output and no verdict at all.
+#
 # ROCm itself comes from one of two places. By default the environment supplies
 # it, which suits a system install or an unpacked tarball -- a single tree that
 # ROCM_PATH can name. Pass -UseRocmSdkWheels to install it into the test venv
@@ -136,16 +141,30 @@ if (-not $TestVenv) {
 # The examples are copied out of the source tree and run from the copy, which
 # keeps the suite from importing a `rocm` package out of the repo instead of the
 # installed wheels.
-$examplesBuildDir = Join-Path ([System.IO.Path]::GetTempPath()) "hip_python_examples_$PID"
-New-Item -ItemType Directory -Path $examplesBuildDir -Force | Out-Null
-Copy-Item -Path (Join-Path $repoRoot "examples") `
-          -Destination (Join-Path $examplesBuildDir "examples") -Recurse -Force
+#
+# Keyed on a GUID rather than on $PID, and the contents are copied into a
+# directory created for them rather than the source directory being copied into
+# an existing one. Both matter for a second run: two runs from one PowerShell
+# session share a $PID, and `Copy-Item -Recurse` given a destination that already
+# exists copies the folder *inside* it, so the second run would stage
+# examples\examples\ and pytest would abort the suite on the resulting import
+# file mismatch.
+$examplesBuildDir = Join-Path ([System.IO.Path]::GetTempPath()) `
+    ("hip_python_examples_" + [guid]::NewGuid().ToString("n").Substring(0, 12))
+$examplesDir = Join-Path $examplesBuildDir "examples"
+New-Item -ItemType Directory -Path $examplesDir -Force | Out-Null
+Copy-Item -Path (Join-Path $repoRoot "examples\*") `
+          -Destination $examplesDir -Recurse -Force
 
 Invoke-Native $Python -m venv $TestVenv
+# Absolute from here on. -TestVenv is usually given relative to the caller's
+# directory, and the numba-hip suite runs from elsewhere, so a relative
+# interpreter path would stop resolving the moment the directory changes.
+$TestVenv = (Resolve-Path -LiteralPath $TestVenv).Path
 $venvPython = Join-Path $TestVenv "Scripts\python.exe"
 
 Invoke-Native $venvPython -m pip install --upgrade pip pytest cffi
-Invoke-Native $venvPython -m pip install -r (Join-Path $examplesBuildDir "examples\requirements.txt")
+Invoke-Native $venvPython -m pip install -r (Join-Path $examplesDir "requirements.txt")
 
 $wheels = @(
     Get-ChildItem -Path $BuildArtifactsDir -Filter "rocm_bindings_*.whl"
@@ -156,8 +175,8 @@ $wheels = @(
 if ($wheels.Count -eq 0) {
     throw "No hip-python wheels found under $BuildArtifactsDir"
 }
-Write-Host "Installing $($wheels.Count) wheel(s):"
-$wheels | ForEach-Object { Write-Host "  $(Split-Path $_ -Leaf)" }
+Write-Output "Installing $($wheels.Count) wheel(s):"
+$wheels | ForEach-Object { Write-Output "  $(Split-Path $_ -Leaf)" }
 Invoke-Native $venvPython -m pip install @wheels
 
 # numba-hip goes in separately, after the compiler bindings it is built on, so
@@ -165,10 +184,10 @@ Invoke-Native $venvPython -m pip install @wheels
 $numbaHipWheel = (Get-ChildItem -Path $BuildArtifactsDir -Filter "numba_hip*.whl" |
                   Select-Object -First 1)
 if ($numbaHipWheel) {
-    Write-Host "Installing $($numbaHipWheel.Name)"
+    Write-Output "Installing $($numbaHipWheel.Name)"
     Invoke-Native $venvPython -m pip install $numbaHipWheel.FullName
 } else {
-    Write-Host "No numba_hip wheel under $BuildArtifactsDir - skipping that suite."
+    Write-Output "No numba_hip wheel under $BuildArtifactsDir - skipping that suite."
 }
 
 ### ROCm from wheels (optional)
@@ -186,8 +205,8 @@ if ($UseRocmSdkWheels) {
     # actually present: querying the GPU needs a HIP runtime, which these
     # provide, and the device wheel carries only kernels, so nothing here needs
     # it yet.
-    Write-Host ""
-    Write-Host "Installing ROCm $RocmSdkVersion from $RocmSdkIndexUrl"
+    Write-Output ""
+    Write-Output "Installing ROCm $RocmSdkVersion from $RocmSdkIndexUrl"
     Invoke-Native $venvPython -m pip install --index-url $RocmSdkIndexUrl `
         "rocm[libraries]==$RocmSdkVersion"
 
@@ -213,7 +232,7 @@ print(Path(find_libraries('amdhip64')[0]).parent.parent)
     $env:ROCM_PATH = $rocmSdkRoot
     $env:HIP_PATH = $rocmSdkRoot
     Remove-Item Env:\ROCM_HOME -ErrorAction SilentlyContinue
-    Write-Host "ROCM_PATH set to $rocmSdkRoot"
+    Write-Output "ROCM_PATH set to $rocmSdkRoot"
 
     if (-not $GfxArch) {
         # gcnArchName carries target features on some GPUs (gfx1103:xnack-),
@@ -232,7 +251,7 @@ print(props.gcnArchName.split(':')[0])
             throw "Could not query the GPU target. Pass -GfxArch (e.g. -GfxArch gfx1103)."
         }
         $GfxArch = $GfxArch.Trim()
-        Write-Host "Detected GPU target: $GfxArch"
+        Write-Output "Detected GPU target: $GfxArch"
     }
 
     Invoke-Native $venvPython -m pip install --index-url $RocmSdkIndexUrl `
@@ -263,8 +282,8 @@ for shortname in ('amdhip64', 'hipblaslt', 'amd_comgr'):
     except Exception as exc:
         print('  %-12s unresolved (%s)' % (shortname, exc))
 '@)
-    Write-Host "ROCm resolved from:"
-    $resolved | ForEach-Object { Write-Host $_ }
+    Write-Output "ROCm resolved from:"
+    $resolved | ForEach-Object { Write-Output $_ }
 }
 
 # The examples suite asks the interop shim to report CUDA error codes that have
@@ -284,7 +303,7 @@ $env:HIP_PYTHON_cudaError_t_HALLUCINATE = "1"
 # Suites 2 to 5 live outside the importable packages (tests/, not under src/) so
 # they exercise the *installed* wheels.
 $suites = [ordered] @{
-    "examples"                = Join-Path $examplesBuildDir "examples"
+    "examples"                = $examplesDir
     "hip-python-interop"      = Join-Path $repoRoot "tests\hip-python-interop"
     "rocm-bindings-core"      = Join-Path $repoRoot "tests\rocm-bindings-core"
     "rocm-bindings-compiler"  = Join-Path $repoRoot "tests\rocm-bindings-compiler"
@@ -303,8 +322,8 @@ $PYTEST_NO_TESTS = 5
 
 $results = [ordered] @{}
 foreach ($name in $suites.Keys) {
-    Write-Host ""
-    Write-Host "=== suite: $name ==="
+    Write-Output ""
+    Write-Output "=== suite: $name ==="
     $ErrorActionPreference = "Continue"
     if ($name -eq "numba-hip") {
         # Run from a directory with no numba/ parent so the source tree cannot
@@ -326,8 +345,8 @@ foreach ($name in $suites.Keys) {
 
 ### Verdict
 
-Write-Host ""
-Write-Host "=== summary ==="
+Write-Output ""
+Write-Output "=== summary ==="
 foreach ($name in $results.Keys) {
     $code = $results[$name]
     $verdict = switch ($code) {
@@ -335,22 +354,31 @@ foreach ($name in $results.Keys) {
         $PYTEST_NO_TESTS  { "NO TESTS (every module skipped on this platform)" }
         default           { "FAILED (exit $code)" }
     }
-    Write-Host ("{0,-24} {1}" -f $name, $verdict)
+    Write-Output ("{0,-24} {1}" -f $name, $verdict)
 }
 
 $failed = @($results.Keys | Where-Object {
     $results[$_] -ne 0 -and $results[$_] -ne $PYTEST_NO_TESTS
 })
 
-if ($failed.Count -eq 0 -and -not $keepVenv) {
-    Remove-Item -Recurse -Force $TestVenv, $examplesBuildDir -ErrorAction SilentlyContinue
+# The staged examples are cleaned up on their own terms rather than with the
+# venv. -TestVenv keeps a venv for the next run to reuse, which is what it is
+# for; nothing reuses a staged copy of the examples, so tying the two together
+# only left %TEMP% filling up with them.
+if ($failed.Count -eq 0) {
+    Remove-Item -Recurse -Force $examplesBuildDir -ErrorAction SilentlyContinue
 } else {
-    Write-Host ""
-    Write-Host "venv kept at $TestVenv"
-    Write-Host "examples kept at $examplesBuildDir"
+    Write-Output ""
+    Write-Output "examples kept at $examplesBuildDir"
+}
+
+if ($failed.Count -eq 0 -and -not $keepVenv) {
+    Remove-Item -Recurse -Force $TestVenv -ErrorAction SilentlyContinue
+} else {
+    Write-Output "venv kept at $TestVenv"
 }
 
 if ($failed.Count -ne 0) {
     throw "$($failed.Count) suite(s) failed: $($failed -join ', ')"
 }
-Write-Host "All suites passed."
+Write-Output "All suites passed."

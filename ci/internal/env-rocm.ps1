@@ -54,7 +54,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not $Root) {
-    Write-Host "No -Root given; querying $Python for a rocm-sdk install..."
+    Write-Output "No -Root given; querying $Python for a rocm-sdk install..."
     $Root = & $Python -m rocm_sdk path --root 2>$null
     if ($LASTEXITCODE -ne 0 -or -not $Root) {
         throw "Could not resolve a ROCm root. Pass -Root <path> for a flat " +
@@ -107,6 +107,6 @@ foreach ($dir in $binDirs) {
     }
 }
 
-Write-Host "ROCM_PATH  = $env:ROCM_PATH"
-Write-Host "LLVM_PATH  = $env:LLVM_PATH"
-Write-Host "Verify the install with: hipInfo.exe"
+Write-Output "ROCM_PATH  = $env:ROCM_PATH"
+Write-Output "LLVM_PATH  = $env:LLVM_PATH"
+Write-Output "Verify the install with: hipInfo.exe"

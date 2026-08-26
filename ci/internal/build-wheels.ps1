@@ -46,19 +46,36 @@
 #
 # No ROCm version appears anywhere: everything is derived from -RocmPath.
 #
+# Progress is written to the success stream rather than to the host, so that
+# `build-wheels.ps1 ... 2>&1 | Tee-Object build.log` captures it. Write-Host
+# bypasses every stream and would leave a log with the compiler's output and none
+# of the surrounding context.
+#
 # Usage:
 #   ci\internal\build-wheels.ps1                      # ROCM_PATH from the environment
 #   ci\internal\build-wheels.ps1 -RocmPath C:\rocm
+#   ci\internal\build-wheels.ps1 -Python .venv\Scripts\python.exe
 #   ci\internal\build-wheels.ps1 -Light               # core + hip + compiler only
 #   ci\internal\build-wheels.ps1 -UseRocmClang        # amdclang-cl instead of MSVC
 #   ci\internal\build-wheels.ps1 -UseSabi 3.11        # one cp311-abi3 wheel set
 #   ci\internal\build-wheels.ps1 -NoBundleLibLLVM     # smaller wheel, no numba.hip
+#   ci\internal\build-wheels.ps1 -RocmLlvmProjectDir C:\src\llvm-project
 
 [CmdletBinding()]
 param(
     # ROCm root. Defaults to ROCM_PATH / ROCM_HOME from the environment
     # (see ci\internal\env-rocm.ps1).
     [string] $RocmPath = $(if ($env:ROCM_PATH) { $env:ROCM_PATH } else { $env:ROCM_HOME }),
+
+    # Interpreter to build against. The extension modules are ABI-tagged for it
+    # (unless -UseSabi is given) and the pure-Python hip-python wheel is built
+    # with its `python -m build`, so it must be the environment holding the
+    # build requirements. Forwarded as Python_EXECUTABLE, because
+    # find_package(Python) would otherwise consult the registry and pick the
+    # highest installed version -- not the one on PATH, and not necessarily the
+    # one the requirements were installed into. Same name and default as
+    # ci\internal\test.ps1, so a build and its test run can be told to agree.
+    [string] $Python = "python",
 
     # Build only core + hip + compiler, mirroring LIGHT_MODE in the bash script.
     # Chooses which packages are built, not how the compiler wheel is
@@ -88,6 +105,13 @@ param(
     # wheels. Reads USE_SABI from the environment, the same name the bash script
     # uses, so CI can set it once for both platforms.
     [string] $UseSabi = $(if ($env:USE_SABI) { $env:USE_SABI } else { "no" }),
+
+    # llvm-project checkout that rocm-bindings-compiler stages the
+    # rocm.bindings.clang shim from. Only a tree that already carries the shim
+    # -- a generated release branch -- can do without it; anywhere else
+    # configure fails on the missing cindex.py. Reads ROCM_LLVM_PROJECT_DIR
+    # from the environment, the same name the bash script uses.
+    [string] $RocmLlvmProjectDir = $env:ROCM_LLVM_PROJECT_DIR,
 
     [string] $BuildDir = "build",
     [string] $WheelOutputDir,
@@ -154,7 +178,7 @@ function Initialize-MsvcEnvironment {
     # Developer PowerShell with a trimmed environment. Trusting the marker there
     # skips the bootstrap and fails on the cl.exe check below instead.
     if ($env:VSCMD_VER -and (Get-Command cl.exe -ErrorAction SilentlyContinue)) {
-        Write-Host "MSVC environment already present (VSCMD_VER=$env:VSCMD_VER)"
+        Write-Output "MSVC environment already present (VSCMD_VER=$env:VSCMD_VER)"
         return
     }
 
@@ -176,7 +200,7 @@ function Initialize-MsvcEnvironment {
         throw "Launch-VsDevShell.ps1 not found under $vsPath."
     }
 
-    Write-Host "Importing MSVC environment from $vsPath"
+    Write-Output "Importing MSVC environment from $vsPath"
     # -SkipAutomaticLocation keeps the caller's working directory.
     & $devShell -Arch amd64 -HostArch amd64 -SkipAutomaticLocation | Out-Null
 }
@@ -195,6 +219,39 @@ if (-not $RocmPath) {
 $RocmPath = (Resolve-Path -LiteralPath $RocmPath).Path
 if (-not (Test-Path -LiteralPath (Join-Path $RocmPath "include"))) {
     throw "No 'include' directory under $RocmPath - hip_python_initialize() will fail."
+}
+
+### Interpreter
+#
+# Resolved to a full path here rather than handed to CMake as a bare name,
+# because Python_EXECUTABLE is what FindPython validates before it searches, and
+# a name it cannot resolve itself sends it back to the registry -- the very
+# outcome this is here to prevent.
+$pythonExe = ""
+$pythonCommand = Get-Command $Python -ErrorAction SilentlyContinue
+if ($pythonCommand) {
+    $pythonExe = $pythonCommand.Path
+}
+elseif ($PSBoundParameters.ContainsKey("Python")) {
+    throw "No interpreter at '$Python' (-Python)."
+}
+else {
+    # Only the default was unresolvable, so nothing was actually asked for.
+    # CMake's own search still has to find an interpreter, and its diagnostic
+    # for finding none is clearer than anything that could be said here.
+    Write-Warning ("No 'python' on PATH; letting CMake choose the interpreter. " +
+                   "It searches the registry and takes the highest version " +
+                   "installed, which need not be the one holding the build " +
+                   "requirements -- pass -Python to name one.")
+}
+
+### llvm-project checkout for the rocm.bindings.clang shim
+
+if ($RocmLlvmProjectDir) {
+    if (-not (Test-Path -LiteralPath $RocmLlvmProjectDir)) {
+        throw "No llvm-project checkout at $RocmLlvmProjectDir (-RocmLlvmProjectDir)."
+    }
+    $RocmLlvmProjectDir = (Resolve-Path -LiteralPath $RocmLlvmProjectDir).Path
 }
 
 ### Build tooling
@@ -233,8 +290,8 @@ $buildNumbaHip = if ($NoNumbaHip -or $NoBundleLibLLVM -or $NoCompiler -or $Light
     "ON"
 }
 if ($buildNumbaHip -eq "OFF" -and -not $NoNumbaHip) {
-    Write-Host ("Not building numba-hip: it needs the bundled shared LLVM and " +
-                "hip-python-interop, which this configuration leaves out.")
+    Write-Output ("Not building numba-hip: it needs the bundled shared LLVM and " +
+                  "hip-python-interop, which this configuration leaves out.")
 }
 
 # Pin the host compiler explicitly. ROCm's own clang.exe sits in
@@ -281,20 +338,29 @@ $cmakeArgs = @(
     "-DHIP_PYTHON_WHEEL_OUTPUT_DIR=$WheelOutputDir"
 )
 
+if ($pythonExe) {
+    $cmakeArgs += "-DPython_EXECUTABLE=$pythonExe"
+    Write-Output "Building against $pythonExe ($(& $pythonExe -V))"
+}
+
+if ($RocmLlvmProjectDir) {
+    $cmakeArgs += "-DHIP_PYTHON_ROCM_LLVM_PROJECT_DIR=$RocmLlvmProjectDir"
+}
+
 # Quote the whole -D argument: Windows PowerShell 5.1 splits an unquoted
 # `-DFOO=3.11` into `-DFOO=3` and `.11` on its way to a native command, and CMake
 # then rejects the floor as '3' while warning about a stray path.
 if ($abi3Floor) {
     $cmakeArgs += "-DHIP_PYTHON_ABI3_FLOOR=$abi3Floor"
-    Write-Host ("Building against the CPython stable ABI, floor $abi3Floor; " +
-                "wheels will be tagged cp$($abi3Floor -replace '\.','')-abi3.")
+    Write-Output ("Building against the CPython stable ABI, floor $abi3Floor; " +
+                  "wheels will be tagged cp$($abi3Floor -replace '\.','')-abi3.")
 }
 
 $cmakeArgs += $ExtraCMakeArgs
 
 Push-Location $repoRoot
 try {
-    Write-Host "cmake $($cmakeArgs -join ' ')"
+    Write-Output "cmake $($cmakeArgs -join ' ')"
     Invoke-Native cmake @cmakeArgs
     Invoke-Native cmake --build "packages/$BuildDir" --target $Target --parallel $MaxJobs
 }
@@ -302,4 +368,4 @@ finally {
     Pop-Location
 }
 
-Write-Host "Wheels written to $WheelOutputDir"
+Write-Output "Wheels written to $WheelOutputDir"
