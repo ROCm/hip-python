@@ -104,6 +104,8 @@ cdef class NDBuffer(Pointer):
 
     cdef _set_ptr(self, void* ptr)
 
+    cdef _check_supported_layout(self, dict cuda_array_interface)
+
     cdef int _numpy_typestr_to_bytes(self, str typestr)
 
     cdef tuple _handle_int(self, size_t subscript, size_t shape_dim)

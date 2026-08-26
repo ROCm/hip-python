@@ -775,6 +775,14 @@ cdef class NDBuffer(Pointer):
         need to pass the ``_force=True`` keyword argument --- in particular if your
         instance was created from a type that does not implement the CUDA array
         interface protocol.
+
+    Note:
+        This type represents a dense, C-contiguous array; all of its
+        addressing is derived from the shape and the itemsize. An input that
+        implements the CUDA array interface protocol is therefore rejected
+        if it carries a mask, a non-zero offset, or strides that describe a
+        non-contiguous layout. Strides that spell out the contiguous layout
+        the shape already implies are accepted.
     See:
         `~.configure`
 
@@ -1018,6 +1026,46 @@ cdef class NDBuffer(Pointer):
             cpython.long.PyLong_FromVoidPtr(ptr), old_data[1]
         )
 
+    cdef _check_supported_layout(self, dict cuda_array_interface):
+        """Reject CUDA array interface layouts this type cannot represent.
+
+        An `NDBuffer` addresses its data as a dense, C-contiguous, unmasked
+        array: `~.NDBuffer.__getitem__` derives every offset from 'shape'
+        alone and `__getbuffer__` reports no strides. An input whose real
+        layout differs would therefore be read at the wrong addresses
+        instead of failing, so it is refused here.
+
+        Note:
+            'strides' may be `None` or spell out the very strides that
+            'shape' and the itemsize imply; `numba` hands out the latter.
+            The stride of an axis of extent one is arbitrary and ignored,
+            as numpy does in its own contiguity test.
+
+        Raises:
+            `NotImplementedError`:
+                If the interface carries a mask or a non-zero offset.
+            `RuntimeError`:
+                If 'strides' describes a non-contiguous layout.
+        """
+        cdef tuple shape = self._cuda_array_interface["shape"]
+        cdef object strides = cuda_array_interface.get("strides", None)
+        cdef object expected = self._itemsize
+        cdef Py_ssize_t i
+
+        if cuda_array_interface.get("mask", None) is not None:
+            raise NotImplementedError("Masked arrays are not supported")
+        if cuda_array_interface.get("offset", 0):
+            raise NotImplementedError("a non-zero 'offset' is not supported")
+        if strides is None or not math.prod(shape):
+            return  # an array without elements is contiguous either way
+        if len(strides) != len(shape):
+            raise ValueError(f"'strides': got {len(strides)} entries for a"
+                             + f" {len(shape)}-dimensional 'shape'")
+        for i in range(len(shape) - 1, -1, -1):  # row major, fastest axis last
+            if shape[i] > 1 and strides[i] != expected:
+                raise RuntimeError("CUDA array interface is not contiguous")
+            expected *= shape[i]
+
     @staticmethod
     cdef NDBuffer fromPtr(void* ptr):
         cdef NDBuffer wrapper = NDBuffer.__new__(NDBuffer)
@@ -1129,15 +1177,19 @@ cdef class NDBuffer(Pointer):
         #
         if "stream" in kwargs:
             stream = kwargs["stream"]
-            if isinstance(stream, int):
+            if stream is None:
+                # Must not route into `Pointer.fromPyobj`, which maps None to
+                # the disallowed address 0.
+                self._cuda_array_interface["stream"] = None
+            elif isinstance(stream, int):
                 if stream == 0:
-                    return ValueError("'stream': value '0' is disallowed as it would be"
-                                      + " ambiguous between None and the default"
-                                      + " stream, more details: https://numba."
-                                      + "readthedocs.io/en/stable/cuda/"
-                                      +"cuda_array_interface.html")
+                    raise ValueError("'stream': value '0' is disallowed as it would be"
+                                     + " ambiguous between None and the default"
+                                     + " stream, more details: https://numba."
+                                     + "readthedocs.io/en/stable/cuda/"
+                                     + "cuda_array_interface.html")
                 elif stream < 0:
-                    return ValueError("'stream': expected positive integer")
+                    raise ValueError("'stream': expected positive integer")
                 self._cuda_array_interface["stream"] = stream
             else:
                 self._cuda_array_interface["stream"] = int(Pointer.fromPyobj(stream))
@@ -1215,13 +1267,22 @@ cdef class NDBuffer(Pointer):
             if "data" not in cuda_array_interface:
                 raise ValueError("input object has '__cuda_array_interface__'"
                                  + " attribute but the dict has no 'data' key")
-            if cuda_array_interface["strides"] is not None:
-                raise RuntimeError("CUDA array interface is not contiguous")
             ptr_as_int = cuda_array_interface["data"][0]
             self._set_ptr(cpython.long.PyLong_AsVoidPtr(ptr_as_int))
-            self.configure(cuda_array_interface)
+            # `configure` takes keyword arguments and accepts only the subset of
+            # interface keys that describe an NDBuffer, so the dict cannot be
+            # forwarded as-is.
+            kwargs = dict(
+                _force=True,
+                shape=tuple(cuda_array_interface["shape"]),
+                typestr=cuda_array_interface["typestr"],
+                read_only=bool(cuda_array_interface["data"][1]),
+                stream=cuda_array_interface.get("stream", None),
+            )
             if isinstance(pyobj, NDBuffer):
-                self._itemsize = pyobj._itemsize
+                kwargs["itemsize"] = pyobj._itemsize
+            self.configure(**kwargs)
+            self._check_supported_layout(cuda_array_interface)
         else:
             pointer = Pointer.fromPyobj(pyobj)
             self._set_ptr(pointer._ptr)

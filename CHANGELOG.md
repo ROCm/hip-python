@@ -209,6 +209,17 @@ documented for the first time.
   Adding or overwriting an entry — as `numba` does with `'strides'` —
   no longer alters the buffer it came from. Use
   `NDBuffer.configure` to change the buffer itself.
+- **Building an `NDBuffer` from another object's CUDA array interface
+  works**, where it previously raised `TypeError` for every such input.
+- **An interface that spells out contiguous strides is accepted.**
+  Previously any `'strides'` other than `None` was refused, including
+  the explicit C-contiguous strides `numba` hands out. A genuinely
+  non-contiguous layout still raises `RuntimeError`, and a mask or a
+  non-zero offset — neither of which an `NDBuffer` can represent — now
+  raises `NotImplementedError` instead of being ignored.
+- **An invalid `stream` passed to `NDBuffer.configure` raises.** It used
+  to return the `ValueError` as the call's result, so the caller
+  received an exception object in place of the buffer.
 
 #### Codegen
 
