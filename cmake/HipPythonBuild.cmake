@@ -693,7 +693,7 @@ endfunction()
 function(hip_python_add_wheel_target)
   set(options "SKIP_AUDITWHEEL")
   set(oneValueArgs TARGET PACKAGE_DIR OUTPUT_DIR COMPONENT)
-  set(multiValueArgs DEPENDS)
+  set(multiValueArgs DEPENDS MODULE_TARGETS)
   cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   # Output directory for wheels
@@ -841,19 +841,31 @@ function(hip_python_add_wheel_target)
     COMMAND ${CMAKE_COMMAND} -E touch "${STAMP_FILE}"
   )
 
+  # File-level prerequisites on the compiled module artifacts. A DEPENDS entry
+  # naming a custom target (e.g. package_rocm_bindings_core) creates ordering
+  # only, not invalidation when the modules underneath are relinked; the stamp
+  # would stay fresh and the wheel would silently go stale. Library/module
+  # targets wired here via $<TARGET_FILE:...> re-run assembly when any .so
+  # changes.
+  set(_module_files)
+  foreach(_tgt IN LISTS ARG_MODULE_TARGETS)
+    list(APPEND _module_files "$<TARGET_FILE:${_tgt}>")
+  endforeach()
+
   # Custom command to build wheel
   add_custom_command(
     OUTPUT "${STAMP_FILE}"
     ${WHEEL_COMMANDS}
     WORKING_DIRECTORY "${ARG_PACKAGE_DIR}"
-    DEPENDS ${ARG_DEPENDS}
+    DEPENDS ${_module_files}
     COMMENT "Building wheel for ${ARG_TARGET} -> ${ARG_OUTPUT_DIR}"
     VERBATIM
   )
 
-  # Target depends on stamp file
+  # Target depends on stamp file; optional DEPENDS keeps package_* aggregates
+  # for build ordering without relying on them for stamp invalidation.
   add_custom_target(${ARG_TARGET}
-    DEPENDS "${STAMP_FILE}"
+    DEPENDS "${STAMP_FILE}" ${ARG_DEPENDS}
   )
 endfunction()
 

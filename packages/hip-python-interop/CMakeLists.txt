@@ -163,3 +163,4 @@ endif()
 add_custom_target(package_hip_python_interop
   DEPENDS ${_hip_python_interop_targets}
 )
+set(HIP_PYTHON_INTEROP_MODULE_TARGETS "${_hip_python_interop_targets}" PARENT_SCOPE)

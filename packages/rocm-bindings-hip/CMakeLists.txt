@@ -159,12 +159,15 @@ install(
 # See: https://peps.python.org/pep-0420/
 
 # Aggregate target for this package (for build.targets in pyproject.toml)
-add_custom_target(package_rocm_bindings_hip
-  DEPENDS
-    rocm_bindings_hip_helpers
-    rocm_bindings_hiprtc_helpers
-    rocm_bindings_cyhip
-    rocm_bindings_cyhiprtc
-    rocm_bindings_hip
-    rocm_bindings_hiprtc
+set(HIP_PYTHON_HIP_MODULE_TARGETS
+  rocm_bindings_hip_helpers
+  rocm_bindings_hiprtc_helpers
+  rocm_bindings_cyhip
+  rocm_bindings_cyhiprtc
+  rocm_bindings_hip
+  rocm_bindings_hiprtc
 )
+add_custom_target(package_rocm_bindings_hip
+  DEPENDS ${HIP_PYTHON_HIP_MODULE_TARGETS}
+)
+set(HIP_PYTHON_HIP_MODULE_TARGETS "${HIP_PYTHON_HIP_MODULE_TARGETS}" PARENT_SCOPE)

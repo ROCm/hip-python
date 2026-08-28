@@ -339,6 +339,7 @@ if(HIP_PYTHON_BUILD_CORE)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT rocm-bindings-core
     DEPENDS package_rocm_bindings_core
+    MODULE_TARGETS ${HIP_PYTHON_CORE_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: core_wheel")
 endif()
@@ -350,6 +351,7 @@ if(HIP_PYTHON_BUILD_HIP)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT rocm-bindings-hip
     DEPENDS package_rocm_bindings_hip
+    MODULE_TARGETS ${HIP_PYTHON_HIP_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: hip_wheel")
 endif()
@@ -361,6 +363,7 @@ if(HIP_PYTHON_BUILD_LIBRARIES)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT rocm-bindings-libraries
     DEPENDS package_rocm_bindings_libraries
+    MODULE_TARGETS ${HIP_PYTHON_LIBRARIES_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: libraries_wheel")
 endif()
@@ -372,6 +375,7 @@ if(_hp_package_systems)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT rocm-bindings-systems
     DEPENDS package_rocm_bindings_systems
+    MODULE_TARGETS ${HIP_PYTHON_SYSTEMS_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: systems_wheel")
 endif()
@@ -383,6 +387,7 @@ if(HIP_PYTHON_BUILD_COMPILER)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT rocm-bindings-compiler
     DEPENDS package_rocm_bindings_compiler
+    MODULE_TARGETS ${HIP_PYTHON_COMPILER_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: compiler_wheel")
 endif()
@@ -394,6 +399,7 @@ if(HIP_PYTHON_BUILD_INTEROP)
     OUTPUT_DIR "${HIP_PYTHON_WHEEL_OUTPUT_DIR}"
     COMPONENT hip-python-interop
     DEPENDS package_hip_python_interop
+    MODULE_TARGETS ${HIP_PYTHON_INTEROP_MODULE_TARGETS}
   )
   message(STATUS "Wheel target enabled: interop_wheel")
 endif()

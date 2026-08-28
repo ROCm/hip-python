@@ -239,6 +239,7 @@ endforeach()
 add_custom_target(package_rocm_bindings_systems
   DEPENDS ${_all_systems_targets}
 )
+set(HIP_PYTHON_SYSTEMS_MODULE_TARGETS "${_all_systems_targets}" PARENT_SCOPE)
 
 # Report the surviving module list to the unified build so it can skip this
 # package's wheel and sdist targets when nothing was built, rather than

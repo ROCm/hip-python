@@ -198,3 +198,4 @@ endforeach()
 add_custom_target(package_rocm_bindings_libraries
   DEPENDS ${_all_library_targets}
 )
+set(HIP_PYTHON_LIBRARIES_MODULE_TARGETS "${_all_library_targets}" PARENT_SCOPE)

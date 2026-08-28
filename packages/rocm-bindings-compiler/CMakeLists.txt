@@ -397,12 +397,15 @@ install(
   COMPONENT rocm-bindings-compiler
 )
 # Aggregate target
+set(HIP_PYTHON_COMPILER_MODULE_TARGETS ${LLVM_TARGETS} ${COMGR_TARGETS})
 if(TARGET rocmllvm AND BUILD_BUNDLED_LIBLLVM)
+  list(APPEND HIP_PYTHON_COMPILER_MODULE_TARGETS rocmllvm)
   add_custom_target(package_rocm_bindings_compiler
-    DEPENDS ${LLVM_TARGETS} ${COMGR_TARGETS} rocmllvm
+    DEPENDS ${HIP_PYTHON_COMPILER_MODULE_TARGETS}
   )
 else()
   add_custom_target(package_rocm_bindings_compiler
-    DEPENDS ${LLVM_TARGETS} ${COMGR_TARGETS}
+    DEPENDS ${HIP_PYTHON_COMPILER_MODULE_TARGETS}
   )
 endif()
+set(HIP_PYTHON_COMPILER_MODULE_TARGETS "${HIP_PYTHON_COMPILER_MODULE_TARGETS}" PARENT_SCOPE)

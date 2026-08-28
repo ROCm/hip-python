@@ -147,6 +147,12 @@ install(
 )
 
 # Aggregate target for this package (for build.targets in pyproject.toml)
-add_custom_target(package_rocm_bindings_core
-  DEPENDS rocm_bindings_core_types rocm_bindings_core_loader rocm_bindings_core_platform_loader
+set(HIP_PYTHON_CORE_MODULE_TARGETS
+  rocm_bindings_core_types
+  rocm_bindings_core_loader
+  rocm_bindings_core_platform_loader
 )
+add_custom_target(package_rocm_bindings_core
+  DEPENDS ${HIP_PYTHON_CORE_MODULE_TARGETS}
+)
+set(HIP_PYTHON_CORE_MODULE_TARGETS "${HIP_PYTHON_CORE_MODULE_TARGETS}" PARENT_SCOPE)
