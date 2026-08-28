@@ -46,9 +46,17 @@ import pytest
 from rocm.bindings.util import paths
 
 
+def _evict_rocm_sdk_modules(monkeypatch):
+    """Remove cached ``rocm_sdk`` submodules so a subsequent block is effective."""
+    for name in list(sys.modules):
+        if name == "rocm_sdk" or name.startswith("rocm_sdk."):
+            monkeypatch.delitem(sys.modules, name, raising=False)
+
+
 @pytest.fixture
 def block_rocm_sdk(monkeypatch):
     """Make ``import rocm_sdk`` (and submodules) fail, forcing the env tier."""
+    _evict_rocm_sdk_modules(monkeypatch)
     monkeypatch.setitem(sys.modules, "rocm_sdk", None)
     monkeypatch.delenv("ROCM_PATH", raising=False)
     monkeypatch.delenv("ROCM_HOME", raising=False)
@@ -152,6 +160,7 @@ def test_get_library_path_rocm_sdk_returns_pathlib(tmp_path, monkeypatch):
     absolute path as bytes regardless of whether ``find_libraries`` yields a
     ``Path`` or a ``str``.
     """
+    _evict_rocm_sdk_modules(monkeypatch)
     lib_file = tmp_path / "libamdhip64.so"
     lib_file.touch()
 
@@ -173,6 +182,7 @@ def test_get_library_path_rocm_sdk_returns_pathlib(tmp_path, monkeypatch):
 
 def test_get_library_path_rocm_sdk_returns_str(tmp_path, monkeypatch):
     """The rocm_sdk tier also accepts plain ``str`` paths (forward-compat)."""
+    _evict_rocm_sdk_modules(monkeypatch)
     lib_file = tmp_path / "libamdhip64.so"
     lib_file.touch()
 
@@ -203,6 +213,7 @@ def test_get_library_path_anchored_shortname(tmp_path, monkeypatch):
     hiprtc-builtins sits, so the only way a wheel install can name it is via a
     registered neighbour -- here hipRTC, installed in the same directory.
     """
+    _evict_rocm_sdk_modules(monkeypatch)
     lib_dir = tmp_path / "_rocm_sdk_core" / "bin"
     lib_dir.mkdir(parents=True)
     anchor = lib_dir / _windows_or_unix_name("hiprtc")
@@ -237,6 +248,7 @@ def test_get_library_path_anchored_shortname_without_anchor(
     driver -- has to reach the bare-name fallback so the caller can report the
     library as missing rather than crash inside path resolution.
     """
+    _evict_rocm_sdk_modules(monkeypatch)
     empty = tmp_path / "empty"
 
     fake_rocm_sdk = types.ModuleType("rocm_sdk")
