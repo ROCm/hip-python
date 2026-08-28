@@ -48,10 +48,10 @@
 # Env read by install_rocm:
 #   ROCM_SPECIFIER  required. 'X.Y', 'X.Y.Z', 'therock:X.Y.Z', 'therock:X.Y.ZrcR',
 #                   'therock:X.Y.ZaYYYYMMDD', 'therock:*', 'therock:*rc*',
-#                   'therock:*a*' or 'preinstalled'. The three wildcards may
-#                   also be written 'therock:?', 'therock:?rc?' and
-#                   'therock:?a?', which install_rocm rewrites to the '*'
-#                   spellings; see __canonicalize_rocm_specifier.
+#                   'therock:*a*', 'therock:*dev*' or 'preinstalled'. Wildcards
+#                   may also be written 'therock:?', 'therock:?rc?',
+#                   'therock:?a?' and 'therock:?dev?'; see
+#                   __canonicalize_rocm_specifier.
 #   AMDGPU_TARGETS  required for the 'therock:' specifiers; a single target.
 #                   'gfx942', an artifact group such as 'gfx94X-dcgpu', or a
 #                   spelling that carries a board suffix, a model letter or
@@ -168,20 +168,24 @@ function __validate_rocm_version_expr() {
   # note: therock tarballs use the full version with patch number
   if [[ "${rocm_specifier}" == "therock:"* ]]; then
     local therock_rocm_version="${rocm_specifier#therock:}"
-    # Check if therock_rocm_version matches X.Y.Z(.(a|rc)R)? format (where X, Y, Z, R are numbers)
-    if [[ ! "${therock_rocm_version}" =~ ^(\*|\*(a|rc)\*|([0-9]+)\.([0-9]+)\.([0-9]+)((a|rc)[0-9]+)?)$ ]]; then
+    if [[ "${therock_rocm_version}" =~ ^(\*|\*(a|rc|dev)\*)$ ]]; then
+      return
+    elif [[ "${therock_rocm_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+((a|rc)[0-9]+)?$ ]]; then
+      return
+    elif [[ "${therock_rocm_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.dev[0-9]+\+[0-9a-f]{40}$ ]]; then
+      return
+    else
       printf "ERROR: Invalid therock ROCM_SPECIFIER format: '${rocm_specifier}'\n" >&2
-      printf "ERROR: Expected formats: 'therock:*', 'therock:*(a|rc)*', 'therock:X.Y.Z(.(a|rc)R)?'\n" >&2
-      printf "ERROR: The wildcards may also be written 'therock:?', 'therock:?a?' and 'therock:?rc?'\n" >&2
+      printf "ERROR: Expected formats: 'therock:*', 'therock:*(a|rc|dev)*', 'therock:X.Y.Z(.(a|rc)R)?', 'therock:X.Y.Z.devN+<sha>'\n" >&2
+      printf "ERROR: Wildcards may also be written 'therock:?', 'therock:?a?', 'therock:?rc?', 'therock:?dev?'\n" >&2
       return 1
     fi
-    return
   # Check if ROCM_SPECIFIER matches X.Y or X.Y.Z format (where X, Y, Z are numbers)
   elif [[ "${rocm_specifier}" =~ ^([0-9]+)\.([0-9]+)(\.([0-9]+))?$ ]]; then
     : # pass
   else
     printf "ERROR: Invalid ROCM_SPECIFIER format: '${rocm_specifier}'\n" >&2
-    printf "ERROR: Expected format: 'X.Y' or 'X.Y.Z' (numbers), 'preinstalled', 'therock:X.Y.Z', 'therock:X.Y.ZrcR' (R is a number), 'therock:X.Y.ZaD' (D is a date in format 'YYYYMMDD'), 'therock:*', 'therock:*rc*', 'therock:*a*' (also spelled 'therock:?', 'therock:?rc?', 'therock:?a?')\n" >&2
+    printf "ERROR: Expected format: 'X.Y' or 'X.Y.Z' (numbers), 'preinstalled', 'therock:X.Y.Z', 'therock:X.Y.ZrcR', 'therock:X.Y.ZaD', 'therock:*', 'therock:*rc*', 'therock:*a*', 'therock:*dev*' (also 'therock:?', 'therock:?rc?', 'therock:?a?', 'therock:?dev?')\n" >&2
     return 1
   fi
 }
@@ -294,9 +298,10 @@ EOF
 # that matches any single character.
 function __canonicalize_rocm_specifier() {
   case "${ROCM_SPECIFIER:-}" in
-    'therock:?')    ROCM_SPECIFIER='therock:*'    ;;
-    'therock:?a?')  ROCM_SPECIFIER='therock:*a*'  ;;
-    'therock:?rc?') ROCM_SPECIFIER='therock:*rc*' ;;
+    'therock:?')     ROCM_SPECIFIER='therock:*'     ;;
+    'therock:?a?')   ROCM_SPECIFIER='therock:*a*'   ;;
+    'therock:?rc?')  ROCM_SPECIFIER='therock:*rc*'  ;;
+    'therock:?dev?') ROCM_SPECIFIER='therock:*dev*' ;;
   esac
   export ROCM_SPECIFIER
 }
@@ -428,8 +433,9 @@ function amdgpu_target_to_therock_artifact_group() {
     return 1
   fi
 
-  # note: groups identified via https://rocm.prereleases.amd.com/tarball/,
-  # https://rocm.nightlies.amd.com/tarball/, https://repo.amd.com/rocm/tarball/
+  # note: groups identified via https://stable.repo.amd.com/rocm/core/tarball/,
+  # https://nightly.repo.amd.com/rocm/core/tarball/,
+  # https://dev.repo.amd.com/rocm/core/tarball/
   #
   # NOTE: -all must come before -dgpu as they are the more recent endings
   local artifact_groups=(
@@ -492,12 +498,178 @@ function amdgpu_target_to_therock_artifact_group() {
   return 1
 }
 
+# Returns whl_index and tarball_base for a TheRock release channel.
+# Args: $1 - list type: releases, nightlies, devreleases, prereleases
+function __therock_repo_bases() {
+  case "${1}" in
+    releases)
+      printf '%s %s\n' \
+        'https://stable.repo.amd.com/rocm/core/whl-next' \
+        'https://stable.repo.amd.com/rocm/core/tarball/' ;;
+    nightlies)
+      printf '%s %s\n' \
+        'https://nightly.repo.amd.com/rocm/core/whl-next' \
+        'https://nightly.repo.amd.com/rocm/core/tarball/' ;;
+    devreleases)
+      printf '%s %s\n' \
+        'https://dev.repo.amd.com/rocm/core/whl-next' \
+        'https://dev.repo.amd.com/rocm/core/tarball/' ;;
+    prereleases)
+      printf '%s %s\n' \
+        'https://rc.repo.amd.com/rocm/core/whl-next' \
+        'https://rc.repo.amd.com/rocm/core/tarball/' ;;
+    *)
+      printf "ERROR: Unknown list type '${1}'. Supported: releases, nightlies, devreleases, prereleases\n" >&2
+      return 1 ;;
+  esac
+}
+
+# Rewrites '?' wildcard spellings to '*' (therock:?dev? -> therock:*dev*, etc.).
+function __therock_list_type_for_version() {
+  local version="${1}"
+  if [[ "${version}" == "*dev*" || "${version}" == *.dev* ]]; then
+    printf "devreleases"
+  elif [[ "${version}" == "*rc*" || "${version}" =~ rc[0-9] ]]; then
+    printf "prereleases"
+  elif [[ "${version}" == "*a*" || "${version}" =~ [0-9]a[0-9]{8} ]]; then
+    printf "nightlies"
+  else
+    printf "releases"
+  fi
+}
+
+function __therock_gfx_target_for_whl() {
+  local artifact_group="${1}"
+  local target="${AMDGPU_TARGETS:-}"
+
+  if [[ -n "${target}" && "${target}" =~ ^gfx[0-9a-z]+$ ]]; then
+    printf "${target}"
+    return 0
+  fi
+  if [[ "${artifact_group}" =~ ^gfx[0-9][0-9a-z]*$ ]]; then
+    printf "${artifact_group}"
+    return 0
+  fi
+  printf "ERROR: cannot resolve gfx target for wheel lookup (AMDGPU_TARGETS='${AMDGPU_TARGETS}', artifact_group='${artifact_group}')\n" >&2
+  return 1
+}
+
+function __therock_whl_pkg_for_target() {
+  local artifact_group="${1}"
+  local target
+  target="$(__therock_gfx_target_for_whl "${artifact_group}")" || return 1
+  printf "rocm-sdk-device-${target}"
+}
+
+function __therock_version_from_pip() {
+  local whl_index="${1}"
+  local pkg="${2}"
+  local tmp_dir
+  tmp_dir=$(mktemp -d)
+  (
+    cd "${tmp_dir}"
+    python3 -m venv _venv >/dev/null 2>&1
+    source _venv/bin/activate
+    pip install --upgrade pip >/dev/null 2>&1
+    pip index versions --pre --index-url "${whl_index}/" "${pkg}" 2>/dev/null \
+      | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -1
+    deactivate
+  )
+  rm -rf "${tmp_dir}"
+}
+
+function __therock_version_from_whl_html() {
+  local whl_index="${1}"
+  local pkg="${2}"
+  python3 - "${whl_index}" "${pkg}" <<'PY'
+import re, sys, urllib.request
+whl_index, pkg = sys.argv[1:3]
+url = f"{whl_index}/{pkg}/"
+html = urllib.request.urlopen(url).read().decode()
+wheel_prefix = pkg.replace("-", "_") + "-"
+versions = []
+for m in re.finditer(r'href="([^"]+\.whl)"', html):
+    name = m.group(1)
+    if not name.startswith(wheel_prefix):
+        continue
+    rest = name[len(wheel_prefix):]
+    version = rest.split("-py3-none-")[0].replace("%2B", "+")
+    versions.append(version)
+if not versions:
+    sys.exit(1)
+print(versions[0])
+PY
+}
+
+function __therock_latest_dev_version_from_tarball() {
+  local tarball_base="${1}"
+  local target="${2}"
+  local artifact_group="${3:-}"
+  python3 - "${tarball_base}" "${target}" "${artifact_group}" <<'PY'
+import json, re, sys, urllib.request
+tarball_base, target, artifact_group = sys.argv[1:4]
+html = urllib.request.urlopen(tarball_base).read().decode()
+m = re.search(r'const files = (\[.*?\]);', html, re.S)
+if not m:
+    sys.exit(1)
+files = sorted(json.loads(m.group(1)), key=lambda f: -f["mtime"])
+candidates = []
+for value in (target, artifact_group, "multiarch"):
+    if value and value not in candidates:
+        candidates.append(value)
+for f in files:
+    name = f["name"]
+    if "-tests-" in name or not name.endswith(".tar.gz"):
+        continue
+    if not name.startswith("therock-dist-linux-"):
+        continue
+    body = name[len("therock-dist-linux-"):-len(".tar.gz")]
+    for cand in candidates:
+        prefix = cand + "-"
+        if body.startswith(prefix):
+            print(body[len(cand) + 1:])
+            sys.exit(0)
+sys.exit(1)
+PY
+}
+
+function __therock_legacy_wheel_version() {
+  local list_type="${1}"
+  local artifact_group="${2}"
+  local pkg="rocm-sdk-libraries-${artifact_group,,}"
+  local list=""
+  case "${list_type}" in
+    prereleases) list="https://rocm.prereleases.amd.com/whl" ;;
+    releases) list="https://repo.amd.com/rocm/whl" ;;
+    nightlies) list="https://rocm.nightlies.amd.com/v2" ;;
+    *) return 1 ;;
+  esac
+  local tmp_dir version
+  tmp_dir=$(mktemp -d)
+  version=$(
+    cd "${tmp_dir}"
+    python3 -m venv _venv >/dev/null 2>&1
+    source _venv/bin/activate
+    pip install --upgrade pip >/dev/null 2>&1
+    pip index versions --pre --index-url "${list}/${artifact_group}/" "${pkg}" 2>/dev/null \
+      | sed -n 's/.*(\([^)]*\)).*/\1/p' | head -1
+    deactivate
+  )
+  rm -rf "${tmp_dir}"
+  if [[ -n "${version}" ]]; then
+    printf "${version}"
+  else
+    return 1
+  fi
+}
+
+
 # Prints the latest available TheRock wheel version for the given list type and artifact group.
 # Args:
-#   $1 - list type: nightlies, prereleases, releases
+#   $1 - list type: nightlies, prereleases, releases, devreleases
 #   $2 - artifact group, e.g. gfx90X-dcgpu, gfx110X-dgpu, gfx1150, gfx120X-all
 # Returns:
-#   latest version string, e.g. 5.4.0rc3
+#   latest version string, e.g. 10.0.0, 10.1.0a20260828, 10.1.0.dev0+<sha>
 function get_latest_therock_wheel_version() {
   local -
 
@@ -505,54 +677,40 @@ function get_latest_therock_wheel_version() {
 
   local list_type="${1}"
   local artifact_group="${2}"
-  local pkg="rocm-sdk-libraries-${artifact_group,,}"  # ,, => lower case
+  local whl_index tarball_base
+  read whl_index tarball_base < <(__therock_repo_bases "${list_type}")
 
-  local lists=(
-    "nightlies https://rocm.nightlies.amd.com/v2"
-    "prereleases https://rocm.prereleases.amd.com/whl"
-    "releases https://repo.amd.com/rocm/whl"
-  )
-
-  local list=""
-  for entry in "${lists[@]}"; do
-    if [[ "${entry}" == "${list_type} "* ]]; then
-      parts=(${entry})
-      list="${parts[1]}"
-      break
-    fi
-  done
-  if [[ -z "${list}" ]]; then
-    printf "ERROR: Unknown list type '${list_type}'. Supported types: nightlies, prereleases, releases\n" >&2
-    false
+  if [[ "${list_type}" == "devreleases" ]]; then
+    local target version
+    target="$(__therock_gfx_target_for_whl "${artifact_group}")" || return 1
+    version="$(__therock_latest_dev_version_from_tarball "${tarball_base}" "${target}" "${artifact_group}")" || {
+      printf "ERROR: no dev build found for target '${target}' on ${tarball_base}\n" >&2
+      return 1
+    }
+    printf "${version}"
+    return 0
   fi
 
-  local tmp_dir=$(mktemp -d)
-  cd ${tmp_dir}
-    python3 -m venv _venv
-    source _venv/bin/activate
-    pip install --upgrade pip >&2
-    local json_file="versions.json"
-    pip index versions --json --pre --index-url \
-        ${list}/${artifact_group}/ ${pkg}\
-          >> ${json_file} && sync
-
-    cat ${json_file} >&2
-    local latest_version=$(python3 -c "\
-import json
-print(json.load(open('${json_file}'))['latest'])")
-
-    deactivate
-    rm -rf ${tmp_dir}
-    printf "${latest_version}"
+  local pkg target latest_version=""
+  pkg="$(__therock_whl_pkg_for_target "${artifact_group}")" || return 1
+  latest_version="$(__therock_version_from_pip "${whl_index}" "${pkg}")" || true
+  if [[ -z "${latest_version}" ]]; then
+    latest_version="$(__therock_version_from_whl_html "${whl_index}" "${pkg}")" || true
+  fi
+  if [[ -z "${latest_version}" ]]; then
+    latest_version="$(__therock_legacy_wheel_version "${list_type}" "${artifact_group}")" || true
+  fi
+  if [[ -z "${latest_version}" ]]; then
+    printf "ERROR: no version found for ${pkg} on ${list_type} channel\n" >&2
+    return 1
+  fi
+  printf "${latest_version}"
 }
 
 # Installs TheRock ROCm distribution from tarball.
 # Args:
-#   $1 - therock_rocm_version (optional), e.g. "7.10.0rc2", "7.10.0", "*", "*a*"
-#        "*rc*", ....
-#        if not provided, the version is extracted from ROCM_SPECIFIER env var,
-#        which install_rocm has by then rewritten to the '*' spelling of a
-#        wildcard written with '?'. Only the '*' spellings are understood here.
+#   $1 - therock_rocm_version (optional), e.g. "10.0.0", "*", "*a*", "*rc*", "*dev*"
+#        if not provided, the version is extracted from ROCM_SPECIFIER env var.
 #   $2 - artifact_group (optional), e.g. gfx90X-dcgpu, gfx110X-dgpu, gfx1150,
 #        gfx120X-all
 #        if not provided, tries AMDGPU_TARGETS directly, then all applicable
@@ -568,62 +726,46 @@ function install_therock_from_tarball() {
 
   local therock_rocm_version="${1:-${ROCM_SPECIFIER#therock:}}"
 
-  # Validate AMDGPU_TARGETS is a single entry
   if [[ "${AMDGPU_TARGETS}" == *";"* ]]; then
     printf "ERROR: Multiple AMDGPU_TARGETS values detected ('${AMDGPU_TARGETS}'). Only a single target is supported.\n" >&2
     return 1
   fi
 
-  # Build list of targets to try: AMDGPU_TARGETS first, then artifact groups
   local targets_to_try=("${AMDGPU_TARGETS}")
-
-  # Get applicable artifact groups
   local artifact_groups_str="$(amdgpu_target_to_therock_artifact_group)"
   read -ra artifact_groups_array <<< "${artifact_groups_str}"
   targets_to_try+=("${artifact_groups_array[@]}")
 
   local os="linux"
-  local list=""
-  # Defaulted, because a target the table does not know still has a verbatim
-  # attempt coming in targets_to_try, and reading element zero of an empty array
-  # under 'set -u' would end the run with an "unbound variable" that names
-  # neither the target nor the table.
   local first_artifact_group="${artifact_groups_array[0]:-}"
+  local list_type tarball_base _whl_index
+  list_type="$(__therock_list_type_for_version "${therock_rocm_version}")"
+  read _whl_index tarball_base < <(__therock_repo_bases "${list_type}")
 
-  # A group is only needed to resolve a wildcard, since it is what the version
-  # index is keyed by. An explicit version needs none, so a target the table
-  # does not know is fatal here and nowhere else.
   if [[ -z "${first_artifact_group}" && "${therock_rocm_version}" == *"*"* ]]; then
-    printf "ERROR: AMDGPU_TARGETS='%s' matches no TheRock artifact group, so the '%s' version cannot be resolved; name the version explicitly, or add the group to amdgpu_target_to_therock_artifact_group\n" "${AMDGPU_TARGETS}" "${therock_rocm_version}" >&2
+    printf "ERROR: AMDGPU_TARGETS='%s' matches no TheRock artifact group, so '%s' cannot be resolved\n" "${AMDGPU_TARGETS}" "${therock_rocm_version}" >&2
     return 1
   fi
 
-  # Determine list URL and resolve wildcards
-  if [[ "${therock_rocm_version}" == *"rc"* ]]; then
-    list="rocm.prereleases.amd.com"
-    if [[ "${therock_rocm_version}" == "*rc*" ]]; then
-      therock_rocm_version=$(get_latest_therock_wheel_version "prereleases" "${first_artifact_group}")
-    fi
-  elif [[ "${therock_rocm_version}" == *"a"* ]]; then
-    list="rocm.nightlies.amd.com"
-    if [[ "${therock_rocm_version}" == "*a*" ]]; then
-      therock_rocm_version=$(get_latest_therock_wheel_version "nightlies" "${first_artifact_group}")
-    fi
-  else
-    if [[ "${therock_rocm_version}" == "*" ]]; then
-      therock_rocm_version=$(get_latest_therock_wheel_version "releases" "${first_artifact_group}")
-    fi
-    list="repo.amd.com/rocm"
-  fi
+  case "${therock_rocm_version}" in
+    "*dev*")
+      therock_rocm_version=$(get_latest_therock_wheel_version "devreleases" "${first_artifact_group}") ;;
+    "*rc*")
+      therock_rocm_version=$(get_latest_therock_wheel_version "prereleases" "${first_artifact_group}") ;;
+    "*a*")
+      therock_rocm_version=$(get_latest_therock_wheel_version "nightlies" "${first_artifact_group}") ;;
+    "*")
+      therock_rocm_version=$(get_latest_therock_wheel_version "releases" "${first_artifact_group}") ;;
+  esac
 
+  local encoded_version="${therock_rocm_version//+/%2B}"
   local tmp_dir=$(mktemp -d)
   cd ${tmp_dir}
     local download_successful=0
     local tried_targets=""
 
-    # Try each target in order
     for target in "${targets_to_try[@]}"; do
-      local url="https://${list}/tarball-multi-arch/therock-dist-${os}-${target}-${therock_rocm_version}.tar.gz"
+      local url="${tarball_base}therock-dist-${os}-${target}-${encoded_version}.tar.gz"
       printf "INFO: Trying to download: ${url}\n" >&2
 
       if wget --spider "${url}" 2>/dev/null; then
@@ -647,7 +789,6 @@ function install_therock_from_tarball() {
     tar -xf *.tar.gz -C ${ROCM_PATH}
   rm -r ${tmp_dir}
 
-  # Configure ROCm PATH. Make sure you're in the therock-tarball directory before proceeding.
   tee /etc/profile.d/set-rocm-env.sh << EOF
 export ROCM_PATH=${ROCM_PATH}
 export PATH=\$PATH:\$ROCM_PATH/bin:\$ROCM_PATH/lib/llvm/bin
@@ -655,3 +796,5 @@ export LD_LIBRARY_PATH=\$ROCM_PATH/lib
 EOF
   chmod +x /etc/profile.d/set-rocm-env.sh
 }
+
+
