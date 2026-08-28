@@ -51,8 +51,6 @@ set -eu
 #   HIP_PYTHON_PROJECT_DIR    passed through to test.sh
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-# shellcheck source=./libos.sh
-. "${script_dir}/libos.sh"
 
 : "${SRC_DIR:?SRC_DIR must be set}"
 : "${BUILD_ARTIFACTS_DIR:?BUILD_ARTIFACTS_DIR must be set}"
@@ -80,7 +78,10 @@ for python_version in ${test_pythons}; do
 
   tested_versions+=("${python_version}")
 
-  if ! python_bin=$(get_manylinux_python_bin "${python_version}"); then
+  tag="cp${python_version//./}"
+  python_bin="/opt/python/${tag}-${tag}/bin"
+  if [[ ! -x "${python_bin}/python${python_version}" ]]; then
+    echo "no CPython ${python_version} at ${python_bin}." >&2
     statuses+=("MISSING")
     continue
   fi

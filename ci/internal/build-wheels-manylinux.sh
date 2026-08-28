@@ -49,18 +49,12 @@ set -eu
 #   BUILD_DIR            scratch dir; every entry gets a subdirectory of it
 #   BUILD_ARTIFACTS_DIR  shared wheel output dir for the whole matrix
 #
-# Optional env:
-#   HIP_PYTHON_WHEEL_MATRIX   default "3.10:no 3.11:no 3.12:3.12".
-#                             Whitespace-separated <python version>:<USE_SABI>
-#                             entries
-#
 # Everything else build-wheels.sh reads (ROCM_PATH, ROCM_VERSION, MAX_JOBS,
 # LIGHT_MODE, SKIP_CODEGEN, ...) is passed through untouched. BUILD_DIR and
-# USE_SABI are the exceptions: this script sets them per entry.
+# USE_SABI are the exceptions: this script sets them per entry, USE_SABI from
+# the floor the entry carries.
 
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-# shellcheck source=./libos.sh
-. "${script_dir}/libos.sh"
 
 : "${SRC_DIR:?SRC_DIR must be set}"
 : "${BUILD_DIR:?BUILD_DIR must be set}"
@@ -70,37 +64,28 @@ script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # them without exporting would otherwise hand it nothing.
 export SRC_DIR BUILD_ARTIFACTS_DIR
 
-wheel_matrix=${HIP_PYTHON_WHEEL_MATRIX:-"3.10:no 3.11:no 3.12:3.12"}
-
 mkdir -p "${BUILD_ARTIFACTS_DIR}"
 
-### parse the matrix, resolve every interpreter up front
+### the matrix, and the interpreters it needs
 #
-# A matrix entry naming a version this image does not carry should fail in
-# seconds rather than after the first entry has spent an hour compiling LLVM.
+# One entry per interpreter the compiled wheels are built for. 3.10 and 3.11
+# are version-specific for the reason in the header, and 3.12 carries the abi3
+# floor, so 3.13 and later install its wheel and need no entry of their own.
 
-python_versions=()
-sabi_floors=()
-python_bins=()
+python_versions=(3.10 3.11 3.12)
+sabi_floors=(no no 3.12)
+expected_tags=(cp310-cp310 cp311-cp311 cp312-abi3)
+python_bins=(/opt/python/cp310-cp310/bin
+             /opt/python/cp311-cp311/bin
+             /opt/python/cp312-cp312/bin)
 
-for entry in ${wheel_matrix}; do
-  python_version=${entry%%:*}
-  sabi=${entry##*:}
-  if [[ "${python_version}" == "${entry}" || -z "${python_version}" || -z "${sabi}" ]]; then
-    echo "ERROR: malformed HIP_PYTHON_WHEEL_MATRIX entry \"${entry}\"." >&2
-    echo "       Expected <python version>:<USE_SABI>, e.g. \"3.10:no\" or \"3.12:3.12\"." >&2
+# Fail in seconds rather than after the first entry has spent an hour on LLVM.
+for i in "${!python_versions[@]}"; do
+  if [[ ! -x "${python_bins[${i}]}/python${python_versions[${i}]}" ]]; then
+    echo "ERROR: no CPython ${python_versions[${i}]} at ${python_bins[${i}]}." >&2
     exit 1
   fi
-
-  python_versions+=("${python_version}")
-  sabi_floors+=("${sabi}")
-  python_bins+=("$(get_manylinux_python_bin "${python_version}")")
 done
-
-if [[ ${#python_versions[@]} -eq 0 ]]; then
-  echo "ERROR: HIP_PYTHON_WHEEL_MATRIX is empty; nothing to build." >&2
-  exit 1
-fi
 
 ### build
 
@@ -139,21 +124,13 @@ echo "=============================================================="
 echo "Wheels in ${BUILD_ARTIFACTS_DIR}"
 echo "=============================================================="
 
-for i in "${!python_versions[@]}"; do
-  python_version=${python_versions[${i}]}
-  sabi=${sabi_floors[${i}]}
-
-  if [[ "${sabi}" == "no" ]]; then
-    tag=cp${python_version//./}
-    expected_tag="${tag}-${tag}"
-  else
-    expected_tag="cp${sabi//./}-abi3"
-  fi
+for i in "${!expected_tags[@]}"; do
+  expected_tag=${expected_tags[${i}]}
 
   found=("${BUILD_ARTIFACTS_DIR}"/*-"${expected_tag}"-*.whl)
   printf '  %-14s %d compiled wheel(s)\n' "${expected_tag}" "${#found[@]}"
   if [[ ${#found[@]} -eq 0 ]]; then
-    missing+=("${expected_tag}, from CPython ${python_version} with USE_SABI=${sabi}")
+    missing+=("${expected_tag}, from CPython ${python_versions[${i}]}")
   fi
 done
 
