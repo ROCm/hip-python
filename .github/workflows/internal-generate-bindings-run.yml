@@ -95,6 +95,11 @@ on:
         type: boolean
         required: false
         default: false
+      publish_force:
+        description: When publish is true, allow overwriting an existing destination branch
+        type: boolean
+        required: false
+        default: false
       requested_by:
         description: Who asked for this run, when a comment did. Empty for a dispatch
         type: string
@@ -170,6 +175,7 @@ jobs:
       HIP_PYTHON_CODEGEN_GIT_AUTHOR: ${{ inputs.git_author }}
       DESTINATION: ${{ inputs.destination }}
       PUBLISH: ${{ inputs.publish }}
+      PUBLISH_FORCE: ${{ inputs.publish_force }}
 
     steps:
       # fetch-depth 0 because generate-bindings.sh restores the generator-owned
@@ -286,10 +292,21 @@ jobs:
           fi
 
           # Lower-cased, as the Jenkins publish stage does it.
-          git remote add dest "git@github.com:${DESTINATION,,}/hip-python.git"
+          url="git@github.com:${DESTINATION,,}/hip-python.git"
+          if git remote get-url dest >/dev/null 2>&1; then
+            git remote set-url dest "${url}"
+          else
+            git remote add dest "${url}"
+          fi
           # IdentitiesOnly so a key from an agent cannot be offered instead.
           git config core.sshCommand \
               "ssh -i ${key} -o IdentitiesOnly=yes -o UserKnownHostsFile=${hosts}"
+          # publish=yes without force refuses to overwrite an existing branch.
+          if [ "${PUBLISH_FORCE}" != true ] \
+             && git ls-remote --exit-code dest "refs/heads/${HIP_PYTHON_CODEGEN_BRANCH}" >/dev/null 2>&1; then
+            echo "::error::destination branch ${HIP_PYTHON_CODEGEN_BRANCH} already exists on ${DESTINATION}/hip-python; use publish=force to overwrite"
+            exit 1
+          fi
           git push --dry-run --force dest "HEAD:refs/heads/${HIP_PYTHON_CODEGEN_BRANCH}"
 
       # After the preflight, so a credential problem does not cost the fetch,

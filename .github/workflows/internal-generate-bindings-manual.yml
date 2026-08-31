@@ -84,8 +84,12 @@ on:
         description: Push the commit. Unset to generate and commit locally only
         type: boolean
         default: true
+      publish_force:
+        description: Overwrite the destination branch if it already exists (only when publish is enabled)
+        type: boolean
+        default: false
 
-# Nine inputs, one under GitHub's cap of ten on a dispatch form. Anything else
+# Ten inputs, at GitHub's cap of ten on a dispatch form. Anything else
 # this grows wants one of these to go first.
 
 permissions: {}
@@ -110,3 +114,4 @@ jobs:
       allow_missing_headers: ${{ inputs.allow_missing_headers }}
       skip_libraries: ${{ inputs.skip_libraries }}
       publish: ${{ inputs.publish }}
+      publish_force: ${{ inputs.publish_force }}

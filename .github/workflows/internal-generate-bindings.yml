@@ -102,7 +102,7 @@ jobs:
       # /generate bindings rocm=<specifier> [base=<branch>] [target=<branch>]
       #                    [sources=<ref>] [missing=fail|skip]
       #                    [skip=<library>[,<library>...]]
-      #                    [dest=AMD-AIOSS|ROCm] [publish=yes|no]
+      #                    [dest=AMD-AIOSS|ROCm] [publish=yes|no|force]
       - name: Parse the command
         id: parse
         env:
@@ -141,6 +141,7 @@ jobs:
           dest=AMD-AIOSS
           # Off unless asked for. See the file header.
           publish=false
+          publish_force=false
 
           set -- ${line#*/generate bindings}
 
@@ -152,6 +153,9 @@ jobs:
                 dest=${tok#dest=} ;;
               publish=yes|publish=true)
                 publish=true ;;
+              publish=force)
+                publish=true
+                publish_force=true ;;
               publish=no|publish=false)
                 publish=false ;;
               *)
@@ -247,6 +251,7 @@ jobs:
             echo "missing=${missing}"
             echo "skip=${skip}"
             echo "publish=${publish}"
+            echo "publish_force=${publish_force}"
             echo "status=${status}"
           } >>"${GITHUB_OUTPUT}"
 
@@ -297,6 +302,7 @@ jobs:
           MISSING: ${{ steps.parse.outputs.missing }}
           SKIP: ${{ steps.parse.outputs.skip }}
           PUBLISH: ${{ steps.parse.outputs.publish }}
+          PUBLISH_FORCE: ${{ steps.parse.outputs.publish_force }}
         run: |
           {
             echo "### generate bindings"
@@ -310,7 +316,11 @@ jobs:
             echo "- missing headers: ${MISSING}"
             echo "- skipped libraries: ${SKIP:-none}"
             if [ "${PUBLISH}" = true ]; then
-              echo "- publish: yes, force-pushed onto the target branch"
+              if [ "${PUBLISH_FORCE}" = true ]; then
+                echo "- publish: force, overwriting the target branch if it exists"
+              else
+                echo "- publish: yes, force-pushed onto the target branch"
+              fi
             else
               echo "- publish: no, the commit stays on the runner"
             fi
@@ -334,6 +344,7 @@ jobs:
       allow_missing_headers: ${{ needs.dispatch.outputs.missing == 'skip' }}
       skip_libraries: ${{ needs.dispatch.outputs.skip }}
       publish: ${{ needs.dispatch.outputs.publish == 'true' }}
+      publish_force: ${{ needs.dispatch.outputs.publish_force == 'true' }}
       requested_by: ${{ github.event.comment.user.login }}
 
   # The check on the base branch commit and the codegen table, written by the
