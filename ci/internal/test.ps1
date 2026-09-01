@@ -97,7 +97,11 @@ param(
     # silently disagree with them.
     [string] $RocmSdkVersion,
 
-    [string] $RocmSdkIndexUrl = "https://repo.amd.com/rocm/whl-multi-arch/"
+    # Index to install those wheels from. It carries both linux_x86_64 and
+    # win_amd64 wheels, so it stays correct for the bash script's platform too,
+    # and it is the same host ci/internal/librocm.sh already queries for
+    # released tarballs and wheels.
+    [string] $RocmSdkIndexUrl = "https://stable.repo.amd.com/rocm/whl-next/"
 )
 
 $ErrorActionPreference = "Stop"
