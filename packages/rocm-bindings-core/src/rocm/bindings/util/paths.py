@@ -50,14 +50,25 @@ def _windows_dll_candidates(shortname: str) -> Iterator[str]:
 
       * most libraries are plain -- ``hipblas.dll``, ``amd_comgr.dll``;
       * some keep the Unix ``lib`` prefix -- ``libhipblaslt.dll``, ``libclang.dll``;
-      * the HIP runtime and hipRTC carry the ROCm version -- ``amdhip64_7.dll``,
-        ``hiprtc0714.dll``.
+      * the HIP runtime and hipRTC carry the HIP version -- ``amdhip64_7.dll``,
+        ``hiprtc0715.dll``.
+
+    On every install seen so far the version in those names is HIP's, not the
+    ROCm release's. The two series agreed up to ROCm 7.x, so deriving the suffix
+    from either worked; ROCm 10.0.0 ships HIP 7.15 and they no longer do. Both
+    are therefore tried, HIP first, and a ROCm-derived name is only reached once
+    no HIP-derived one exists -- which keeps the observed naming authoritative
+    without hardcoding that a build must have stamped its filenames from that
+    series. Where the two agree the derived names coincide and are yielded once.
 
     The version-bearing forms are derived from ``rocm.version`` rather than
-    matched by wildcard, so they name the ROCm release these bindings were
-    generated against. That matters in System32, where several majors coexist
+    matched by wildcard, so they name the release these bindings were generated
+    against. That matters in System32, where several majors coexist
     (``amdhip64_6.dll`` beside ``amdhip64_7.dll``) and loading the newest one
-    would silently pair the bindings with the wrong runtime.
+    would silently pair the bindings with the wrong runtime. Trying the second
+    series does widen what can match there, but only after every name from the
+    first has turned out not to exist -- where the alternative is the bare name
+    the loader cannot resolve either, so nothing is lost by looking.
 
     Candidates are yielded most-likely first; the shapes that do not apply to a
     given library simply never exist on disk, so no per-library table is needed.
@@ -65,12 +76,21 @@ def _windows_dll_candidates(shortname: str) -> Iterator[str]:
     yield f"{shortname}.dll"
     yield f"lib{shortname}.dll"
     try:
-        from rocm.version import ROCM_VERSION_TUPLE
+        from rocm.version import HIP_VERSION_TUPLE, ROCM_VERSION_TUPLE
     except ImportError:
         return
-    major, minor = ROCM_VERSION_TUPLE[0], ROCM_VERSION_TUPLE[1]
-    yield f"{shortname}_{major}.dll"
-    yield f"{shortname}{major:02d}{minor:02d}.dll"
+    seen = set()
+    for major, minor in (
+        (HIP_VERSION_TUPLE[0], HIP_VERSION_TUPLE[1]),
+        (ROCM_VERSION_TUPLE[0], ROCM_VERSION_TUPLE[1]),
+    ):
+        for name in (
+            f"{shortname}_{major}.dll",
+            f"{shortname}{major:02d}{minor:02d}.dll",
+        ):
+            if name not in seen:
+                seen.add(name)
+                yield name
 
 
 # Libraries rocm_sdk leaves out of ALL_LIBRARIES, each mapped to one it does
@@ -254,7 +274,7 @@ def get_library_path(
     Platform-specific behavior:
         Windows:
             - DLL names differ from the other platforms: the HIP runtime and
-              hipRTC are version-suffixed (amdhip64_7.dll, hiprtc0714.dll) and a
+              hipRTC are version-suffixed (amdhip64_7.dll, hiprtc0715.dll) and a
               few libraries keep the Unix 'lib' prefix (libhipblaslt.dll). See
               _windows_dll_candidates.
             - Traditional HIP SDK: DLLs are in C:\\Windows\\System32 (installed

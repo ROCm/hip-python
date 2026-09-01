@@ -199,9 +199,17 @@ def test_get_library_path_rocm_sdk_returns_str(tmp_path, monkeypatch):
     assert result == str(lib_file).encode("utf-8")
 
 
-def _windows_or_unix_name(shortname, major=7, minor=14):
-    """The filename a ROCm install uses for ``shortname`` on this platform."""
+def _windows_or_unix_name(shortname, version=None):
+    """The filename a ROCm install uses for ``shortname`` on this platform.
+
+    The Windows suffix has to come from the same place the resolver reads it,
+    ``HIP_VERSION_TUPLE``, or the planted file cannot match by construction.
+    Hardcoding it worked only while the HIP and ROCm versions agreed.
+    """
     if sys.platform in ("win32", "cygwin"):
+        if version is None:
+            from rocm.version import HIP_VERSION_TUPLE as version
+        major, minor = version[0], version[1]
         return f"{shortname}{major:02d}{minor:02d}.dll"
     return f"lib{shortname}.so"
 
@@ -350,3 +358,53 @@ def test_get_clang_resource_dir_not_found(
     _no_rocm_tree(tmp_path, monkeypatch)
 
     assert paths.get_clang_resource_dir("no_such_libclang") is None
+
+
+# _windows_dll_candidates derives the version-bearing DLL names, and the two
+# version series it reads diverged in ROCm 10.0.0 (HIP 7.15). The names it
+# yields are therefore pinned here for both the diverged and the agreeing case.
+# The function does not branch on sys.platform, so these run on every host.
+
+
+def test_windows_dll_candidates_tries_both_version_series(monkeypatch):
+    """A diverged install offers the HIP-derived names before the ROCm ones."""
+    monkeypatch.setattr(
+        "rocm.version.HIP_VERSION_TUPLE", (7, 15, 26333, "0000000")
+    )
+    monkeypatch.setattr("rocm.version.ROCM_VERSION_TUPLE", (10, 0, 0))
+
+    assert list(paths._windows_dll_candidates("hiprtc")) == [
+        "hiprtc.dll",
+        "libhiprtc.dll",
+        "hiprtc_7.dll",
+        "hiprtc0715.dll",
+        "hiprtc_10.dll",
+        "hiprtc1000.dll",
+    ]
+
+
+def test_windows_dll_candidates_deduplicates_agreeing_versions(monkeypatch):
+    """Up to ROCm 7.x both series name the same files, so each is yielded once."""
+    monkeypatch.setattr("rocm.version.HIP_VERSION_TUPLE", (7, 13, 26154))
+    monkeypatch.setattr("rocm.version.ROCM_VERSION_TUPLE", (7, 13, 0))
+
+    assert list(paths._windows_dll_candidates("amdhip64")) == [
+        "amdhip64.dll",
+        "libamdhip64.dll",
+        "amdhip64_7.dll",
+        "amdhip640713.dll",
+    ]
+
+
+def test_windows_dll_candidates_without_version_module(monkeypatch):
+    """No rocm.version leaves the unversioned names rather than raising.
+
+    Nothing can be derived without it, and a resolver that raised here would
+    take down library loading over a name it was only guessing at anyway.
+    """
+    monkeypatch.setitem(sys.modules, "rocm.version", None)
+
+    assert list(paths._windows_dll_candidates("hipblas")) == [
+        "hipblas.dll",
+        "libhipblas.dll",
+    ]
