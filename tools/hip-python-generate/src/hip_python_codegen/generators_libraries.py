@@ -471,7 +471,12 @@ def generate_hipdnn_backend(
         _make_header_arg(header_relpath, header_content),
         runtime_linking=runtime_linking,
         util_pkg="rocm.bindings.util",
-        dll="libhipdnn.so",
+        # The library is libhipdnn_backend.so / hipdnn_backend.dll on every
+        # platform ROCm ships it for; there is no libhipdnn.so beside it. The
+        # backend strips the "lib" prefix and the suffix to form the shortname
+        # handed to get_library_path, so naming the header directory here
+        # instead would look for a library that does not exist.
+        dll="libhipdnn_backend.so",
         module_opts={"python_interface_always_return_tuple": True},
         modifiers_lazy_loader=" except? HIPDNN_STATUS_INTERNAL_ERROR nogil",
         error_return_value_lazy_loader="HIPDNN_STATUS_INTERNAL_ERROR",
