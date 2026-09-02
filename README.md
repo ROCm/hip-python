@@ -37,11 +37,18 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
   [`ci/internal/test.ps1`](ci/internal/test.ps1)). No prebuilt Windows
   wheels are published yet. ROCm does not ship every component for
   Windows, so a Windows install offers fewer bindings — the user guide
-  lists which ones and why.
+  lists which ones and why. A wheel-installed ROCm SDK can also end up
+  incomplete there; see [Known Limitations](#known-limitations).
 * Requires that a compatible ROCm&trade; HIP SDK is installed on your system.
   * Source code is provided only for particular ROCm versions.
     * See the `git` branches tagged with `release/rocm-rel-X.Y[.Z]`
   * Prebuilt packages are built only for particular ROCm versions.
+* Prebuilt packages may be provided only for **Python 3.10 and newer**,
+  even though the packages themselves declare `requires-python = ">=3.9"`.
+  The published wheel set is built for CPython 3.10 and 3.11 plus an abi3
+  wheel whose 3.12 floor also serves every later CPython
+  ([`ci/internal/build-wheels-manylinux.sh`](ci/internal/build-wheels-manylinux.sh)),
+  so a 3.9 interpreter has to build from source.
 
 > [!NOTE]
 > You may find that packages for one ROCm&trade; release are compatible with
@@ -103,26 +110,6 @@ if you don't want the `hip.*` alias namespace that the `hip-python`
 metapackage provides.
 
 <!-- markdownlint-enable  MD013 -->
-
-### Via Wheel in Local Filesystem
-
-If you have HIP Python package wheels on your filesystem, install
-the ones you need. Pip resolves inter-package dependencies from the
-wheel directory:
-
-```shell
-# Install everything from a local dist/ directory:
-python3 -m pip install dist/*.whl
-
-# Or pick specific wheels:
-python3 -m pip install dist/rocm_bindings_core-*.whl \
-                       dist/rocm_bindings_hip-*.whl \
-                       dist/rocm_bindings_libraries-*.whl
-# add dist/rocm_bindings_systems-*.whl for rccl/roctx
-# add dist/rocm_bindings_compiler-*.whl for LLVM-C + COMGR
-# add dist/hip_python_interop-*.whl for the CUDA interop layer
-# add dist/hip_python-*.whl for the legacy `hip.*` alias namespace
-```
 
 > [!NOTE]
 > See the HIP Python user guide for more details:
@@ -466,6 +453,27 @@ See [share/design/CODEGEN.md](share/design/CODEGEN.md) and
 
 ## Known Limitations
 
+### Windows: an incompletely installed ROCm SDK
+
+The pip ROCm SDK unpacks its development tree on first use, and part of
+that tree consists of symlinks. Creating a symlink on Windows needs the
+create-symlink privilege, which a normal process only holds with
+Developer Mode enabled or when running elevated. Without it the
+expansion can stop early and still report success, leaving a
+development tree that silently misses files. The CMake packages under
+`lib/llvm/lib/cmake/` are a typical casualty, in which case a source
+build fails inside `find_package(LLVM CONFIG)` rather than with a
+clear missing-file error.
+
+If you installed the SDK from wheels without Developer Mode and a build
+cannot find parts of it, enable Developer Mode and reinstall
+`rocm-sdk-devel` with `pip install --force-reinstall --no-deps` — the
+first run already removed the archive, so a reinstall is what triggers
+a second expansion attempt. Installing ROCm from a
+[tarball](https://stable.repo.amd.com/rocm/core/tarball/) sidesteps
+this altogether, since it ships the tree already unpacked, and is the
+more predictable choice for building from source on Windows.
+
 ### Experimental libraries
 
 The newly added bindings — `hipfile`, `hipblaslt`, and `hipsparselt` —
@@ -491,10 +499,12 @@ practice:
 > your system, you have to build the corresponding library manually
 > by following the build instructions in its source package:
 >
-> - `hipblaslt`, `hipsparselt` — see the per-library README under
->   <https://github.com/ROCm/rocm-libraries>.
-> - `hipfile` — see the per-library README under
->   <https://github.com/ROCm/rocm-systems>.
+> - `hipblaslt` — see
+>   [rocm-libraries/projects/hipblaslt](https://github.com/ROCm/rocm-libraries/tree/develop/projects/hipblaslt).
+> - `hipsparselt` — see
+>   [rocm-libraries/projects/hipsparselt](https://github.com/ROCm/rocm-libraries/tree/develop/projects/hipsparselt).
+> - `hipfile` — see
+>   [rocm-systems/projects/hipfile](https://github.com/ROCm/rocm-systems/tree/develop/projects/hipfile).
 >
 > After building, install the resulting `.so` into a directory on
 > `LD_LIBRARY_PATH` (or `${ROCM_PATH}/lib`) so hip-python's loader
@@ -509,9 +519,9 @@ runtime; the build probes for both at configure time and silently drops
 the modules that fail. `hsakmt` is a deliberate exception: `/opt/rocm/lib/`
 ships only the static archive `libhsakmt.a`, which a `dlopen`-based
 runtime cannot load, so the binding is deferred rather than shipped
-non-functional. Track upstream
-[ROCm/ROCT-Thunk-Interface](https://github.com/ROCm/ROCT-Thunk-Interface)
-for a shared-library variant.
+non-functional. `libhsakmt` is developed alongside the ROCr runtime in
+[rocm-systems/projects/rocr-runtime/libhsakmt](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocr-runtime/libhsakmt);
+track it there for a shared-library variant.
 
 ### `hipblaslt`: Cython-level (`cimport`) usage may require C++ compilation
 
@@ -522,7 +532,7 @@ calls C-ABI symbols, which is unaffected by header-source issues.
 However, downstream Cython users who do
 `cimport rocm.bindings.cyhipblaslt` will cause Cython to emit
 `#include <hipblaslt/hipblaslt.h>` in the generated C, and the
-upstream header (as of ROCm 7.13.0 / hipBLASLt 1.2.2)
+upstream header (as of ROCm 10.0.0 / hipBLASLt 1.4.1)
 unconditionally pulls in `<memory>`, `<regex>`, `<vector>` (C++
 stdlib) even though it is otherwise structured as a pure C-API
 header (the C++ extension API lives separately in
@@ -533,8 +543,8 @@ includes) until the upstream fix lands.
 The hip-python codegen itself works around this with an in-memory
 strip of the offending lines before parsing; that workaround is not
 visible to downstream Cython consumers because it operates only at
-generation time. Track upstream issue at
-[ROCm/hipBLASLt](https://github.com/ROCm/hipBLASLt).
+generation time. Track this upstream in
+[rocm-libraries/projects/hipblaslt](https://github.com/ROCm/rocm-libraries/tree/develop/projects/hipblaslt).
 
 ## Documentation
 
