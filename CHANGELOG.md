@@ -51,11 +51,20 @@ documented for the first time.
 - **Three CUDA compatibility shims** in `hip-python-interop`, beside its
   `cuda.bindings.{driver,runtime,nvrtc}` modules: `pynvml` backed by
   `rocm.bindings.amdsmi`, `nvtx` backed by `rocm.bindings.roctx`, and a
-  minimal `cuda.core.Device` backed by `rocm.bindings.hip`. NVTX
+  minimal `cuda.core` backed by `rocm.bindings.hip`. NVTX
   features ROCTX cannot express — domains, colors, categories, payloads,
   counters — are accepted for source compatibility and degrade to
   no-ops; set `HIP_PYTHON_NVTX_COMPAT` or call `nvtx.set_compat_mode` to
   have them warn or raise instead.
+- **Streams and stream-ordered device memory in the `cuda.core` shim.**
+  `Device.create_stream` either creates a HIP stream or wraps any object
+  implementing the CUDA stream protocol, `Device.default_stream` hands
+  out the NULL stream as a token, and `DeviceMemoryResource` allocates
+  `Buffer`s from the device's HIP memory pool. This is what lets
+  consumers such as RMM exchange streams with HIP Python instead of
+  skipping their interoperability paths. The shim now reports a
+  `__version__` naming the `cuda.core` API level it emulates, which is
+  what those consumers gate the paths on.
 - **`cuda.bindings.cufile`**, a cuFile-compatible interop module backed
   by AMD's hipFILE, with the snake_case functions, the array helpers,
   the cuFile enums and a `cuFileError`. Built where hipFILE is present.

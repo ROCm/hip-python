@@ -132,7 +132,7 @@ It produces eight wheels:
   bundled `libLLVM.so` / `LLVM.dll`)
 - `hip-python-interop` — `cuda.bindings.{driver,runtime,nvrtc,cufile}` interop
   layer, plus `pynvml` (NVML, AMD SMI-backed), `nvtx` (NVTX, ROCTX-backed) and
-  minimal `cuda.core.Device` (HIP-backed) compatibility shims
+  minimal `cuda.core` (HIP-backed) compatibility shims
 - `hip-python` — exposes the `hip.*` namespace as an alias of
   `rocm.bindings.*`, so that `from hip import hip, hiprtc, hipblas` (etc.)
   keeps working unchanged
@@ -148,7 +148,7 @@ It produces eight wheels:
 > is the package, `driver` / `runtime` / `nvrtc` are the modules).
 > The interop wheel additionally ships a top-level `pynvml` (NVML) shim
 > backed by AMD SMI, an `nvtx` (NVTX) shim backed by ROCTX, and a minimal
-> `cuda.core.Device` shim backed by HIP, so `import pynvml`, `import nvtx`
+> `cuda.core` shim backed by HIP, so `import pynvml`, `import nvtx`
 > and `from cuda.core import Device` keep working on AMD GPUs.
 >
 > **New code should prefer** `from rocm.bindings import hip, hiprtc` and

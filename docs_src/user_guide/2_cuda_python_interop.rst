@@ -104,7 +104,7 @@ modules that you need as shown below:
    convenience compatibility shims for common CUDA-ecosystem entry
    points: :ref:`sec_pynvml_shim` (an NVML / ``pynvml`` shim),
    :ref:`sec_nvtx_shim` (an NVTX / ``nvtx`` shim) and
-   :ref:`sec_cuda_core_shim` (a minimal ``cuda.core.Device`` shim).
+   :ref:`sec_cuda_core_shim` (a minimal ``cuda.core`` shim).
 
 Python Example
 --------------
@@ -395,33 +395,90 @@ non-portable usage in CI that runs without a ROCTX runtime.
 
 .. admonition:: What will I learn?
 
-   * That a minimal ``cuda.core.Device`` is available on AMD GPUs and
-     what part of its surface is implemented.
+   * That a minimal ``cuda.core`` is available on AMD GPUs and what part
+     of its surface is implemented.
+   * How to hand streams back and forth between HIP Python and another
+     GPU library through the CUDA stream protocol.
 
 The wheel also provides a minimal ``cuda.core`` shim, backed by the
 high-level :py:obj:`rocm.bindings.hip` HIP runtime API. It implements
 just enough of the high-level ``cuda.core`` surface for HIP ports of
-CUDA Python consumers: a ``Device`` class exposing ``device_id`` and
-``uuid``.
+CUDA Python consumers:
+
+* ``Device`` --- ``device_id``, ``uuid``, ``set_current``, ``sync``,
+  ``create_stream`` and ``default_stream``.
+* ``Stream`` --- the ``__cuda_stream__`` vocabulary type, plus ``handle``,
+  ``sync`` and ``close``.
+* ``DeviceMemoryResource`` and ``Buffer`` --- stream-ordered allocation
+  from the device's HIP memory pool.
 
 .. code-block:: python
    :linenos:
-   :caption: Using the cuda.core.Device shim
+   :caption: Using the cuda.core shim
    :name: cuda_core_device
 
-   from cuda.core import Device
+   from cuda.core import Device, DeviceMemoryResource
 
    dev = Device()          # current device; or Device(device_id)
    print(dev.device_id)    # HIP device ordinal
    print(dev.uuid)         # "GPU-<uuid>" string (via hipDeviceGetUuid)
 
+   dev.set_current()
+   stream = dev.create_stream()          # a non-blocking HIP stream
+
+   mr = DeviceMemoryResource(dev.device_id)
+   buf = mr.allocate(1024, stream=stream)
+   buf.close(stream=stream)              # stream-ordered free
+   stream.sync()
+
+Streams: interoperating with other libraries
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``Device.create_stream`` accepts any object implementing the `CUDA stream
+protocol <https://nvidia.github.io/cuda-python/cuda-core/latest/interoperability.html#cuda-stream-protocol>`__
+--- a ``__cuda_stream__`` method returning ``(0, <address>)`` --- which is
+how a stream created by RMM, CuPy or Numba is adopted without copying or
+recreating it. The wrapper holds a reference to the object it borrowed, so
+the underlying stream stays alive, and closing the wrapper releases that
+reference rather than destroying the stream. ``Stream`` implements the same
+protocol in the other direction, so those libraries can consume a HIP
+Python stream:
+
+.. code-block:: python
+   :linenos:
+   :caption: Exchanging streams with RMM through the CUDA stream protocol
+   :name: cuda_core_stream_protocol
+
+   import rmm.pylibrmm.stream
+   from cuda.core import Device
+
+   dev = Device()
+   dev.set_current()
+
+   # RMM -> cuda.core
+   cuda_stream = dev.create_stream(rmm.pylibrmm.stream.Stream())
+
+   # cuda.core -> RMM
+   rmm_stream = rmm.pylibrmm.stream.Stream(cuda_stream)
+
+Because a new stream is associated with whichever device is current, HIP
+rather than the shim decides where it lands; ``create_stream`` therefore
+raises if the ``Device`` it was called on is not the current one. Call
+``Device.set_current`` first, as the example does.
+
+``Device.default_stream`` returns the NULL stream as a token. HIP has no
+equivalent of CUDA Python's ``CUDA_PYTHON_CUDA_PER_THREAD_DEFAULT_STREAM``
+environment variable, so it is always the legacy NULL stream.
+
 .. caution::
 
    This is **not** a full port of NVIDIA's ``cuda.core`` /
-   ``cuda.core.experimental`` package. Only ``Device.device_id`` and
-   ``Device.uuid`` are implemented today; higher-level abstractions
-   (``Stream``, ``Buffer``, ``Program``, ...) are intentionally out of
-   scope and can be added on demand.
+   ``cuda.core.experimental`` package; the members listed above are all
+   that is implemented. Remaining abstractions (``Event``, ``Program``,
+   ``Linker``, ...) are intentionally out of scope and can be added on
+   demand. The module's ``__version__`` names the ``cuda.core`` API level
+   the shim emulates --- consumers gate their interoperability paths on it
+   --- and not the HIP Python release it ships in.
 
 .. seealso::
 

@@ -228,7 +228,7 @@ replacements for the corresponding ``cuda-python`` modules,
 implemented on top of HIP. It additionally provides three small
 compatibility shims: a ``pynvml`` (NVML) shim backed by AMD SMI, an
 ``nvtx`` (NVTX) shim backed by ROCTX, and a minimal
-``cuda.core.Device`` shim backed by HIP. Use this to port CUDA Python
+``cuda.core`` shim backed by HIP. Use this to port CUDA Python
 code to AMD GPUs with minimal source changes (see
 :doc:`/user_guide/2_cuda_python_interop` for the porting guide):
 
