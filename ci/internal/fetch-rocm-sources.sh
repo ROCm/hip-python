@@ -52,8 +52,9 @@ set -xeu
 #                   that survives a GitHub comment) resolve to a concrete ref.
 #   ROCM_SOURCES_REF
 #                   one ref for all three repositories, overriding the derived
-#                   one. For a version whose release branches do not exist yet,
-#                   'amd-staging' is the usual value.
+#                   one. For a version whose release refs do not exist yet,
+#                   'develop' is the usual value; llvm-project, which calls
+#                   that branch 'amd-staging', is mapped for you.
 #   ROCM_SOURCES_FULL
 #                   default false. 'true' checks the repositories out whole
 #                   instead of only the paths the generators read.
@@ -144,18 +145,26 @@ for entry in rocm_systems:rocm-systems \
   target=${SRC_DIR}/${dir}
   url=${base_url}/${name}.git
 
+  # llvm-project calls the branch the other two call 'develop' 'amd-staging',
+  # and carries a 'develop' TAG months behind it that `git clone -b` would take
+  # without a word. Mapped here rather than in every caller.
+  repo_ref=${ref}
+  if [[ "${name}" == "llvm-project" && "${repo_ref}" == "develop" ]]; then
+    repo_ref=amd-staging
+  fi
+
   rm -rf "${target}"
 
   if [[ "${sources_full}" == "true" ]]; then
     clone_rc=0
-    git clone --depth=1 --single-branch -b "${ref}" "${url}" "${target}" || clone_rc=$?
+    git clone --depth=1 --single-branch -b "${repo_ref}" "${url}" "${target}" || clone_rc=$?
   else
     # Blobless and checkout-less first: with --filter=blob:none the file
     # contents are only fetched for the paths the sparse checkout selects,
     # which is what keeps these three very large repositories cheap.
     clone_rc=0
     git clone --depth=1 --single-branch --filter=blob:none --no-checkout \
-        -b "${ref}" "${url}" "${target}" || clone_rc=$?
+        -b "${repo_ref}" "${url}" "${target}" || clone_rc=$?
     if [[ ${clone_rc} -eq 0 ]]; then
       git -C "${target}" sparse-checkout set --cone $(sparse_paths_for "${name}")
       git -C "${target}" checkout
@@ -163,7 +172,7 @@ for entry in rocm_systems:rocm-systems \
   fi
 
   if [[ ${clone_rc} -ne 0 ]]; then
-    message="cannot fetch ${name} at '${ref}' (derived from ROCM_SPECIFIER '${rocm_specifier}' and ROCm ${rocm_version}); pass ROCM_SOURCES_REF to name the ref explicitly"
+    message="cannot fetch ${name} at '${repo_ref}' (derived from ROCM_SPECIFIER '${rocm_specifier}' and ROCm ${rocm_version}); pass ROCM_SOURCES_REF to name the ref explicitly"
     if [[ -n "${GITHUB_ACTIONS:-}" ]]; then
       echo "::error::${message}"
     fi
@@ -172,9 +181,12 @@ for entry in rocm_systems:rocm-systems \
   fi
 
   sha=$(git -C "${target}" rev-parse HEAD)
-  echo "[info] ${name}: ${ref} (${sha}) -> ${target}"
+  # The committer date too: a ref can resolve to a tag that stopped moving, and
+  # the generator would read it without a word of complaint.
+  committed=$(git -C "${target}" log -1 --format=%cI 2>/dev/null || true)
+  echo "[info] ${name}: ${repo_ref} (${sha}, ${committed:-date unknown}) -> ${target}"
   if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
-    echo "- ${name}: \`${ref}\` (\`${sha}\`)" >>"${GITHUB_STEP_SUMMARY}"
+    echo "- ${name}: \`${repo_ref}\` (\`${sha}\`, ${committed:-date unknown})" >>"${GITHUB_STEP_SUMMARY}"
   fi
   du -sh "${target}" || true
 done
