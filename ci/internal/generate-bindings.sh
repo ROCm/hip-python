@@ -46,15 +46,28 @@ set -xeu
 # input to a Windows HIP compilation.
 #
 # The generated tree is written into ${BUILD_DIR}/hip_python so the sibling
-# commit step (ci/internal/commit-bindings.sh) can stage and commit it.
+# commit step (ci/internal/commit-bindings.sh) can stage and commit it, unless
+# HIP_PYTHON_CODEGEN_IN_PLACE says to generate into the checkout itself.
 #
 # Required env:
 #   SRC_DIR      parent dir holding hip_python/ and the ROCm component repos
 #                (rocm_systems/, rocm_libraries/, rocm_llvm_project/)
-#   BUILD_DIR    scratch dir; the working copy lands at ${BUILD_DIR}/hip_python
+#   BUILD_DIR    scratch dir; the working copy lands at ${BUILD_DIR}/hip_python.
+#                Not read in the in-place mode below
 #   ROCM_VERSION ROCm version passed to the generator (e.g. 7.13.0)
 #
 # Optional env:
+#   HIP_PYTHON_CODEGEN_IN_PLACE
+#                               default false. 'true' generates into the
+#                               checkout instead of a copy, and skips the
+#                               base-branch restore below: a build wants the
+#                               bindings where it builds from, and stages
+#                               nothing afterwards.
+#   HIP_PYTHON_PROJECT_DIR      default hip_python, as in build-wheels.sh.
+#                               Name of the checkout under ${SRC_DIR}.
+#   HIP_PYTHON_CODEGEN_PYTHON   default python3. Interpreter the tooling is
+#                               installed into; it needs >= 3.10, which the
+#                               system python of a manylinux image is not.
 #   ROCM_PATH                   default /opt/rocm
 #   ROCM_SYSTEMS_DIR            default ${SRC_DIR}/rocm_systems
 #   ROCM_LIBRARIES_DIR          default ${SRC_DIR}/rocm_libraries
@@ -81,8 +94,16 @@ set -xeu
 
 ### resolved paths
 
-src_dir=${SRC_DIR}/hip_python
-build_dir=${BUILD_DIR}/hip_python
+in_place=${HIP_PYTHON_CODEGEN_IN_PLACE:-false}
+codegen_python=${HIP_PYTHON_CODEGEN_PYTHON:-python3}
+project_dir=${HIP_PYTHON_PROJECT_DIR:-hip_python}
+
+src_dir=${SRC_DIR}/${project_dir}
+if [[ "${in_place}" == "true" ]]; then
+  build_dir=${src_dir}
+else
+  build_dir=${BUILD_DIR}/${project_dir}
+fi
 
 rocm_path=${ROCM_PATH:-/opt/rocm}
 rocm_systems_dir=${ROCM_SYSTEMS_DIR:-${SRC_DIR}/rocm_systems}
@@ -94,31 +115,42 @@ base_branch=${HIP_PYTHON_CODEGEN_BASE_BRANCH:-amd-integration}
 allow_missing_headers=${HIP_PYTHON_ALLOW_MISSING_HEADERS:-false}
 skip_libraries=${HIP_PYTHON_SKIP_LIBRARIES:-}
 
-### prepare an isolated working copy
+### prepare the working copy
 
-rm -rf ${build_dir}
-mkdir -p ${BUILD_DIR}
-cp -R ${src_dir} ${BUILD_DIR}/
+if [[ "${in_place}" == "true" ]]; then
+  cd ${build_dir}
+else
+  rm -rf ${build_dir}
+  mkdir -p ${BUILD_DIR}
+  cp -R ${src_dir} ${BUILD_DIR}/
 
-cd ${build_dir}
+  cd ${build_dir}
 
-# Clean generator-owned content so the commit step can stage a delta. The
-# packages/<wheel>/src/rocm/bindings/*.{pxd,pyx,pyi} and
-# cmake/generated_{modules,versions}.cmake files are regenerated below;
-# restore them from the base branch first so the diff reflects only the
-# generator's output.
-for pkg in rocm-bindings-core rocm-bindings-hip rocm-bindings-libraries \
-           rocm-bindings-systems rocm-bindings-compiler hip-python-interop; do
-  git checkout origin/${base_branch} -- packages/${pkg}/src packages/${pkg}/cmake \
-    2>/dev/null || true
-done
+  # Clean generator-owned content so the commit step can stage a delta. The
+  # packages/<wheel>/src/rocm/bindings/*.{pxd,pyx,pyi} and
+  # cmake/generated_{modules,versions}.cmake files are regenerated below;
+  # restore them from the base branch first so the diff reflects only the
+  # generator's output.
+  for pkg in rocm-bindings-core rocm-bindings-hip rocm-bindings-libraries \
+             rocm-bindings-systems rocm-bindings-compiler hip-python-interop; do
+    git checkout origin/${base_branch} -- packages/${pkg}/src packages/${pkg}/cmake \
+      2>/dev/null || true
+  done
+fi
 
 ### step 1 - install the in-tree codegen tooling
 
 # interfacegen + the hip-python-generate recipe live in the hip-python
 # monorepo under tools/. libclang Python bindings often lag the system
-# libclang.so; pin a known-good range. Installed into the system Python so
-# the `hip-python-generate` console script stays on PATH for the run below.
+# libclang.so; pin a known-good range. Into a venv, so that the console script
+# is found wherever HIP_PYTHON_CODEGEN_PYTHON lives and the install does not
+# outlive this script.
+codegen_venv=$(mktemp -d)
+trap 'rm -rf "${codegen_venv}"' EXIT
+${codegen_python} -m venv ${codegen_venv}
+PATH=${codegen_venv}/bin:${PATH}
+export PATH
+
 python3 -m pip install --upgrade pip
 python3 -m pip install "${interfacegen_dir}"
 python3 -m pip install "${hip_python_codegen_dir}"
