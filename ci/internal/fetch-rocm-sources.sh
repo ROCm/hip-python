@@ -135,6 +135,56 @@ function sparse_paths_for() {
   esac
 }
 
+### headers a cmake configure would have written
+
+# hipTensor's public header includes two headers that only exist after a cmake
+# configure: an export header from generate_export_header() and a version
+# header from its .in template. No ROCm install covers the gap -- the SDK the
+# wheel images carry ships no hipTensor at all, so this checkout is the only
+# source the recipe has, and without these the library fails to parse and the
+# whole generation reports a failure.
+function materialize_hiptensor_headers() {
+  local project=${SRC_DIR}/rocm_libraries/projects/hiptensor
+  local internal=${project}/library/include/hiptensor/internal
+  [[ -d "${internal}" ]] || return 0
+
+  if [[ ! -f "${internal}/hiptensor-export.h" ]]; then
+    # What generate_export_header() writes for a shared library built with
+    # default visibility.
+    cat >"${internal}/hiptensor-export.h" <<'EOF'
+#ifndef HIPTENSOR_EXPORT_H
+#define HIPTENSOR_EXPORT_H
+
+#define HIPTENSOR_EXPORT __attribute__((visibility("default")))
+#define HIPTENSOR_NO_EXPORT __attribute__((visibility("hidden")))
+#define HIPTENSOR_DEPRECATED __attribute__((__deprecated__))
+#define HIPTENSOR_DEPRECATED_EXPORT HIPTENSOR_EXPORT HIPTENSOR_DEPRECATED
+#define HIPTENSOR_DEPRECATED_NO_EXPORT HIPTENSOR_NO_EXPORT HIPTENSOR_DEPRECATED
+
+#endif
+EOF
+  fi
+
+  if [[ -f "${internal}/hiptensor-version.h" || ! -f "${internal}/hiptensor-version.h.in" ]]; then
+    return 0
+  fi
+
+  local version
+  version=$(sed -n 's/^[[:space:]]*set[[:space:]]*([[:space:]]*VERSION_STRING[[:space:]]*"\([0-9][0-9.]*\)".*/\1/p' \
+                   "${project}/CMakeLists.txt" | head -1)
+  # HIPTENSOR_{MAJOR,MINOR,PATCH}_VERSION reach the bindings as constants, so a
+  # placeholder version would be shipped as fact.
+  if [[ -z "${version}" ]]; then
+    echo "ERROR: no VERSION_STRING in ${project}/CMakeLists.txt, so the hipTensor version macros cannot be filled in" >&2
+    exit 1
+  fi
+  sed -e "s/@hiptensor_VERSION_MAJOR@/$(echo "${version}" | cut -d. -f1)/" \
+      -e "s/@hiptensor_VERSION_MINOR@/$(echo "${version}" | cut -d. -f2)/" \
+      -e "s/@hiptensor_VERSION_PATCH@/$(echo "${version}" | cut -d. -f3)/" \
+      "${internal}/hiptensor-version.h.in" >"${internal}/hiptensor-version.h"
+  echo "[info] hiptensor: wrote the cmake-generated headers, version ${version}"
+}
+
 ### fetch
 
 for entry in rocm_systems:rocm-systems \
@@ -190,3 +240,5 @@ for entry in rocm_systems:rocm-systems \
   fi
   du -sh "${target}" || true
 done
+
+materialize_hiptensor_headers
