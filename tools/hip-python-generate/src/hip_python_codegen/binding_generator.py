@@ -868,8 +868,13 @@ def generate_cuda_interop_layer_files(
         )
         return
 
+    if "hipRuntimeGetVersion" not in hip_2_cuda:
+        raise RuntimeError(
+            "the CUDA interop layer is generated from hipify-perl's symbol mapping "
+            "and no mapping was loaded; point --rocm-path at an installation that "
+            "ships hipify-perl, or exclude the interop layer from this run."
+        )
     # See: https://github.com/NVIDIA/cuda-python/issues/16
-    assert "hipRuntimeGetVersion" in hip_2_cuda
     hip_2_cuda["hipRuntimeGetVersion"].append("getLocalRuntimeVersion")
 
     if rocm_version_tuple[:2] >= (6, 4):
@@ -1151,6 +1156,17 @@ def generate(opts):  # noqa: C901
             hipify_perl_path = os.path.join(opts.rocm_path, *_rel)
             if os.path.exists(hipify_perl_path):
                 (_, hip_2_cuda) = parse_hipify_perl(hipify_perl_path)
+                # A present script that parses to a map without the anchor
+                # symbol means hipify-perl emits a format the parser does not
+                # know. Reported here and not where the map is consumed, which
+                # is a full generation run later.
+                if "hipRuntimeGetVersion" not in hip_2_cuda:
+                    raise RuntimeError(
+                        f"{hipify_perl_path} yielded {len(hip_2_cuda)} symbol mappings, "
+                        "none of them 'hipRuntimeGetVersion'. Its mapping format has "
+                        "changed; teach hip_python_codegen.hipify.parse_hipify_perl "
+                        "the new one."
+                    )
                 break
         else:
             print(
