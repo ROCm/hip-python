@@ -31,7 +31,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 * **Linux** is the primary supported platform (prebuilt packages and code).
   * Prebuilt packages distributed via PyPI are only provided for
     Linux systems that match the `manylinux_2_17_x86_64` tag.
-* **Windows** is supported from source: the wheels build with MSVC and
+* **Windows** (EXPERIMENTAL) is supported from source: the wheels build with MSVC and
   the test suites pass there
   ([`ci/internal/build-wheels.ps1`](ci/internal/build-wheels.ps1),
   [`ci/internal/test.ps1`](ci/internal/test.ps1)). No prebuilt Windows
@@ -57,7 +57,7 @@ for HIP and an interoperability layer for CUDA&reg; Python programs
 
 ### Build requirements
 
-* Linux or Windows
+* Linux or Windows (EXPERIMENTAL)
 * A C compiler (GCC/Clang on Linux, MSVC on Windows)
 * `python3` + `venv`, and a shell the CI scripts run in (`bash` on Linux,
   PowerShell on Windows)
