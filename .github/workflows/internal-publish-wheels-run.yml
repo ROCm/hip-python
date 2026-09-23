@@ -35,16 +35,16 @@
 # tree into wheels. A ref carrying no rendered bindings is refused below rather
 # than generated on the spot.
 #
-# The three legs are fixed rather than an input: Python 3.12 with an abi3 floor
-# of 3.12, then 3.11 and 3.10 without one. The abi3 leg's wheels install on 3.12
-# through 3.14, so three passes cover five interpreters, and there is nothing to
-# choose per run -- a release is all of them or none.
+# The wheel set is the manylinux matrix, not an input: cp310, cp311, and
+# cp312-abi3 (which installs on 3.12 through 3.14). A release is all of them
+# or none. ci/internal/build-wheels-manylinux.sh is what Jenkins uses for the
+# same pool; it selects each /opt/python interpreter itself and refuses the
+# run if any promised tag is missing.
 #
-# One job for all three, because `[self-hosted, linux]` is one machine: a matrix
-# would serialize on it anyway and pay the ROCm install three times over. ROCm
-# is installed once and each pass re-runs prepare-container.sh with
-# ROCM_SPECIFIER=preinstalled, which keeps that installation and only switches
-# the interpreter `python3` points at.
+# One job for the whole matrix, because `[self-hosted, linux]` is one machine:
+# a GHA matrix would serialize on it anyway and pay the ROCm install three
+# times over. ROCm is installed once; the matrix script then builds against
+# that installation.
 
 name: publish wheels (run)
 
@@ -162,7 +162,8 @@ jobs:
           # The scripts that run are this commit's, and the release branches
           # older than they are still around: without this, such a ref fails on
           # a path that does not exist and nothing says why.
-          for script in prepare-container.sh build-wheels.sh; do
+          for script in prepare-container.sh build-wheels.sh \
+                          build-wheels-manylinux.sh; do
             if [ ! -f "hip_python/ci/internal/${script}" ]; then
               echo "::error::this commit carries no ci/internal/${script}, so it predates the scripts this workflow drives; publish from a release branch generated after they landed"
               exit 1
@@ -177,9 +178,9 @@ jobs:
           rm -rf "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
           mkdir -p "${BUILD_DIR}" "${BUILD_ARTIFACTS_DIR}"
 
-      # Once. The three passes below reuse this installation, which is what
-      # makes them cost a build each rather than a build and an install each.
-      - name: Install ROCm and select the first interpreter
+      # Once. The matrix script reuses this installation and only switches
+      # which /opt/python is on PATH for each pass.
+      - name: Install ROCm
         env:
           MANYLINUX_DEFAULT_PYTHON_VERSION: "3.12"
         run: bash hip_python/ci/internal/prepare-container.sh
@@ -188,34 +189,10 @@ jobs:
         id: rocm
         run: echo "version=${ROCM_VERSION:-}" >>"${GITHUB_OUTPUT}"
 
-      # The legs are a list in one place rather than three near-identical pairs
-      # of steps. Each pass:
-      #
-      # * re-runs prepare-container.sh with ROCM_SPECIFIER=preinstalled, which
-      #   its header documents as keeping whatever is already there, so only its
-      #   interpreter selection does anything. That selection is an
-      #   `alternatives --set python3`, a change to the image rather than to
-      #   this shell's PATH, which is why it takes effect for the build that
-      #   follows it inside the same step;
-      # * builds with the leg's abi3 floor into the shared artifacts directory.
-      #   build-wheels.sh removes its own working copy and not that directory,
-      #   so each pass adds to what the last one left. The two pure-Python
-      #   wheels are byte-identical across the legs and simply overwrite
-      #   themselves.
-      - name: Build the wheels for each interpreter
-        run: |
-          set -eu
-          for leg in 3.12:3.12 3.11:no 3.10:no; do
-            python=${leg%%:*}
-            sabi=${leg##*:}
-            echo "::group::python ${python}, sabi ${sabi}"
-            MANYLINUX_DEFAULT_PYTHON_VERSION="${python}" \
-            ROCM_SPECIFIER=preinstalled \
-              bash hip_python/ci/internal/prepare-container.sh
-            USE_SABI="${sabi}" \
-              bash hip_python/ci/internal/build-wheels.sh
-            echo "::endgroup::"
-          done
+      # The matrix, USE_SABI floors and tag checks live in the script, so a
+      # publish that forgot cp312-abi3 fails here rather than on the index.
+      - name: Build the manylinux wheel matrix
+        run: bash hip_python/ci/internal/build-wheels-manylinux.sh
 
       # What came out, said plainly, because the next job uploads exactly this
       # and a reader should be able to see the set before it goes anywhere.

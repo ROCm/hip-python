@@ -21,8 +21,9 @@
 # SOFTWARE.
 #
 # The comment path into a wheel release: `/publish wheels ref=<branch>` builds
-# the fixed three-leg set from the bindings that branch carries and uploads it
-# to TestPyPI, or to PyPI when the comment says `index=pypi`.
+# the manylinux matrix (cp310, cp311, cp312-abi3) from the bindings that
+# branch carries and uploads it to TestPyPI, or to PyPI when the comment says
+# `index=pypi`.
 #
 # Where the command belongs is a release task issue, after the branch has been
 # generated and tested: `/generate bindings` makes it, `/full test hpe
