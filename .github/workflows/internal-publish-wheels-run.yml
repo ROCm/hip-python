@@ -308,15 +308,17 @@ jobs:
           bad=
           for f in ${names}; do
             # dist-version-python-abi-platform.whl, so the platform is what
-            # follows the last dash.
+            # follows the last dash. auditwheel then compresses compatible
+            # aliases into that field with dots --
+            # manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64 --
+            # so equality with PLAT would reject a repaired wheel.
             plat=${f%.whl}
             plat=${plat##*-}
-            # `any` is the pure-Python metapackage, which is portable and says
-            # so. Anything else has to be the tag this image builds for --
-            # a bare linux_x86_64 is what an unrepaired wheel carries, and no
-            # index accepts one.
-            case "${plat}" in
-              any|"${PLAT}") ;;
+            # `any` is the pure-Python metapackage. Anything else must name
+            # this image's tag as one of those aliases. A bare linux_x86_64
+            # is what an unrepaired wheel carries, and no index accepts one.
+            case ".${plat}." in
+              *.any.*|*."${PLAT}".*) ;;
               *) bad="${bad} ${f}" ;;
             esac
           done
