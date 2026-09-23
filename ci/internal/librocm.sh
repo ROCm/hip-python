@@ -26,7 +26,7 @@
 #
 # Trimmed copy of aiss-3p-dev-pipelines' public/nodes/rocm/librocm.sh, reduced
 # to what hip-python CI needs from a manylinux container. Everything retained
-# is byte-identical to upstream so a re-sync stays a readable diff, with two
+# is byte-identical to upstream so a re-sync stays a readable diff, with three
 # exceptions:
 #
 #   - install_rocm_el replaces upstream's install_rocm_rhel. Only the repository
@@ -37,6 +37,9 @@
 #     Building TheRock from source and reaching the internal artifact storage
 #     need credentials and tooling that only the aiss-3p-dev-pipelines nodes
 #     have; nothing else was dropped from the dispatcher.
+#   - install_therock_from_tarball uses wget --progress=dot:giga. Upstream's
+#     default dots are 1K each and flood a non-TTY CI log for a multi-GB
+#     dist tarball.
 #
 # Upstream's install_rocm_ubuntu is absent for the same reason the workflows no
 # longer use a Debian image at all.
@@ -770,7 +773,7 @@ function install_therock_from_tarball() {
 
       if wget --spider "${url}" 2>/dev/null; then
         printf "INFO: Found tarball for target: ${target}\n" >&2
-        wget "${url}"
+        wget --progress=dot:giga "${url}"
         download_successful=1
         break
       else
