@@ -6,6 +6,32 @@ is the generator itself, its recipes and its tooling. The build, runtime
 and docs machinery that consumes these artifacts lives in **hip-python**
 — see that repository's `CHANGELOG.md`.
 
+## 0.5
+
+The minor bump is a signal to consumers: stubs generated before and
+after this version differ in what they declare, and the older ones are
+missing names the modules bind.
+
+### Fixed
+
+#### Bindings
+
+- **Handle typedefs are declared.** `hipStream_t`, `hipEvent_t`,
+  `hipFunction_t` and the 51 further aliases `hip` binds as `X = Y` were
+  absent from the stub, so the names callers actually write did not
+  resolve. They render as the same assignment, and carry the members of
+  the record they alias.
+- **A wrapper class names the base it inherits.** Every record and
+  function pointer derives from the util package's `Pointer` in the
+  `.pyx` and from nothing in the stub, which dropped `createRef`,
+  `is_ptr_null` and the rest of the handle surface.
+- **A leading underscore no longer hides a class.** `_hiprtcProgram` is
+  bound by its module and named by a handle typedef; only compiler
+  predefines such as `__llvm__` are skipped now.
+- **`has_symbol` is declared** by a runtime-linked module. It comes from
+  the module prolog rather than from a node, so the stub walker never
+  saw it.
+
 ## 0.4
 
 The minor bump is a signal to consumers: stubs generated before and

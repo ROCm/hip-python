@@ -8,6 +8,20 @@ pipeline. The generator itself keeps its own log in
 `numba-hip`, which carries its own version, in
 [packages/numba-hip/CHANGELOG.md](packages/numba-hip/CHANGELOG.md).
 
+## 0.1.2
+
+### Fixed
+
+#### Codegen
+
+- **Generated stubs declare handle typedefs and the base a wrapper
+  inherits**, so `hip.hipStream_t`, `hiprtc._hiprtcProgram` and
+  `program.createRef()` resolve. A class whose name starts with an
+  underscore is no longer skipped, and a runtime-linked module declares
+  its `has_symbol` probe. In `hip` alone that is 55 public names the
+  module binds and the stub did not declare. `interfacegen` moves to
+  `0.5` in step.
+
 ## 0.1.1
 
 ### Added
