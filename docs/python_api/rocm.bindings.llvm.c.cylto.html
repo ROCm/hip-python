@@ -1,0 +1,1330 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.llvm.c.cylto — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.llvm.c.cylto';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.llvm.c.cydebuginfo.html" rel="next" title="rocm.bindings.llvm.c.cydebuginfo"/>
+<link href="rocm.bindings.llvm.c.cylljit.html" rel="prev" title="rocm.bindings.llvm.c.cylljit"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.llvm.c.cylto</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.llvm.c.cylto</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-llvm-c-cylto">
+<h1>rocm.bindings.llvm.c.cylto<a class="headerlink" href="#rocm-bindings-llvm-c-cylto" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            20 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.llvm.c.cylto</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html"><span class="doc">rocm.bindings.llvm.c.lto</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.llvm.c.cyvisibility</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"llvm-c/lto.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="n">_Bool</span> <span class="n">lto_bool_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">lto_symbol_attributes</span><span class="p">:</span>
+        <span class="n">LTO_SYMBOL_ALIGNMENT_MASK</span>
+        <span class="n">LTO_SYMBOL_PERMISSIONS_MASK</span>
+        <span class="n">LTO_SYMBOL_PERMISSIONS_CODE</span>
+        <span class="n">LTO_SYMBOL_PERMISSIONS_DATA</span>
+        <span class="n">LTO_SYMBOL_PERMISSIONS_RODATA</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_MASK</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_REGULAR</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_TENTATIVE</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_WEAK</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_UNDEFINED</span>
+        <span class="n">LTO_SYMBOL_DEFINITION_WEAKUNDEF</span>
+        <span class="n">LTO_SYMBOL_SCOPE_MASK</span>
+        <span class="n">LTO_SYMBOL_SCOPE_INTERNAL</span>
+        <span class="n">LTO_SYMBOL_SCOPE_HIDDEN</span>
+        <span class="n">LTO_SYMBOL_SCOPE_PROTECTED</span>
+        <span class="n">LTO_SYMBOL_SCOPE_DEFAULT</span>
+        <span class="n">LTO_SYMBOL_SCOPE_DEFAULT_CAN_BE_HIDDEN</span>
+        <span class="n">LTO_SYMBOL_COMDAT</span>
+        <span class="n">LTO_SYMBOL_ALIAS</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">lto_debug_model</span><span class="p">:</span>
+        <span class="n">LTO_DEBUG_MODEL_NONE</span>
+        <span class="n">LTO_DEBUG_MODEL_DWARF</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">lto_codegen_model</span><span class="p">:</span>
+        <span class="n">LTO_CODEGEN_PIC_MODEL_STATIC</span>
+        <span class="n">LTO_CODEGEN_PIC_MODEL_DYNAMIC</span>
+        <span class="n">LTO_CODEGEN_PIC_MODEL_DYNAMIC_NO_PIC</span>
+        <span class="n">LTO_CODEGEN_PIC_MODEL_DEFAULT</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">LLVMOpaqueLTOModule</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">LLVMOpaqueLTOModule</span> <span class="o">*</span> <span class="n">lto_module_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">LLVMOpaqueLTOCodeGenerator</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">LLVMOpaqueLTOCodeGenerator</span> <span class="o">*</span> <span class="n">lto_code_gen_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">LLVMOpaqueThinLTOCodeGenerator</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">LLVMOpaqueThinLTOCodeGenerator</span> <span class="o">*</span> <span class="n">thinlto_code_gen_t</span>
+
+<span class="c"># </span>
+<span class="c"># Returns a printable string.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_get_version</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the last error string or NULL if last operation was successful.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_get_error_message</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Checks if a file is a loadable object file.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_is_object_file</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Checks if a file is a loadable object compiled for requested target.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_is_object_file_for_target</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">target_triple_prefix</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Return true if \p Buffer contains a bitcode file with ObjC code (category</span>
+<span class="c"># or class) in it.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=20</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_has_objc_category</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Checks if a buffer is a loadable object file.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_is_object_file_in_memory</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Checks if a buffer is a loadable object compiled for requested target.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_is_object_file_in_memory_for_target</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">target_triple_prefix</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file from disk.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file from memory.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_from_memory</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file from memory with an extra path argument.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=9</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_from_memory_with_path</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file in its own context.</span>
+<span class="c"># </span>
+<span class="c"># Loads an object file in its own LLVMContext.  This function call is</span>
+<span class="c"># thread-safe.  However, modules created this way should not be merged into an</span>
+<span class="c"># lto_code_gen_t using \a lto_codegen_add_module().</span>
+<span class="c"># </span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=11</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_in_local_context</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file in the codegen context.</span>
+<span class="c"># </span>
+<span class="c"># Loads an object file into the same context as \c cg.  The module is safe to</span>
+<span class="c"># add using \a lto_codegen_add_module().</span>
+<span class="c"># </span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=11</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_in_codegen_context</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">mem</span><span class="p">,</span><span class="n">size_t</span> <span class="n">length</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">,</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file from disk. The seek point of fd is not preserved.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=5</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_from_fd</span><span class="p">(</span><span class="nb">int</span> <span class="n">fd</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">,</span><span class="n">size_t</span> <span class="n">file_size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Loads an object file from disk. The seek point of fd is not preserved.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=5</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_module_t</span> <span class="nf">lto_module_create_from_fd_at_offset</span><span class="p">(</span><span class="nb">int</span> <span class="n">fd</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">,</span><span class="n">size_t</span> <span class="n">file_size</span><span class="p">,</span><span class="n">size_t</span> <span class="n">map_size</span><span class="p">,</span><span class="nb">long</span> <span class="n">offset</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Frees all memory internally allocated by the module.</span>
+<span class="c"># Upon return the lto_module_t is no longer valid.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_module_dispose</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns triple string which the object module was compiled under.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_module_get_target_triple</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets triple string with which the object will be codegened.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=4</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_module_set_target_triple</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">triple</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the number of symbols in the object module.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">lto_module_get_num_symbols</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the name of the ith symbol in the object module.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_module_get_symbol_name</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the attributes of the ith symbol in the object module.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_symbol_attributes</span> <span class="nf">lto_module_get_symbol_attribute</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">&lt;</span><span class="n">lto_symbol_attributes</span><span class="o">&gt;-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the number of asm undefined symbols in the object module.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=30</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">lto_module_get_num_asm_undef_symbols</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the name of the ith asm undefined symbol in the object module.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=30</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_module_get_asm_undef_symbol_name</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the module's linker options.</span>
+<span class="c"># </span>
+<span class="c"># The linker options may consist of multiple flags. It is the linker's</span>
+<span class="c"># responsibility to split the flags using a platform-specific mechanism.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=16</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_module_get_linkeropts</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># If targeting mach-o on darwin, this function gets the CPU type and subtype</span>
+<span class="c"># that will end up being encoded in the mach-o header. These are the values</span>
+<span class="c"># that can be found in mach/machine.h.</span>
+<span class="c"># </span>
+<span class="c"># \p out_cputype and \p out_cpusubtype must be non-NULL.</span>
+<span class="c"># </span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=27</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_get_macho_cputype</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">out_cputype</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">out_cpusubtype</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># This function can be used by the linker to check if a given module has</span>
+<span class="c"># any constructor or destructor functions.</span>
+<span class="c"># </span>
+<span class="c"># Returns true if the module has either the @llvm.global_ctors or the</span>
+<span class="c"># @llvm.global_dtors symbol. Otherwise returns false.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=29</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_has_ctor_dtor</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"llvm-c/lto.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">lto_codegen_diagnostic_severity_t</span><span class="p">:</span>
+        <span class="n">LTO_DS_ERROR</span>
+        <span class="n">LTO_DS_WARNING</span>
+        <span class="n">LTO_DS_REMARK</span>
+        <span class="n">LTO_DS_NOTE</span>
+
+    <span class="k">ctypedef</span> <span class="n">void</span> <span class="p">(</span><span class="o">*</span><span class="n">lto_diagnostic_handler_t</span><span class="p">)</span> <span class="p">(</span><span class="n">lto_codegen_diagnostic_severity_t</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="c"># </span>
+<span class="c"># Set a diagnostic handler and the related context (void *).</span>
+<span class="c"># This is more general than lto_get_error_message, as the diagnostic handler</span>
+<span class="c"># can be called at anytime within lto.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=7</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_diagnostic_handler</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">arg0</span><span class="p">,</span><span class="n">lto_diagnostic_handler_t</span> <span class="n">arg1</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">arg2</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Instantiates a code generator.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># All modules added using \a lto_codegen_add_module() must have been created</span>
+<span class="c"># in the same context as the codegen.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_code_gen_t</span> <span class="nf">lto_codegen_create</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Instantiate a code generator in its own context.</span>
+<span class="c"># </span>
+<span class="c"># Instantiates a code generator in its own context.  Modules added via \a</span>
+<span class="c"># lto_codegen_add_module() must have all been created in the same context,</span>
+<span class="c"># using \a lto_module_create_in_codegen_context().</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=11</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_code_gen_t</span> <span class="nf">lto_codegen_create_in_local_context</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Frees all code generator and all memory it internally allocated.</span>
+<span class="c"># Upon return the lto_code_gen_t is no longer valid.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_dispose</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">arg0</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Add an object module to the set of modules for which code will be generated.</span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \c cg and \c mod must both be in the same context.  See \a</span>
+<span class="c"># lto_codegen_create_in_local_context() and \a</span>
+<span class="c"># lto_module_create_in_codegen_context().</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_add_module</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the object module for code generation. This will transfer the ownership</span>
+<span class="c"># of the module to the code generator.</span>
+<span class="c"># </span>
+<span class="c"># \c cg and \c mod must both be in the same context.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=13</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_module</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets if debug info should be generated.</span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_set_debug_model</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">lto_debug_model</span> <span class="n">arg1</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets which PIC code model to generated.</span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_set_pic_model</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">lto_codegen_model</span> <span class="n">arg1</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the cpu to generate code for.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=4</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_cpu</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">cpu</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the location of the assembler tool to run. If not set, libLTO</span>
+<span class="c"># will use gcc to invoke the assembler.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_assembler_path</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets extra arguments that libLTO should pass to the assembler.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=4</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_assembler_args</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">args</span><span class="p">,</span><span class="nb">int</span> <span class="n">nargs</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Adds to a list of all global symbols that must exist in the final generated</span>
+<span class="c"># code. If a function is not listed there, it might be inlined into every usage</span>
+<span class="c"># and optimized away.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_add_must_preserve_symbol</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">symbol</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Writes a new object file at the specified path that contains the</span>
+<span class="c"># merged contents of all modules added so far.</span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=5</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_write_merged_modules</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Generates code for all added modules into one native object file.</span>
+<span class="c"># This calls lto_codegen_optimize then lto_codegen_compile_optimized.</span>
+<span class="c"># </span>
+<span class="c"># On success returns a pointer to a generated mach-o/ELF buffer and</span>
+<span class="c"># length set to the buffer size.  The buffer is owned by the</span>
+<span class="c"># lto_code_gen_t and will be freed when lto_codegen_dispose()</span>
+<span class="c"># is called, or lto_codegen_compile() is called again.</span>
+<span class="c"># On failure, returns NULL (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">void</span> * <span class="nf">lto_codegen_compile</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Generates code for all added modules into one native object file.</span>
+<span class="c"># This calls lto_codegen_optimize then lto_codegen_compile_optimized (instead</span>
+<span class="c"># of returning a generated mach-o/ELF buffer, it writes to a file).</span>
+<span class="c"># </span>
+<span class="c"># The name of the file is written to name. Returns true on error.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=5</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_compile_to_file</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Runs optimization for the merged module. Returns true on error.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=12</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_codegen_optimize</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Generates code for the optimized merged module into one native object file.</span>
+<span class="c"># It will not run any IR optimizations on the merged module.</span>
+<span class="c"># </span>
+<span class="c"># On success returns a pointer to a generated mach-o/ELF buffer and length set</span>
+<span class="c"># to the buffer size.  The buffer is owned by the lto_code_gen_t and will be</span>
+<span class="c"># freed when lto_codegen_dispose() is called, or</span>
+<span class="c"># lto_codegen_compile_optimized() is called again. On failure, returns NULL</span>
+<span class="c"># (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=12</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">void</span> * <span class="nf">lto_codegen_compile_optimized</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the runtime API version.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=12</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">lto_api_version</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Parses options immediately, making them available as early as possible. For</span>
+<span class="c"># example during executing codegen::InitTargetOptionsFromCodeGenFlags. Since</span>
+<span class="c"># parsing shud only happen once, only one of lto_codegen_debug_options or</span>
+<span class="c"># lto_set_debug_options should be called.</span>
+<span class="c"># </span>
+<span class="c"># This function takes one or more options separated by spaces.</span>
+<span class="c"># Warning: passing file paths through this function may confuse the argument</span>
+<span class="c"># parser if the paths contain spaces.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=28</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_set_debug_options</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">const</span> <span class="o">*</span> <span class="n">options</span><span class="p">,</span><span class="nb">int</span> <span class="n">number</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets options to help debug codegen bugs. Since parsing shud only happen once,</span>
+<span class="c"># only one of lto_codegen_debug_options or lto_set_debug_options</span>
+<span class="c"># should be called.</span>
+<span class="c"># </span>
+<span class="c"># This function takes one or more options separated by spaces.</span>
+<span class="c"># Warning: passing file paths through this function may confuse the argument</span>
+<span class="c"># parser if the paths contain spaces.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=3</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_debug_options</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">arg1</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Same as the previous function, but takes every option separately through an</span>
+<span class="c"># array.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=26</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_debug_options_array</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">const</span> <span class="o">*</span> <span class="n">arg1</span><span class="p">,</span><span class="nb">int</span> <span class="n">number</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Initializes LLVM disassemblers.</span>
+<span class="c"># FIXME: This doesn't really belong here.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=5</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_initialize_disassembler</span><span class="p">()</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets if we should run internalize pass during optimization and code</span>
+<span class="c"># generation.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=14</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_should_internalize</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">ShouldInternalize</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Set whether to embed uselists in bitcode.</span>
+<span class="c"># </span>
+<span class="c"># Sets whether \a lto_codegen_write_merged_modules() should embed uselists in</span>
+<span class="c"># output bitcode.  This should be turned on for all -save-temps output.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=15</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_codegen_set_should_embed_uselists</span><span class="p">(</span><span class="n">lto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">ShouldEmbedUselists</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"llvm-c/lto.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">LLVMOpaqueLTOInput</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">LLVMOpaqueLTOInput</span> <span class="o">*</span> <span class="n">lto_input_t</span>
+
+<span class="c"># </span>
+<span class="c"># Creates an LTO input file from a buffer. The path</span>
+<span class="c"># argument is used for diagnotics as this function</span>
+<span class="c"># otherwise does not know which file the given buffer</span>
+<span class="c"># is associated with.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=24</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">lto_input_t</span> <span class="nf">lto_input_create</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="nb">buffer</span><span class="p">,</span><span class="n">size_t</span> <span class="n">buffer_size</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Frees all memory internally allocated by the LTO input file.</span>
+<span class="c"># Upon return the lto_module_t is no longer valid.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=24</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">lto_input_dispose</span><span class="p">(</span><span class="n">lto_input_t</span> <span class="nb">input</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the number of dependent library specifiers</span>
+<span class="c"># for the given LTO input file.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=24</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">lto_input_get_num_dependent_libraries</span><span class="p">(</span><span class="n">lto_input_t</span> <span class="nb">input</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the ith dependent library specifier</span>
+<span class="c"># for the given LTO input file. The returned</span>
+<span class="c"># string is not null-terminated.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=24</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">lto_input_get_dependent_library</span><span class="p">(</span><span class="n">lto_input_t</span> <span class="nb">input</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the list of libcall symbols that can be generated by LTO</span>
+<span class="c"># that might not be visible from the symbol table of bitcode files.</span>
+<span class="c"># </span>
+<span class="c"># \since prior to LTO_API_VERSION=25</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> *<span class="kt">const</span> * <span class="nf">lto_runtime_lib_symbols_list</span><span class="p">(</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"llvm-c/lto.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">LTOObjectBuffer</span><span class="p">:</span>
+        <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Buffer</span>
+        <span class="n">size_t</span> <span class="n">Size</span>
+
+<span class="c"># </span>
+<span class="c"># Instantiates a ThinLTO code generator.</span>
+<span class="c"># Returns NULL on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># The ThinLTOCodeGenerator is not intended to be reuse for multiple</span>
+<span class="c"># compilation: the model is that the client adds modules to the generator and</span>
+<span class="c"># ask to perform the ThinLTO optimizations / codegen, and finally destroys the</span>
+<span class="c"># codegenerator.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">thinlto_code_gen_t</span> <span class="nf">thinlto_create_codegen</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Frees the generator and all memory it internally allocated.</span>
+<span class="c"># Upon return the thinlto_code_gen_t is no longer valid.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_dispose</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Add a module to a ThinLTO code generator. Identifier has to be unique among</span>
+<span class="c"># all the modules in a code generator. The data buffer stays owned by the</span>
+<span class="c"># client, and is expected to be available for the entire lifetime of the</span>
+<span class="c"># thinlto_code_gen_t it is added to.</span>
+<span class="c"># </span>
+<span class="c"># On failure, returns NULL (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_add_module</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">identifier</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="nb">int</span> <span class="n">length</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Optimize and codegen all the modules added to the codegenerator using</span>
+<span class="c"># ThinLTO. Resulting objects are accessible using thinlto_module_get_object().</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_process</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the number of object files produced by the ThinLTO CodeGenerator.</span>
+<span class="c"># </span>
+<span class="c"># It usually matches the number of input files, but this is not a guarantee of</span>
+<span class="c"># the API and may change in future implementation, so the client should not</span>
+<span class="c"># assume it.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">thinlto_module_get_num_objects</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns a reference to the ith object file produced by the ThinLTO</span>
+<span class="c"># CodeGenerator.</span>
+<span class="c"># </span>
+<span class="c"># Client should use \p thinlto_module_get_num_objects() to get the number of</span>
+<span class="c"># available objects.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LTOObjectBuffer</span> <span class="nf">thinlto_module_get_object</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">index</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the number of object files produced by the ThinLTO CodeGenerator.</span>
+<span class="c"># </span>
+<span class="c"># It usually matches the number of input files, but this is not a guarantee of</span>
+<span class="c"># the API and may change in future implementation, so the client should not</span>
+<span class="c"># assume it.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=21</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">thinlto_module_get_num_object_files</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Returns the path to the ith object file produced by the ThinLTO</span>
+<span class="c"># CodeGenerator.</span>
+<span class="c"># </span>
+<span class="c"># Client should use \p thinlto_module_get_num_object_files() to get the number</span>
+<span class="c"># of available objects.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=21</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">thinlto_module_get_object_file</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">index</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="bp">NULL</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets which PIC code model to generate.</span>
+<span class="c"># Returns true on error (check lto_get_error_message() for details).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">thinlto_codegen_set_pic_model</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">lto_codegen_model</span> <span class="n">arg1</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the path to a directory to use as a storage for temporary bitcode files.</span>
+<span class="c"># The intention is to make the bitcode files available for debugging at various</span>
+<span class="c"># stage of the pipeline.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_savetemps_dir</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">save_temps_dir</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Set the path to a directory where to save generated object files. This</span>
+<span class="c"># path can be used by a linker to request on-disk files instead of in-memory</span>
+<span class="c"># buffers. When set, results are available through</span>
+<span class="c"># thinlto_module_get_object_file() instead of thinlto_module_get_object().</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=21</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_set_generated_objects_dir</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">save_temps_dir</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the cpu to generate code for.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cpu</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">cpu</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Disable CodeGen, only run the stages till codegen and stop. The output will</span>
+<span class="c"># be bitcode.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=19</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_disable_codegen</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">disable</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Perform CodeGen only: disable all other stages.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=19</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_codegen_only</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">codegen_only</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Parse -mllvm style debug options.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_debug_options</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="n">const</span> <span class="o">*</span> <span class="n">options</span><span class="p">,</span><span class="nb">int</span> <span class="n">number</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Test if a module has support for ThinLTO linking.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">_Bool</span> <span class="nf">lto_module_is_thinlto</span><span class="p">(</span><span class="n">lto_module_t</span> <span class="n">mod</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="o">-</span><span class="mf">1</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Adds a symbol to the list of global symbols that must exist in the final</span>
+<span class="c"># generated code. If a function is not listed there, it might be inlined into</span>
+<span class="c"># every usage and optimized away. For every single module, the functions</span>
+<span class="c"># referenced from code outside of the ThinLTO modules need to be added here.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_add_must_preserve_symbol</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">name</span><span class="p">,</span><span class="nb">int</span> <span class="n">length</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Adds a symbol to the list of global symbols that are cross-referenced between</span>
+<span class="c"># ThinLTO files. If the ThinLTO CodeGenerator can ensure that every</span>
+<span class="c"># references from a ThinLTO module to this symbol is optimized away, then</span>
+<span class="c"># the symbol can be discarded.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_add_cross_referenced_symbol</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">name</span><span class="p">,</span><span class="nb">int</span> <span class="n">length</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the path to a directory to use as a cache storage for incremental build.</span>
+<span class="c"># Setting this activates caching.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_dir</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">cache_dir</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the cache pruning interval (in seconds). A negative value disables the</span>
+<span class="c"># pruning. An unspecified default value will be applied, and a value of 0 will</span>
+<span class="c"># force prunning to occur.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_pruning_interval</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">int</span> <span class="n">interval</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the maximum cache size that can be persistent across build, in terms of</span>
+<span class="c"># percentage of the available space on the disk. Set to 100 to indicate</span>
+<span class="c"># no limit, 50 to indicate that the cache size will not be left over half the</span>
+<span class="c"># available space. A value over 100 will be reduced to 100, a value of 0 will</span>
+<span class="c"># be ignored. An unspecified default value will be applied.</span>
+<span class="c"># </span>
+<span class="c"># The formula looks like:</span>
+<span class="c">#  AvailableSpace = FreeSpace + ExistingCacheSize</span>
+<span class="c">#  NewCacheSize = AvailableSpace * P/100</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_final_cache_size_relative_to_available_space</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">percentage</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the expiration (in seconds) for an entry in the cache. An unspecified</span>
+<span class="c"># default value will be applied. A value of 0 will be ignored.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=18</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_entry_expiration</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">expiration</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the maximum size of the cache directory (in bytes). A value over the</span>
+<span class="c"># amount of available space on the disk will be reduced to the amount of</span>
+<span class="c"># available space. An unspecified default value will be applied. A value of 0</span>
+<span class="c"># will be ignored.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=22</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_size_bytes</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">max_size_bytes</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Same as thinlto_codegen_set_cache_size_bytes, except the maximum size is in</span>
+<span class="c"># megabytes (2^20 bytes).</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=23</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_size_megabytes</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">max_size_megabytes</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Sets the maximum number of files in the cache directory. An unspecified</span>
+<span class="c"># default value will be applied. A value of 0 will be ignored.</span>
+<span class="c"># </span>
+<span class="c"># \since LTO_API_VERSION=22</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">thinlto_codegen_set_cache_size_files</span><span class="p">(</span><span class="n">thinlto_code_gen_t</span> <span class="n">cg</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">max_size_files</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__lto_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.llvm.c.cylljit.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.llvm.c.cylljit</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.llvm.c.cydebuginfo.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.llvm.c.cydebuginfo</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

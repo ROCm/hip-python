@@ -1,0 +1,1851 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.llvm.c.cydebuginfo — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.llvm.c.cydebuginfo';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.llvm.c.cyexecutionengine.html" rel="next" title="rocm.bindings.llvm.c.cyexecutionengine"/>
+<link href="rocm.bindings.llvm.c.cylto.html" rel="prev" title="rocm.bindings.llvm.c.cylto"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.llvm.c.cydebuginfo</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.llvm.c.cydebuginfo</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-llvm-c-cydebuginfo">
+<h1>rocm.bindings.llvm.c.cydebuginfo<a class="headerlink" href="#rocm-bindings-llvm-c-cydebuginfo" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            36 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.llvm.c.cydebuginfo</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html"><span class="doc">rocm.bindings.llvm.c.debuginfo</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.llvm.c.cytypes</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.llvm.c.cyvisibility</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"llvm-c/DebugInfo.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">LLVMDIFlags</span><span class="p">:</span>
+        <span class="n">LLVMDIFlagZero</span>
+        <span class="n">LLVMDIFlagPrivate</span>
+        <span class="n">LLVMDIFlagProtected</span>
+        <span class="n">LLVMDIFlagPublic</span>
+        <span class="n">LLVMDIFlagFwdDecl</span>
+        <span class="n">LLVMDIFlagAppleBlock</span>
+        <span class="n">LLVMDIFlagReservedBit4</span>
+        <span class="n">LLVMDIFlagVirtual</span>
+        <span class="n">LLVMDIFlagArtificial</span>
+        <span class="n">LLVMDIFlagExplicit</span>
+        <span class="n">LLVMDIFlagPrototyped</span>
+        <span class="n">LLVMDIFlagObjcClassComplete</span>
+        <span class="n">LLVMDIFlagObjectPointer</span>
+        <span class="n">LLVMDIFlagVector</span>
+        <span class="n">LLVMDIFlagStaticMember</span>
+        <span class="n">LLVMDIFlagLValueReference</span>
+        <span class="n">LLVMDIFlagRValueReference</span>
+        <span class="n">LLVMDIFlagReserved</span>
+        <span class="n">LLVMDIFlagSingleInheritance</span>
+        <span class="n">LLVMDIFlagMultipleInheritance</span>
+        <span class="n">LLVMDIFlagVirtualInheritance</span>
+        <span class="n">LLVMDIFlagIntroducedVirtual</span>
+        <span class="n">LLVMDIFlagBitField</span>
+        <span class="n">LLVMDIFlagNoReturn</span>
+        <span class="n">LLVMDIFlagTypePassByValue</span>
+        <span class="n">LLVMDIFlagTypePassByReference</span>
+        <span class="n">LLVMDIFlagEnumClass</span>
+        <span class="n">LLVMDIFlagFixedEnum</span>
+        <span class="n">LLVMDIFlagThunk</span>
+        <span class="n">LLVMDIFlagNonTrivial</span>
+        <span class="n">LLVMDIFlagBigEndian</span>
+        <span class="n">LLVMDIFlagLittleEndian</span>
+        <span class="n">LLVMDIFlagIndirectVirtualBase</span>
+        <span class="n">LLVMDIFlagAccessibility</span>
+        <span class="n">LLVMDIFlagPtrToMemberRep</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">LLVMDWARFSourceLanguage</span><span class="p">:</span>
+        <span class="n">LLVMDWARFSourceLanguageC89</span>
+        <span class="n">LLVMDWARFSourceLanguageC</span>
+        <span class="n">LLVMDWARFSourceLanguageAda83</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus</span>
+        <span class="n">LLVMDWARFSourceLanguageCobol74</span>
+        <span class="n">LLVMDWARFSourceLanguageCobol85</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran77</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran90</span>
+        <span class="n">LLVMDWARFSourceLanguagePascal83</span>
+        <span class="n">LLVMDWARFSourceLanguageModula2</span>
+        <span class="n">LLVMDWARFSourceLanguageJava</span>
+        <span class="n">LLVMDWARFSourceLanguageC99</span>
+        <span class="n">LLVMDWARFSourceLanguageAda95</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran95</span>
+        <span class="n">LLVMDWARFSourceLanguagePLI</span>
+        <span class="n">LLVMDWARFSourceLanguageObjC</span>
+        <span class="n">LLVMDWARFSourceLanguageObjC_plus_plus</span>
+        <span class="n">LLVMDWARFSourceLanguageUPC</span>
+        <span class="n">LLVMDWARFSourceLanguageD</span>
+        <span class="n">LLVMDWARFSourceLanguagePython</span>
+        <span class="n">LLVMDWARFSourceLanguageOpenCL</span>
+        <span class="n">LLVMDWARFSourceLanguageGo</span>
+        <span class="n">LLVMDWARFSourceLanguageModula3</span>
+        <span class="n">LLVMDWARFSourceLanguageHaskell</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus_03</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus_11</span>
+        <span class="n">LLVMDWARFSourceLanguageOCaml</span>
+        <span class="n">LLVMDWARFSourceLanguageRust</span>
+        <span class="n">LLVMDWARFSourceLanguageC11</span>
+        <span class="n">LLVMDWARFSourceLanguageSwift</span>
+        <span class="n">LLVMDWARFSourceLanguageJulia</span>
+        <span class="n">LLVMDWARFSourceLanguageDylan</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus_14</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran03</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran08</span>
+        <span class="n">LLVMDWARFSourceLanguageRenderScript</span>
+        <span class="n">LLVMDWARFSourceLanguageBLISS</span>
+        <span class="n">LLVMDWARFSourceLanguageKotlin</span>
+        <span class="n">LLVMDWARFSourceLanguageZig</span>
+        <span class="n">LLVMDWARFSourceLanguageCrystal</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus_17</span>
+        <span class="n">LLVMDWARFSourceLanguageC_plus_plus_20</span>
+        <span class="n">LLVMDWARFSourceLanguageC17</span>
+        <span class="n">LLVMDWARFSourceLanguageFortran18</span>
+        <span class="n">LLVMDWARFSourceLanguageAda2005</span>
+        <span class="n">LLVMDWARFSourceLanguageAda2012</span>
+        <span class="n">LLVMDWARFSourceLanguageHIP</span>
+        <span class="n">LLVMDWARFSourceLanguageAssembly</span>
+        <span class="n">LLVMDWARFSourceLanguageC_sharp</span>
+        <span class="n">LLVMDWARFSourceLanguageMojo</span>
+        <span class="n">LLVMDWARFSourceLanguageGLSL</span>
+        <span class="n">LLVMDWARFSourceLanguageGLSL_ES</span>
+        <span class="n">LLVMDWARFSourceLanguageHLSL</span>
+        <span class="n">LLVMDWARFSourceLanguageOpenCL_CPP</span>
+        <span class="n">LLVMDWARFSourceLanguageCPP_for_OpenCL</span>
+        <span class="n">LLVMDWARFSourceLanguageSYCL</span>
+        <span class="n">LLVMDWARFSourceLanguageRuby</span>
+        <span class="n">LLVMDWARFSourceLanguageMove</span>
+        <span class="n">LLVMDWARFSourceLanguageHylo</span>
+        <span class="n">LLVMDWARFSourceLanguageMetal</span>
+        <span class="n">LLVMDWARFSourceLanguageMips_Assembler</span>
+        <span class="n">LLVMDWARFSourceLanguageGOOGLE_RenderScript</span>
+        <span class="n">LLVMDWARFSourceLanguageBORLAND_Delphi</span>
+
+    <span class="k">ctypedef</span> <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LLVMDWARFMemorySpace</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">LLVMDWARFEmissionKind</span><span class="p">:</span>
+        <span class="n">LLVMDWARFEmissionNone</span>
+        <span class="n">LLVMDWARFEmissionFull</span>
+        <span class="n">LLVMDWARFEmissionLineTablesOnly</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span><span class="p">:</span>
+        <span class="n">LLVMMDStringMetadataKind</span>
+        <span class="n">LLVMConstantAsMetadataMetadataKind</span>
+        <span class="n">LLVMLocalAsMetadataMetadataKind</span>
+        <span class="n">LLVMDistinctMDOperandPlaceholderMetadataKind</span>
+        <span class="n">LLVMMDTupleMetadataKind</span>
+        <span class="n">LLVMDILocationMetadataKind</span>
+        <span class="n">LLVMDIExpressionMetadataKind</span>
+        <span class="n">LLVMDIGlobalVariableExpressionMetadataKind</span>
+        <span class="n">LLVMGenericDINodeMetadataKind</span>
+        <span class="n">LLVMDISubrangeMetadataKind</span>
+        <span class="n">LLVMDIEnumeratorMetadataKind</span>
+        <span class="n">LLVMDIBasicTypeMetadataKind</span>
+        <span class="n">LLVMDIDerivedTypeMetadataKind</span>
+        <span class="n">LLVMDICompositeTypeMetadataKind</span>
+        <span class="n">LLVMDISubroutineTypeMetadataKind</span>
+        <span class="n">LLVMDIFileMetadataKind</span>
+        <span class="n">LLVMDICompileUnitMetadataKind</span>
+        <span class="n">LLVMDISubprogramMetadataKind</span>
+        <span class="n">LLVMDILexicalBlockMetadataKind</span>
+        <span class="n">LLVMDILexicalBlockFileMetadataKind</span>
+        <span class="n">LLVMDINamespaceMetadataKind</span>
+        <span class="n">LLVMDIModuleMetadataKind</span>
+        <span class="n">LLVMDITemplateTypeParameterMetadataKind</span>
+        <span class="n">LLVMDITemplateValueParameterMetadataKind</span>
+        <span class="n">LLVMDIGlobalVariableMetadataKind</span>
+        <span class="n">LLVMDILocalVariableMetadataKind</span>
+        <span class="n">LLVMDILabelMetadataKind</span>
+        <span class="n">LLVMDIObjCPropertyMetadataKind</span>
+        <span class="n">LLVMDIImportedEntityMetadataKind</span>
+        <span class="n">LLVMDIMacroMetadataKind</span>
+        <span class="n">LLVMDIMacroFileMetadataKind</span>
+        <span class="n">LLVMDICommonBlockMetadataKind</span>
+        <span class="n">LLVMDIStringTypeMetadataKind</span>
+        <span class="n">LLVMDIGenericSubrangeMetadataKind</span>
+        <span class="n">LLVMDIArgListMetadataKind</span>
+        <span class="n">LLVMDIAssignIDMetadataKind</span>
+        <span class="n">LLVMDISubrangeTypeMetadataKind</span>
+        <span class="n">LLVMDIFixedPointTypeMetadataKind</span>
+
+    <span class="k">ctypedef</span> <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LLVMMetadataKind</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">LLVMChecksumKind</span><span class="p">:</span>
+        <span class="n">CSK_MD5</span>
+        <span class="n">CSK_SHA1</span>
+        <span class="n">CSK_SHA256</span>
+
+    <span class="k">ctypedef</span> <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LLVMDWARFTypeEncoding</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">LLVMDWARFMacinfoRecordType</span><span class="p">:</span>
+        <span class="n">LLVMDWARFMacinfoRecordTypeDefine</span>
+        <span class="n">LLVMDWARFMacinfoRecordTypeMacro</span>
+        <span class="n">LLVMDWARFMacinfoRecordTypeStartFile</span>
+        <span class="n">LLVMDWARFMacinfoRecordTypeEndFile</span>
+        <span class="n">LLVMDWARFMacinfoRecordTypeVendorExt</span>
+
+<span class="c"># </span>
+<span class="c"># The current debug metadata version number.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDebugMetadataVersion</span><span class="p">()</span>
+
+
+<span class="c"># </span>
+<span class="c"># The version of debug metadata that's present in the provided \c Module.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMGetModuleDebugMetadataVersion</span><span class="p">(</span><span class="n">LLVMModuleRef</span> <span class="n">Module</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Strip debug info in the module if it exists.</span>
+<span class="c"># To do this, we remove all calls to the debugger intrinsics and any named</span>
+<span class="c"># metadata for debugging. We also remove debug locations for instructions.</span>
+<span class="c"># Return true if module is modified.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">LLVMStripModuleDebugInfo</span><span class="p">(</span><span class="n">LLVMModuleRef</span> <span class="n">Module</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Construct a builder for a module, and do not allow for unresolved nodes</span>
+<span class="c"># attached to the module.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDIBuilderRef</span> <span class="nf">LLVMCreateDIBuilderDisallowUnresolved</span><span class="p">(</span><span class="n">LLVMModuleRef</span> <span class="n">M</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Construct a builder for a module and collect unresolved nodes attached</span>
+<span class="c"># to the module in order to resolve cycles during a call to</span>
+<span class="c"># \c LLVMDIBuilderFinalize.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDIBuilderRef</span> <span class="nf">LLVMCreateDIBuilder</span><span class="p">(</span><span class="n">LLVMModuleRef</span> <span class="n">M</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Deallocates the \c DIBuilder and everything it owns.</span>
+<span class="c"># @note You must call \c LLVMDIBuilderFinalize before this</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMDisposeDIBuilder</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Construct any deferred debug info descriptors.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMDIBuilderFinalize</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Finalize a specific subprogram.</span>
+<span class="c"># No new variables may be added to this subprogram afterwards.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMDIBuilderFinalizeSubprogram</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Subprogram</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># A CompileUnit provides an anchor for all debugging</span>
+<span class="c"># information generated during this instance of compilation.</span>
+<span class="c"># \param Lang          Source programming language, eg.</span>
+<span class="c">#                      \c LLVMDWARFSourceLanguageC99</span>
+<span class="c"># \param FileRef       File info.</span>
+<span class="c"># \param Producer      Identify the producer of debugging information</span>
+<span class="c">#                      and code.  Usually this is a compiler</span>
+<span class="c">#                      version string.</span>
+<span class="c"># \param ProducerLen   The length of the C string passed to \c Producer.</span>
+<span class="c"># \param isOptimized   A boolean flag which indicates whether optimization</span>
+<span class="c">#                      is enabled or not.</span>
+<span class="c"># \param Flags         This string lists command line options. This</span>
+<span class="c">#                      string is directly embedded in debug info</span>
+<span class="c">#                      output which may be used by a tool</span>
+<span class="c">#                      analyzing generated debugging information.</span>
+<span class="c"># \param FlagsLen      The length of the C string passed to \c Flags.</span>
+<span class="c"># \param RuntimeVer    This indicates runtime version for languages like</span>
+<span class="c">#                      Objective-C.</span>
+<span class="c"># \param SplitName     The name of the file that we'll split debug info</span>
+<span class="c">#                      out into.</span>
+<span class="c"># \param SplitNameLen  The length of the C string passed to \c SplitName.</span>
+<span class="c"># \param Kind          The kind of debug information to generate.</span>
+<span class="c"># \param DWOId         The DWOId if this is a split skeleton compile unit.</span>
+<span class="c"># \param SplitDebugInlining    Whether to emit inline debug info.</span>
+<span class="c"># \param DebugInfoForProfiling Whether to emit extra debug info for</span>
+<span class="c">#                              profile collection.</span>
+<span class="c"># \param SysRoot         The Clang system root (value of -isysroot).</span>
+<span class="c"># \param SysRootLen      The length of the C string passed to \c SysRoot.</span>
+<span class="c"># \param SDK           The SDK. On Darwin, the last component of the sysroot.</span>
+<span class="c"># \param SDKLen        The length of the C string passed to \c SDK.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateCompileUnit</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMDWARFSourceLanguage</span> <span class="n">Lang</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">FileRef</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Producer</span><span class="p">,</span><span class="n">size_t</span> <span class="n">ProducerLen</span><span class="p">,</span><span class="nb">int</span> <span class="n">isOptimized</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Flags</span><span class="p">,</span><span class="n">size_t</span> <span class="n">FlagsLen</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">RuntimeVer</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">SplitName</span><span class="p">,</span><span class="n">size_t</span> <span class="n">SplitNameLen</span><span class="p">,</span><span class="n">LLVMDWARFEmissionKind</span> <span class="n">Kind</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">DWOId</span><span class="p">,</span><span class="nb">int</span> <span class="n">SplitDebugInlining</span><span class="p">,</span><span class="nb">int</span> <span class="n">DebugInfoForProfiling</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">SysRoot</span><span class="p">,</span><span class="n">size_t</span> <span class="n">SysRootLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">SDK</span><span class="p">,</span><span class="n">size_t</span> <span class="n">SDKLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a file descriptor to hold debugging information for a file.</span>
+<span class="c"># \param Builder      The \c DIBuilder.</span>
+<span class="c"># \param Filename     File name.</span>
+<span class="c"># \param FilenameLen  The length of the C string passed to \c Filename.</span>
+<span class="c"># \param Directory    Directory.</span>
+<span class="c"># \param DirectoryLen The length of the C string passed to \c Directory.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateFile</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Filename</span><span class="p">,</span><span class="n">size_t</span> <span class="n">FilenameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Directory</span><span class="p">,</span><span class="n">size_t</span> <span class="n">DirectoryLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a file descriptor to hold debugging information for a file.</span>
+<span class="c"># \param Builder      The \c DIBuilder.</span>
+<span class="c"># \param Filename     File name.</span>
+<span class="c"># \param FilenameLen  The length of the C string passed to \c Filename.</span>
+<span class="c"># \param Directory    Directory.</span>
+<span class="c"># \param DirectoryLen The length of the C string passed to \c Directory.</span>
+<span class="c"># \param ChecksumKind The kind of checksum. eg MD5, SHA256</span>
+<span class="c"># \param Checksum     The checksum.</span>
+<span class="c"># \param ChecksumLen  The length of the checksum.</span>
+<span class="c"># \param Souce        The embedded source.</span>
+<span class="c"># \param SourceLen    The length of the source.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateFileWithChecksum</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Filename</span><span class="p">,</span><span class="n">size_t</span> <span class="n">FilenameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Directory</span><span class="p">,</span><span class="n">size_t</span> <span class="n">DirectoryLen</span><span class="p">,</span><span class="n">LLVMChecksumKind</span> <span class="n">ChecksumKind</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Checksum</span><span class="p">,</span><span class="n">size_t</span> <span class="n">ChecksumLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Source</span><span class="p">,</span><span class="n">size_t</span> <span class="n">SourceLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Creates a new descriptor for a module with the specified parent scope.</span>
+<span class="c"># \param Builder         The \c DIBuilder.</span>
+<span class="c"># \param ParentScope     The parent scope containing this module declaration.</span>
+<span class="c"># \param Name            Module name.</span>
+<span class="c"># \param NameLen         The length of the C string passed to \c Name.</span>
+<span class="c"># \param ConfigMacros    A space-separated shell-quoted list of -D macro</span>
+<span class="c">#                        definitions as they would appear on a command line.</span>
+<span class="c"># \param ConfigMacrosLen The length of the C string passed to \c ConfigMacros.</span>
+<span class="c"># \param IncludePath     The path to the module map file.</span>
+<span class="c"># \param IncludePathLen  The length of the C string passed to \c IncludePath.</span>
+<span class="c"># \param APINotesFile    The path to an API notes file for the module.</span>
+<span class="c"># \param APINotesFileLen The length of the C string passed to \c APINotestFile.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateModule</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ParentScope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">ConfigMacros</span><span class="p">,</span><span class="n">size_t</span> <span class="n">ConfigMacrosLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">IncludePath</span><span class="p">,</span><span class="n">size_t</span> <span class="n">IncludePathLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">APINotesFile</span><span class="p">,</span><span class="n">size_t</span> <span class="n">APINotesFileLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Creates a new descriptor for a namespace with the specified parent scope.</span>
+<span class="c"># \param Builder          The \c DIBuilder.</span>
+<span class="c"># \param ParentScope      The parent scope containing this module declaration.</span>
+<span class="c"># \param Name             NameSpace name.</span>
+<span class="c"># \param NameLen          The length of the C string passed to \c Name.</span>
+<span class="c"># \param ExportSymbols    Whether or not the namespace exports symbols, e.g.</span>
+<span class="c">#                         this is true of C++ inline namespaces.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateNameSpace</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ParentScope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="nb">int</span> <span class="n">ExportSymbols</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for the specified subprogram.</span>
+<span class="c"># \param Builder         The \c DIBuilder.</span>
+<span class="c"># \param Scope           Function scope.</span>
+<span class="c"># \param Name            Function name.</span>
+<span class="c"># \param NameLen         Length of enumeration name.</span>
+<span class="c"># \param LinkageName     Mangled function name.</span>
+<span class="c"># \param LinkageNameLen  Length of linkage name.</span>
+<span class="c"># \param File            File where this variable is defined.</span>
+<span class="c"># \param LineNo          Line number.</span>
+<span class="c"># \param Ty              Function type.</span>
+<span class="c"># \param IsLocalToUnit   True if this function is not externally visible.</span>
+<span class="c"># \param IsDefinition    True if this is a function definition.</span>
+<span class="c"># \param ScopeLine       Set to the beginning of the scope this starts</span>
+<span class="c"># \param Flags           E.g.: \c LLVMDIFlagLValueReference. These flags are</span>
+<span class="c">#                        used to emit dwarf attributes.</span>
+<span class="c"># \param IsOptimized     True if optimization is ON.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateFunction</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">LinkageName</span><span class="p">,</span><span class="n">size_t</span> <span class="n">LinkageNameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="nb">int</span> <span class="n">IsLocalToUnit</span><span class="p">,</span><span class="nb">int</span> <span class="n">IsDefinition</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">ScopeLine</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="nb">int</span> <span class="n">IsOptimized</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for a lexical block with the specified parent context.</span>
+<span class="c"># \param Builder      The \c DIBuilder.</span>
+<span class="c"># \param Scope        Parent lexical block.</span>
+<span class="c"># \param File         Source file.</span>
+<span class="c"># \param Line         The line in the source file.</span>
+<span class="c"># \param Column       The column in the source file.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateLexicalBlock</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Column</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for a lexical block with a new file attached.</span>
+<span class="c"># \param Builder        The \c DIBuilder.</span>
+<span class="c"># \param Scope          Lexical block.</span>
+<span class="c"># \param File           Source file.</span>
+<span class="c"># \param Discriminator  DWARF path discriminator value.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateLexicalBlockFile</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Discriminator</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for an imported namespace. Suitable for e.g. C++</span>
+<span class="c"># using declarations.</span>
+<span class="c"># \param Builder    The \c DIBuilder.</span>
+<span class="c"># \param Scope      The scope this module is imported into</span>
+<span class="c"># \param File       File where the declaration is located.</span>
+<span class="c"># \param Line       Line number of the declaration.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateImportedModuleFromNamespace</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">NS</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for an imported module that aliases another</span>
+<span class="c"># imported entity descriptor.</span>
+<span class="c"># \param Builder        The \c DIBuilder.</span>
+<span class="c"># \param Scope          The scope this module is imported into</span>
+<span class="c"># \param ImportedEntity Previous imported entity to alias.</span>
+<span class="c"># \param File           File where the declaration is located.</span>
+<span class="c"># \param Line           Line number of the declaration.</span>
+<span class="c"># \param Elements       Renamed elements.</span>
+<span class="c"># \param NumElements    Number of renamed elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateImportedModuleFromAlias</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ImportedEntity</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for an imported module.</span>
+<span class="c"># \param Builder        The \c DIBuilder.</span>
+<span class="c"># \param Scope          The scope this module is imported into</span>
+<span class="c"># \param M              The module being imported here</span>
+<span class="c"># \param File           File where the declaration is located.</span>
+<span class="c"># \param Line           Line number of the declaration.</span>
+<span class="c"># \param Elements       Renamed elements.</span>
+<span class="c"># \param NumElements    Number of renamed elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateImportedModuleFromModule</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">M</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c">#   Create a descriptor for an imported function, type, or variable.  Suitable</span>
+<span class="c">#   for e.g. FORTRAN-style USE declarations.</span>
+<span class="c">#   \param Builder        The DIBuilder.</span>
+<span class="c">#   \param Scope          The scope this module is imported into.</span>
+<span class="c">#   \param Decl           The declaration (or definition) of a function, type,</span>
+<span class="c">#                         or variable.</span>
+<span class="c">#   \param File           File where the declaration is located.</span>
+<span class="c">#   \param Line           Line number of the declaration.</span>
+<span class="c">#   \param Name           A name that uniquely identifies this imported</span>
+<span class="c"># declaration.</span>
+<span class="c">#   \param NameLen        The length of the C string passed to \c Name.</span>
+<span class="c">#   \param Elements       Renamed elements.</span>
+<span class="c">#   \param NumElements    Number of renamed elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateImportedDeclaration</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Decl</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Creates a new DebugLocation that describes a source location.</span>
+<span class="c"># \param Line The line in the source file.</span>
+<span class="c"># \param Column The column in the source file.</span>
+<span class="c"># \param Scope The scope in which the location resides.</span>
+<span class="c"># \param InlinedAt The scope where this location was inlined, if at all.</span>
+<span class="c">#                  (optional).</span>
+<span class="c"># \note If the item to which this location is attached cannot be</span>
+<span class="c">#       attributed to a source line, pass 0 for the line and column.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateDebugLocation</span><span class="p">(</span><span class="n">LLVMContextRef</span> <span class="n">Ctx</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Column</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">InlinedAt</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the line number of this debug location.</span>
+<span class="c"># \param Location     The debug location.</span>
+<span class="c"># </span>
+<span class="c"># @see DILocation::getLine()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDILocationGetLine</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the column number of this debug location.</span>
+<span class="c"># \param Location     The debug location.</span>
+<span class="c"># </span>
+<span class="c"># @see DILocation::getColumn()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDILocationGetColumn</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the local scope associated with this debug location.</span>
+<span class="c"># \param Location     The debug location.</span>
+<span class="c"># </span>
+<span class="c"># @see DILocation::getScope()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDILocationGetScope</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the "inline at" location associated with this debug location.</span>
+<span class="c"># \param Location     The debug location.</span>
+<span class="c"># </span>
+<span class="c"># @see DILocation::getInlinedAt()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDILocationGetInlinedAt</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the metadata of the file associated with a given scope.</span>
+<span class="c"># \param Scope     The scope object.</span>
+<span class="c"># </span>
+<span class="c"># @see DIScope::getFile()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIScopeGetFile</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the directory of a given file.</span>
+<span class="c"># \param File     The file object.</span>
+<span class="c"># \param Len      The length of the returned string.</span>
+<span class="c"># </span>
+<span class="c"># @see DIFile::getDirectory()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">LLVMDIFileGetDirectory</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">Len</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the name of a given file.</span>
+<span class="c"># \param File     The file object.</span>
+<span class="c"># \param Len      The length of the returned string.</span>
+<span class="c"># </span>
+<span class="c"># @see DIFile::getFilename()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">LLVMDIFileGetFilename</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">Len</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the source of a given file.</span>
+<span class="c"># \param File     The file object.</span>
+<span class="c"># \param Len      The length of the returned string.</span>
+<span class="c"># </span>
+<span class="c"># @see DIFile::getSource()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">LLVMDIFileGetSource</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">Len</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a type array.</span>
+<span class="c"># \param Builder        The DIBuilder.</span>
+<span class="c"># \param Data           The type elements.</span>
+<span class="c"># \param NumElements    Number of type elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderGetOrCreateTypeArray</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create subroutine type.</span>
+<span class="c"># \param Builder        The DIBuilder.</span>
+<span class="c"># \param File            The file in which the subroutine resides.</span>
+<span class="c"># \param ParameterTypes  An array of subroutine parameter types. This</span>
+<span class="c">#                        includes return type at 0th index.</span>
+<span class="c"># \param NumParameterTypes The number of parameter types in \c ParameterTypes</span>
+<span class="c"># \param Flags           E.g.: \c LLVMDIFlagLValueReference.</span>
+<span class="c">#                        These flags are used to emit dwarf attributes.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateSubroutineType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">ParameterTypes</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumParameterTypes</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a macro.</span>
+<span class="c"># @param Builder         The DIBuilder.</span>
+<span class="c"># @param ParentMacroFile Macro parent (could be NULL).</span>
+<span class="c"># @param Line            Source line number where the macro is defined.</span>
+<span class="c"># @param RecordType      DW_MACINFO_define or DW_MACINFO_undef.</span>
+<span class="c"># @param Name            Macro name.</span>
+<span class="c"># @param NameLen         Macro name length.</span>
+<span class="c"># @param Value           Macro value.</span>
+<span class="c"># @param ValueLen        Macro value length.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateMacro</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ParentMacroFile</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="n">LLVMDWARFMacinfoRecordType</span> <span class="n">RecordType</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Value</span><span class="p">,</span><span class="n">size_t</span> <span class="n">ValueLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information temporary entry for a macro file.</span>
+<span class="c"># List of macro node direct children will be calculated by DIBuilder,</span>
+<span class="c"># using the \p ParentMacroFile relationship.</span>
+<span class="c"># @param Builder         The DIBuilder.</span>
+<span class="c"># @param ParentMacroFile Macro parent (could be NULL).</span>
+<span class="c"># @param Line            Source line number where the macro file is included.</span>
+<span class="c"># @param File            File descriptor containing the name of the macro file.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateTempMacroFile</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ParentMacroFile</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for an enumerator.</span>
+<span class="c"># @param Builder        The DIBuilder.</span>
+<span class="c"># @param Name           Enumerator name.</span>
+<span class="c"># @param NameLen        Length of enumerator name.</span>
+<span class="c"># @param Value          Enumerator value.</span>
+<span class="c"># @param IsUnsigned     True if the value is unsigned.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateEnumerator</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">Value</span><span class="p">,</span><span class="nb">int</span> <span class="n">IsUnsigned</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for an enumerator of arbitrary precision.</span>
+<span class="c"># @param Builder        The DIBuilder.</span>
+<span class="c"># @param Name           Enumerator name.</span>
+<span class="c"># @param NameLen        Length of enumerator name.</span>
+<span class="c"># @param SizeInBits     Number of bits of the value.</span>
+<span class="c"># @param Words          The words that make up the value.</span>
+<span class="c"># @param IsUnsigned     True if the value is unsigned.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateEnumeratorOfArbitraryPrecision</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">const</span> <span class="n">uint64_t</span> <span class="o">*</span> <span class="n">Words</span><span class="p">,</span><span class="nb">int</span> <span class="n">IsUnsigned</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for an enumeration.</span>
+<span class="c"># \param Builder        The DIBuilder.</span>
+<span class="c"># \param Scope          Scope in which this enumeration is defined.</span>
+<span class="c"># \param Name           Enumeration name.</span>
+<span class="c"># \param NameLen        Length of enumeration name.</span>
+<span class="c"># \param File           File where this member is defined.</span>
+<span class="c"># \param LineNumber     Line number.</span>
+<span class="c"># \param SizeInBits     Member size.</span>
+<span class="c"># \param AlignInBits    Member alignment.</span>
+<span class="c"># \param Elements       Enumeration elements.</span>
+<span class="c"># \param NumElements    Number of enumeration elements.</span>
+<span class="c"># \param ClassTy        Underlying type of a C++11/ObjC fixed enum.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateEnumerationType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ClassTy</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a union.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Scope        Scope in which this union is defined.</span>
+<span class="c"># \param Name         Union name.</span>
+<span class="c"># \param NameLen      Length of union name.</span>
+<span class="c"># \param File         File where this member is defined.</span>
+<span class="c"># \param LineNumber   Line number.</span>
+<span class="c"># \param SizeInBits   Member size.</span>
+<span class="c"># \param AlignInBits  Member alignment.</span>
+<span class="c"># \param Flags        Flags to encode member attribute, e.g. private</span>
+<span class="c"># \param Elements     Union elements.</span>
+<span class="c"># \param NumElements  Number of union elements.</span>
+<span class="c"># \param RunTimeLang  Optional parameter, Objective-C runtime version.</span>
+<span class="c"># \param UniqueId     A unique identifier for the union.</span>
+<span class="c"># \param UniqueIdLen  Length of unique identifier.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateUnionType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">RunTimeLang</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">UniqueId</span><span class="p">,</span><span class="n">size_t</span> <span class="n">UniqueIdLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for an array.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Size         Array size.</span>
+<span class="c"># \param AlignInBits  Alignment.</span>
+<span class="c"># \param Ty           Element type.</span>
+<span class="c"># \param Subscripts   Subscripts.</span>
+<span class="c"># \param NumSubscripts Number of subscripts.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateArrayType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">Size</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Subscripts</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumSubscripts</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a set.</span>
+<span class="c"># \param Builder        The DIBuilder.</span>
+<span class="c"># \param Scope          The scope in which the set is defined.</span>
+<span class="c"># \param Name           A name that uniquely identifies this set.</span>
+<span class="c"># \param NameLen        The length of the C string passed to \c Name.</span>
+<span class="c"># \param File           File where the set is located.</span>
+<span class="c"># \param Line           Line number of the declaration.</span>
+<span class="c"># \param SizeInBits     Set size.</span>
+<span class="c"># \param AlignInBits    Set alignment.</span>
+<span class="c"># \param BaseTy         The base type of the set.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateSetType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">BaseTy</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for a subrange with dynamic bounds.</span>
+<span class="c"># \param Builder    The DIBuilder.</span>
+<span class="c"># \param Scope      The scope in which the subrange is defined.</span>
+<span class="c"># \param Name       A name that uniquely identifies this subrange.</span>
+<span class="c"># \param NameLen    The length of the C string passed to \c Name.</span>
+<span class="c"># \param LineNo     Line number.</span>
+<span class="c"># \param File       File where the subrange is located.</span>
+<span class="c"># \param SizeInBits Member size.</span>
+<span class="c"># \param AlignInBits Member alignment.</span>
+<span class="c"># \param Flags      Flags.</span>
+<span class="c"># \param BaseTy     The base type of the subrange. eg integer or enumeration</span>
+<span class="c"># \param LowerBound Lower bound of the subrange.</span>
+<span class="c"># \param UpperBound Upper bound of the subrange.</span>
+<span class="c"># \param Stride     Stride of the subrange.</span>
+<span class="c"># \param Bias       Bias of the subrange.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateSubrangeType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">BaseTy</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">LowerBound</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">UpperBound</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Stride</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Bias</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a dynamic array.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Size         Array size.</span>
+<span class="c"># \param AlignInBits  Alignment.</span>
+<span class="c"># \param Ty           Element type.</span>
+<span class="c"># \param Subscripts   Subscripts.</span>
+<span class="c"># \param NumSubscripts Number of subscripts.</span>
+<span class="c"># \param DataLocation DataLocation. (DIVariable, DIExpression or NULL)</span>
+<span class="c"># \param Associated   Associated. (DIVariable, DIExpression or NULL)</span>
+<span class="c"># \param Allocated    Allocated. (DIVariable, DIExpression or NULL)</span>
+<span class="c"># \param Rank         Rank. (DIVariable, DIExpression or NULL)</span>
+<span class="c"># \param BitStride    BitStride.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateDynamicArrayType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">Size</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Subscripts</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumSubscripts</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DataLocation</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Associated</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Allocated</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Rank</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">BitStride</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Replace arrays.</span>
+<span class="c"># </span>
+<span class="c"># @see DIBuilder::replaceArrays()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMReplaceArrays</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">T</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a vector type.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Size         Vector size.</span>
+<span class="c"># \param AlignInBits  Alignment.</span>
+<span class="c"># \param Ty           Element type.</span>
+<span class="c"># \param Subscripts   Subscripts.</span>
+<span class="c"># \param NumSubscripts Number of subscripts.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateVectorType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">Size</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Subscripts</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumSubscripts</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a DWARF unspecified type.</span>
+<span class="c"># \param Builder   The DIBuilder.</span>
+<span class="c"># \param Name      The unspecified type's name.</span>
+<span class="c"># \param NameLen   Length of type name.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateUnspecifiedType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a basic</span>
+<span class="c"># type.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Name        Type name.</span>
+<span class="c"># \param NameLen     Length of type name.</span>
+<span class="c"># \param SizeInBits  Size of the type.</span>
+<span class="c"># \param Encoding    DWARF encoding code, e.g. \c LLVMDWARFTypeEncoding_float.</span>
+<span class="c"># \param Flags       Flags to encode optional attribute like endianity</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateBasicType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Encoding</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a pointer.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param PointeeTy         Type pointed by this pointer.</span>
+<span class="c"># \param SizeInBits        Size.</span>
+<span class="c"># \param AlignInBits       Alignment. (optional, pass 0 to ignore)</span>
+<span class="c"># \param AddressSpace      DWARF address space. (optional, pass 0 to ignore)</span>
+<span class="c"># \param MemorySpace       DWARF memory space (optional, pass 0 for none).</span>
+<span class="c"># \param Name              Pointer type name. (optional)</span>
+<span class="c"># \param NameLen           Length of pointer type name. (optional)</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreatePointerType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">PointeeTy</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">AddressSpace</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">MS</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a struct.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Scope        Scope in which this struct is defined.</span>
+<span class="c"># \param Name         Struct name.</span>
+<span class="c"># \param NameLen      Struct name length.</span>
+<span class="c"># \param File         File where this member is defined.</span>
+<span class="c"># \param LineNumber   Line number.</span>
+<span class="c"># \param SizeInBits   Member size.</span>
+<span class="c"># \param AlignInBits  Member alignment.</span>
+<span class="c"># \param Flags        Flags to encode member attribute, e.g. private</span>
+<span class="c"># \param Elements     Struct elements.</span>
+<span class="c"># \param NumElements  Number of struct elements.</span>
+<span class="c"># \param RunTimeLang  Optional parameter, Objective-C runtime version.</span>
+<span class="c"># \param VTableHolder The object containing the vtable for the struct.</span>
+<span class="c"># \param UniqueId     A unique identifier for the struct.</span>
+<span class="c"># \param UniqueIdLen  Length of the unique identifier for the struct.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateStructType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DerivedFrom</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">RunTimeLang</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VTableHolder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">UniqueId</span><span class="p">,</span><span class="n">size_t</span> <span class="n">UniqueIdLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a member.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Scope        Member scope.</span>
+<span class="c"># \param Name         Member name.</span>
+<span class="c"># \param NameLen      Length of member name.</span>
+<span class="c"># \param File         File where this member is defined.</span>
+<span class="c"># \param LineNo       Line number.</span>
+<span class="c"># \param SizeInBits   Member size.</span>
+<span class="c"># \param AlignInBits  Member alignment.</span>
+<span class="c"># \param OffsetInBits Member offset.</span>
+<span class="c"># \param Flags        Flags to encode member attribute, e.g. private</span>
+<span class="c"># \param Ty           Parent type.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateMemberType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">OffsetInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a</span>
+<span class="c"># C++ static data member.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Scope        Member scope.</span>
+<span class="c"># \param Name         Member name.</span>
+<span class="c"># \param NameLen      Length of member name.</span>
+<span class="c"># \param File         File where this member is declared.</span>
+<span class="c"># \param LineNumber   Line number.</span>
+<span class="c"># \param Type         Type of the static member.</span>
+<span class="c"># \param Flags        Flags to encode member attribute, e.g. private.</span>
+<span class="c"># \param ConstantVal  Const initializer of the member.</span>
+<span class="c"># \param AlignInBits  Member alignment.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateStaticMemberType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">ConstantVal</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a pointer to member.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param PointeeType  Type pointed to by this pointer.</span>
+<span class="c"># \param ClassType    Type for which this pointer points to members of.</span>
+<span class="c"># \param SizeInBits   Size.</span>
+<span class="c"># \param AlignInBits  Alignment.</span>
+<span class="c"># \param Flags        Flags.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateMemberPointerType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">PointeeType</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">ClassType</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for Objective-C instance variable.</span>
+<span class="c"># \param Builder      The DIBuilder.</span>
+<span class="c"># \param Name         Member name.</span>
+<span class="c"># \param NameLen      The length of the C string passed to \c Name.</span>
+<span class="c"># \param File         File where this member is defined.</span>
+<span class="c"># \param LineNo       Line number.</span>
+<span class="c"># \param SizeInBits   Member size.</span>
+<span class="c"># \param AlignInBits  Member alignment.</span>
+<span class="c"># \param OffsetInBits Member offset.</span>
+<span class="c"># \param Flags        Flags to encode member attribute, e.g. private</span>
+<span class="c"># \param Ty           Parent type.</span>
+<span class="c"># \param PropertyNode Property associated with this ivar.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateObjCIVar</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">OffsetInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">PropertyNode</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for Objective-C property.</span>
+<span class="c"># \param Builder            The DIBuilder.</span>
+<span class="c"># \param Name               Property name.</span>
+<span class="c"># \param NameLen            The length of the C string passed to \c Name.</span>
+<span class="c"># \param File               File where this property is defined.</span>
+<span class="c"># \param LineNo             Line number.</span>
+<span class="c"># \param GetterName         Name of the Objective C property getter selector.</span>
+<span class="c"># \param GetterNameLen      The length of the C string passed to \c GetterName.</span>
+<span class="c"># \param SetterName         Name of the Objective C property setter selector.</span>
+<span class="c"># \param SetterNameLen      The length of the C string passed to \c SetterName.</span>
+<span class="c"># \param PropertyAttributes Objective C property attributes.</span>
+<span class="c"># \param Ty                 Type.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateObjCProperty</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">GetterName</span><span class="p">,</span><span class="n">size_t</span> <span class="n">GetterNameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">SetterName</span><span class="p">,</span><span class="n">size_t</span> <span class="n">SetterNameLen</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">PropertyAttributes</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a uniqued DIType* clone with FlagObjectPointer. If \c Implicit</span>
+<span class="c"># is true, then also set FlagArtificial.</span>
+<span class="c"># \param Builder   The DIBuilder.</span>
+<span class="c"># \param Type      The underlying type to which this pointer points.</span>
+<span class="c"># \param Implicit  Indicates whether this pointer was implicitly generated</span>
+<span class="c">#                  (i.e., not spelled out in source).</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateObjectPointerType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">,</span><span class="nb">int</span> <span class="n">Implicit</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a qualified</span>
+<span class="c"># type, e.g. 'const int'.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Tag         Tag identifying type,</span>
+<span class="c">#                    e.g. LLVMDWARFTypeQualifier_volatile_type</span>
+<span class="c"># \param Type        Base Type.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateQualifiedType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Tag</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a c++</span>
+<span class="c"># style reference or rvalue reference type.</span>
+<span class="c"># \param Builder   The DIBuilder.</span>
+<span class="c"># \param Tag       Tag identifying type,</span>
+<span class="c"># \param Type      Base Type.</span>
+<span class="c"># \param AddressSpace      DWARF address space. (optional, pass 0 to ignore)</span>
+<span class="c"># \param MemorySpace       DWARF memory space (optional, pass 0 for none).</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateReferenceType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Tag</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">AddressSpace</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">MemorySpace</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create C++11 nullptr type.</span>
+<span class="c"># \param Builder   The DIBuilder.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateNullPtrType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a typedef.</span>
+<span class="c"># \param Builder    The DIBuilder.</span>
+<span class="c"># \param Type       Original type.</span>
+<span class="c"># \param Name       Typedef name.</span>
+<span class="c"># \param File       File where this type is defined.</span>
+<span class="c"># \param LineNo     Line number.</span>
+<span class="c"># \param Scope      The surrounding context for the typedef.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateTypedef</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry to establish inheritance relationship</span>
+<span class="c"># between two types.</span>
+<span class="c"># \param Builder       The DIBuilder.</span>
+<span class="c"># \param Ty            Original type.</span>
+<span class="c"># \param BaseTy        Base type. Ty is inherits from base.</span>
+<span class="c"># \param BaseOffset    Base offset.</span>
+<span class="c"># \param VBPtrOffset  Virtual base pointer offset.</span>
+<span class="c"># \param Flags         Flags to describe inheritance attribute, e.g. private</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateInheritance</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">BaseTy</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">BaseOffset</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">VBPtrOffset</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a permanent forward-declared type.</span>
+<span class="c"># \param Builder             The DIBuilder.</span>
+<span class="c"># \param Tag                 A unique tag for this type.</span>
+<span class="c"># \param Name                Type name.</span>
+<span class="c"># \param NameLen             Length of type name.</span>
+<span class="c"># \param Scope               Type scope.</span>
+<span class="c"># \param File                File where this type is defined.</span>
+<span class="c"># \param Line                Line number where this type is defined.</span>
+<span class="c"># \param RuntimeLang         Indicates runtime version for languages like</span>
+<span class="c">#                            Objective-C.</span>
+<span class="c"># \param SizeInBits          Member size.</span>
+<span class="c"># \param AlignInBits         Member alignment.</span>
+<span class="c"># \param UniqueIdentifier    A unique identifier for the type.</span>
+<span class="c"># \param UniqueIdentifierLen Length of the unique identifier.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateForwardDecl</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Tag</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">RuntimeLang</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">UniqueIdentifier</span><span class="p">,</span><span class="n">size_t</span> <span class="n">UniqueIdentifierLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a temporary forward-declared type.</span>
+<span class="c"># \param Builder             The DIBuilder.</span>
+<span class="c"># \param Tag                 A unique tag for this type.</span>
+<span class="c"># \param Name                Type name.</span>
+<span class="c"># \param NameLen             Length of type name.</span>
+<span class="c"># \param Scope               Type scope.</span>
+<span class="c"># \param File                File where this type is defined.</span>
+<span class="c"># \param Line                Line number where this type is defined.</span>
+<span class="c"># \param RuntimeLang         Indicates runtime version for languages like</span>
+<span class="c">#                            Objective-C.</span>
+<span class="c"># \param SizeInBits          Member size.</span>
+<span class="c"># \param AlignInBits         Member alignment.</span>
+<span class="c"># \param Flags               Flags.</span>
+<span class="c"># \param UniqueIdentifier    A unique identifier for the type.</span>
+<span class="c"># \param UniqueIdentifierLen Length of the unique identifier.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateReplaceableCompositeType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Tag</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">Line</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">RuntimeLang</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">UniqueIdentifier</span><span class="p">,</span><span class="n">size_t</span> <span class="n">UniqueIdentifierLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a bit field member.</span>
+<span class="c"># \param Builder             The DIBuilder.</span>
+<span class="c"># \param Scope               Member scope.</span>
+<span class="c"># \param Name                Member name.</span>
+<span class="c"># \param NameLen             Length of member name.</span>
+<span class="c"># \param File                File where this member is defined.</span>
+<span class="c"># \param LineNumber          Line number.</span>
+<span class="c"># \param SizeInBits          Member size.</span>
+<span class="c"># \param OffsetInBits        Member offset.</span>
+<span class="c"># \param StorageOffsetInBits Member storage offset.</span>
+<span class="c"># \param Flags               Flags to encode member attribute.</span>
+<span class="c"># \param Type                Parent type.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateBitFieldMemberType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">OffsetInBits</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">StorageOffsetInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create debugging information entry for a class.</span>
+<span class="c"># \param Scope               Scope in which this class is defined.</span>
+<span class="c"># \param Name                Class name.</span>
+<span class="c"># \param NameLen             The length of the C string passed to \c Name.</span>
+<span class="c"># \param File                File where this member is defined.</span>
+<span class="c"># \param LineNumber          Line number.</span>
+<span class="c"># \param SizeInBits          Member size.</span>
+<span class="c"># \param AlignInBits         Member alignment.</span>
+<span class="c"># \param OffsetInBits        Member offset.</span>
+<span class="c"># \param Flags               Flags to encode member attribute, e.g. private.</span>
+<span class="c"># \param DerivedFrom         Debug info of the base class of this type.</span>
+<span class="c"># \param Elements            Class members.</span>
+<span class="c"># \param NumElements         Number of class elements.</span>
+<span class="c"># \param VTableHolder        Debug info of the base class that contains vtable</span>
+<span class="c">#                            for this type. This is used in</span>
+<span class="c">#                            DW_AT_containing_type. See DWARF documentation</span>
+<span class="c">#                            for more info.</span>
+<span class="c"># \param TemplateParamsNode  Template type parameters.</span>
+<span class="c"># \param UniqueIdentifier    A unique identifier for the type.</span>
+<span class="c"># \param UniqueIdentifierLen Length of the unique identifier.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateClassType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNumber</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">SizeInBits</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">OffsetInBits</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DerivedFrom</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Elements</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">NumElements</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VTableHolder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">TemplateParamsNode</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">UniqueIdentifier</span><span class="p">,</span><span class="n">size_t</span> <span class="n">UniqueIdentifierLen</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a uniqued DIType* clone with FlagArtificial set.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Type        The underlying type.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateArtificialType</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Type</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the name of this DIType.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># \param Length    The length of the returned string.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getName()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">LLVMDITypeGetName</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">Length</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the size of this DIType in bits.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getSizeInBits()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">uint64_t</span> <span class="nf">LLVMDITypeGetSizeInBits</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the offset of this DIType in bits.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getOffsetInBits()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">uint64_t</span> <span class="nf">LLVMDITypeGetOffsetInBits</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the alignment of this DIType in bits.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getAlignInBits()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">uint32_t</span> <span class="nf">LLVMDITypeGetAlignInBits</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the source line where this DIType is declared.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getLine()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDITypeGetLine</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the flags associated with this DIType.</span>
+<span class="c"># \param DType     The DIType.</span>
+<span class="c"># </span>
+<span class="c"># @see DIType::getFlags()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDIFlags</span> <span class="nf">LLVMDITypeGetFlags</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">DType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a descriptor for a value range.</span>
+<span class="c"># \param Builder    The DIBuilder.</span>
+<span class="c"># \param LowerBound Lower bound of the subrange, e.g. 0 for C, 1 for Fortran.</span>
+<span class="c"># \param Count      Count of elements in the subrange.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderGetOrCreateSubrange</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">LowerBound</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">Count</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create an array of DI Nodes.</span>
+<span class="c"># \param Builder        The DIBuilder.</span>
+<span class="c"># \param Data           The DI Node elements.</span>
+<span class="c"># \param NumElements    Number of DI Node elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderGetOrCreateArray</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for the specified variable which has a complex</span>
+<span class="c"># address expression for its address.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Addr        An array of complex address operations.</span>
+<span class="c"># \param Length      Length of the address operation array.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateExpression</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">Addr</span><span class="p">,</span><span class="n">size_t</span> <span class="n">Length</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for the specified variable that does not have an</span>
+<span class="c"># address, but does have a constant value.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Value       The constant value.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateConstantValueExpression</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">Value</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for the specified variable.</span>
+<span class="c"># \param Scope       Variable scope.</span>
+<span class="c"># \param Name        Name of the variable.</span>
+<span class="c"># \param NameLen     The length of the C string passed to \c Name.</span>
+<span class="c"># \param Linkage     Mangled  name of the variable.</span>
+<span class="c"># \param LinkLen     The length of the C string passed to \c Linkage.</span>
+<span class="c"># \param File        File where this variable is defined.</span>
+<span class="c"># \param LineNo      Line number.</span>
+<span class="c"># \param Ty          Variable Type.</span>
+<span class="c"># \param LocalToUnit Boolean flag indicate whether this variable is</span>
+<span class="c">#                    externally visible or not.</span>
+<span class="c"># \param Expr        The location of the global relative to the attached</span>
+<span class="c">#                    GlobalVariable.</span>
+<span class="c"># \param Decl        Reference to the corresponding declaration.</span>
+<span class="c">#                    variables.</span>
+<span class="c"># \param AlignInBits Variable alignment(or 0 if no alignment attr was</span>
+<span class="c">#                    specified)</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateGlobalVariableExpression</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Linkage</span><span class="p">,</span><span class="n">size_t</span> <span class="n">LinkLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="nb">int</span> <span class="n">LocalToUnit</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Expr</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Decl</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">MS</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the dwarf::Tag of a DINode</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">uint16_t</span> <span class="nf">LLVMGetDINodeTag</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">MD</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Retrieves the \c DIVariable associated with this global variable expression.</span>
+<span class="c"># \param GVE    The global variable expression.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::DIGlobalVariableExpression::getVariable()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIGlobalVariableExpressionGetVariable</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">GVE</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Retrieves the \c DIExpression associated with this global variable expression.</span>
+<span class="c"># \param GVE    The global variable expression.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::DIGlobalVariableExpression::getExpression()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIGlobalVariableExpressionGetExpression</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">GVE</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the metadata of the file associated with a given variable.</span>
+<span class="c"># \param Var     The variable object.</span>
+<span class="c"># </span>
+<span class="c"># @see DIVariable::getFile()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIVariableGetFile</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Var</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the metadata of the scope associated with a given variable.</span>
+<span class="c"># \param Var     The variable object.</span>
+<span class="c"># </span>
+<span class="c"># @see DIVariable::getScope()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIVariableGetScope</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Var</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the source line where this \c DIVariable is declared.</span>
+<span class="c"># \param Var     The DIVariable.</span>
+<span class="c"># </span>
+<span class="c"># @see DIVariable::getLine()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDIVariableGetLine</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Var</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new temporary \c MDNode.  Suitable for use in constructing cyclic</span>
+<span class="c"># \c MDNode structures. A temporary \c MDNode is not uniqued, may be RAUW'd,</span>
+<span class="c"># and must be manually deleted with \c LLVMDisposeTemporaryMDNode.</span>
+<span class="c"># \param Ctx            The context in which to construct the temporary node.</span>
+<span class="c"># \param Data           The metadata elements.</span>
+<span class="c"># \param NumElements    Number of metadata elements.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMTemporaryMDNode</span><span class="p">(</span><span class="n">LLVMContextRef</span> <span class="n">Ctx</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="o">*</span> <span class="n">Data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NumElements</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Deallocate a temporary node.</span>
+<span class="c"># </span>
+<span class="c"># Calls \c replaceAllUsesWith(nullptr) before deleting, so any remaining</span>
+<span class="c"># references will be reset.</span>
+<span class="c"># \param TempNode    The temporary metadata node.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMDisposeTemporaryMDNode</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">TempNode</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Replace all uses of temporary metadata.</span>
+<span class="c"># \param TempTargetMetadata    The temporary metadata node.</span>
+<span class="c"># \param Replacement           The replacement metadata node.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMMetadataReplaceAllUsesWith</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">TempTargetMetadata</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Replacement</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for the specified global variable that is temporary</span>
+<span class="c"># and meant to be RAUWed.</span>
+<span class="c"># \param Scope       Variable scope.</span>
+<span class="c"># \param Name        Name of the variable.</span>
+<span class="c"># \param NameLen     The length of the C string passed to \c Name.</span>
+<span class="c"># \param Linkage     Mangled  name of the variable.</span>
+<span class="c"># \param LnkLen      The length of the C string passed to \c Linkage.</span>
+<span class="c"># \param File        File where this variable is defined.</span>
+<span class="c"># \param LineNo      Line number.</span>
+<span class="c"># \param Ty          Variable Type.</span>
+<span class="c"># \param LocalToUnit Boolean flag indicate whether this variable is</span>
+<span class="c">#                    externally visible or not.</span>
+<span class="c"># \param Decl        Reference to the corresponding declaration.</span>
+<span class="c"># \param AlignInBits Variable alignment(or 0 if no alignment attr was</span>
+<span class="c">#                    specified)</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateTempGlobalVariableFwdDecl</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Linkage</span><span class="p">,</span><span class="n">size_t</span> <span class="n">LnkLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="nb">int</span> <span class="n">LocalToUnit</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Decl</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Only use in "new debug format" (LLVMIsNewDbgInfoFormat() is true).</span>
+<span class="c"># See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes</span>
+<span class="c"># </span>
+<span class="c"># The debug format can be switched later after inserting the records using</span>
+<span class="c"># LLVMSetIsNewDbgInfoFormat, if needed for legacy or transitionary reasons.</span>
+<span class="c"># </span>
+<span class="c"># Insert a Declare DbgRecord before the given instruction.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Storage     The storage of the variable to declare.</span>
+<span class="c"># \param VarInfo     The variable's debug info descriptor.</span>
+<span class="c"># \param Expr        A complex location expression for the variable.</span>
+<span class="c"># \param DebugLoc    Debug info location.</span>
+<span class="c"># \param Instr       Instruction acting as a location for the new record.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertDeclareRecordBefore</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Storage</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VarInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Expr</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DebugLoc</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Instr</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Only use in "new debug format" (LLVMIsNewDbgInfoFormat() is true).</span>
+<span class="c"># See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes</span>
+<span class="c"># </span>
+<span class="c"># The debug format can be switched later after inserting the records using</span>
+<span class="c"># LLVMSetIsNewDbgInfoFormat, if needed for legacy or transitionary reasons.</span>
+<span class="c"># </span>
+<span class="c"># Insert a Declare DbgRecord at the end of the given basic block. If the basic</span>
+<span class="c"># block has a terminator instruction, the record is inserted before that</span>
+<span class="c"># terminator instruction.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Storage     The storage of the variable to declare.</span>
+<span class="c"># \param VarInfo     The variable's debug info descriptor.</span>
+<span class="c"># \param Expr        A complex location expression for the variable.</span>
+<span class="c"># \param DebugLoc    Debug info location.</span>
+<span class="c"># \param Block       Basic block acting as a location for the new record.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertDeclareRecordAtEnd</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Storage</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VarInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Expr</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DebugLoc</span><span class="p">,</span><span class="n">LLVMBasicBlockRef</span> <span class="n">Block</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Only use in "new debug format" (LLVMIsNewDbgInfoFormat() is true).</span>
+<span class="c"># See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes</span>
+<span class="c"># </span>
+<span class="c"># The debug format can be switched later after inserting the records using</span>
+<span class="c"># LLVMSetIsNewDbgInfoFormat, if needed for legacy or transitionary reasons.</span>
+<span class="c"># </span>
+<span class="c"># Insert a new debug record before the given instruction.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Val         The value of the variable.</span>
+<span class="c"># \param VarInfo     The variable's debug info descriptor.</span>
+<span class="c"># \param Expr        A complex location expression for the variable.</span>
+<span class="c"># \param DebugLoc    Debug info location.</span>
+<span class="c"># \param Instr       Instruction acting as a location for the new record.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertDbgValueRecordBefore</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Val</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VarInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Expr</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DebugLoc</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Instr</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Only use in "new debug format" (LLVMIsNewDbgInfoFormat() is true).</span>
+<span class="c"># See https://llvm.org/docs/RemoveDIsDebugInfo.html#c-api-changes</span>
+<span class="c"># </span>
+<span class="c"># The debug format can be switched later after inserting the records using</span>
+<span class="c"># LLVMSetIsNewDbgInfoFormat, if needed for legacy or transitionary reasons.</span>
+<span class="c"># </span>
+<span class="c"># Insert a new debug record at the end of the given basic block. If the</span>
+<span class="c"># basic block has a terminator instruction, the record is inserted before</span>
+<span class="c"># that terminator instruction.</span>
+<span class="c"># \param Builder     The DIBuilder.</span>
+<span class="c"># \param Val         The value of the variable.</span>
+<span class="c"># \param VarInfo     The variable's debug info descriptor.</span>
+<span class="c"># \param Expr        A complex location expression for the variable.</span>
+<span class="c"># \param DebugLoc    Debug info location.</span>
+<span class="c"># \param Block       Basic block acting as a location for the new record.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertDbgValueRecordAtEnd</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">Val</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">VarInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Expr</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">DebugLoc</span><span class="p">,</span><span class="n">LLVMBasicBlockRef</span> <span class="n">Block</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for a local auto variable.</span>
+<span class="c"># \param Builder         The DIBuilder.</span>
+<span class="c"># \param Scope           The local scope the variable is declared in.</span>
+<span class="c"># \param Name            Variable name.</span>
+<span class="c"># \param NameLen         Length of variable name.</span>
+<span class="c"># \param File            File where this variable is defined.</span>
+<span class="c"># \param LineNo          Line number.</span>
+<span class="c"># \param Ty              Metadata describing the type of the variable.</span>
+<span class="c"># \param AlwaysPreserve  If true, this descriptor will survive optimizations.</span>
+<span class="c"># \param Flags           Flags.</span>
+<span class="c"># \param AlignInBits     Variable alignment.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateAutoVariable</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="nb">int</span> <span class="n">AlwaysPreserve</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">MS</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">AlignInBits</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for a function parameter variable.</span>
+<span class="c"># \param Builder         The DIBuilder.</span>
+<span class="c"># \param Scope           The local scope the variable is declared in.</span>
+<span class="c"># \param Name            Variable name.</span>
+<span class="c"># \param NameLen         Length of variable name.</span>
+<span class="c"># \param ArgNo           Unique argument number for this variable; starts at 1.</span>
+<span class="c"># \param File            File where this variable is defined.</span>
+<span class="c"># \param LineNo          Line number.</span>
+<span class="c"># \param Ty              Metadata describing the type of the variable.</span>
+<span class="c"># \param AlwaysPreserve  If true, this descriptor will survive optimizations.</span>
+<span class="c"># \param Flags           Flags.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateParameterVariable</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Scope</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">ArgNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Ty</span><span class="p">,</span><span class="nb">int</span> <span class="n">AlwaysPreserve</span><span class="p">,</span><span class="n">LLVMDIFlags</span> <span class="n">Flags</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the metadata of the subprogram attached to a function.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::Function::getSubprogram()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMGetSubprogram</span><span class="p">(</span><span class="n">LLVMValueRef</span> <span class="n">Func</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Set the subprogram attached to a function.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::Function::setSubprogram()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMSetSubprogram</span><span class="p">(</span><span class="n">LLVMValueRef</span> <span class="n">Func</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">SP</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the line associated with a given subprogram.</span>
+<span class="c"># \param Subprogram     The subprogram object.</span>
+<span class="c"># </span>
+<span class="c"># @see DISubprogram::getLine()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMDISubprogramGetLine</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Subprogram</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Replace the subprogram subroutine type.</span>
+<span class="c"># \param Subprogram        The subprogram object.</span>
+<span class="c"># \param SubroutineType    The new subroutine type.</span>
+<span class="c"># </span>
+<span class="c"># @see DISubprogram::replaceType()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMDISubprogramReplaceType</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Subprogram</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">SubroutineType</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Get the debug location for the given instruction.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::Instruction::getDebugLoc()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMInstructionGetDebugLoc</span><span class="p">(</span><span class="n">LLVMValueRef</span> <span class="n">Inst</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Set the debug location for the given instruction.</span>
+<span class="c"># </span>
+<span class="c"># To clear the location metadata of the given instruction, pass NULL to \p Loc.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::Instruction::setDebugLoc()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">LLVMInstructionSetDebugLoc</span><span class="p">(</span><span class="n">LLVMValueRef</span> <span class="n">Inst</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Loc</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Create a new descriptor for a label</span>
+<span class="c"># </span>
+<span class="c"># \param Builder         The DIBuilder.</span>
+<span class="c"># \param Scope           The scope to create the label in.</span>
+<span class="c"># \param Name            Variable name.</span>
+<span class="c"># \param NameLen         Length of variable name.</span>
+<span class="c"># \param File            The file to create the label in.</span>
+<span class="c"># \param LineNo          Line Number.</span>
+<span class="c"># \param AlwaysPreserve  Preserve the label regardless of optimization.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::DIBuilder::createLabel()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMMetadataRef</span> <span class="nf">LLVMDIBuilderCreateLabel</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Context</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">Name</span><span class="p">,</span><span class="n">size_t</span> <span class="n">NameLen</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">File</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">LineNo</span><span class="p">,</span><span class="nb">int</span> <span class="n">AlwaysPreserve</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Insert a new llvm.dbg.label intrinsic call</span>
+<span class="c"># </span>
+<span class="c"># \param Builder         The DIBuilder.</span>
+<span class="c"># \param LabelInfo       The Label's debug info descriptor</span>
+<span class="c"># \param Location        The debug info location</span>
+<span class="c"># \param InsertBefore    Location for the new intrinsic.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::DIBuilder::insertLabel()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertLabelBefore</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">LabelInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">,</span><span class="n">LLVMValueRef</span> <span class="n">InsertBefore</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Insert a new llvm.dbg.label intrinsic call</span>
+<span class="c"># </span>
+<span class="c"># \param Builder         The DIBuilder.</span>
+<span class="c"># \param LabelInfo       The Label's debug info descriptor</span>
+<span class="c"># \param Location        The debug info location</span>
+<span class="c"># \param InsertAtEnd     Location for the new intrinsic.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::DIBuilder::insertLabel()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">LLVMDbgRecordRef</span> <span class="nf">LLVMDIBuilderInsertLabelAtEnd</span><span class="p">(</span><span class="n">LLVMDIBuilderRef</span> <span class="n">Builder</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">LabelInfo</span><span class="p">,</span><span class="n">LLVMMetadataRef</span> <span class="n">Location</span><span class="p">,</span><span class="n">LLVMBasicBlockRef</span> <span class="n">InsertAtEnd</span><span class="p">)</span>
+
+
+<span class="c"># </span>
+<span class="c"># Obtain the enumerated type of a Metadata instance.</span>
+<span class="c"># </span>
+<span class="c"># @see llvm::Metadata::getMetadataID()</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="nf">LLVMGetMetadataKind</span><span class="p">(</span><span class="n">LLVMMetadataRef</span> <span class="n">Metadata</span><span class="p">)</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__debuginfo_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.llvm.c.cylto.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.llvm.c.cylto</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.llvm.c.cyexecutionengine.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.llvm.c.cyexecutionengine</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

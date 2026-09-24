@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Adapter Types — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/5_adapters';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="6_build_from_source.html" rel="next" title="Building from Source"/>
+<link href="4_numba_hip.html" rel="prev" title="Kernel Programming in Python with Numba HIP"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">Adapter Types</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Adapter Types</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-usage-in-hip-python">Pointer: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cstr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cstr-usage-in-hip-python">CStr: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray-usage-in-hip-python">DeviceArray: Usage in HIP Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types">List Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types-usage-in-hip-python">List Types: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rank-0-pointer-types">Rank-0 Pointer Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-type-for-hipmodulelaunchkernel">Helper type for <code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autogenerated-wrapper-types">Autogenerated Wrapper Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-the-adapter-types">Properties of the Adapter Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="adapter-types">
+<span id="ch-datatypes"></span><h1>Adapter Types<a class="headerlink" href="#adapter-types" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-08-31
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            10 min read
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>This chapter highlights some of the datatypes that HIP Python’s Python
+interfaces use to convert various Python objects to the C datatypes expected
+by the routines of the HIP C API.</p>
+<p>While generic types are defined in module <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#module-rocm.bindings.util.types" title="rocm.bindings.util.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.util.types</span></code></a>,
+specific helper types for <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#module-rocm.bindings.hip" title="rocm.bindings.hip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.hip</span></code></a> are defined in
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings._hip_helpers</span></code> (handcoded helper module).</p>
+<section id="pointer">
+<span id="sec-pointer"></span><h2><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><a class="headerlink" href="#pointer" title="Link to this heading">#</a></h2>
+<p>Whenever a C function signature argument of pointer type is too generic —
+e.g., already if it is a C <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> pointer — HIP Python’s code generator
+uses the <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types.Pointer</span></code></a> adapter to convert a select list of Python
+objects to the pointer type expected by the C function:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the adapter’s pointer attribute to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>The adapter copies the pointer attribute.
+Python buffer handle ownership, if the input object has acquired one, is not
+transferred.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The adapter interprets the <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>Copies the <code class="docutils literal notranslate"><span class="pre">value</span></code> member.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the <a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a>
+protocol:</p>
+<p>Retrieves the address from the <code class="docutils literal notranslate"><span class="pre">"data"</span></code> tuple of the
+<code class="docutils literal notranslate"><span class="pre">__cuda_array_interface</span></code> member of the object.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the
+<a class="reference external" href="https://docs.python.org/3/c-api/buffer.html">Python buffer protocol</a>:</p>
+<p>If the object represents a simple contiguous array, the adapter acquires the
+buffer handle and retrieves the buffer. Releases the handle at time of
+destruction.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+<section id="pointer-usage-in-hip-python">
+<h3>Pointer: Usage in HIP Python<a class="headerlink" href="#pointer-usage-in-hip-python" title="Link to this heading">#</a></h3>
+<p>The type is typically used as argument in the following scenarios:</p>
+<ul class="simple">
+<li><p>When modeling generic first-degree pointers of basic type — however,
+typically not for (<code class="docutils literal notranslate"><span class="pre">const</span></code>) <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> — or generic first-degree pointers of
+type <code class="docutils literal notranslate"><span class="pre">void</span></code> type.</p></li>
+<li><p>When modeling in-out scalar arguments, where the user supplies
+<code class="docutils literal notranslate"><span class="pre">ctypes.addressof(myscalar)</span></code> as argument.</p></li>
+<li><p>As place-holder whenever a complicated type expression of pointer type has
+not been analyzed yet.</p></li>
+</ul>
+</section>
+</section>
+<section id="cstr">
+<span id="sec-cstr"></span><h2><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a><a class="headerlink" href="#cstr" title="Link to this heading">#</a></h2>
+<p>A C <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> is, in the overwhelming majority of C APIs, a NUL-terminated
+string. HIP Python’s code generator therefore uses the
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a> adapter — and not the generic
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> — for <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> arguments, <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> return
+values, and <code class="docutils literal notranslate"><span class="pre">char[]</span></code> record fields.</p>
+<p>You can pass a Python <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> wherever such an argument is expected;
+the adapter UTF-8 encodes it for you, so byte-string literals and manual
+<code class="docutils literal notranslate"><span class="pre">.encode("utf-8")</span></code> calls are not needed:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 55 </span><span class="caption-text">Passing <code class="docutils literal notranslate"><span class="pre">str</span></code> Where the C API Expects a <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code></span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rocm.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">hip</span><span class="p">,</span> <span class="n">hiprtc</span>
+
+<span class="n">err</span><span class="p">,</span> <span class="n">prog</span> <span class="o">=</span> <span class="n">hiprtc</span><span class="o">.</span><span class="n">hiprtcCreateProgram</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">"my_program"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+<span class="c1"># ...</span>
+<span class="n">err</span><span class="p">,</span> <span class="n">kernel</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">hipModuleGetFunction</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">"my_kernel"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The adapter can be initialized from the following Python objects:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>Takes the pointer address <code class="docutils literal notranslate"><span class="pre">pyobj.value</span></code>. Length information must be
+obtained via <code class="docutils literal notranslate"><span class="pre">strlen</span></code> in this case. (This type must be checked before the
+buffer protocol because <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a> is also identified as a
+Python buffer.)</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>:</p>
+<p>UTF-8 encoded, then interned (see the note below). The adapter’s pointer
+refers to the encoded bytes.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>:</p>
+<p>Interned as-is (see the note below).</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the
+<a class="reference external" href="https://docs.python.org/3/c-api/buffer.html">Python buffer protocol</a>,
+e.g. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytearray" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytearray</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#memoryview" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">memoryview</span></code></a>, or a NumPy array:</p>
+<p>If the object represents a simple contiguous array, the adapter acquires the
+buffer handle and takes the buffer’s address. It releases the handle at time
+of destruction. (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a> also implements this protocol but is
+intercepted by the dedicated branch above.)</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that is accepted as input by the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> routine of
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>.</p></li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> and <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a> inputs are <em>interned</em>: the adapter keeps
+the encoded bytes in the class-level <code class="docutils literal notranslate"><span class="pre">CStr._retained_inputs</span></code>
+dictionary for the lifetime of the program. The C pointer handed to the
+backend therefore stays valid even after the adapter instance is collected,
+and even if the backend retains the pointer past the call’s return — the
+COMGR compile cache behind <a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#module-rocm.bindings.hiprtc" title="rocm.bindings.hiprtc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.hiprtc</span></code></a> does exactly
+that. You do not have to keep the Python string alive yourself.</p>
+<p>Repeated calls with equal content reuse the same canonical bytes object,
+and therefore the same C pointer, so backend caches keyed on pointer
+identity still hit. The table grows only with the number of <em>distinct</em>
+string contents ever passed.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The pin above applies to <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> and <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a> only. A
+buffer-protocol source (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytearray" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytearray</span></code></a>, a NumPy array, …) is pinned
+for the adapter instance’s lifetime alone. If the C library stores the
+pointer and your adapter then goes out of scope, you can get memory
+errors — pass a <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> / <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>, or hold a Python-side
+reference for as long as the backend may dereference the pointer.</p>
+</div>
+<section id="cstr-usage-in-hip-python">
+<h3>CStr: Usage in HIP Python<a class="headerlink" href="#cstr-usage-in-hip-python" title="Link to this heading">#</a></h3>
+<p>The adapter appears in three roles:</p>
+<ul class="simple">
+<li><p>As <strong>input</strong> adapter for string arguments, e.g. the program name and source
+of <a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCreateProgram" title="rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a>, the kernel name of
+<a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipModuleGetFunction" title="rocm.bindings.hip.hipModuleGetFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleGetFunction</span></code></a>, and the module, function, and value names
+throughout the LLVM-C bindings in <a class="reference internal" href="../python_api/rocm/bindings/llvm/c/index.html#module-rocm.bindings.llvm.c" title="rocm.bindings.llvm.c"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.llvm.c</span></code></a>.</p></li>
+<li><p>As <strong>return value</strong> for functions that return a <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code>, e.g.
+<a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipGetErrorString" title="rocm.bindings.hip.hipGetErrorString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipGetErrorString</span></code></a>. Use <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a> on the
+result to decode it; the type also implements the buffer protocol.</p></li>
+<li><p>As <strong>binding-allocated output buffer</strong>. Where the C API expects the caller
+to supply a <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code> buffer plus its size —
+<a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipDeviceGetName" title="rocm.bindings.hip.hipDeviceGetName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipDeviceGetName</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipDeviceGetPCIBusId" title="rocm.bindings.hip.hipDeviceGetPCIBusId"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipDeviceGetPCIBusId</span></code></a>, and the log
+buffers of <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipGraphInstantiate" title="rocm.bindings.hip.hipGraphInstantiate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipGraphInstantiate</span></code></a> — HIP Python allocates the
+buffer for you and returns it as a <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a> in the result
+tuple. There is no output argument to pass in these cases.</p></li>
+</ul>
+</section>
+</section>
+<section id="devicearray">
+<span id="sec-device-array"></span><h2><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.DeviceArray" title="rocm.bindings.util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a><a class="headerlink" href="#devicearray" title="Link to this heading">#</a></h2>
+<p>This is a datatype for handling device buffers returned by <code class="docutils literal notranslate"><span class="pre">~.hipMalloc</span></code> and
+related device memory allocation routines. It implements the
+<a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a>
+protocol.</p>
+<p>In case it appears as the type of a function argument, it can also be
+initialized from the following Python objects that you can pass instead of it:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the type’s pointer attribute to <code class="xref py py-obj docutils literal notranslate"><span class="pre">NULL</span></code>.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that is accepted as input by the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> routine of
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>In this case, init code from <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is used.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Py_buffer</span></code> object ownership is not transferred
+See <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code> for more information.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The type interprets the <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute. No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>The type takes the pointer address from <code class="docutils literal notranslate"><span class="pre">pyobj.value</span></code>.
+No shape and type information is available in this case!</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> with <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code> member:</p>
+<p>The type takes the integer-valued pointer address, i.e. the first entry of
+the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> tuple from <code class="xref py py-obj docutils literal notranslate"><span class="pre">pyobj</span></code>’s member
+<code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code>. Copies shape and type information.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Shape and type information and other metadata can be modified or overwritten
+after creation via the <code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code> member function. be
+aware that you might need to pass the <code class="docutils literal notranslate"><span class="pre">_force=True</span></code> keyword argument — in
+particular if your instance was created from a type that does not implement the
+<a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a>
+protocol or via a HIP Python device memory allocation routine.</p>
+</div>
+<div class="admonition-see admonition">
+<p class="admonition-title">See</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure</span></code></p>
+</div>
+</section>
+<section id="devicearray-usage-in-hip-python">
+<h2>DeviceArray: Usage in HIP Python<a class="headerlink" href="#devicearray-usage-in-hip-python" title="Link to this heading">#</a></h2>
+<p>The type is used as return value of:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipMalloc" title="rocm.bindings.hip.hipMalloc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMalloc</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipExtMallocWithFlags" title="rocm.bindings.hip.hipExtMallocWithFlags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipExtMallocWithFlags</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipMallocManaged" title="rocm.bindings.hip.hipMallocManaged"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocManaged</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipMallocAsync" title="rocm.bindings.hip.hipMallocAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocAsync</span></code></a></p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipMallocFromPoolAsync" title="rocm.bindings.hip.hipMallocFromPoolAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMallocFromPoolAsync</span></code></a></p></li>
+</ul>
+<p>It can be passed to functions that expect a <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> argument and
+where passing an instance of this type instead makes sense, e.g. you can pass
+it as copy destination or copy source in <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipMemcpy" title="rocm.bindings.hip.hipMemcpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipMemcpy</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The example <a class="reference internal" href="1_basic_usage.html#sec-example-hip-python-device-arrays"><span class="std std-ref">HIP Python Device Arrays</span></a>
+showcases how to use <code class="docutils literal notranslate"><span class="pre">~.DeviceArray.configure</span></code> to change the shape and type
+of a <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.DeviceArray" title="rocm.bindings.util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a> instance and how use the <code class="docutils literal notranslate"><span class="pre">[]</span></code> operator
+to retrieve a subarray.</p>
+</div>
+</section>
+<section id="list-types">
+<span id="sec-list-types"></span><h2>List Types<a class="headerlink" href="#list-types" title="Link to this heading">#</a></h2>
+<p>The adapter types</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfPointer" title="rocm.bindings.util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfInt" title="rocm.bindings.util.types.ListOfInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfLong" title="rocm.bindings.util.types.ListOfLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfLong</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUnsigned" title="rocm.bindings.util.types.ListOfUnsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsigned</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUnsignedLong" title="rocm.bindings.util.types.ListOfUnsignedLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsignedLong</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfInt64" title="rocm.bindings.util.types.ListOfInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt64</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUInt64" title="rocm.bindings.util.types.ListOfUInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUInt64</span></code></a>,</p></li>
+</ul>
+<p>are used for simple Python <code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">tuple</span></code> objects whose elements are</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>, or <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>,</p></li>
+<li><p>can be used to construct a <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>,</p></li>
+<li><p>can be converted to the C types <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code>, respectively,</p></li>
+<li><p>or can be converted to the C types <code class="docutils literal notranslate"><span class="pre">int64_t</span></code>, <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code>, respectively.</p></li>
+</ul>
+<p>The types can be initialized from the following Python objects:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> / <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of the respective element type:</p>
+<p>In this case, adapter type allocates an array of C values wherein it stores
+the addresses/values obtained from the <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>/<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>
+entries. Furthermore, the instance’s owner flag is set in this case.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that is accepted as input by the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> routine of
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>In this case, init code from <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is used and the C owner flag
+remains unset. See <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> for more information.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The allocated array lives exactly as long as the adapter instance. HIP
+Python’s generated wrappers bind the adapter to a local variable and so
+keep it alive across the C call, which is all a call-duration argument
+needs. If a C function instead <em>retains</em> the pointer past its return, you
+must hold the adapter yourself: construct it explicitly —
+<code class="docutils literal notranslate"><span class="pre">rocm.bindings.util.types.ListOfPointer([...])</span></code> — and keep that object
+referenced for as long as the backend may dereference it, rather than
+passing a bare <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>.</p>
+<p>String elements are the one exception: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> and <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>
+entries of a <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a> are interned exactly like
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a> inputs (see <a class="reference internal" href="#sec-cstr"><span class="std std-ref">CStr</span></a>), so the <em>strings</em> they
+point to are pinned for the program’s lifetime even though the pointer
+array around them is not.</p>
+</div>
+<section id="list-types-usage-in-hip-python">
+<h3>List Types: Usage in HIP Python<a class="headerlink" href="#list-types-usage-in-hip-python" title="Link to this heading">#</a></h3>
+<p>HIP Python employs the <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a> type in scenarios
+were a list of C <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code> is expected,
+and the <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfPointer" title="rocm.bindings.util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a> type where a list of C pointer types
+is expected.</p>
+<p>As with <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>, the entries of such a string list may be plain
+<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> objects; they are UTF-8 encoded for you. Byte-string literals
+are still accepted.</p>
+<p>The type <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a> is for example used to convert input
+Python types in the following routines:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCompileProgram" title="rocm.bindings.hiprtc.hiprtcCompileProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCompileProgram</span></code></a> for argument <code class="docutils literal notranslate"><span class="pre">options</span></code>,</p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCreateProgram" title="rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a> for argument <code class="docutils literal notranslate"><span class="pre">headers</span></code>, and</p></li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCreateProgram" title="rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a> for argument <code class="docutils literal notranslate"><span class="pre">includeNames</span></code>.</p></li>
+</ul>
+<p>HIP Python functions that expect a C array of C <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">unsigned</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span></code> element type (<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span></code>, …) use <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfInt" title="rocm.bindings.util.types.ListOfInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt</span></code></a>,
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUnsigned" title="rocm.bindings.util.types.ListOfUnsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsigned</span></code></a>, or <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUnsignedLong" title="rocm.bindings.util.types.ListOfUnsignedLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUnsignedLong</span></code></a>,
+respectively, to handle the conversion from appropriate Python input types.</p>
+<p>Where the C declaration pins the element width instead of naming a plain C
+integer type – <code class="docutils literal notranslate"><span class="pre">int64_t</span> <span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span></code> –
+the fixed-width adapters <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfInt64" title="rocm.bindings.util.types.ListOfInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfInt64</span></code></a> and
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfUInt64" title="rocm.bindings.util.types.ListOfUInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfUInt64</span></code></a> are used. Their elements are 64 bits wide on
+every supported platform, whereas C <code class="docutils literal notranslate"><span class="pre">long</span></code> is 64 bits on Linux but 32 bits on
+Windows.</p>
+</section>
+</section>
+<section id="rank-0-pointer-types">
+<h2>Rank-0 Pointer Types<a class="headerlink" href="#rank-0-pointer-types" title="Link to this heading">#</a></h2>
+<p>A pointer argument that points at a <em>single</em> value rather than a sized buffer
+is handled by the <code class="docutils literal notranslate"><span class="pre">PointerTo*</span></code> types – <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToInt" title="rocm.bindings.util.types.PointerToInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToInt</span></code></a>,
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToLong" title="rocm.bindings.util.types.PointerToLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToLong</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToUnsigned" title="rocm.bindings.util.types.PointerToUnsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToUnsigned</span></code></a>,
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToUnsignedLong" title="rocm.bindings.util.types.PointerToUnsignedLong"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToUnsignedLong</span></code></a>, <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToInt64" title="rocm.bindings.util.types.PointerToInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToInt64</span></code></a> and
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.PointerToUInt64" title="rocm.bindings.util.types.PointerToUInt64"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PointerToUInt64</span></code></a>. Each is a length-1 specialization of the
+matching <code class="docutils literal notranslate"><span class="pre">ListOf*</span></code> type and accepts the same inputs, except that a
+<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> / <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> initializer must have exactly one element.</p>
+<p>Use them for caller-allocated scalar pointer arguments: allocate one slot with
+<code class="docutils literal notranslate"><span class="pre">allocate()</span></code>, pass the instance to the call, then read the result back
+through the <code class="docutils literal notranslate"><span class="pre">value</span></code> property (or <code class="docutils literal notranslate"><span class="pre">[0]</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the examples <a class="reference internal" href="1_basic_usage.html#sec-launching-kernels"><span class="std std-ref">Launching Kernels</span></a> and <a class="reference internal" href="1_basic_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>,
+we can pass lists directly to <a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCreateProgram" title="rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a> and <a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#rocm.bindings.hiprtc.hiprtcCompileProgram" title="rocm.bindings.hiprtc.hiprtcCompileProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCompileProgram</span></code></a>
+thanks to the type conversions performed by <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>.</p>
+</div>
+</section>
+<section id="helper-type-for-hipmodulelaunchkernel">
+<h2>Helper type for <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipModuleLaunchKernel" title="rocm.bindings.hip.hipModuleLaunchKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a><a class="headerlink" href="#helper-type-for-hipmodulelaunchkernel" title="Link to this heading">#</a></h2>
+<p>The type <code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code> is a datatype for handling
+Python list or tuple objects with entries that are either ctypes datatypes or
+that can be converted to type Pointer. This adapter type is used for
+converting Python objects into a shape that is expected by the <code class="docutils literal notranslate"><span class="pre">extra</span></code> argument
+of <code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel</span></code>.</p>
+<p>The type <code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code> used as similar init procedure
+as the types presented in <a class="reference internal" href="#sec-list-types"><span class="std std-ref">List Types</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the example <a class="reference internal" href="1_basic_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>,
+we can pass lists of <a class="reference external" href="https://docs.python.org/3/library/ctypes.html#module-ctypes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes</span></code></a> types and <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.DeviceArray" title="rocm.bindings.util.types.DeviceArray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a>
+directly to <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.hipModuleLaunchKernel" title="rocm.bindings.hip.hipModuleLaunchKernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a> thanks to the type conversions
+performed by <code class="xref py py-obj docutils literal notranslate"><span class="pre">HipModuleLaunchKernel_extra</span></code>.</p>
+</div>
+</section>
+<section id="autogenerated-wrapper-types">
+<h2>Autogenerated Wrapper Types<a class="headerlink" href="#autogenerated-wrapper-types" title="Link to this heading">#</a></h2>
+<p>HIP Python’s code generator autogenerates Python wrapper types
+for records (C <code class="docutils literal notranslate"><span class="pre">struct</span></code> and <code class="docutils literal notranslate"><span class="pre">union</span></code>) and C function pointers.</p>
+<p>As the other types presented in this chapter, these types
+can be initialized from different Python objects — but only if and only if
+they serve as input adapter for a HIP Python function.</p>
+<p>Their initialization from within Python code differs with respect to
+the other discussed types. Instead of passing a Python object, you can pass
+initial values of their properties — either as positional arguments,
+keyword arguments, or a combination of both — to the constructor.</p>
+<div class="admonition-example-initialization-of-dim3-in-python-code admonition">
+<p class="admonition-title">Example (Initialization of <code class="docutils literal notranslate"><span class="pre">dim3</span></code> in Python code)</p>
+<p>In the example <a class="reference internal" href="1_basic_usage.html#sec-launching-kernels-with-args"><span class="std std-ref">Kernels with Arguments</span></a>, the autogenerated
+type <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#rocm.bindings.hip.dim3" title="rocm.bindings.hip.dim3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dim3</span></code></a> is initialized using keyword arguments and positional
+arguments, respectively, as shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">block</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">dim3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">dim3</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">block</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>If autogenerated types are used as adapter for a function argument, the following
+input types are also accepted instead of passing an instance of the type:</p>
+<ul>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>:</p>
+<p>This will set the type’s pointer attribute to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</p>
+<p>The type interprets the <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> value as address and copies to its
+pointer attribute.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/ctypes.html#ctypes.c_void_p" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctypes.c_void_p</span></code></a>:</p>
+<p>Takes the pointer address <code class="docutils literal notranslate"><span class="pre">pyobj.value</span></code> and writes it to its pointer attribute.</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the <a class="reference external" href="https://numba.readthedocs.io/en/stable/cuda/cuda_array_interface.html">CUDA Array Interface</a>
+protocol:</p>
+<p>Takes the integer-valued pointer address, i.e. the first entry of the <code class="docutils literal notranslate"><span class="pre">data</span></code>
+tuple from <code class="docutils literal notranslate"><span class="pre">pyobj</span></code>’s member <code class="docutils literal notranslate"><span class="pre">__cuda_array_interface__</span></code>  and writes it to
+its pointer attribute.</p>
+<p>(Input type is not allowed for function pointer wrapper types.)</p>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a> that implements the
+<a class="reference external" href="https://docs.python.org/3/c-api/buffer.html">Python buffer protocol</a>:</p>
+<p>If the object represents a simple contiguous array, the adapter acquires the
+buffer handle, retrieves the buffer writes the buffer’s data address to its
+pointer attribute. It releases the handle again at time of destruction.</p>
+<p>(Input type is not allowed for function pointer wrapper types.)</p>
+</li>
+<li><p><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>:</p>
+<p>Writes the data pointer of the <code class="docutils literal notranslate"><span class="pre">~.types.Pointer</span></code> instance to its own data
+pointer attribute. No ownership is transferred.</p>
+</li>
+</ul>
+<p>Type checks are performed in the above order.</p>
+</section>
+<section id="properties-of-the-adapter-types">
+<h2>Properties of the Adapter Types<a class="headerlink" href="#properties-of-the-adapter-types" title="Link to this heading">#</a></h2>
+<p>Finally, we want to highlight some important properties that are shared by all
+adapter types presented in this chapter:</p>
+<ol class="arabic">
+<li><p>All datatypes presented in this chapter are subclasses of type
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>. Therefore, they can all be passed to functions
+that use <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> for type conversions for the given
+argument; read the section <a class="reference internal" href="#sec-pointer"><span class="std std-ref">Pointer</span></a> again to understand why.</p></li>
+<li><p>Due to the way subclasses are initialized — the init procedure of
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> is invoked if the specialized conversions were not
+applied (see <a class="reference internal" href="#sec-device-array"><span class="std std-ref">DeviceArray</span></a> and <a class="reference internal" href="#sec-list-types"><span class="std std-ref">List Types</span></a>) —
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> and any of its subclasses can be passed to any
+function that uses a subclass of <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> as adapter.</p></li>
+<li><p>You can instantiate all of the datatypes presented in this chapter in
+Python and Cython code.</p></li>
+<li><p>You can subclass all of the datatypes presented in this chapter in Python
+and Cython code.</p></li>
+<li><p>You can always use <code class="docutils literal notranslate"><span class="pre">int(&lt;adapter_obj&gt;)</span></code> to obtain the address of
+the underlying data as integer.</p>
+<p>(Hint: Print the integer address via Python routine <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#hex" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hex</span></code></a> to obtain
+an address that you can compare with AMD log output. AMD log output can be
+enabled via environment variable <code class="docutils literal notranslate"><span class="pre">AMD_LOG_LEVEL</span></code>. Set it to a value of at
+least <code class="docutils literal notranslate"><span class="pre">3</span></code>.)</p>
+</li>
+<li><p>You can always pass an <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a> to functions that
+use an adapter type for translating the given argument.
+It will be interpreted as integer representation of an address.</p></li>
+</ol>
+<section id="implications">
+<h3>Implications<a class="headerlink" href="#implications" title="Link to this heading">#</a></h3>
+<p>Due to the first two properties, you can use one of the subclasses as adapter
+and then pass the object to a HIP Python function that uses
+<a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> or one of its subclasses as converter:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 56 </span><span class="caption-text">HIP Python Datatype Used as Adapter in Python Code</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rocm.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">hip</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">hip</span><span class="o">.</span><span class="n">hipMyFunc</span><span class="p">(</span><span class="o">...</span><span class="p">,</span>
+   <span class="n">pointer_is_used_to_convert_this_arg</span><span class="o">=</span><span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">ListOfInt</span><span class="p">(</span>
+     <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Due to properties 3 and 4, you can define your own adapter types and pass them
+to HIP Python’s functions wherever those use <a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a> or one
+of its subclasses as converter. Obviously, your adapter must create data or
+link to data that makes sense for the C function wrapped by HIP Python’s Python
+interfaces.</p>
+</section>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="4_numba_hip.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Kernel Programming in Python with Numba HIP</p>
+</div>
+</a>
+<a class="right-next" href="6_build_from_source.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Building from Source</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pointer-usage-in-hip-python">Pointer: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cstr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cstr-usage-in-hip-python">CStr: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeviceArray</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#devicearray-usage-in-hip-python">DeviceArray: Usage in HIP Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types">List Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#list-types-usage-in-hip-python">List Types: Usage in HIP Python</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rank-0-pointer-types">Rank-0 Pointer Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-type-for-hipmodulelaunchkernel">Helper type for <code class="xref py py-obj docutils literal notranslate"><span class="pre">hipModuleLaunchKernel</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#autogenerated-wrapper-types">Autogenerated Wrapper Types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#properties-of-the-adapter-types">Properties of the Adapter Types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implications">Implications</a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

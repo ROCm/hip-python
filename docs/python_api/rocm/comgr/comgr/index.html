@@ -1,0 +1,1638 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../../../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.comgr.comgr — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../../../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../../../../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../../../../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../../../../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../../../../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../../../../_static/search.js?v=90a4452c"></script>
+<script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm/comgr/comgr/index';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../../../../genindex.html" rel="index" title="Index"/>
+<link href="../../../../search.html" rel="search" title="Search"/>
+<link href="../hiprtc_header/index.html" rel="next" title="rocm.comgr.hiprtc_header"/>
+<link href="../amdhsa_kernel_directives/index.html" rel="prev" title="rocm.comgr.amdhsa_kernel_directives"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../../../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../../../../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../../../../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">rocm.comgr</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="../index.html">rocm.comgr</a></li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.comgr.comgr</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.comgr.comgr</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.to_bytes"><code class="docutils literal notranslate"><span class="pre">to_bytes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.to_str"><code class="docutils literal notranslate"><span class="pre">to_str()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.comgr_check"><code class="docutils literal notranslate"><span class="pre">comgr_check()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.metadata_string_get_bytes"><code class="docutils literal notranslate"><span class="pre">metadata_string_get_bytes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.metadata_map_get_keys"><code class="docutils literal notranslate"><span class="pre">metadata_map_get_keys()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_metadata"><code class="docutils literal notranslate"><span class="pre">parse_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_data_metadata"><code class="docutils literal notranslate"><span class="pre">parse_data_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_obj_metadata"><code class="docutils literal notranslate"><span class="pre">parse_code_obj_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_obj_kernel_names"><code class="docutils literal notranslate"><span class="pre">parse_code_obj_kernel_names()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_names"><code class="docutils literal notranslate"><span class="pre">get_isa_names()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_metadata"><code class="docutils literal notranslate"><span class="pre">get_isa_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_metadata_all"><code class="docutils literal notranslate"><span class="pre">get_isa_metadata_all()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol"><code class="docutils literal notranslate"><span class="pre">Symbol</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.type"><code class="docutils literal notranslate"><span class="pre">Symbol.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.name"><code class="docutils literal notranslate"><span class="pre">Symbol.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.size"><code class="docutils literal notranslate"><span class="pre">Symbol.size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.is_undefined"><code class="docutils literal notranslate"><span class="pre">Symbol.is_undefined</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.value"><code class="docutils literal notranslate"><span class="pre">Symbol.value</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_data_symbols"><code class="docutils literal notranslate"><span class="pre">parse_data_symbols()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_symbols"><code class="docutils literal notranslate"><span class="pre">parse_code_symbols()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.kind_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Data.kind_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.valid_kinds"><code class="docutils literal notranslate"><span class="pre">Data.valid_kinds()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.kind_str"><code class="docutils literal notranslate"><span class="pre">Data.kind_str</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_name"><code class="docutils literal notranslate"><span class="pre">Data.get_data_name()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_len"><code class="docutils literal notranslate"><span class="pre">Data.get_data_len()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_bytes"><code class="docutils literal notranslate"><span class="pre">Data.get_data_bytes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get"><code class="docutils literal notranslate"><span class="pre">Data.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.datas"><code class="docutils literal notranslate"><span class="pre">DataSet.datas</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.add_data"><code class="docutils literal notranslate"><span class="pre">DataSet.add_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.count_data"><code class="docutils literal notranslate"><span class="pre">DataSet.count_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.get_data"><code class="docutils literal notranslate"><span class="pre">DataSet.get_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.get"><code class="docutils literal notranslate"><span class="pre">DataSet.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.action_kind_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Action.action_kind_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.valid_action_kinds"><code class="docutils literal notranslate"><span class="pre">Action.valid_action_kinds()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.lang_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Action.lang_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.valid_languages"><code class="docutils literal notranslate"><span class="pre">Action.valid_languages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.result_data_set"><code class="docutils literal notranslate"><span class="pre">Action.result_data_set</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_isa_name"><code class="docutils literal notranslate"><span class="pre">Action.set_isa_name()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_language"><code class="docutils literal notranslate"><span class="pre">Action.set_language()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_options"><code class="docutils literal notranslate"><span class="pre">Action.set_options()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get_num_options"><code class="docutils literal notranslate"><span class="pre">Action.get_num_options()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get_option"><code class="docutils literal notranslate"><span class="pre">Action.get_option()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_logging"><code class="docutils literal notranslate"><span class="pre">Action.set_logging()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.do_action"><code class="docutils literal notranslate"><span class="pre">Action.do_action()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get"><code class="docutils literal notranslate"><span class="pre">Action.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_program"><code class="docutils literal notranslate"><span class="pre">disassemble_program()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_code_obj_function"><code class="docutils literal notranslate"><span class="pre">disassemble_code_obj_function()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.dump_metadata_yaml"><code class="docutils literal notranslate"><span class="pre">dump_metadata_yaml()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel"><code class="docutils literal notranslate"><span class="pre">disassemble_amdhsa_code_obj_v6_kernel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hip_to_bc"><code class="docutils literal notranslate"><span class="pre">compile_hip_to_bc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_bc_to_hsa"><code class="docutils literal notranslate"><span class="pre">compile_bc_to_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hip_to_hsa"><code class="docutils literal notranslate"><span class="pre">compile_hip_to_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_bc"><code class="docutils literal notranslate"><span class="pre">compile_bc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hsa"><code class="docutils literal notranslate"><span class="pre">compile_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_via_action_deprecated"><code class="docutils literal notranslate"><span class="pre">disassemble_via_action_deprecated()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="module-rocm.comgr.comgr">
+<span id="rocm-comgr-comgr"></span><h1>rocm.comgr.comgr<a class="headerlink" href="#module-rocm.comgr.comgr" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            21 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Higher level interfaces that simplify the use of AMD COMGR.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><dl class="simple">
+<dt>HIPRTC_RUNTIME_HEADER (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>):</dt><dd><p>The content of the <code class="docutils literal notranslate"><span class="pre">hipRTC</span></code> / <code class="docutils literal notranslate"><span class="pre">hiprtc_runtime.h</span></code> header file, read on
+first access from the installed ROCm’s <code class="docutils literal notranslate"><span class="pre">hiprtc-builtins</span></code> library. See
+<a class="reference internal" href="../hiprtc_header/index.html#module-rocm.comgr.hiprtc_header" title="rocm.comgr.hiprtc_header"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rocm.comgr.hiprtc_header</span></code></a>, which explains why the installed
+copy is the only correct one.
+Take a look at <a class="github reference external" href="https://github.com/ROCm/clr">ROCm/clr</a> for more details on how this
+file is generated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.Symbol" title="rocm.comgr.comgr.Symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Symbol</span></code></a></p></td>
+<td><p>Represents a code symbol in a code object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.Data" title="rocm.comgr.comgr.Data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.DataSet" title="rocm.comgr.comgr.DataSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataSet</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.Action" title="rocm.comgr.comgr.Action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Action</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.to_bytes" title="rocm.comgr.comgr.to_bytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bytes</span></code></a>(obj)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.to_str" title="rocm.comgr.comgr.to_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_str</span></code></a>(obj)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.comgr_check" title="rocm.comgr.comgr.comgr_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comgr_check</span></code></a>(call_result)</p></td>
+<td><p>Check AMD COMGR call status and return other result tuple entries.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.metadata_string_get_bytes" title="rocm.comgr.comgr.metadata_string_get_bytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata_string_get_bytes</span></code></a>(metadata_string)</p></td>
+<td><p>Get the text associated with a string metadata node as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.metadata_map_get_keys" title="rocm.comgr.comgr.metadata_map_get_keys"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata_map_get_keys</span></code></a>(metadata_map)</p></td>
+<td><p>Get the keys of a AMD COMGR metadata map as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_metadata" title="rocm.comgr.comgr.parse_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_metadata</span></code></a>(metadata[, level])</p></td>
+<td><p>Parse metadata node and return a nest of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>, and <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_data_metadata" title="rocm.comgr.comgr.parse_data_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_data_metadata</span></code></a>(data)</p></td>
+<td><p>Parse metadata of a <code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_s</span></code> object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_code_obj_metadata" title="rocm.comgr.comgr.parse_code_obj_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_code_obj_metadata</span></code></a>(code_obj, code_obj_size[, kind])</p></td>
+<td><p>Parse metadata of a code object, e.g., one generated via HIPRTC.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_code_obj_kernel_names" title="rocm.comgr.comgr.parse_code_obj_kernel_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_code_obj_kernel_names</span></code></a>(code, code_size[, kind])</p></td>
+<td><p>Return the names of kernels in the code object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>(→ list)</p></td>
+<td><p>Return list of ISA names supported by this COMGR version</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata" title="rocm.comgr.comgr.get_isa_metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata</span></code></a>(isa_name)</p></td>
+<td><p>Parse metadata for a specific ISA.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a>()</p></td>
+<td><p>Return metadata for all ISAs supported by this COMGR version as dict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_data_symbols" title="rocm.comgr.comgr.parse_data_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_data_symbols</span></code></a>(data)</p></td>
+<td><p>Parse all symbols of a data object and return as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.parse_code_symbols" title="rocm.comgr.comgr.parse_code_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_code_symbols</span></code></a>(code, code_size[, kind])</p></td>
+<td><p>Parse metadata of a code object, e.g., one generated via HIPRTC.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.disassemble_program" title="rocm.comgr.comgr.disassemble_program"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disassemble_program</span></code></a>(isa_name, program[, ...])</p></td>
+<td><p>Disassemble an AMD GPU machine code program.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.disassemble_code_obj_function" title="rocm.comgr.comgr.disassemble_code_obj_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disassemble_code_obj_function</span></code></a>(code_obj, isa_name[, ...])</p></td>
+<td><p>Disassembles a kernel or device function stored in a code object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.dump_metadata_yaml" title="rocm.comgr.comgr.dump_metadata_yaml"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump_metadata_yaml</span></code></a>(metadata_dict)</p></td>
+<td><p>Note:</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel" title="rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disassemble_amdhsa_code_obj_v6_kernel</span></code></a>(code_obj, isa_name)</p></td>
+<td><p>Disassembles a kernel stored in an AMD GPU code object v6.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.compile_hip_to_bc" title="rocm.comgr.comgr.compile_hip_to_bc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_hip_to_bc</span></code></a>(source, isa_name, hip_version_tuple)</p></td>
+<td><p>Compiles a HIP C++ source to LLVM BC.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.compile_bc_to_hsa" title="rocm.comgr.comgr.compile_bc_to_hsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_bc_to_hsa</span></code></a>(source, isa_name[, bc_kind, ...])</p></td>
+<td><p>Translate LLVM IR/BC to HSA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.compile_hip_to_hsa" title="rocm.comgr.comgr.compile_hip_to_hsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_hip_to_hsa</span></code></a>(source, isa_name, hip_version_tuple)</p></td>
+<td><p>Compiles a HIP C++ source to HSA.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.compile_bc" title="rocm.comgr.comgr.compile_bc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_bc</span></code></a>(ir_or_bc, isa_name[, bc_kind, extra_opts, ...])</p></td>
+<td><p>Compile LLVM BC/IR to AMD GPU code object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.comgr.comgr.compile_hsa" title="rocm.comgr.comgr.compile_hsa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_hsa</span></code></a>(hsa, isa_name[, extra_opts, default_opts, ...])</p></td>
+<td><p>Compile AMD HSA assembly to AMD GPU code object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.comgr.comgr.disassemble_via_action_deprecated" title="rocm.comgr.comgr.disassemble_via_action_deprecated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">disassemble_via_action_deprecated</span></code></a>(code_obj, isa_name)</p></td>
+<td><p>Disassemble an AMD GPU executable/relocatable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.to_bytes">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">to_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.to_bytes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.to_str">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.to_str" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.comgr_check">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">comgr_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">call_result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.comgr_check" title="Link to this definition">#</a></dt>
+<dd><p>Check AMD COMGR call status and return other result tuple entries.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.metadata_string_get_bytes">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">metadata_string_get_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_metadata_node_s</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.metadata_string_get_bytes" title="Link to this definition">#</a></dt>
+<dd><p>Get the text associated with a string metadata node as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>metadata_str (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_metadata_node_s</span></code></a>):</dt><dd><p>A metadata node that represents a string.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.metadata_map_get_keys">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">metadata_map_get_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_metadata_node_s</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.metadata_map_get_keys" title="Link to this definition">#</a></dt>
+<dd><p>Get the keys of a AMD COMGR metadata map as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>metadata_map (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_metadata_node_s</span></code></a>):</dt><dd><p>A metadata node that represents a map.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_metadata">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_metadata_node_s</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Parse metadata node and return a nest of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>, and <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>metadata_map (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_metadata_node_s" title="rocm.bindings.amd_comgr.amd_comgr_metadata_node_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_metadata_node_s</span></code></a>):</dt><dd><p>A metadata node that represents a map.</p>
+</dd>
+<dt>level (int, optional):</dt><dd><p>Not used yet. Useful for debugging.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_data_metadata">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_data_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_s" title="rocm.bindings.amd_comgr.amd_comgr_data_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_data_s</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_data_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Parse metadata of a <code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_s</span></code> object.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_code_obj_metadata">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_code_obj_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_obj_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_code_obj_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Parse metadata of a code object, e.g., one generated via HIPRTC.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>code_obj:</dt><dd><p>Code object that is accepted as input of <a class="reference internal" href="../../bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.util.types.Pointer</span></code></a>,
+e.g. an implementor of the Python buffer protocol such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+</dd>
+<dt>code_obj_size (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>):</dt><dd><p>Length of the code.</p>
+</dd>
+<dt>kind (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_kind_s</span></code></a>, optional):</dt><dd><p>Kind of the code object in terms of AMD COMGR kinds, e.g.
+<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_DATA_KIND_EXECUTABLE</span></code></a>,
+which is the default.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_code_obj_kernel_names">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_code_obj_kernel_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_code_obj_kernel_names" title="Link to this definition">#</a></dt>
+<dd><p>Return the names of kernels in the code object.</p>
+<p>Results are returned in order of appearance.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>code:</dt><dd><p>Code object that is accepted as input of <a class="reference internal" href="../../bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.util.types.Pointer</span></code></a>,
+e.g. an implementor of the Python buffer protocol such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+</dd>
+<dt>code_size (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>):</dt><dd><p>Length of the code.</p>
+</dd>
+<dt>kind (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_kind_s</span></code></a>, optional):</dt><dd><p>Kind of the code object in terms of AMD COMGR kinds, e.g.
+<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_DATA_KIND_EXECUTABLE</span></code></a>,
+which is the default.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.get_isa_names">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">get_isa_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.get_isa_names" title="Link to this definition">#</a></dt>
+<dd><p>Return list of ISA names supported by this COMGR version</p>
+<p>Return ISA names supported by this COMGR version as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or
+<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>decode (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional):</dt><dd><p>If the names should be decoded to a Python <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>:</dt><dd><p>List of ISA names, either as Python <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> (<code class="docutils literal notranslate"><span class="pre">decode=True</span></code>) or
+<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.get_isa_metadata">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">get_isa_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.get_isa_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Parse metadata for a specific ISA.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>):</dt><dd><p>The ISA name</p>
+</dd>
+</dl>
+</dd>
+<dt>See:</dt><dd><p>get_isa_names</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.get_isa_metadata_all">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">get_isa_metadata_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.get_isa_metadata_all" title="Link to this definition">#</a></dt>
+<dd><p>Return metadata for all ISAs supported by this COMGR version as dict.</p>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">Symbol</span></span><a class="headerlink" href="#rocm.comgr.comgr.Symbol" title="Link to this definition">#</a></dt>
+<dd><p>Represents a code symbol in a code object.</p>
+<p>Members result from <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_get_info" title="rocm.bindings.amd_comgr.amd_comgr_symbol_get_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_symbol_get_info</span></code></a> supplied with the
+following <code class="docutils literal notranslate"><span class="pre">attribute</span></code> parameters:</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_NAME_LENGTH" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_NAME_LENGTH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_NAME_LENGTH</span></code></a>:</dt><dd><p>The length of the symbol name in bytes. Does not include the NUL
+terminator. The type of this attribute is uint64_t.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_NAME" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_NAME</span></code></a>:</dt><dd><p>The name of the symbol. The type of this attribute is character array
+with the length equal to the value of the
+AMD_COMGR_SYMBOL_INFO_NAME_LENGTH attribute plus 1 for a NUL
+terminator.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_TYPE" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_TYPE</span></code></a>:</dt><dd><p>The kind of the symbol. The type of this attribute is
+amd_comgr_symbol_type_t.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_SIZE" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_SIZE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_SIZE</span></code></a>:</dt><dd><p>Size of the variable. The value of this attribute is undefined if the
+symbol is not a variable. The type of this attribute is uint64_t.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_IS_UNDEFINED" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_IS_UNDEFINED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_IS_UNDEFINED</span></code></a>:</dt><dd><p>Indicates whether the symbol is undefined. The type of this attribute
+is bool.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_VALUE" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_VALUE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_VALUE</span></code></a>:</dt><dd><p>The value of the symbol. The type of this attribute is uint64_t.</p>
+</dd>
+<dt><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_LAST" title="rocm.bindings.amd_comgr.amd_comgr_symbol_info_s.AMD_COMGR_SYMBOL_INFO_LAST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_SYMBOL_INFO_LAST</span></code></a>:</dt><dd><p>Marker for last valid symbol info.</p>
+</dd>
+</dl>
+<p>An object’s member <code class="docutils literal notranslate"><span class="pre">self.type</span></code> can have the following values:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code>:</dt><dd><p>The symbol’s type is unknown.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">NOTYPE</span></code>:</dt><dd><p>The symbol’s type is not specified.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OBJECT</span></code>:</dt><dd><p>The symbol is associated with a data object, such as a variable, an
+array, and so on.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FUNC</span></code>:</dt><dd><p>The symbol is associated with a function or other executable code.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SECTION</span></code>:</dt><dd><p>The symbol is associated with a section. Symbol table entries of this
+type exist primarily for relocation.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FILE</span></code>:</dt><dd><p>Conventionally, the symbol’s name gives the name of the source file
+associated with the object file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">COMMON</span></code>:</dt><dd><p>The symbol labels an uninitialized common block.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">AMDGPU_HSA_KERNEL</span></code>:</dt><dd><p>The symbol is associated with an AMDGPU Code Object V2 kernel function.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rocm.comgr.comgr.Symbol.type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rocm.comgr.comgr.Symbol.name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol.size">
+<span class="sig-name descname"><span class="pre">size</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#rocm.comgr.comgr.Symbol.size" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol.is_undefined">
+<span class="sig-name descname"><span class="pre">is_undefined</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#rocm.comgr.comgr.Symbol.is_undefined" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Symbol.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#rocm.comgr.comgr.Symbol.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_data_symbols">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_data_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_s" title="rocm.bindings.amd_comgr.amd_comgr_data_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_data_s</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_data_symbols" title="Link to this definition">#</a></dt>
+<dd><p>Parse all symbols of a data object and return as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.parse_code_symbols">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">parse_code_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.parse_code_symbols" title="Link to this definition">#</a></dt>
+<dd><p>Parse metadata of a code object, e.g., one generated via HIPRTC.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>code:</dt><dd><p>Code object that is accepted as input of <a class="reference internal" href="../../bindings/util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.util.types.Pointer</span></code></a>,
+e.g. an implementor of the Python buffer protocol such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>.</p>
+</dd>
+<dt>code_size (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>):</dt><dd><p>Length of the code.</p>
+</dd>
+<dt>kind (<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_kind_s</span></code></a>, optional):</dt><dd><p>Kind of the code object in terms of AMD COMGR kinds, e.g.
+<a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s.AMD_COMGR_DATA_KIND_EXECUTABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMD_COMGR_DATA_KIND_EXECUTABLE</span></code></a>,
+which is the default.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_buffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Data" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.kind_str_to_enum">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kind_str_to_enum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Data.kind_str_to_enum" title="Link to this definition">#</a></dt>
+<dd><p>Look up an <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_kind_s</span></code></a> value by name.</p>
+<p>Accepts either the short form (<code class="docutils literal notranslate"><span class="pre">"SOURCE"</span></code>,
+<code class="docutils literal notranslate"><span class="pre">"FATBIN"</span></code>, …) or the full enum name
+(<code class="docutils literal notranslate"><span class="pre">"AMD_COMGR_DATA_KIND_SOURCE"</span></code>); the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_DATA_KIND_</span></code> prefix is added if not already
+present. Case-insensitive.</p>
+<p>The canonical list of valid values lives on the autogenerated
+cy* enum class <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_data_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_data_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_data_kind_s</span></code></a> — strip the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_DATA_KIND_</span></code> prefix from each member name to get
+the short-name form. Use <a class="reference internal" href="#rocm.comgr.comgr.Data.valid_kinds" title="rocm.comgr.comgr.Data.valid_kinds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">valid_kinds()</span></code></a> for a
+runtime-derived list.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>AttributeError: if the (normalised) name is not a member</dt><dd><p>of the cy* enum (e.g. a key removed upstream in a
+newer ROCm release than the binding was built
+against).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.valid_kinds">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rocm.comgr.comgr.Data.valid_kinds" title="Link to this definition">#</a></dt>
+<dd><p>Return the short-name keys accepted by
+<a class="reference internal" href="#rocm.comgr.comgr.Data.kind_str_to_enum" title="rocm.comgr.comgr.Data.kind_str_to_enum"><code class="xref py py-meth docutils literal notranslate"><span class="pre">kind_str_to_enum()</span></code></a> — derived at runtime from
+the cy* enum, so always in sync with the installed wheel.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.kind_str">
+<span class="sig-name descname"><span class="pre">kind_str</span></span><a class="headerlink" href="#rocm.comgr.comgr.Data.kind_str" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.get_data_name">
+<span class="sig-name descname"><span class="pre">get_data_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.Data.get_data_name" title="Link to this definition">#</a></dt>
+<dd><p>Returns the data object’s name as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.get_data_len">
+<span class="sig-name descname"><span class="pre">get_data_len</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Data.get_data_len" title="Link to this definition">#</a></dt>
+<dd><p>Get the size of the managed data as Python ‘int’.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.get_data_bytes">
+<span class="sig-name descname"><span class="pre">get_data_bytes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><span class="pre">bytes</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.Data.get_data_bytes" title="Link to this definition">#</a></dt>
+<dd><p>Copy the managed data into a new buffer and return it as Python
+‘bytes’.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><p>This routine should only be used if this is a result data object,
+e.g. obtained as result from an action. If this is a source data
+object, you can also access <code class="docutils literal notranslate"><span class="pre">self.source_bytes</span></code> for a copy of
+the original source data buffer.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Data.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Data.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">DataSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">datas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.DataSet" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet.datas">
+<span class="sig-name descname"><span class="pre">datas</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#rocm.comgr.comgr.DataSet.datas" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet.add_data">
+<span class="sig-name descname"><span class="pre">add_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#rocm.comgr.comgr.Data" title="rocm.comgr.comgr.Data"><span class="pre">Data</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.DataSet.add_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet.count_data">
+<span class="sig-name descname"><span class="pre">count_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.DataSet.count_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#rocm.comgr.comgr.Data" title="rocm.comgr.comgr.Data"><span class="pre">Data</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.DataSet.get_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.DataSet.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.DataSet.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">Action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action" title="Link to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.action_kind_str_to_enum">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action_kind_str_to_enum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_kind_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.action_kind_str_to_enum" title="Link to this definition">#</a></dt>
+<dd><p>Look up an <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_action_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_action_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_action_kind_s</span></code></a> value by name.</p>
+<p>Accepts either the short form (<code class="docutils literal notranslate"><span class="pre">"COMPILE_SOURCE_TO_BC"</span></code>,
+<code class="docutils literal notranslate"><span class="pre">"LINK_BC_TO_BC"</span></code>, …) or the full enum name
+(<code class="docutils literal notranslate"><span class="pre">"AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC"</span></code>); the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_ACTION_</span></code> prefix is added if not already
+present. Case-insensitive.</p>
+<p>The canonical list of valid values lives on the autogenerated
+cy* enum class <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_action_kind_s" title="rocm.bindings.amd_comgr.amd_comgr_action_kind_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_action_kind_s</span></code></a> — strip the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_ACTION_</span></code> prefix from each member name to get the
+short-name form. Use <a class="reference internal" href="#rocm.comgr.comgr.Action.valid_action_kinds" title="rocm.comgr.comgr.Action.valid_action_kinds"><code class="xref py py-meth docutils literal notranslate"><span class="pre">valid_action_kinds()</span></code></a> for a
+runtime-derived list.</p>
+<dl class="simple">
+<dt>Notes:</dt><dd><p>A few keys that earlier ROCm releases exposed have been
+removed upstream (passing them will raise
+<a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#AttributeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AttributeError</span></code></a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ADD_DEVICE_LIBRARIES</span></code> — removed in ROCm 6.4;
+replaced by <code class="docutils literal notranslate"><span class="pre">COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC</span></code>
+(fuses the device-libs link into the compile step).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPTIMIZE_BC_TO_BC</span></code> — removed in an earlier release.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COMPILE_SOURCE_TO_FATBIN</span></code> — removed in an earlier
+release; the fat-binary path is now reached via
+<code class="docutils literal notranslate"><span class="pre">COMPILE_SOURCE_TO_EXECUTABLE</span></code> /
+<code class="docutils literal notranslate"><span class="pre">COMPILE_SOURCE_TO_RELOCATABLE</span></code>.</p></li>
+</ul>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>AttributeError: if the (normalised) name is not a member</dt><dd><p>of the cy* enum (e.g. a key removed upstream in a
+newer ROCm release than the binding was built
+against).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.valid_action_kinds">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_action_kinds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rocm.comgr.comgr.Action.valid_action_kinds" title="Link to this definition">#</a></dt>
+<dd><p>Return the short-name keys accepted by
+<a class="reference internal" href="#rocm.comgr.comgr.Action.action_kind_str_to_enum" title="rocm.comgr.comgr.Action.action_kind_str_to_enum"><code class="xref py py-meth docutils literal notranslate"><span class="pre">action_kind_str_to_enum()</span></code></a> — derived at runtime from
+the cy* enum, so always in sync with the installed wheel.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.lang_str_to_enum">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lang_str_to_enum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.lang_str_to_enum" title="Link to this definition">#</a></dt>
+<dd><p>Look up an <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_language_s" title="rocm.bindings.amd_comgr.amd_comgr_language_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_language_s</span></code></a> value by name.</p>
+<p>Accepts either the short form (<code class="docutils literal notranslate"><span class="pre">"HIP"</span></code>, <code class="docutils literal notranslate"><span class="pre">"LLVM_IR"</span></code>, …)
+or the full enum name (<code class="docutils literal notranslate"><span class="pre">"AMD_COMGR_LANGUAGE_HIP"</span></code>); the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_LANGUAGE_</span></code> prefix is added if not already
+present. Case-insensitive.</p>
+<p>The canonical list of valid values lives on the autogenerated
+cy* enum class <a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_language_s" title="rocm.bindings.amd_comgr.amd_comgr_language_s"><code class="xref py py-obj docutils literal notranslate"><span class="pre">amd_comgr_language_s</span></code></a> — strip the
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_LANGUAGE_</span></code> prefix from each member name to get
+the short-name form. Use <a class="reference internal" href="#rocm.comgr.comgr.Action.valid_languages" title="rocm.comgr.comgr.Action.valid_languages"><code class="xref py py-meth docutils literal notranslate"><span class="pre">valid_languages()</span></code></a> for a
+runtime-derived list.</p>
+<dl class="simple">
+<dt>Notes:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">HC</span></code> (AMD Heterogeneous C++) was supported by earlier
+ROCm releases but has been retired — passing it will
+raise <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#AttributeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AttributeError</span></code></a>. Use <code class="docutils literal notranslate"><span class="pre">HIP</span></code> instead.</p>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>AttributeError: if the (normalised) name is not a member</dt><dd><p>of the cy* enum (e.g. a key removed upstream in a
+newer ROCm release than the binding was built
+against).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.valid_languages">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_languages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rocm.comgr.comgr.Action.valid_languages" title="Link to this definition">#</a></dt>
+<dd><p>Return the short-name keys accepted by
+<a class="reference internal" href="#rocm.comgr.comgr.Action.lang_str_to_enum" title="rocm.comgr.comgr.Action.lang_str_to_enum"><code class="xref py py-meth docutils literal notranslate"><span class="pre">lang_str_to_enum()</span></code></a> — derived at runtime from the
+cy* enum, so always in sync with the installed wheel.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.result_data_set">
+<span class="sig-name descname"><span class="pre">result_data_set</span></span><a class="headerlink" href="#rocm.comgr.comgr.Action.result_data_set" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.set_isa_name">
+<span class="sig-name descname"><span class="pre">set_isa_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.set_isa_name" title="Link to this definition">#</a></dt>
+<dd><p>Sets the action info object’s isa_name.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>Input will be null-terminated if it is not already.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.set_language">
+<span class="sig-name descname"><span class="pre">set_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lang_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.set_language" title="Link to this definition">#</a></dt>
+<dd><p>Set the language of the input data, e.g. “HIP”.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.comgr.comgr.Action.lang_str_to_enum" title="rocm.comgr.comgr.Action.lang_str_to_enum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lang_str_to_enum</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.set_options">
+<span class="sig-name descname"><span class="pre">set_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.set_options" title="Link to this definition">#</a></dt>
+<dd><p>Set options to supply to the action runner.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>options (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Options to supply to the action runner.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>Input will be null-terminated if it is not already.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.get_num_options">
+<span class="sig-name descname"><span class="pre">get_num_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.get_num_options" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.get_option">
+<span class="sig-name descname"><span class="pre">get_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><span class="pre">bytes</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.Action.get_option" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.set_logging">
+<span class="sig-name descname"><span class="pre">set_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.set_logging" title="Link to this definition">#</a></dt>
+<dd><p>Enable logging.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.do_action">
+<span class="sig-name descname"><span class="pre">do_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#rocm.comgr.comgr.DataSet" title="rocm.comgr.comgr.DataSet"><span class="pre">DataSet</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="../../bindings/amd_comgr/index.html#rocm.bindings.amd_comgr.amd_comgr_status_s" title="rocm.bindings.amd_comgr.amd_comgr_status_s"><span class="pre">rocm.bindings.amd_comgr.amd_comgr_status_s</span></a></span></span><a class="headerlink" href="#rocm.comgr.comgr.Action.do_action" title="Link to this definition">#</a></dt>
+<dd><p>Run the action for the given data_set.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.Action.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.Action.get" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.disassemble_program">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">disassemble_program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_address_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_memory_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_default_read_memory_cb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_instruction_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_default_append_instruction_cb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_address_annotation_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">_default_append_address_annotation_cb</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.disassemble_program" title="Link to this definition">#</a></dt>
+<dd><p>Disassemble an AMD GPU machine code program.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><p>DISASSEMBLE_* Actions will soon be deprecated;
+see: <a class="github reference external" href="https://github.com">github</a>/&lt;internal-amd-org&gt;/llvm-project/pull/2677</p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>program:</dt><dd><p>A block of machine code that represents a sequence of instructions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.disassemble_code_obj_function">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">disassemble_code_obj_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_address_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.disassemble_code_obj_function" title="Link to this definition">#</a></dt>
+<dd><p>Disassembles a kernel or device function stored in a code object.</p>
+<p>Identifies the size and location of the function symbol in the code object
+and disassembles it.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>code_obj:</dt><dd><p>An object that can be converted to bytes.</p>
+</dd>
+<dt>func_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>):</dt><dd><p>The name of the function lookup or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>.
+If <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> is specified, the first found function
+is disassembled.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.dump_metadata_yaml">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">dump_metadata_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.dump_metadata_yaml" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Note:</dt><dd><p>AMD HSA kernel metadata does not
+have list of lists or dict of dicts.
+We see only dict of lists, dict of values
+and list of dicts.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">disassemble_amdhsa_code_obj_v6_kernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_address_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel" title="Link to this definition">#</a></dt>
+<dd><p>Disassembles a kernel stored in an AMD GPU code object v6.</p>
+<p>Identifies the size and location of the function symbol in the code object
+and disassembles it.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>code_obj:</dt><dd><p>An object that can be converted to bytes.</p>
+</dd>
+<dt>func_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, ooptional):</dt><dd><p>The name of the function lookup or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>.
+If <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a> is specified, the first found kernel
+is disassembled.</p>
+</dd>
+<dt>raw (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional):</dt><dd><p>Just return raw instructions, do not prepend and
+append code object v6 specific ELF directions
+and metadata. Defaults to <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#False" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.compile_hip_to_bc">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">compile_hip_to_bc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hip_version_tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['-fgpu-rdc',</span> <span class="pre">'-O3',</span> <span class="pre">'-mcumode',</span> <span class="pre">'-std=c++14',</span> <span class="pre">'-nogpuinc',</span> <span class="pre">'-Wno-gnu-line-marker',</span> <span class="pre">'-Wno-missing-prototypes']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend_hiprtc_runtime_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.compile_hip_to_bc" title="Link to this definition">#</a></dt>
+<dd><p>Compiles a HIP C++ source to LLVM BC.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>source (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>The input as bytes or str.</p>
+</dd>
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+<dt>hip_version_tuple (<code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple[int]</span></code>):</dt><dd><p>Integer triple like <code class="docutils literal notranslate"><span class="pre">(6,0,32830)</span></code> that indicates a HIP version.</p>
+</dd>
+<dt>extra_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Extra options that are appended to the default options; see
+argument <code class="docutils literal notranslate"><span class="pre">default_opts</span></code>.
+You would typically supply additional options via this value but
+can also use it overrule some or all of the options specified
+in default_opts. Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>default_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Default options that are typically not changed.
+Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">["-fgpu-rdc",</span> <span class="pre">"-O3",</span> <span class="pre">"-mcumode",</span> <span class="pre">"-std=c++14",</span>
+<span class="pre">"-nogpuinc",</span> <span class="pre">"-Wno-gnu-line-marker",</span> <span class="pre">"-Wno-missing-prototypes"]</span></code>.</p>
+</dd>
+<dt>prepend_hiprtc_runtime_header (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional):</dt><dd><p>Prepend the hiprtc runtime header to the source code.
+Defaults to <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#False" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></a>.</p>
+</dd>
+<dt>logging (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>):</dt><dd><p>Enable logging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt>action_kind (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>):</dt><dd><p>The compile action kind. Defaults to
+<code class="docutils literal notranslate"><span class="pre">"COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC"</span></code>
+Other supported option is <code class="docutils literal notranslate"><span class="pre">"COMPILE_SOURCE_TO_BC"</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 with the following components (in that order):
+1. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: The compilation result, an LLVM BC file.
+2. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The log output if logging was specified.
+3. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The diagnostics output if diagnostics were</p>
+<blockquote>
+<div><p>enabled via options.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>:</dt><dd><p>If one of the compile fails. Enable logging to get more
+detailed error reports.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>String arguments are always encoded as <code class="xref py py-obj docutils literal notranslate"><span class="pre">utf-8</span></code>.</p>
+</dd>
+<dt>Note:</dt><dd><p>Default option <code class="xref py py-obj docutils literal notranslate"><span class="pre">-fgpu-rdc</span></code> keeps <code class="xref py py-obj docutils literal notranslate"><span class="pre">__device__</span></code> functions in the bitcode
+file.</p>
+</dd>
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a></p>
+</dd>
+<dt>Note:</dt><dd><p>This implementation is based on what AMD COMGR logs to screen when
+compiling HIP code to BC via hipRTC while the environment variables
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_REDIRECT_LOGS="stderr"</span></code> and
+<code class="docutils literal notranslate"><span class="pre">AMD_COMGR_EMIT_VERBOSE_LOGS=1</span></code> are active:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>text
+ActionKind: AMD_COMGR_ACTION_COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC
+IsaName: amdgcn-amd-amdhsa–gfx90a:sramecc+:xnack-
+Options: “-O3” “-mcumode” “–hip-version=6.0.32830”
+“-DHIP_VERSION_MAJOR=6” “-DHIP_VERSION_MINOR=0”
+“-DHIP_VERSION_PATCH=32830” “-D__HIPCC_RTC__” “-include”
+“hiprtc_runtime.h” “-std=c++14” “-nogpuinc” “-Wno-gnu-line-marker”
+“-Wno-missing-prototypes” “–offload-arch=gfx90a:sramecc+:xnack-”
+“-fgpu-rdc”
+Path:</p>
+<blockquote>
+<div><p>Language: AMD_COMGR_LANGUAGE_HIP</p>
+</div></blockquote>
+<p>Compilation Args: […]
+Driver Job Args: […]</p>
+<blockquote>
+<div><p>ReturnStatus: AMD_COMGR_STATUS_SUCCESS</p>
+</div></blockquote>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.compile_bc_to_hsa">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">compile_bc_to_hsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'BC'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.compile_bc_to_hsa" title="Link to this definition">#</a></dt>
+<dd><p>Translate LLVM IR/BC to HSA.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>source (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>The input as bytes or str.</p>
+</dd>
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+<dt>bc_kind (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional):</dt><dd><p>Either “BC” or “BC_BUNDLE”. Defaults to “BC”.</p>
+</dd>
+<dt>extra_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>-like, optional):</dt><dd><p>Extra options that are appended to the default options.
+You would typically supply additional options via this value but
+can also use it overrule some or all of the options specified
+in default_opts. Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>logging (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional):</dt><dd><p>Enable logging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 with the following components (in that order):</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: The compilation result, an AMD GPU HSA assembly source</dt><dd><p>file.</p>
+</dd>
+</dl>
+</li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The log output if logging was specified.</p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The diagnostics output if diagnostics were</dt><dd><p>enabled via options.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>:</dt><dd><p>If one of the compile fails. Enable logging to get more
+detailed error reports.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>String arguments are always encoded as <code class="xref py py-obj docutils literal notranslate"><span class="pre">utf-8</span></code>.</p>
+</dd>
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a>
+<a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.compile_hip_to_hsa">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">compile_hip_to_hsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hip_version_tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['-S',</span> <span class="pre">'-O3',</span> <span class="pre">'-mcumode',</span> <span class="pre">'-std=c++14',</span> <span class="pre">'-nogpuinc',</span> <span class="pre">'-Wno-gnu-line-marker',</span> <span class="pre">'-Wno-missing-prototypes']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend_hiprtc_runtime_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.compile_hip_to_hsa" title="Link to this definition">#</a></dt>
+<dd><p>Compiles a HIP C++ source to HSA.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>source (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>The input as bytes or str.</p>
+</dd>
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+<dt>hip_version_tuple (<code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple[int]</span></code>):</dt><dd><p>Integer triple like <code class="docutils literal notranslate"><span class="pre">(6,0,32830)</span></code> that indicates a HIP version.</p>
+</dd>
+<dt>extra_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Extra options that are appended to the default options; see
+argument <code class="docutils literal notranslate"><span class="pre">default_opts</span></code>.
+You would typically supply additional options via this value but
+can also use it overrule some or all of the options specified
+in default_opts. Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>default_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Default options that are typically not changed.
+Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">["-S",</span> <span class="pre">"-O3",</span> <span class="pre">"-mcumode",</span> <span class="pre">"-std=c++14",</span>
+<span class="pre">"-nogpuinc",</span> <span class="pre">"-Wno-gnu-line-marker",</span> <span class="pre">"-Wno-missing-prototypes"]</span></code>.</p>
+</dd>
+<dt>prepend_hiprtc_runtime_header (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional)</dt><dd><p>Prepend the hiprtc runtime header to the source code.
+Defaults to <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#False" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></a>.</p>
+</dd>
+<dt>logging (bool):</dt><dd><p>Enable logging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 3 with the following components (in that order):
+1. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: The compilation result, an AMD GPU HSA assembly source</p>
+<blockquote>
+<div><p>file.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The log output if logging was specified.</p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The diagnostics output if diagnostics were</dt><dd><p>enabled via options.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>:</dt><dd><p>If one of the compile fails. Enable logging to get more
+detailed error reports.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>String arguments are always encoded as <code class="xref py py-obj docutils literal notranslate"><span class="pre">utf-8</span></code>.</p>
+</dd>
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a>
+<a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.compile_bc">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">compile_bc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ir_or_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bc_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'BC'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['-O3']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.compile_bc" title="Link to this definition">#</a></dt>
+<dd><p>Compile LLVM BC/IR to AMD GPU code object.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>ir_or_bc (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>The input as bytes or str.</p>
+</dd>
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+<dt>bc_kind (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional):</dt><dd><p>Either “BC” or “BC_BUNDLE”. Defaults to “BC”.</p>
+</dd>
+<dt>extra_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Extra options that are appended to the default options; see
+argument <code class="docutils literal notranslate"><span class="pre">default_opts</span></code>.
+You would typically supply additional options via this value but
+can also use it overrule some or all of the options specified
+in default_opts. Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>default_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Default options that are typically not changed.
+Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">["-S",</span> <span class="pre">"-O3",</span> <span class="pre">"-mcumode",</span> <span class="pre">"-std=c++14",</span>
+<span class="pre">"-nogpuinc",</span> <span class="pre">"-Wno-gnu-line-marker",</span> <span class="pre">"-Wno-missing-prototypes"]</span></code>.</p>
+</dd>
+<dt>logging (bool):</dt><dd><p>Enable logging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 3 with the following components (in that order):
+1. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: The compilation result, an AMD GPU object in ELF</p>
+<blockquote>
+<div><p>format.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The log output if logging was specified.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The diagnostics output if diagnostics were
+enabled via options.</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>:</dt><dd><p>If one of the compile fails. Enable logging to get more
+detailed error reports.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>We deduced the order of actions and their parametrization from the
+AMD COMGR log output when running hiprtcLinkComplete with
+BC input. We decided to skip the LINK_BC_TO_BC step.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.compile_hsa">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">compile_hsa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.compile_hsa" title="Link to this definition">#</a></dt>
+<dd><p>Compile AMD HSA assembly to AMD GPU code object.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>source (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>The input as bytes or str.</p>
+</dd>
+<dt>isa_name (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>ISA name supported by this version of AMD COMGR, e.g.
+<code class="docutils literal notranslate"><span class="pre">amdgcn-amd-amdhsa--gfx90a:sramecc+:xnack-</span></code>.
+See <a class="reference internal" href="#rocm.comgr.comgr.get_isa_names" title="rocm.comgr.comgr.get_isa_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_names</span></code></a>, <a class="reference internal" href="#rocm.comgr.comgr.get_isa_metadata_all" title="rocm.comgr.comgr.get_isa_metadata_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_isa_metadata_all</span></code></a> for more
+information.</p>
+</dd>
+<dt>extra_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Extra options that are appended to the default options; see
+argument <code class="docutils literal notranslate"><span class="pre">default_opts</span></code>.
+You would typically supply additional options via this value but
+can also use it overrule some or all of the options specified
+in default_opts. Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>default_opts (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or Python buffer such as <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>):</dt><dd><p>Default options that are typically not changed.
+Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">[]</span></code>.</p>
+</dd>
+<dt>logging (bool):</dt><dd><p>Enable logging. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 3 with the following components (in that order):
+1. <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: The compilation result, an AMD GPU object in ELF</p>
+<blockquote>
+<div><p>format.</p>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The log output if logging was specified.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>: The diagnostics output if diagnostics were
+enabled via options.</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a>:</dt><dd><p>If one of the compile fails. Enable logging to get more
+detailed error reports.</p>
+</dd>
+</dl>
+</dd>
+<dt>Note:</dt><dd><p>We deduced the order of actions and their parametrization from the
+AMD COMGR log output when running hiprtcLinkComplete with
+BC input. We decided to skip the LINK_BC_TO_BC step.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.comgr.comgr.disassemble_via_action_deprecated">
+<span class="sig-prename descclassname"><span class="pre">rocm.comgr.comgr.</span></span><span class="sig-name descname"><span class="pre">disassemble_via_action_deprecated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isa_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logging</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DISASSEMBLE_EXECUTABLE_TO_SOURCE'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.comgr.comgr.disassemble_via_action_deprecated" title="Link to this definition">#</a></dt>
+<dd><p>Disassemble an AMD GPU executable/relocatable.</p>
+<dl class="simple">
+<dt>Warning:</dt><dd><p>DISASSEMBLE_* Actions will soon be deprecated;
+see: <a class="github reference external" href="https://github.com">github</a>/&lt;internal-amd-org&gt;/llvm-project/pull/2677</p>
+</dd>
+</dl>
+</dd></dl>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="../amdhsa_kernel_directives/index.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.comgr.amdhsa_kernel_directives</p>
+</div>
+</a>
+<a class="right-next" href="../hiprtc_header/index.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.comgr.hiprtc_header</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.to_bytes"><code class="docutils literal notranslate"><span class="pre">to_bytes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.to_str"><code class="docutils literal notranslate"><span class="pre">to_str()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.comgr_check"><code class="docutils literal notranslate"><span class="pre">comgr_check()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.metadata_string_get_bytes"><code class="docutils literal notranslate"><span class="pre">metadata_string_get_bytes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.metadata_map_get_keys"><code class="docutils literal notranslate"><span class="pre">metadata_map_get_keys()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_metadata"><code class="docutils literal notranslate"><span class="pre">parse_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_data_metadata"><code class="docutils literal notranslate"><span class="pre">parse_data_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_obj_metadata"><code class="docutils literal notranslate"><span class="pre">parse_code_obj_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_obj_kernel_names"><code class="docutils literal notranslate"><span class="pre">parse_code_obj_kernel_names()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_names"><code class="docutils literal notranslate"><span class="pre">get_isa_names()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_metadata"><code class="docutils literal notranslate"><span class="pre">get_isa_metadata()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.get_isa_metadata_all"><code class="docutils literal notranslate"><span class="pre">get_isa_metadata_all()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol"><code class="docutils literal notranslate"><span class="pre">Symbol</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.type"><code class="docutils literal notranslate"><span class="pre">Symbol.type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.name"><code class="docutils literal notranslate"><span class="pre">Symbol.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.size"><code class="docutils literal notranslate"><span class="pre">Symbol.size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.is_undefined"><code class="docutils literal notranslate"><span class="pre">Symbol.is_undefined</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Symbol.value"><code class="docutils literal notranslate"><span class="pre">Symbol.value</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_data_symbols"><code class="docutils literal notranslate"><span class="pre">parse_data_symbols()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.parse_code_symbols"><code class="docutils literal notranslate"><span class="pre">parse_code_symbols()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.kind_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Data.kind_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.valid_kinds"><code class="docutils literal notranslate"><span class="pre">Data.valid_kinds()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.kind_str"><code class="docutils literal notranslate"><span class="pre">Data.kind_str</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_name"><code class="docutils literal notranslate"><span class="pre">Data.get_data_name()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_len"><code class="docutils literal notranslate"><span class="pre">Data.get_data_len()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get_data_bytes"><code class="docutils literal notranslate"><span class="pre">Data.get_data_bytes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Data.get"><code class="docutils literal notranslate"><span class="pre">Data.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.datas"><code class="docutils literal notranslate"><span class="pre">DataSet.datas</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.add_data"><code class="docutils literal notranslate"><span class="pre">DataSet.add_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.count_data"><code class="docutils literal notranslate"><span class="pre">DataSet.count_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.get_data"><code class="docutils literal notranslate"><span class="pre">DataSet.get_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.DataSet.get"><code class="docutils literal notranslate"><span class="pre">DataSet.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.action_kind_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Action.action_kind_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.valid_action_kinds"><code class="docutils literal notranslate"><span class="pre">Action.valid_action_kinds()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.lang_str_to_enum"><code class="docutils literal notranslate"><span class="pre">Action.lang_str_to_enum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.valid_languages"><code class="docutils literal notranslate"><span class="pre">Action.valid_languages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.result_data_set"><code class="docutils literal notranslate"><span class="pre">Action.result_data_set</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_isa_name"><code class="docutils literal notranslate"><span class="pre">Action.set_isa_name()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_language"><code class="docutils literal notranslate"><span class="pre">Action.set_language()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_options"><code class="docutils literal notranslate"><span class="pre">Action.set_options()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get_num_options"><code class="docutils literal notranslate"><span class="pre">Action.get_num_options()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get_option"><code class="docutils literal notranslate"><span class="pre">Action.get_option()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.set_logging"><code class="docutils literal notranslate"><span class="pre">Action.set_logging()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.do_action"><code class="docutils literal notranslate"><span class="pre">Action.do_action()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.Action.get"><code class="docutils literal notranslate"><span class="pre">Action.get()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_program"><code class="docutils literal notranslate"><span class="pre">disassemble_program()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_code_obj_function"><code class="docutils literal notranslate"><span class="pre">disassemble_code_obj_function()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.dump_metadata_yaml"><code class="docutils literal notranslate"><span class="pre">dump_metadata_yaml()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_amdhsa_code_obj_v6_kernel"><code class="docutils literal notranslate"><span class="pre">disassemble_amdhsa_code_obj_v6_kernel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hip_to_bc"><code class="docutils literal notranslate"><span class="pre">compile_hip_to_bc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_bc_to_hsa"><code class="docutils literal notranslate"><span class="pre">compile_bc_to_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hip_to_hsa"><code class="docutils literal notranslate"><span class="pre">compile_hip_to_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_bc"><code class="docutils literal notranslate"><span class="pre">compile_bc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.compile_hsa"><code class="docutils literal notranslate"><span class="pre">compile_hsa()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.comgr.comgr.disassemble_via_action_deprecated"><code class="docutils literal notranslate"><span class="pre">disassemble_via_action_deprecated()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../../../../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

@@ -1,0 +1,165 @@
+.. MIT License
+..
+.. Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
+..
+.. Permission is hereby granted, free of charge, to any person obtaining a copy
+.. of this software and associated documentation files (the "Software"), to deal
+.. in the Software without restriction, including without limitation the rights
+.. to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+.. copies of the Software, and to permit persons to whom the Software is
+.. furnished to do so, subject to the following conditions:
+..
+.. The above copyright notice and this permission notice shall be included in all
+.. copies or substantial portions of the Software.
+..
+.. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.. IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.. FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+.. AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+.. LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+.. OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+.. SOFTWARE.
+
+HIP Python
+==========
+
+**Welcome to the documentation pages for HIP Python!**
+
+HIP Python provides low-level Cython and Python\ |reg| bindings for the HIP
+runtime, HIPRTC, multiple math libraries and the communication library RCCL,
+and further a CUDA\ |reg| Python Interoperability layer that aims to simplify
+the porting of CUDA Python and Cython programs.
+
+.. note::
+
+   This documentation was generated on 2026-09-24T21:13:15+00:00 from
+   ROCm\ |trade| version 10.0.0 headers by
+   interfacegen 0.5 from hip-python
+   0.1.2 (``183b6a80``).
+
+   Source trees always consulted during codegen:
+
+   * ``ROCm/rocm-systems``: ``6b0e43f341195e203754e08f850e437ff2fc09f9``
+     — supplies the HIP, HIPRTC and AMD COMGR headers the bindings are
+     generated from.
+   * ``ROCm/llvm-project``: ``8f497e0992fb7513f7f78a6f6b6f1056c375e961``
+     — supplies ``clang`` Python bindings compatible with ROCm Clang.
+
+   Optional source trees consulted during codegen:
+
+   * ``ROCm/rocm-libraries``: ``8d1ae90eff7d022f26019ec55b2ec6a7674b3112``
+
+Spotlight
+---------
+
+.. grid:: 1 1 2 2
+   :gutter: 1
+
+   .. grid-item-card:: How to Install HIP Python
+
+      Learn how to identify the correct HIP Python packages
+      to install for your ROCm\ |trade| installation,
+      where to retrieve the packages and what options
+      you have to install them.
+
+      * :doc:`/user_guide/0_install`
+
+      .. image:: _static/pip_install.PNG
+         :width: 240
+         :align: center
+
+   .. grid-item-card:: How to Use HIP Python
+
+      Learn how to use HIP Python's interfaces in your Python or Cython program.
+      We present a large number of examples that cover
+      HIP and HIPRTC as well as multiple math libraries (HIPBLAS, HIPRAND, HIPFFT)
+      and the communication library RCCL.
+      Learn how to launch your own kernels and how the different
+      libraries interact.
+
+      * :doc:`/user_guide/1_basic_usage`
+
+      .. image:: _static/hip_usage.PNG
+         :width: 240
+         :align: center
+
+   .. grid-item-card:: How to Port CUDA Python Applications
+
+      Learn how you can use HIP Python's CUDA Python interoperability layer
+      to port or even directly run CUDA Python applications
+      on AMD GPUs. The chapter covers Python and Cython programs.
+
+      * :doc:`/user_guide/2_cuda_python_interop`
+
+      .. image:: _static/cuda_interop.PNG
+         :width: 240
+         :align: center
+
+   .. grid-item-card:: JIT Compilation and LLVM IR
+
+      Learn how to JIT-compile, link, and inspect HIP kernels at
+      runtime --- from the high-level :py:obj:`~.hiprtc` API
+      (compile, link, launch) down to the lower-level
+      :py:obj:`rocm.comgr` pipeline (HIP source --> LLVM bitcode
+      --> HSA assembly --> code object) --- and how to work on the
+      IR itself with the LLVM-C bindings in
+      ``rocm.bindings.llvm.c``: parse bitcode, build a module with
+      the IR builder, run pass pipelines, and query targets.
+
+      * :doc:`/user_guide/3_jit_compilation`
+
+   .. grid-item-card:: Adapter Types
+
+      Learn about the datatypes that HIP Python uses to translate between C and Python
+      and that are designed to ease interoperability with other
+      packages such as `NumPy <https://numpy.org>`__ and
+      `Numba <https://numba.pydata.org/>`__.
+
+      * :doc:`/user_guide/5_adapters`
+
+   .. grid-item-card:: GPU Programming with Numba HIP
+
+      Learn how to write GPU kernels in Python with Numba HIP, the
+      ROCm\ |trade| HIP backend for Numba. Covers vector addition,
+      shared-memory reductions, matrix multiplication, ufuncs,
+      CPU/GPU code reuse, and linking external HIP/CUDA C++ device
+      functions via the Foreign Function Interface.
+
+      * :doc:`/user_guide/4_numba_hip`
+
+   .. grid-item-card:: HIP Python's Python API
+
+      The full list of HIP Python Python variables, classes
+      and functions. A few entry points:
+
+      * :doc:`python_api/rocm/bindings/hip/index`
+      * :doc:`python_api/rocm/bindings/hiprtc/index`
+      * :doc:`python_api/rocm/bindings/hipblas/index`
+      * :doc:`python_api/rocm/bindings/amd_comgr/index`
+      * :doc:`python_api/rocm/bindings/util/index`
+      * …
+      * :ref:`Full module index <modindex>`
+
+   .. grid-item-card:: The CUDA Python Interoperability Layer's Python API
+
+      The full list of the CUDA Python interoperability layer's Python variables, classes
+      and functions.
+
+      * :doc:`python_api/cuda/bindings/driver/index`
+      * :doc:`python_api/cuda/bindings/runtime/index`
+      * :doc:`python_api/cuda/bindings/nvrtc/index`
+
+.. note::
+
+   Contributions are welcome. Most of this API is generated from the
+   ROCm\ |trade| C headers, so a fix belongs in the code generator rather
+   than in the emitted bindings. The `contributing guide
+   <https://github.com/ROCm/hip-python/blob/main/CONTRIBUTING.md>`__ in the
+   source repository explains where each kind of change belongs and how to
+   validate it, and :doc:`/user_guide/6_build_from_source` covers building
+   the wheels and these documentation pages yourself.
+
+.. |reg| unicode:: U+000AE .. REGISTERED SIGN
+   :ltrim:
+.. |trade| unicode:: U+02122 .. TRADEMARK SIGN
+   :ltrim:

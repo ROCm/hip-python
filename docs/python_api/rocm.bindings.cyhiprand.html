@@ -1,0 +1,1280 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.cyhiprand — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.cyhiprand';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.cyhipfft.html" rel="next" title="rocm.bindings.cyhipfft"/>
+<link href="rocm.bindings.cyhipblaslt.html" rel="prev" title="rocm.bindings.cyhipblaslt"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.cyhiprand</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.cyhiprand</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-cyhiprand">
+<h1>rocm.bindings.cyhiprand<a class="headerlink" href="#rocm-bindings-cyhiprand" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            21 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.cyhiprand</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/hiprand/index.html"><span class="doc">rocm.bindings.hiprand</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipStream_t</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"hiprand/hiprand.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPRAND_VERSION</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPRAND_DEFAULT_MAX_BLOCK_SIZE</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPRAND_DEFAULT_MIN_WARPS_PER_EU</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">uint4</span><span class="p">:</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">x</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">y</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">z</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">w</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">rocrand_discrete_distribution_st</span><span class="p">:</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">size</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">offset</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">alias</span>
+        <span class="n">double</span> <span class="o">*</span> <span class="n">probability</span>
+        <span class="n">double</span> <span class="o">*</span> <span class="n">cdf</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_discrete_distribution_st</span> <span class="o">*</span> <span class="n">rocrand_discrete_distribution</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">rocrand_generator_base_type</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_generator_base_type</span> <span class="o">*</span> <span class="n">rocrand_generator</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">rocrand_status</span><span class="p">:</span>
+        <span class="n">ROCRAND_STATUS_SUCCESS</span>
+        <span class="n">ROCRAND_STATUS_VERSION_MISMATCH</span>
+        <span class="n">ROCRAND_STATUS_NOT_CREATED</span>
+        <span class="n">ROCRAND_STATUS_ALLOCATION_FAILED</span>
+        <span class="n">ROCRAND_STATUS_TYPE_ERROR</span>
+        <span class="n">ROCRAND_STATUS_OUT_OF_RANGE</span>
+        <span class="n">ROCRAND_STATUS_LENGTH_NOT_MULTIPLE</span>
+        <span class="n">ROCRAND_STATUS_DOUBLE_PRECISION_REQUIRED</span>
+        <span class="n">ROCRAND_STATUS_LAUNCH_FAILURE</span>
+        <span class="n">ROCRAND_STATUS_INTERNAL_ERROR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">rocrand_rng_type</span><span class="p">:</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_DEFAULT</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_XORWOW</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_MRG32K3A</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_MTGP32</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_PHILOX4_32_10</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_MRG31K3P</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_LFSR113</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_MT19937</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_THREEFRY2_32_20</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_THREEFRY2_64_20</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_THREEFRY4_32_20</span>
+        <span class="n">ROCRAND_RNG_PSEUDO_THREEFRY4_64_20</span>
+        <span class="n">ROCRAND_RNG_QUASI_DEFAULT</span>
+        <span class="n">ROCRAND_RNG_QUASI_SOBOL32</span>
+        <span class="n">ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL32</span>
+        <span class="n">ROCRAND_RNG_QUASI_SOBOL64</span>
+        <span class="n">ROCRAND_RNG_QUASI_SCRAMBLED_SOBOL64</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">rocrand_ordering</span><span class="p">:</span>
+        <span class="n">ROCRAND_ORDERING_PSEUDO_BEST</span>
+        <span class="n">ROCRAND_ORDERING_PSEUDO_DEFAULT</span>
+        <span class="n">ROCRAND_ORDERING_PSEUDO_SEEDED</span>
+        <span class="n">ROCRAND_ORDERING_PSEUDO_LEGACY</span>
+        <span class="n">ROCRAND_ORDERING_PSEUDO_DYNAMIC</span>
+        <span class="n">ROCRAND_ORDERING_QUASI_DEFAULT</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">rocrand_direction_vector_set</span><span class="p">:</span>
+        <span class="n">ROCRAND_DIRECTION_VECTORS_32_JOEKUO6</span>
+        <span class="n">ROCRAND_SCRAMBLED_DIRECTION_VECTORS_32_JOEKUO6</span>
+        <span class="n">ROCRAND_DIRECTION_VECTORS_64_JOEKUO6</span>
+        <span class="n">ROCRAND_SCRAMBLED_DIRECTION_VECTORS_64_JOEKUO6</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_generator_base_type</span> <span class="n">hiprandGenerator_st</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_discrete_distribution_st</span> <span class="n">hiprandDiscreteDistribution_st</span>
+
+    <span class="k">ctypedef</span> <span class="nb">unsigned</span> <span class="nb">int</span><span class="p">[</span><span class="mf">32</span><span class="p">]</span> <span class="n">hiprandDirectionVectors32_t</span>
+
+    <span class="k">ctypedef</span> <span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span><span class="p">[</span><span class="mf">64</span><span class="p">]</span> <span class="n">hiprandDirectionVectors64_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_generator_base_type</span> <span class="o">*</span> <span class="n">hiprandGenerator_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">rocrand_discrete_distribution_st</span> <span class="o">*</span> <span class="n">hiprandDiscreteDistribution_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">hiprandStatus</span><span class="p">:</span>
+        <span class="n">HIPRAND_STATUS_SUCCESS</span>
+        <span class="n">HIPRAND_STATUS_VERSION_MISMATCH</span>
+        <span class="n">HIPRAND_STATUS_NOT_INITIALIZED</span>
+        <span class="n">HIPRAND_STATUS_ALLOCATION_FAILED</span>
+        <span class="n">HIPRAND_STATUS_TYPE_ERROR</span>
+        <span class="n">HIPRAND_STATUS_OUT_OF_RANGE</span>
+        <span class="n">HIPRAND_STATUS_LENGTH_NOT_MULTIPLE</span>
+        <span class="n">HIPRAND_STATUS_DOUBLE_PRECISION_REQUIRED</span>
+        <span class="n">HIPRAND_STATUS_LAUNCH_FAILURE</span>
+        <span class="n">HIPRAND_STATUS_PREEXISTING_FAILURE</span>
+        <span class="n">HIPRAND_STATUS_INITIALIZATION_FAILED</span>
+        <span class="n">HIPRAND_STATUS_ARCH_MISMATCH</span>
+        <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span>
+        <span class="n">HIPRAND_STATUS_NOT_IMPLEMENTED</span>
+
+    <span class="k">ctypedef</span> <span class="n">hiprandStatus</span> <span class="n">hiprandStatus_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">hiprandRngType</span><span class="p">:</span>
+        <span class="n">HIPRAND_RNG_TEST</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_DEFAULT</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_XORWOW</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_MRG32K3A</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_MTGP32</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_MT19937</span>
+        <span class="n">HIPRAND_RNG_PSEUDO_PHILOX4_32_10</span>
+        <span class="n">HIPRAND_RNG_QUASI_DEFAULT</span>
+        <span class="n">HIPRAND_RNG_QUASI_SOBOL32</span>
+        <span class="n">HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32</span>
+        <span class="n">HIPRAND_RNG_QUASI_SOBOL64</span>
+        <span class="n">HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64</span>
+
+    <span class="k">ctypedef</span> <span class="n">hiprandRngType</span> <span class="n">hiprandRngType_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">hiprandOrdering</span><span class="p">:</span>
+        <span class="n">HIPRAND_ORDERING_PSEUDO_BEST</span>
+        <span class="n">HIPRAND_ORDERING_PSEUDO_DEFAULT</span>
+        <span class="n">HIPRAND_ORDERING_PSEUDO_SEEDED</span>
+        <span class="n">HIPRAND_ORDERING_PSEUDO_LEGACY</span>
+        <span class="n">HIPRAND_ORDERING_PSEUDO_DYNAMIC</span>
+        <span class="n">HIPRAND_ORDERING_QUASI_DEFAULT</span>
+
+    <span class="k">ctypedef</span> <span class="n">hiprandOrdering</span> <span class="n">hiprandOrdering_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">hiprandDirectionVectorSet</span><span class="p">:</span>
+        <span class="n">HIPRAND_DIRECTION_VECTORS_32_JOEKUO6</span>
+        <span class="n">HIPRAND_SCRAMBLED_DIRECTION_VECTORS_32_JOEKUO6</span>
+        <span class="n">HIPRAND_DIRECTION_VECTORS_64_JOEKUO6</span>
+        <span class="n">HIPRAND_SCRAMBLED_DIRECTION_VECTORS_64_JOEKUO6</span>
+
+    <span class="k">ctypedef</span> <span class="n">hiprandDirectionVectorSet</span> <span class="n">hiprandDirectionVectorSet_t</span>
+
+<span class="c"># </span>
+<span class="c"># \brief Creates a new random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Creates a new random number generator of type \p rng_type,</span>
+<span class="c"># and returns it in \p generator. That generator will use</span>
+<span class="c"># GPU to create random numbers.</span>
+<span class="c"># </span>
+<span class="c"># Values for \p rng_type are:</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_DEFAULT</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_XORWOW</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MRG32K3A</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MTGP32</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MT19937</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_PHILOX4_32_10</span>
+<span class="c"># - HIPRAND_RNG_QUASI_DEFAULT</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SOBOL32</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SOBOL64</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64</span>
+<span class="c"># </span>
+<span class="c"># \param generator Pointer to generator</span>
+<span class="c"># \param rng_type Type of random number generator to create</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed \n</span>
+<span class="c"># - HIPRAND_STATUS_INITIALIZATION_FAILED if there was a problem setting up the GPU \n</span>
+<span class="c"># - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the</span>
+<span class="c">#   dynamically linked library version \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if the value for \p rng_type is invalid \n</span>
+<span class="c"># - HIPRAND_STATUS_NOT_IMPLEMENTED if generator of type \p rng_type is not implemented yet \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if generator was created successfully \n</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandCreateGenerator</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="o">*</span> <span class="n">generator</span><span class="p">,</span><span class="n">hiprandRngType</span> <span class="n">rng_type</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Creates a new random number generator on host.</span>
+<span class="c"># </span>
+<span class="c"># Creates a new host random number generator of type \p rng_type</span>
+<span class="c"># and returns it in \p generator. Created generator will use</span>
+<span class="c"># host CPU to generate random numbers.</span>
+<span class="c"># </span>
+<span class="c"># Values for \p rng_type are:</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_DEFAULT</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_XORWOW</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MRG32K3A</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MTGP32</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_MT19937</span>
+<span class="c"># - HIPRAND_RNG_PSEUDO_PHILOX4_32_10</span>
+<span class="c"># - HIPRAND_RNG_QUASI_DEFAULT</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SOBOL32</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SOBOL64</span>
+<span class="c"># - HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64</span>
+<span class="c"># </span>
+<span class="c"># \param generator Pointer to generator</span>
+<span class="c"># \param rng_type Type of random number generator to create</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_ALLOCATION_FAILED, if memory allocation failed \n</span>
+<span class="c"># - HIPRAND_STATUS_VERSION_MISMATCH if the header file version does not match the</span>
+<span class="c">#   dynamically linked library version \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if the value for \p rng_type is invalid \n</span>
+<span class="c"># - HIPRAND_STATUS_NOT_IMPLEMENTED if host generator of type \p rng_type is not implemented yet \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if generator was created successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandCreateGeneratorHost</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="o">*</span> <span class="n">generator</span><span class="p">,</span><span class="n">hiprandRngType</span> <span class="n">rng_type</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Destroys random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Destroys random number generator and frees related memory.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to be destroyed</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if generator was destroyed successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandDestroyGenerator</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed 32-bit unsigned integers.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 32-bit unsigned integers and</span>
+<span class="c"># saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0 and \p 2^32, including \p 0 and</span>
+<span class="c"># excluding \p 2^32.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of 32-bit unsigned integers to generate</span>
+<span class="c"># </span>
+<span class="c"># Note: \p generator must be not be of type \p HIPRAND_RNG_QUASI_SOBOL64</span>
+<span class="c"># or \p HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerate</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed 8-bit unsigned integers.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 8-bit unsigned integers and</span>
+<span class="c"># saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0 and \p 2^8, including \p 0 and</span>
+<span class="c"># excluding \p 2^8.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of 8-bit unsigned integers to generate</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateChar</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">char</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed 16-bit unsigned integers.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 16-bit unsigned integers and</span>
+<span class="c"># saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0 and \p 2^16, including \p 0 and</span>
+<span class="c"># excluding \p 2^16.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of 16-bit unsigned integers to generate</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateShort</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed 64-bit unsigned integers.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 64-bit unsigned integers and</span>
+<span class="c"># saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0 and \p 2^64, including \p 0 and</span>
+<span class="c"># excluding \p 2^64.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of 64-bit unsigned integers to generate</span>
+<span class="c"># </span>
+<span class="c"># Note: \p generator must be of type \p HIPRAND_RNG_QUASI_SOBOL64</span>
+<span class="c"># or \p HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL64.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateLongLong</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed floats.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 32-bit floating-point values</span>
+<span class="c"># and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0.0f and \p 1.0f, excluding \p 0.0f and</span>
+<span class="c"># including \p 1.0f.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of floats to generate</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateUniform</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">float</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed double-precision floating-point values.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 64-bit double-precision floating-point</span>
+<span class="c"># values and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and</span>
+<span class="c"># including \p 1.0.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of floats to generate</span>
+<span class="c"># </span>
+<span class="c"># Note: When \p generator is of type: \p HIPRAND_RNG_PSEUDO_MRG32K3A,</span>
+<span class="c"># \p HIPRAND_RNG_PSEUDO_MTGP32, \p HIPRAND_RNG_QUASI_SOBOL32, or</span>
+<span class="c"># \p HIPRAND_RNG_QUASI_SCRAMBLED_SOBOL32 then the returned \p double</span>
+<span class="c"># values are generated from only 32 random bits</span>
+<span class="c"># each (one &lt;tt&gt;unsigned int&lt;/tt&gt; value per one generated \p double).</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateUniformDouble</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="n">double</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates uniformly distributed half-precision floating-point values.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n uniformly distributed 16-bit half-precision floating-point</span>
+<span class="c"># values and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># Generated numbers are between \p 0.0 and \p 1.0, excluding \p 0.0 and</span>
+<span class="c"># including \p 1.0.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of halfs to generate</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateUniformHalf</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates normally distributed floats.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n normally distributed 32-bit floating-point</span>
+<span class="c"># values and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of floats to generate</span>
+<span class="c"># \param mean Mean value of normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(float2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateNormal</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">float</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="nb">float</span> <span class="n">mean</span><span class="p">,</span><span class="nb">float</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates normally distributed doubles.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n normally distributed 64-bit double-precision floating-point</span>
+<span class="c"># numbers and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of doubles to generate</span>
+<span class="c"># \param mean Mean value of normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(double2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateNormalDouble</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="n">double</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="n">double</span> <span class="n">mean</span><span class="p">,</span><span class="n">double</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates normally distributed halfs.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n normally distributed 16-bit half-precision floating-point</span>
+<span class="c"># numbers and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of halfs to generate</span>
+<span class="c"># \param mean Mean value of normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(half2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateNormalHalf</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="n">mean</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates log-normally distributed floats.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n log-normally distributed 32-bit floating-point values</span>
+<span class="c"># and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of floats to generate</span>
+<span class="c"># \param mean Mean value of log normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of log normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(float2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateLogNormal</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">float</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="nb">float</span> <span class="n">mean</span><span class="p">,</span><span class="nb">float</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates log-normally distributed doubles.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n log-normally distributed 64-bit double-precision floating-point</span>
+<span class="c"># values and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of doubles to generate</span>
+<span class="c"># \param mean Mean value of log normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of log normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(double2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateLogNormalDouble</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="n">double</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="n">double</span> <span class="n">mean</span><span class="p">,</span><span class="n">double</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates log-normally distributed halfs.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n log-normally distributed 16-bit half-precision floating-point</span>
+<span class="c"># values and saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of halfs to generate</span>
+<span class="c"># \param mean Mean value of log normal distribution</span>
+<span class="c"># \param stddev Standard deviation value of log normal distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not even, \p output_data is not</span>
+<span class="c"># aligned to \p sizeof(half2) bytes, or \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateLogNormalHalf</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="n">mean</span><span class="p">,</span><span class="nb">unsigned</span> <span class="n">short</span> <span class="n">stddev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Generates Poisson-distributed 32-bit unsigned integers.</span>
+<span class="c"># </span>
+<span class="c"># Generates \p n Poisson-distributed 32-bit unsigned integers and</span>
+<span class="c"># saves them to \p output_data.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to use</span>
+<span class="c"># \param output_data Pointer to memory to store generated numbers</span>
+<span class="c"># \param n Number of 32-bit unsigned integers to generate</span>
+<span class="c"># \param lambda lambda for the Poisson distribution</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if generator failed to launch kernel \n</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive \n</span>
+<span class="c"># - HIPRAND_STATUS_LENGTH_NOT_MULTIPLE if \p n is not a multiple of the dimension</span>
+<span class="c"># of used quasi-random generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if random numbers were successfully generated \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGeneratePoisson</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">output_data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">n</span><span class="p">,</span><span class="n">double</span> <span class="n">lambda_</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Initializes the generator's state on GPU or host.</span>
+<span class="c"># </span>
+<span class="c"># Initializes the generator's state on GPU or host.</span>
+<span class="c"># </span>
+<span class="c"># If hiprandGenerateSeeds() was not called for a generator, it will be</span>
+<span class="c"># automatically called by functions which generates random numbers like</span>
+<span class="c"># hiprandGenerate(), hiprandGenerateUniform(), hiprandGenerateNormal() etc.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to initialize</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was never created \n</span>
+<span class="c"># - HIPRAND_STATUS_PREEXISTING_FAILURE if there was an existing error from</span>
+<span class="c">#   a previous kernel launch \n</span>
+<span class="c"># - HIPRAND_STATUS_LAUNCH_FAILURE if the kernel launch failed for any reason \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the seeds were generated successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGenerateSeeds</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Sets the current stream for kernel launches.</span>
+<span class="c"># </span>
+<span class="c"># Sets the current stream for all kernel launches of the generator.</span>
+<span class="c"># All functions will use this stream.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Generator to modify</span>
+<span class="c"># \param stream Stream to use or NULL for default stream</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if stream was set successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandSetStream</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Sets the seed of a pseudo-random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Sets the seed of the pseudo-random number generator.</span>
+<span class="c"># </span>
+<span class="c"># - This operation resets the generator's internal state.</span>
+<span class="c"># - This operation does not change the generator's offset.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Pseudo-random number generator</span>
+<span class="c"># \param seed New seed value</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if the generator is a quasi random number generator \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if seed was set successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandSetPseudoRandomGeneratorSeed</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span> <span class="n">seed</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Sets the offset of a random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Sets the absolute offset of the random number generator.</span>
+<span class="c"># </span>
+<span class="c"># - This operation resets the generator's internal state.</span>
+<span class="c"># - This operation does not change the generator's seed.</span>
+<span class="c"># </span>
+<span class="c"># Absolute offset cannot be set if generator's type is</span>
+<span class="c"># HIPRAND_RNG_PSEUDO_MTGP32 or HIPRAND_RNG_PSEUDO_MT19937.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Random number generator</span>
+<span class="c"># \param offset New absolute offset</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if offset was successfully set \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if generator's type is HIPRAND_RNG_PSEUDO_MTGP32</span>
+<span class="c"># or HIPRAND_RNG_PSEUDO_MT19937 \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandSetGeneratorOffset</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span> <span class="n">offset</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Sets the ordering of a random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Sets the ordering of the results of a random number generator.</span>
+<span class="c"># </span>
+<span class="c"># - This operation resets the generator's internal state.</span>
+<span class="c"># - This operation does not change the generator's seed.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Random number generator</span>
+<span class="c"># \param order New ordering of results</span>
+<span class="c"># </span>
+<span class="c"># The ordering choices for pseudorandom sequences are</span>
+<span class="c"># HIPRAND_ORDERING_PSEUDO_DEFAULT and</span>
+<span class="c"># HIPRAND_ORDERING_PSEUDO_LEGACY.</span>
+<span class="c"># The default ordering is HIPRAND_ORDERING_PSEUDO_DEFAULT, which is equal to</span>
+<span class="c"># HIPRAND_ORDERING_PSEUDO_LEGACY for now.</span>
+<span class="c"># </span>
+<span class="c"># For quasirandom sequences there is only one ordering, HIPRAND_ORDERING_QUASI_DEFAULT.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_INITIALIZED if the generator was not initialized \n</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if the ordering is not valid \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the ordering was successfully set \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if generator's type is not valid</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandSetGeneratorOrdering</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="n">hiprandOrdering</span> <span class="n">order</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Set the number of dimensions of a quasi-random number generator.</span>
+<span class="c"># </span>
+<span class="c"># Set the number of dimensions of a quasi-random number generator.</span>
+<span class="c"># Supported values of \p dimensions are 1 to 20000.</span>
+<span class="c"># </span>
+<span class="c"># - This operation resets the generator's internal state.</span>
+<span class="c"># - This operation does not change the generator's offset.</span>
+<span class="c"># </span>
+<span class="c"># \param generator Quasi-random number generator</span>
+<span class="c"># \param dimensions Number of dimensions</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_NOT_CREATED if the generator wasn't created \n</span>
+<span class="c"># - HIPRAND_STATUS_TYPE_ERROR if the generator is not a quasi-random number generator \n</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p dimensions is out of range \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the number of dimensions was set successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandSetQuasiRandomGeneratorDimensions</span><span class="p">(</span><span class="n">hiprandGenerator_t</span> <span class="n">generator</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">dimensions</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Returns the version number of the cuRAND or rocRAND library.</span>
+<span class="c"># </span>
+<span class="c"># Returns in \p version the version number of the underlying cuRAND or</span>
+<span class="c"># rocRAND library.</span>
+<span class="c"># </span>
+<span class="c"># \param version Version of the library</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p version is NULL \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the version number was successfully returned \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGetVersion</span><span class="p">(</span><span class="nb">int</span> <span class="o">*</span> <span class="n">version</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Construct the histogram for a Poisson distribution.</span>
+<span class="c"># </span>
+<span class="c"># Construct the histogram for the Poisson distribution with lambda \p lambda.</span>
+<span class="c"># </span>
+<span class="c"># \param lambda lambda for the Poisson distribution</span>
+<span class="c"># \param discrete_distribution pointer to the histogram in device memory</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_ALLOCATION_FAILED if memory could not be allocated \n</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p discrete_distribution pointer was null \n</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if lambda is non-positive \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the histogram was constructed successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandCreatePoissonDistribution</span><span class="p">(</span><span class="n">double</span> <span class="n">lambda_</span><span class="p">,</span><span class="n">hiprandDiscreteDistribution_t</span> <span class="o">*</span> <span class="n">discrete_distribution</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Destroy the histogram array for a discrete distribution.</span>
+<span class="c"># </span>
+<span class="c"># Destroy the histogram array for a discrete distribution created by</span>
+<span class="c"># hiprandCreatePoissonDistribution.</span>
+<span class="c"># </span>
+<span class="c"># \param discrete_distribution pointer to the histogram in device memory</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p discrete_distribution was null \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the histogram was destroyed successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandDestroyDistribution</span><span class="p">(</span><span class="n">hiprandDiscreteDistribution_t</span> <span class="n">discrete_distribution</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Retrieves the Sobol 32 direction vector array specified by \p set.</span>
+<span class="c"># </span>
+<span class="c"># \param vectors Pointer to the Sobol 32 direction vector array.</span>
+<span class="c"># \param set Specifies which hipRAND vector set for quasirandom generators to retrieve.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p set is invalid \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if \p vectors was set successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGetDirectionVectors32</span><span class="p">(</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="p">(</span><span class="o">**</span><span class="n">vectors</span><span class="p">)[</span><span class="mf">32</span><span class="p">],</span><span class="n">hiprandDirectionVectorSet</span> <span class="nb">set</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Retrieves the Sobol 64 direction vector array specified by \p set.</span>
+<span class="c"># </span>
+<span class="c"># \param vectors Pointer to the Sobol 64 direction vector array.</span>
+<span class="c"># \param set Specifies which hipRAND vector set for quasirandom generators to retrieve.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_OUT_OF_RANGE if \p set is invalid \n</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if \p vectors was set successfully \n</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGetDirectionVectors64</span><span class="p">(</span><span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span> <span class="p">(</span><span class="o">**</span><span class="n">vectors</span><span class="p">)[</span><span class="mf">64</span><span class="p">],</span><span class="n">hiprandDirectionVectorSet</span> <span class="nb">set</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Retrieves the scramble constants for 32-bit scrambled Sobol generation.</span>
+<span class="c"># </span>
+<span class="c"># \param constants Pointer to the constants pointer.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the pointer was set successfully</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGetScrambleConstants32</span><span class="p">(</span><span class="n">const</span> <span class="nb">unsigned</span> <span class="nb">int</span> <span class="o">**</span> <span class="n">constants</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># \brief Retrieves the scramble constants for 64-bit scrambled Sobol generation.</span>
+<span class="c"># </span>
+<span class="c"># \param constants Pointer to the constants pointer.</span>
+<span class="c"># </span>
+<span class="c"># \return</span>
+<span class="c"># - HIPRAND_STATUS_SUCCESS if the pointer was set successfully</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hiprandStatus</span> <span class="nf">hiprandGetScrambleConstants64</span><span class="p">(</span><span class="n">const</span> <span class="nb">unsigned</span> <span class="nb">long</span> <span class="nb">long</span> <span class="o">**</span> <span class="n">constants</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPRAND_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__hiprand_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.cyhipblaslt.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.cyhipblaslt</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.cyhipfft.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.cyhipfft</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

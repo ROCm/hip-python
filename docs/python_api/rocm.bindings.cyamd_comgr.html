@@ -1,0 +1,2484 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.cyamd_comgr — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.cyamd_comgr';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="cuda.bindings.cydriver.html" rel="next" title="cuda.bindings.cydriver"/>
+<link href="rocm.bindings.cyhipsolver.html" rel="prev" title="rocm.bindings.cyhipsolver"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.cyamd_comgr</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.cyamd_comgr</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-cyamd-comgr">
+<h1>rocm.bindings.cyamd_comgr<a class="headerlink" href="#rocm-bindings-cyamd-comgr" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            52 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.cyamd_comgr</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/amd_comgr/index.html"><span class="doc">rocm.bindings.amd_comgr</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">AMD_COMGR_INTERFACE_VERSION_MAJOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">AMD_COMGR_INTERFACE_VERSION_MINOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_status_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_STATUS_SUCCESS</span>
+        <span class="n">AMD_COMGR_STATUS_ERROR</span>
+        <span class="n">AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT</span>
+        <span class="n">AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_status_s</span> <span class="n">amd_comgr_status_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_language_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_LANGUAGE_NONE</span>
+        <span class="n">AMD_COMGR_LANGUAGE_OPENCL_1_2</span>
+        <span class="n">AMD_COMGR_LANGUAGE_OPENCL_2_0</span>
+        <span class="n">AMD_COMGR_LANGUAGE_HIP</span>
+        <span class="n">AMD_COMGR_LANGUAGE_LLVM_IR</span>
+        <span class="n">AMD_COMGR_LANGUAGE_LAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_language_s</span> <span class="n">amd_comgr_language_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Query additional information about a status code.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] status Status code.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] status_string A NUL-terminated string that describes</span>
+<span class="c"># the error status.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># status is an invalid status code, or @p status_string is NULL.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_status_string</span><span class="p">(</span><span class="n">amd_comgr_status_s</span> <span class="n">status</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">status_string</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the version of the code object manager interface</span>
+<span class="c"># supported.</span>
+<span class="c"># </span>
+<span class="c"># An interface is backwards compatible with an implementation with an</span>
+<span class="c"># equal major version, and a greater than or equal minor version.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] major Major version number.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] minor Minor version number.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">amd_comgr_get_version</span><span class="p">(</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">major</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">minor</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_data_kind_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_DATA_KIND_UNDEF</span>
+        <span class="n">AMD_COMGR_DATA_KIND_SOURCE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_INCLUDE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_PRECOMPILED_HEADER</span>
+        <span class="n">AMD_COMGR_DATA_KIND_DIAGNOSTIC</span>
+        <span class="n">AMD_COMGR_DATA_KIND_LOG</span>
+        <span class="n">AMD_COMGR_DATA_KIND_BC</span>
+        <span class="n">AMD_COMGR_DATA_KIND_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_EXECUTABLE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_BYTES</span>
+        <span class="n">AMD_COMGR_DATA_KIND_FATBIN</span>
+        <span class="n">AMD_COMGR_DATA_KIND_AR</span>
+        <span class="n">AMD_COMGR_DATA_KIND_BC_BUNDLE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_AR_BUNDLE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_OBJ_BUNDLE</span>
+        <span class="n">AMD_COMGR_DATA_KIND_SPIRV</span>
+        <span class="n">AMD_COMGR_DATA_KIND_LAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_data_kind_s</span> <span class="n">amd_comgr_data_kind_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_data_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_data_s</span> <span class="n">amd_comgr_data_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_data_set_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_data_set_s</span> <span class="n">amd_comgr_data_set_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_action_info_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_action_info_s</span> <span class="n">amd_comgr_action_info_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_metadata_node_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_metadata_node_s</span> <span class="n">amd_comgr_metadata_node_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_symbol_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_symbol_s</span> <span class="n">amd_comgr_symbol_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_disassembly_info_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_disassembly_info_s</span> <span class="n">amd_comgr_disassembly_info_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_symbolizer_info_s</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">handle</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_symbolizer_info_s</span> <span class="n">amd_comgr_symbolizer_info_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Return the number of isa names supported by this version of</span>
+<span class="c"># the code object manager library.</span>
+<span class="c"># </span>
+<span class="c"># The isa name specifies the instruction set architecture that should</span>
+<span class="c"># be used in the actions that involve machine code generation or</span>
+<span class="c"># inspection.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of isa names supported.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># count is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_isa_count</span><span class="p">(</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the Nth isa name supported by this version of the</span>
+<span class="c"># code object manager library.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index of the isa name to be returned. The</span>
+<span class="c"># first isa name is index 0.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] isa_name A null terminated string that is the isa name</span>
+<span class="c"># being requested.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># index is greater than the number of isa name supported by this</span>
+<span class="c"># version of the code object manager library. @p isa_name is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_isa_name</span><span class="p">(</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">isa_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get a handle to the metadata of an isa name.</span>
+<span class="c"># </span>
+<span class="c"># The structure of the returned metadata is isa name specific and versioned</span>
+<span class="c"># with details specified in</span>
+<span class="c"># https://llvm.org/docs/AMDGPUUsage.html#code-object-metadata.</span>
+<span class="c"># It can include information about the</span>
+<span class="c"># limits for resources such as registers and memory addressing.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] isa_name The isa name to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] metadata A handle to the metadata of the isa name. If</span>
+<span class="c"># the isa name has no metadata then the returned handle has a kind of</span>
+<span class="c"># @p AMD_COMGR_METADATA_KIND_NULL. The handle must be destroyed</span>
+<span class="c"># using @c amd_comgr_destroy_metadata.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># name is NULL or is not an isa name supported by this version of the</span>
+<span class="c"># code object manager library. @p metadata is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_isa_metadata</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">isa_name</span><span class="p">,</span><span class="n">amd_comgr_metadata_node_s</span> <span class="o">*</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Create a data object that can hold data of a specified kind.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] kind The kind of data the object is intended to hold.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] data A handle to the data object created. Its reference</span>
+<span class="c"># count is set to 1.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># kind is an invalid data kind, or @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p data is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to create the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_create_data</span><span class="p">(</span><span class="n">amd_comgr_data_kind_s</span> <span class="n">kind</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Indicate that no longer using a data object handle.</span>
+<span class="c"># </span>
+<span class="c"># The reference count of the associated data object is</span>
+<span class="c"># decremented. If it reaches 0 it is destroyed.</span>
+<span class="c"># </span>
+<span class="c"># @note Although this may lead to the destruction of a data object, it is not</span>
+<span class="c"># considered a mutation for the purposes of the restrictions described in @ref</span>
+<span class="c"># codeobjectmanager.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to release.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_release_data</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the kind of the data object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] kind The kind of data the object.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object. @p kind is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to create the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_data_kind</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">amd_comgr_data_kind_s</span> <span class="o">*</span> <span class="n">kind</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the data content of a data object to the specified</span>
+<span class="c"># bytes.</span>
+<span class="c"># </span>
+<span class="c"># Any previous value of the data object is overwritten. Any metadata</span>
+<span class="c"># associated with the data object is also replaced which invalidates</span>
+<span class="c"># all metadata handles to the old metadata.</span>
+<span class="c"># </span>
+<span class="c"># @warning This function mutates the data object; see @ref codeobjectmanager</span>
+<span class="c"># for restrictions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to update.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] size The number of bytes in the data specified by @p bytes.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] bytes The bytes to set the data object to. The bytes are</span>
+<span class="c"># copied into the data object and can be freed after the call.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_set_data</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">size</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief For the given open posix file descriptor, map a slice of the</span>
+<span class="c"># file into the data object. The slice is specified by @p offset and @p size.</span>
+<span class="c"># Internally this API calls amd_comgr_set_data and resets data object's</span>
+<span class="c"># current state.</span>
+<span class="c"># </span>
+<span class="c"># @warning This function mutates the data object; see @ref codeobjectmanager</span>
+<span class="c"># for restrictions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] data The data object to update.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] file_descriptor The native file descriptor for an open file.</span>
+<span class="c"># The @p file_descriptor must not be passed into a system I/O function</span>
+<span class="c"># by any other thread while this function is executing.  The offset in</span>
+<span class="c"># the file descriptor may be updated based on the requested size and</span>
+<span class="c"># underlying platform. The @p file_descriptor may be closed immediately</span>
+<span class="c"># after this function returns.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] offset position relative to the start of the file</span>
+<span class="c"># specifying the beginning of the slice in @p file_descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] size Size in bytes of the slice.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The operation is successful.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is an invalid or</span>
+<span class="c"># the map operation failed.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_set_data_from_file_slice</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="nb">int</span> <span class="n">file_descriptor</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">offset</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the name associated with a data object.</span>
+<span class="c"># </span>
+<span class="c"># When compiling, the full name of an include directive is used to</span>
+<span class="c"># reference the contents of the include data object with the same</span>
+<span class="c"># name. The name may also be used for other data objects in log and</span>
+<span class="c"># diagnostic output.</span>
+<span class="c"># </span>
+<span class="c"># @warning This function mutates the data object; see @ref codeobjectmanager</span>
+<span class="c"># for restrictions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to update.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] name A null terminated string that specifies the name to</span>
+<span class="c"># use for the data object. If NULL then the name is set to the empty</span>
+<span class="c"># string.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_set_data_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the data contents, and/or the size of the data</span>
+<span class="c"># associated with a data object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p bytes. On return, if @p bytes</span>
+<span class="c"># is NULL, set to the size of the data object contents.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] bytes If not NULL, then the first @p size bytes of the</span>
+<span class="c"># data object contents is copied. If NULL, no data is copied, and</span>
+<span class="c"># only @p size is updated (useful in order to find the size of buffer</span>
+<span class="c"># required to copy the data).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_data</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the data object name and/or name length.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p name. On return, the size of</span>
+<span class="c"># the data object name including the terminating null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] name If not NULL, then the first @p size characters of the</span>
+<span class="c"># data object name are copied. If @p name is NULL, only @p size is updated</span>
+<span class="c"># (useful in order to find the size of buffer required to copy the name).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_data_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the data object isa name and/or isa name length.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p isa_name. On return, if @p</span>
+<span class="c"># isa_name is NULL, set to the size of the isa name including the terminating</span>
+<span class="c"># null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] isa_name If not NULL, then the first @p size characters</span>
+<span class="c"># of the isa name are copied. If NULL, no isa name is copied, and</span>
+<span class="c"># only @p size is updated (useful in order to find the size of buffer</span>
+<span class="c"># required to copy the isa name).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF, or is not an isa specific</span>
+<span class="c"># kind. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_data_isa_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">isa_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">ctypedef</span> <span class="n">void</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_create_symbolizer_info_anon_funptr_0</span><span class="p">)</span> <span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Create a symbolizer info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] code_object A data object denoting a code object for which</span>
+<span class="c"># symbolization should be performed. The kind of this object must be</span>
+<span class="c"># ::AMD_COMGR_DATA_KIND_RELOCATABLE, ::AMD_COMGR_DATA_KIND_EXECUTABLE,</span>
+<span class="c"># or ::AMD_COMGR_DATA_KIND_BYTES.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] print_symbol_callback Function called by a successfull</span>
+<span class="c"># symbolize query. @p symbol is a null-terminated string containing the</span>
+<span class="c"># symbolization of the address and @p user_data is an arbitary user data.</span>
+<span class="c"># The callback does not own @p symbol, and it cannot be referenced once</span>
+<span class="c"># the callback returns.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] symbolizer_info A handle to the symbolizer info object created.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT if @p code_object is</span>
+<span class="c"># invalid or @p print_symbol_callback is null.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to create @p symbolizer_info as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_create_symbolizer_info</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">code_object</span><span class="p">,</span><span class="n">amd_comgr_create_symbolizer_info_anon_funptr_0</span> <span class="n">print_symbol_callback</span><span class="p">,</span><span class="n">amd_comgr_symbolizer_info_s</span> <span class="o">*</span> <span class="n">symbolizer_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Destroy symbolizer info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] symbolizer_info A handle to symbolizer info object to destroy.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS on successful execution.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT if @p</span>
+<span class="c"># symbolizer_info is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_destroy_symbolizer_info</span><span class="p">(</span><span class="n">amd_comgr_symbolizer_info_s</span> <span class="n">symbolizer_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Symbolize an address.</span>
+<span class="c"># </span>
+<span class="c"># The @p address is symbolized using the symbol definitions of the</span>
+<span class="c"># @p code_object specified when the @p symbolizer_info was created.</span>
+<span class="c"># The @p print_symbol_callback callback function specified when the</span>
+<span class="c"># @p symbolizer_info was created is called passing the</span>
+<span class="c"># symbolization result as @p symbol and @p user_data value.</span>
+<span class="c"># </span>
+<span class="c"># If symbolization is not possible ::AMD_COMGR_STATUS_SUCCESS is returned and</span>
+<span class="c"># the string passed to the @p symbol argument of the @p print_symbol_callback</span>
+<span class="c"># specified when the @p symbolizer_info was created contains the text</span>
+<span class="c"># "&lt;invalid&gt;" or "??". This is consistent with `llvm-symbolizer` utility.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] symbolizer_info A handle to symbolizer info object which should be</span>
+<span class="c"># used to symbolize the @p address.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] address An unrelocated ELF address to which symbolization</span>
+<span class="c"># query should be performed.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] is_code if true, the symbolizer symbolize the address as code</span>
+<span class="c"># and the symbolization result contains filename, function name, line number</span>
+<span class="c"># and column number, else the symbolizer symbolize the address as data and</span>
+<span class="c"># the symbolizaion result contains symbol name, symbol's starting address</span>
+<span class="c"># and symbol size.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] user_data Arbitrary user-data passed to @p print_symbol_callback</span>
+<span class="c"># callback as described for @p symbolizer_info argument.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># symbolizer_info is an invalid data object.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_symbolize</span><span class="p">(</span><span class="n">amd_comgr_symbolizer_info_s</span> <span class="n">symbolizer_info</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">address</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">is_code</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">user_data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get a handle to the metadata of a data object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] metadata A handle to the metadata of the data</span>
+<span class="c"># object. If the data object has no metadata then the returned handle</span>
+<span class="c"># has a kind of @p AMD_COMGR_METADATA_KIND_NULL. The</span>
+<span class="c"># handle must be destroyed using @c amd_comgr_destroy_metadata.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># data is an invalid data object, or has kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p metadata is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_data_metadata</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">amd_comgr_metadata_node_s</span> <span class="o">*</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Destroy a metadata handle.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata A metadata handle to destroy.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p metadata is an invalid</span>
+<span class="c"># metadata handle.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update metadata</span>
+<span class="c"># handle as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_destroy_metadata</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Create a data set object.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] data_set A handle to the data set created. Initially it</span>
+<span class="c"># contains no data objects.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to create the data</span>
+<span class="c"># set object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_create_data_set</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="o">*</span> <span class="n">data_set</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Destroy a data set object.</span>
+<span class="c"># </span>
+<span class="c"># The reference counts of any associated data objects are decremented. Any</span>
+<span class="c"># handles to the data set object become invalid.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_set A handle to the data set object to destroy.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is an invalid</span>
+<span class="c"># data set object.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update data set</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_destroy_data_set</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="n">data_set</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Add a data object to a data set object if it is not already added.</span>
+<span class="c"># </span>
+<span class="c"># The reference count of the data object is incremented.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_set A handle to the data set object to be updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data A handle to the data object to be added. If @p data_set</span>
+<span class="c"># already has the specified handle present, then it is not added. The order</span>
+<span class="c"># that data objects are added is preserved.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is an invalid</span>
+<span class="c"># data set object. @p data is an invalid data object; has undef kind; has</span>
+<span class="c"># include kind but does not have a name.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update data set</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_data_set_add</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="n">data_set</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Remove all data objects of a specified kind from a data set object.</span>
+<span class="c"># </span>
+<span class="c"># The reference count of the removed data objects is decremented.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_set A handle to the data set object to be updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_kind The data kind of the data objects to be removed. If @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF is specified then all data objects are removed.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is an invalid</span>
+<span class="c"># data set object. @p data_kind is an invalid data kind.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update data set</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_data_set_remove</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="n">data_set</span><span class="p">,</span><span class="n">amd_comgr_data_kind_s</span> <span class="n">data_kind</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the number of data objects of a specified data kind that are</span>
+<span class="c"># added to a data set object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_set A handle to the data set object to be queried.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_kind The data kind of the data objects to be counted.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of data objects of data kind @p data_kind.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is an invalid</span>
+<span class="c"># data set object. @p data_kind is an invalid data kind or @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p count is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query data set</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_data_count</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="n">data_set</span><span class="p">,</span><span class="n">amd_comgr_data_kind_s</span> <span class="n">data_kind</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the Nth data object of a specified data kind that is added to a</span>
+<span class="c"># data set object.</span>
+<span class="c"># </span>
+<span class="c"># The reference count of the returned data object is incremented.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_set A handle to the data set object to be queried.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data_kind The data kind of the data object to be returned.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index of the data object of data kind @data_kind to be</span>
+<span class="c"># returned. The first data object is index 0. The order of data objects matches</span>
+<span class="c"># the order that they were added to the data set object.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] data The data object being requested.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data_set is an invalid</span>
+<span class="c"># data set object. @p data_kind is an invalid data kind or @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_UNDEF. @p index is greater than the number of data</span>
+<span class="c"># objects of kind @p data_kind. @p data is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query data set</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_data_get_data</span><span class="p">(</span><span class="n">amd_comgr_data_set_s</span> <span class="n">data_set</span><span class="p">,</span><span class="n">amd_comgr_data_kind_s</span> <span class="n">data_kind</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="o">*</span> <span class="n">data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Create an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] action_info A handle to the action info object created.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to create the action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_create_action_info</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="o">*</span> <span class="n">action_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Destroy an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to destroy.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_destroy_action_info</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the isa name of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># When an action info object is created it has no isa name. Some</span>
+<span class="c"># actions require that the action info object has an isa name</span>
+<span class="c"># defined.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] isa_name A null terminated string that is the isa name. If NULL</span>
+<span class="c"># or the empty string then the isa name is cleared. The isa name is defined as</span>
+<span class="c"># the Code Object Target Identification string, described at</span>
+<span class="c"># https://llvm.org/docs/AMDGPUUsage.html#code-object-target-identification</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p isa_name is not an</span>
+<span class="c"># isa name supported by this version of the code object manager</span>
+<span class="c"># library.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_isa_name</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">isa_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the isa name and/or isa name length.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p isa_name. On return, if @p</span>
+<span class="c"># isa_name is NULL, set to the size of the isa name including the terminating</span>
+<span class="c"># null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] isa_name If not NULL, then the first @p size characters of the</span>
+<span class="c"># isa name are copied into @p isa_name. If the isa name is not set then an</span>
+<span class="c"># empty string is copied into @p isa_name. If NULL, no name is copied, and</span>
+<span class="c"># only @p size is updated (useful in order to find the size of buffer required</span>
+<span class="c"># to copy the name).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_isa_name</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">isa_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the source language of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># When an action info object is created it has no language defined</span>
+<span class="c"># which is represented by @p</span>
+<span class="c"># AMD_COMGR_LANGUAGE_NONE. Some actions require that</span>
+<span class="c"># the action info object has a source language defined.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] language The language to set. If @p</span>
+<span class="c"># AMD_COMGR_LANGUAGE_NONE then the language is cleared.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p language is an</span>
+<span class="c"># invalid language.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_language</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">amd_comgr_language_s</span> <span class="n">language</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the language for an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] language The language of the action info opject. @p</span>
+<span class="c"># AMD_COMGR_LANGUAGE_NONE if not defined,</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p language is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_language</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">amd_comgr_language_s</span> <span class="o">*</span> <span class="n">language</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the options array of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># This overrides any option strings or arrays previously set by calls to this</span>
+<span class="c"># function.</span>
+<span class="c"># </span>
+<span class="c"># An @p action_info object which had its options set with this function can</span>
+<span class="c"># only have its option inspected with @p</span>
+<span class="c"># amd_comgr_action_info_get_option_list_count and @p</span>
+<span class="c"># amd_comgr_action_info_get_option_list_item.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] options An array of null terminated strings. May be NULL if @p</span>
+<span class="c"># count is zero, which will result in an empty options array.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] count The number of null terminated strings in @p options.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object, or @p options is NULL and @p count is non-zero.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update action</span>
+<span class="c"># info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_option_list</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">options</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the number of options in the options array.</span>
+<span class="c"># </span>
+<span class="c"># The @p action_info object must have had its options set with @p</span>
+<span class="c"># amd_comgr_action_info_set_option_list.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of options in the options array.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The options of @p action_info were never</span>
+<span class="c"># set, or not set with @p amd_comgr_action_info_set_option_list.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object, or @p count is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query the data</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_option_list_count</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the Nth option string in the options array and/or that</span>
+<span class="c"># option's length.</span>
+<span class="c"># </span>
+<span class="c"># The @p action_info object must have had its options set with @p</span>
+<span class="c"># amd_comgr_action_info_set_option_list.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index of the option to be returned. The first option</span>
+<span class="c"># index is 0. The order is the same as the options when they were added in @p</span>
+<span class="c"># amd_comgr_action_info_set_option_list.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p option. On return, if @option</span>
+<span class="c"># is NULL, set to the size of the Nth option string including the terminating</span>
+<span class="c"># null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] option If not NULL, then the first @p size characters of the Nth</span>
+<span class="c"># option string are copied into @p option. If NULL, no option string is</span>
+<span class="c"># copied, and only @p size is updated (useful in order to find the size of</span>
+<span class="c"># buffer required to copy the option string).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The options of @p action_info were never</span>
+<span class="c"># set, or not set with @p amd_comgr_action_info_set_option_list.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object, @p index is invalid, or @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query the data</span>
+<span class="c"># object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_option_list_item</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">option</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the bundle entry IDs of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># When an action info object is created it has no bundle entry IDs. Some</span>
+<span class="c"># actions require that the action info object has bundle entry IDs</span>
+<span class="c"># defined.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] bundle_entry_ids An array of strings containing one or more</span>
+<span class="c"># bundle entry ID strings. If NULL then the bundle entry ID strings are</span>
+<span class="c"># cleared. These IDs are described at</span>
+<span class="c"># https://clang.llvm.org/docs/ClangOffloadBundler.html#bundle-entry-id</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p contains an invalid</span>
+<span class="c"># bundle ID not supported by this version of the code object manager</span>
+<span class="c"># library.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_bundle_entry_ids</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">bundle_entry_ids</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get number of bundle entry IDs</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of bundle entry IDs availible. This value</span>
+<span class="c"># can be used as an upper bound to the Index provided to the corresponding</span>
+<span class="c"># amd_comgr_get_bundle_entry_id() call.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_bundle_entry_id_count</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Fetch the Nth specific bundle entry ID or that ID's length.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index of the bundle entry ID to be returned.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size For out, the size of @p bundle_entry_id. For in,</span>
+<span class="c"># if @bundle_entry_id is NULL, set to the size of the Nth ID string including</span>
+<span class="c"># the terminating null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] bundle_entry_id If not NULL, then the first @p size characters of</span>
+<span class="c"># the Nth bundle entry ID string are copied into @p bundle_entry_id. If NULL,</span>
+<span class="c"># no bundle entry ID is copied, and only @p size is updated (useful in order</span>
+<span class="c"># to find the size of the buffer requried to copy the bundle_entry_id string).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_bundle_entry_id</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">bundle_entry_id</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set whether the specified action should use an</span>
+<span class="c"># in-memory virtual file system (VFS).</span>
+<span class="c"># </span>
+<span class="c"># @warning Environment variable @p AMD_COMGR_SAVE_TEMPS may override options</span>
+<span class="c"># set by this API and @p AMD_COMGR_USE_VFS. If @p AMD_COMGR_SAVE_TEMPS is set</span>
+<span class="c"># to "1", all actions are performed using the real file system irrespective of</span>
+<span class="c"># the value of @p should_use_vfs @p AMD_COMGR_USE_VFS;</span>
+<span class="c"># </span>
+<span class="c"># @warning Environment variable @p AMD_COMGR_USE_VFS may override options</span>
+<span class="c"># set by this API. If @p AMD_COMGR_USE_VFS is set to "1", all actions</span>
+<span class="c"># are performed using VFS. If @p AMD_COMGR_USE_VFS is set to "0",</span>
+<span class="c"># none of the actions are performed using VFS.</span>
+<span class="c"># </span>
+<span class="c"># If @p AMD_COMGR_USE_VFS is unset, this API can be used to selectively</span>
+<span class="c"># turn VFS usage on/off for specified actions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] should_use_vfs A boolean that directs the choice to</span>
+<span class="c"># use the VFS.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object.</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_vfs</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">should_use_vfs</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the device library linking behavior of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># Device library linking can be either enforced or omitted for compilation</span>
+<span class="c"># actions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] should_link_device_libs A boolean that directs the choice to</span>
+<span class="c"># link the device libraries.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_device_lib_linking</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">should_link_device_libs</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the block sizes for kernel cloning.</span>
+<span class="c"># </span>
+<span class="c"># When an action info object is created it has no block sizes specified.</span>
+<span class="c"># When block sizes are set, SPIR-V translation and compilation actions</span>
+<span class="c"># (AMD_COMGR_ACTION_TRANSLATE_SPIRV_TO_BC and</span>
+<span class="c"># AMD_COMGR_ACTION_COMPILE_SPIRV_TO_RELOCATABLE) will automatically clone</span>
+<span class="c"># kernel functions for each specified block size, if the size is within the</span>
+<span class="c"># limits specified by the amdgpu-flat-work-group-size attribute on the kernel.</span>
+<span class="c"># The upper limit of the original kernel is assumed to represent the original</span>
+<span class="c"># kernel, so if corresponding block size is in the set of block sizes, no new</span>
+<span class="c"># kernel is generated for that block size.</span>
+<span class="c"># Cloned kernels will have the amdgpu-flat-work-group-size attribute set with</span>
+<span class="c"># an upper limit equal to the corresponding block size and the lower bound</span>
+<span class="c"># equal to the lower bound of the original kernel.</span>
+<span class="c"># Cloned kernels will have a name in the format of</span>
+<span class="c"># "&lt;original_kernel_name&gt;.bs&lt;block_size&gt;".</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] block_sizes An array of block sizes (flat work group sizes) to</span>
+<span class="c"># compile kernel variants for. If NULL then the block sizes are cleared.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] count The number of elements in the @p block_sizes array.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object, or @p block_sizes is NULL and @p count is</span>
+<span class="c"># non-zero.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to update action</span>
+<span class="c"># info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_block_sizes</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">block_sizes</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the number of block sizes set for kernel cloning actions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of block sizes set.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object. @p count is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query action</span>
+<span class="c"># info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_block_sizes_count</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the block sizes set for kernel cloning actions.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] count The number of elements in the @p block_sizes array.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] block_sizes Array to store the block sizes. Must be large enough</span>
+<span class="c"># to hold @p count elements. Use amd_comgr_action_info_get_block_sizes_count</span>
+<span class="c"># to query the required size.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p action_info is an</span>
+<span class="c"># invalid action info object. @p block_sizes is NULL. @p count is less than</span>
+<span class="c"># the number of block sizes set.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to query action</span>
+<span class="c"># info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_block_sizes</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">block_sizes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set the working directory of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># When an action info object is created it has an empty working</span>
+<span class="c"># directory. Some actions use the working directory to resolve</span>
+<span class="c"># relative file paths.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] path A null terminated string that is the working</span>
+<span class="c"># directory path. If NULL or the empty string then the working</span>
+<span class="c"># directory is cleared.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_working_directory_path</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the working directory path and/or working directory path</span>
+<span class="c"># length of an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p path. On return, if @p path is</span>
+<span class="c"># NULL, set to the size of the working directory path including the</span>
+<span class="c"># terminating null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] path If not NULL, then the first @p size characters of</span>
+<span class="c"># the working directory path is copied. If the working directory path</span>
+<span class="c"># is not set then an empty string is copied. If NULL, the working</span>
+<span class="c"># directory path is not copied, and only @p size is updated (useful</span>
+<span class="c"># in order to find the size of buffer required to copy the working</span>
+<span class="c"># directory path).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_working_directory_path</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">path</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Set whether logging is enabled for an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info A handle to the action info object to be</span>
+<span class="c"># updated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] logging Whether logging should be enabled or disable.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_set_logging</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">_Bool</span> <span class="n">logging</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get whether logging is enabled for an action info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] action_info The action info object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] logging Whether logging is enabled.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># action_info is an invalid action info object. @p logging is NULL.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_action_info_get_logging</span><span class="p">(</span><span class="n">amd_comgr_action_info_s</span> <span class="n">action_info</span><span class="p">,</span><span class="n">_Bool</span> <span class="o">*</span> <span class="n">logging</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_action_kind_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_ACTION_SOURCE_TO_PREPROCESSOR</span>
+        <span class="n">AMD_COMGR_ACTION_ADD_PRECOMPILED_HEADERS</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SOURCE_TO_BC</span>
+        <span class="n">AMD_COMGR_ACTION_LINK_BC_TO_BC</span>
+        <span class="n">AMD_COMGR_ACTION_CODEGEN_BC_TO_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_ACTION_CODEGEN_BC_TO_ASSEMBLY</span>
+        <span class="n">AMD_COMGR_ACTION_LINK_RELOCATABLE_TO_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_ACTION_LINK_RELOCATABLE_TO_EXECUTABLE</span>
+        <span class="n">AMD_COMGR_ACTION_ASSEMBLE_SOURCE_TO_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_ACTION_DISASSEMBLE_RELOCATABLE_TO_SOURCE</span>
+        <span class="n">AMD_COMGR_ACTION_DISASSEMBLE_EXECUTABLE_TO_SOURCE</span>
+        <span class="n">AMD_COMGR_ACTION_DISASSEMBLE_BYTES_TO_SOURCE</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SOURCE_WITH_DEVICE_LIBS_TO_BC</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SOURCE_TO_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SOURCE_TO_EXECUTABLE</span>
+        <span class="n">AMD_COMGR_ACTION_UNBUNDLE</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SPIRV_TO_RELOCATABLE</span>
+        <span class="n">AMD_COMGR_ACTION_TRANSLATE_SPIRV_TO_BC</span>
+        <span class="n">AMD_COMGR_ACTION_COMPILE_SOURCE_TO_SPIRV</span>
+        <span class="n">AMD_COMGR_ACTION_LAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_action_kind_s</span> <span class="n">amd_comgr_action_kind_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Perform an action.</span>
+<span class="c"># </span>
+<span class="c"># Each action ignores any data objects in @p input that it does not</span>
+<span class="c"># use. If logging is enabled in @info then @p result will have a log</span>
+<span class="c"># data object added. Any diagnostic data objects produced by the</span>
+<span class="c"># action will be added to @p result. See the description of each</span>
+<span class="c"># action in @p amd_comgr_action_kind_t.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] kind The action to perform.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] info The action info to use when performing the action.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] input The input data objects to the @p kind action.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] result Any data objects are removed before performing</span>
+<span class="c"># the action which then adds all data objects produced by the action.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR An error was</span>
+<span class="c"># reported when executing the action.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># kind is an invalid action kind. @p input_data or @p result_data are</span>
+<span class="c"># invalid action data object handles. See the description of each</span>
+<span class="c"># action in @p amd_comgr_action_kind_t for other</span>
+<span class="c"># conditions that result in this status.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_do_action</span><span class="p">(</span><span class="n">amd_comgr_action_kind_s</span> <span class="n">kind</span><span class="p">,</span><span class="n">amd_comgr_action_info_s</span> <span class="n">info</span><span class="p">,</span><span class="n">amd_comgr_data_set_s</span> <span class="nb">input</span><span class="p">,</span><span class="n">amd_comgr_data_set_s</span> <span class="n">result</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_metadata_kind_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_METADATA_KIND_NULL</span>
+        <span class="n">AMD_COMGR_METADATA_KIND_STRING</span>
+        <span class="n">AMD_COMGR_METADATA_KIND_MAP</span>
+        <span class="n">AMD_COMGR_METADATA_KIND_LIST</span>
+        <span class="n">AMD_COMGR_METADATA_KIND_LAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_metadata_kind_s</span> <span class="n">amd_comgr_metadata_kind_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Get the kind of the metadata node.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] kind The kind of the metadata node.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node. @p kind is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to create the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_metadata_kind</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">amd_comgr_metadata_kind_s</span> <span class="o">*</span> <span class="n">kind</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the string and/or string length from a metadata string</span>
+<span class="c"># node.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size On entry, the size of @p string. On return, if @p</span>
+<span class="c"># string is NULL, set to the size of the string including the terminating null</span>
+<span class="c"># character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] string If not NULL, then the first @p size characters</span>
+<span class="c"># of the string are copied. If NULL, no string is copied, and only @p</span>
+<span class="c"># size is updated (useful in order to find the size of buffer required</span>
+<span class="c"># to copy the string).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node, or does not have kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_KIND_STRING. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_metadata_string</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">string</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the map size from a metadata map node.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] size The number of entries in the map.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node, or not of kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_KIND_MAP. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_metadata_map_size</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">ctypedef</span> <span class="n">amd_comgr_status_s</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_iterate_map_metadata_anon_funptr_0</span><span class="p">)</span> <span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span><span class="p">,</span><span class="n">amd_comgr_metadata_node_s</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Iterate over the elements a metadata map node.</span>
+<span class="c"># </span>
+<span class="c"># @warning The metadata nodes which are passed to the callback are not owned</span>
+<span class="c"># by the callback, and are freed just after the callback returns. The callback</span>
+<span class="c"># must not save any references to its parameters between iterations.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] callback The function to call for each entry in the map. The</span>
+<span class="c"># entry's key is passed in @p key, the entry's value is passed in @p value, and</span>
+<span class="c"># @p user_data is passed as @p user_data. If the function returns with a status</span>
+<span class="c"># other than @p AMD_COMGR_STATUS_SUCCESS then iteration is stopped.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] user_data The value to pass to each invocation of @p</span>
+<span class="c"># callback. Allows context to be passed into the call back function.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR An error was</span>
+<span class="c"># reported by @p callback.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node, or not of kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_KIND_MAP. @p callback is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to iterate the metadata as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_iterate_map_metadata</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">amd_comgr_iterate_map_metadata_anon_funptr_0</span> <span class="n">callback</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">user_data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Use a string key to lookup an element of a metadata map</span>
+<span class="c"># node and return the entry value.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] key A null terminated string that is the key to lookup.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] value The metadata node of the @p key element of the</span>
+<span class="c"># @p metadata map metadata node. The handle must be destroyed</span>
+<span class="c"># using @c amd_comgr_destroy_metadata.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The map has no entry</span>
+<span class="c"># with a string key with the value @p key.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node, or not of kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_KIND_MAP. @p key or @p value is</span>
+<span class="c"># NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to lookup metadata as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_metadata_lookup</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span><span class="n">amd_comgr_metadata_node_s</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Get the list size from a metadata list node.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] size The number of entries in the list.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node, or does nopt have kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_KIND_LIST. @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_metadata_list_size</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Return the Nth metadata node of a list metadata node.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] metadata The metadata node to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index being requested. The first list element</span>
+<span class="c"># is index 0.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] value The metadata node of the @p index element of the</span>
+<span class="c"># @p metadata list metadata node. The handle must be destroyed</span>
+<span class="c"># using @c amd_comgr_destroy_metadata.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p</span>
+<span class="c"># metadata is an invalid metadata node or not of kind @p</span>
+<span class="c"># AMD_COMGR_METADATA_INFO_LIST. @p index is greater</span>
+<span class="c"># than the number of list elements. @p value is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to update action data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_index_list_metadata</span><span class="p">(</span><span class="n">amd_comgr_metadata_node_s</span> <span class="n">metadata</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">amd_comgr_metadata_node_s</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">ctypedef</span> <span class="n">amd_comgr_status_s</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_iterate_symbols_anon_funptr_0</span><span class="p">)</span> <span class="p">(</span><span class="n">amd_comgr_symbol_s</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Iterate over the symbols of a machine code object.</span>
+<span class="c"># </span>
+<span class="c"># For a AMD_COMGR_DATA_KIND_RELOCATABLE the symbols in the ELF symtab section</span>
+<span class="c"># are iterated. For a AMD_COMGR_DATA_KIND_EXECUTABLE the symbols in the ELF</span>
+<span class="c"># dynsymtab are iterated.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] callback The function to call for each symbol in the machine code</span>
+<span class="c"># data object. The symbol handle is passed in @p symbol and @p user_data is</span>
+<span class="c"># passed as @p user_data. If the function returns with a status other than @p</span>
+<span class="c"># AMD_COMGR_STATUS_SUCCESS then iteration is stopped.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] user_data The value to pass to each invocation of @p</span>
+<span class="c"># callback. Allows context to be passed into the call back function.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR An error was</span>
+<span class="c"># reported by @p callback.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is an invalid data</span>
+<span class="c"># object, or not of kind @p AMD_COMGR_DATA_KIND_RELOCATABLE or</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE. @p callback is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to iterate the data object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_iterate_symbols</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">amd_comgr_iterate_symbols_anon_funptr_0</span> <span class="n">callback</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">user_data</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Lookup a symbol in a machine code object by name.</span>
+<span class="c"># </span>
+<span class="c"># For a AMD_COMGR_DATA_KIND_RELOCATABLE the symbols in the ELF symtab section</span>
+<span class="c"># are inspected. For a AMD_COMGR_DATA_KIND_EXECUTABLE the symbols in the ELF</span>
+<span class="c"># dynsymtab are inspected.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] name A null terminated string that is the symbol name to lookup.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] symbol The symbol with the @p name.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The machine code object has no symbol</span>
+<span class="c"># with @p name.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is an invalid data</span>
+<span class="c"># object, or not of kind @p AMD_COMGR_DATA_KIND_RELOCATABLE or</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to lookup symbol as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_symbol_lookup</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">name</span><span class="p">,</span><span class="n">amd_comgr_symbol_s</span> <span class="o">*</span> <span class="n">symbol</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_symbol_type_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_UNKNOWN</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_NOTYPE</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_OBJECT</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_FUNC</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_SECTION</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_FILE</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_COMMON</span>
+        <span class="n">AMD_COMGR_SYMBOL_TYPE_AMDGPU_HSA_KERNEL</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_symbol_type_s</span> <span class="n">amd_comgr_symbol_type_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_symbol_info_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_NAME_LENGTH</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_NAME</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_TYPE</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_SIZE</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_IS_UNDEFINED</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_VALUE</span>
+        <span class="n">AMD_COMGR_SYMBOL_INFO_LAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_symbol_info_s</span> <span class="n">amd_comgr_symbol_info_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Query information about a machine code object symbol.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] symbol The symbol to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] attribute Attribute to query.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] value Pointer to an application-allocated buffer where to store</span>
+<span class="c"># the value of the attribute. If the buffer passed by the application is not</span>
+<span class="c"># large enough to hold the value of attribute, the behavior is undefined. The</span>
+<span class="c"># type of value returned is specified by @p amd_comgr_symbol_info_t.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has</span>
+<span class="c"># been executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The @p symbol does not have the requested @p</span>
+<span class="c"># attribute.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p symbol is an invalid</span>
+<span class="c"># symbol. @p attribute is an invalid value. @p value is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES</span>
+<span class="c"># Unable to query symbol as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_symbol_get_info</span><span class="p">(</span><span class="n">amd_comgr_symbol_s</span> <span class="n">symbol</span><span class="p">,</span><span class="n">amd_comgr_symbol_info_s</span> <span class="n">attribute</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">ctypedef</span> <span class="n">uint64_t</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_0</span><span class="p">)</span> <span class="p">(</span><span class="n">uint64_t</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span><span class="p">,</span><span class="n">uint64_t</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="k">ctypedef</span> <span class="n">void</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_1</span><span class="p">)</span> <span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="k">ctypedef</span> <span class="n">void</span> <span class="p">(</span><span class="o">*</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_2</span><span class="p">)</span> <span class="p">(</span><span class="n">uint64_t</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Create a disassembly info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] isa_name A null terminated string that is the isa name of the</span>
+<span class="c"># target to disassemble for. The isa name is defined as the Code Object Target</span>
+<span class="c"># Identification string, described at</span>
+<span class="c"># https://llvm.org/docs/AMDGPUUsage.html#code-object-target-identification</span>
+<span class="c"># </span>
+<span class="c"># @param[in] read_memory_callback Function called to request @p size bytes</span>
+<span class="c"># from the program address space at @p from be read into @p to. The requested</span>
+<span class="c"># @p size is never zero. Returns the number of bytes which could be read, with</span>
+<span class="c"># the guarantee that no additional bytes will be available in any subsequent</span>
+<span class="c"># call.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] print_instruction_callback Function called after a successful</span>
+<span class="c"># disassembly. @p instruction is a null terminated string containing the</span>
+<span class="c"># disassembled instruction. The callback does not own @p instruction, and it</span>
+<span class="c"># cannot be referenced once the callback returns.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] print_address_annotation_callback Function called after @c</span>
+<span class="c"># print_instruction_callback returns, once for each instruction operand which</span>
+<span class="c"># was resolved to an absolute address. @p address is the absolute address in</span>
+<span class="c"># the program address space. It is intended to append a symbolic</span>
+<span class="c"># form of the address, perhaps as a comment, after the instruction disassembly</span>
+<span class="c"># produced by @c print_instruction_callback.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] disassembly_info A handle to the disassembly info object</span>
+<span class="c"># created.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The disassembly info object was created.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p isa_name is NULL or</span>
+<span class="c"># invalid; or @p read_memory_callback, @p print_instruction_callback,</span>
+<span class="c"># or @p print_address_annotation_callback is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to create the</span>
+<span class="c"># disassembly info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_create_disassembly_info</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">isa_name</span><span class="p">,</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_0</span> <span class="n">read_memory_callback</span><span class="p">,</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_1</span> <span class="n">print_instruction_callback</span><span class="p">,</span><span class="n">amd_comgr_create_disassembly_info_anon_funptr_2</span> <span class="n">print_address_annotation_callback</span><span class="p">,</span><span class="n">amd_comgr_disassembly_info_s</span> <span class="o">*</span> <span class="n">disassembly_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Destroy a disassembly info object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] disassembly_info A handle to the disassembly info object to</span>
+<span class="c"># destroy.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The disassembly info object was</span>
+<span class="c"># destroyed.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p disassembly_info is an</span>
+<span class="c"># invalid disassembly info object.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to destroy the</span>
+<span class="c"># disassembly info object as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_destroy_disassembly_info</span><span class="p">(</span><span class="n">amd_comgr_disassembly_info_s</span> <span class="n">disassembly_info</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Disassemble a single instruction.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] address The address of the first byte of the instruction in the</span>
+<span class="c"># program address space.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] user_data Arbitrary user-data passed to each callback function</span>
+<span class="c"># during disassembly.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] size The number of bytes consumed to decode the</span>
+<span class="c"># instruction, or consumed while failing to decode an invalid instruction.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The disassembly was successful.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The disassembly failed.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p disassembly_info is</span>
+<span class="c"># invalid or @p size is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to disassemble the</span>
+<span class="c"># instruction as out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_disassemble_instruction</span><span class="p">(</span><span class="n">amd_comgr_disassembly_info_s</span> <span class="n">disassembly_info</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">address</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">user_data</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Demangle a symbol name.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] mangled_symbol_name A data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_BYTES containing the mangled symbol name.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] demangled_symbol_name A handle to the data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_BYTES created and set to contain the demangled symbol</span>
+<span class="c"># name in case of successful completion. The handle must be released using</span>
+<span class="c"># @c amd_comgr_release_data. @p demangled_symbol_name is not updated for</span>
+<span class="c"># an error case.</span>
+<span class="c"># </span>
+<span class="c"># @note If the @p mangled_symbol_name cannot be demangled, it will be copied</span>
+<span class="c"># without changes to the @p demangled_symbol_name and AMD_COMGR_STATUS_SUCCESS</span>
+<span class="c"># is returned.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p mangled_symbol_name is</span>
+<span class="c"># an invalid data object or not of kind @p AMD_COMGR_DATA_KIND_BYTES or</span>
+<span class="c"># @p demangled_symbol_name is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Out of resources.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_demangle_symbol_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">mangled_symbol_name</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="o">*</span> <span class="n">demangled_symbol_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Fetch mangled symbol names from a code object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data A data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE or @p AMD_COMGR_DATA_KIND_BC</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of mangled names retrieved. This value</span>
+<span class="c"># can be used as an upper bound to the Index provided to the corresponding</span>
+<span class="c"># amd_comgr_get_mangled_name() call.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is</span>
+<span class="c"># an invalid data object or not of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE or</span>
+<span class="c"># @p AMD_COMGR_DATA_KIND_BC.</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_populate_mangled_names</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Fetch the Nth specific mangled name from a set of populated names or</span>
+<span class="c"># that name's length.</span>
+<span class="c"># </span>
+<span class="c"># The @p data must have had its mangled names populated with @p</span>
+<span class="c"># amd_comgr_populate_mangled_names.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data A data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE or @p AMD_COMGR_DATA_KIND_BC used to</span>
+<span class="c"># identify which set of mangled names to retrive from.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] index The index of the mangled name to be returned.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size For out, the size of @p mangled_name. For in,</span>
+<span class="c"># if @mangled_name is NULL, set to the size of the Nth option string including</span>
+<span class="c"># the terminating null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] mangled_name If not NULL, then the first @p size characters of</span>
+<span class="c"># the Nth mangled name string are copied into @p mangled_name. If NULL, no</span>
+<span class="c"># mangled name string is copied, and only @p size is updated (useful in order</span>
+<span class="c"># to find the size of the buffer requried to copy the mangled_name string).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR @p data has not been used to</span>
+<span class="c"># populate a set of mangled names, or index is greater than the count of</span>
+<span class="c"># mangled names for that data object</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_get_mangled_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">index</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">mangled_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Populate a name expression map from a given code object.</span>
+<span class="c"># </span>
+<span class="c"># Used to map stub names *__amdgcn_name_expr_* in bitcodes and code</span>
+<span class="c"># objects generated by hip runtime to an associated (unmangled) name</span>
+<span class="c"># expression and (mangled) symbol name.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data A data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE or @p AMD_COMGR_DATA_KIND_BC</span>
+<span class="c"># </span>
+<span class="c"># @param[out] count The number of name expressions mapped. This value</span>
+<span class="c"># can be used as an upper bound to the Index provided to the corresponding</span>
+<span class="c"># amd_comgr_map_name_expression_to_symbol_name() call.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is</span>
+<span class="c"># an invalid data object or not of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE or</span>
+<span class="c"># @p AMD_COMGR_DATA_KIND_BC.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR LLVM API failure, which should be</span>
+<span class="c"># accompanied by an LLVM error message to stderr</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_populate_name_expression_map</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Fetch a related symbol name for a given name expression;</span>
+<span class="c"># or that name's length.</span>
+<span class="c"># </span>
+<span class="c"># The @p data must have had its name expression map populated with @p</span>
+<span class="c"># amd_comgr_populate_name_expression_map.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data A data object of kind @p</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE or @p AMD_COMGR_DATA_KIND_BC used to</span>
+<span class="c"># identify which map of name expressions to retrieve from.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] size For out, the size of @p symbol_name. For in,</span>
+<span class="c"># if @symbol_name is NULL, set to the size of the Nth option string including</span>
+<span class="c"># the terminating null character.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] name_expression A character array of a name expression. This name</span>
+<span class="c"># is used as the key to the name expression map in order to locate the desired</span>
+<span class="c"># @symbol_name.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] symbol_name If not NULL, then the first @p size characters of</span>
+<span class="c"># the symbol name string mapped from @name_expression are copied into @p</span>
+<span class="c"># symbol_name. If NULL, no symbol name string is copied, and only @p size is</span>
+<span class="c"># updated (useful in order to find the size of the buffer required to copy the</span>
+<span class="c"># symbol_name string).</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function executed successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR @p data object is not valid (NULL or not of</span>
+<span class="c"># type bitcode or code object)</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p name_expression is not</span>
+<span class="c"># present in the name expression map.</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_map_name_expression_to_symbol_name</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">name_expression</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">symbol_name</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">code_object_info_s</span><span class="p">:</span>
+        <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">isa</span>
+        <span class="n">size_t</span> <span class="n">size</span>
+        <span class="n">uint64_t</span> <span class="n">offset</span>
+
+    <span class="k">ctypedef</span> <span class="n">code_object_info_s</span> <span class="n">amd_comgr_code_object_info_t</span>
+
+<span class="c"># </span>
+<span class="c"># @ brief Given a bundled code object and list of target id strings, extract</span>
+<span class="c"># correponding code object information.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object for bundled code object. This should be</span>
+<span class="c"># of kind AMD_COMGR_DATA_KIND_FATBIN or AMD_COMGR_DATA_KIND_EXECUTABLE or</span>
+<span class="c"># AMD_COMGR_DATA_KIND_BYTES. The API interprets the data object of kind</span>
+<span class="c"># AMD_COMGR_DATA_KIND_FATBIN as a clang offload bundle and of kind</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE as an executable shared object. For a data</span>
+<span class="c"># object of type AMD_COMGR_DATA_KIND_BYTES the API first inspects the data</span>
+<span class="c"># passed to determine if it is a fatbin or an executable and performs</span>
+<span class="c"># the lookup.</span>
+<span class="c"># </span>
+<span class="c"># @param[in, out] info_list A list of code object information structure</span>
+<span class="c"># initialized with null terminated target id strings. If the target id</span>
+<span class="c"># is matched in the code object bundle the corresponding code object</span>
+<span class="c"># information is updated with offset and size of the code object. If the</span>
+<span class="c"># target id is not found the offset and size are set to 0.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The code object bundle header is incorrect</span>
+<span class="c"># or reading bundle entries failed.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is not of</span>
+<span class="c"># kind AMD_COMGR_DATA_KIND_FATBIN, or AMD_COMGR_DATA_KIND_BYTES or</span>
+<span class="c"># AMD_COMGR_DATA_KIND_EXECUTABLE or either @p info_list is NULL.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT if the @p data has</span>
+<span class="c"># invalid data.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_lookup_code_object</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">code_object_info_s</span> <span class="o">*</span> <span class="n">info_list</span><span class="p">,</span><span class="n">size_t</span> <span class="n">info_list_size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @ brief Given a code object and an ELF virtual address, map the ELF virtual</span>
+<span class="c"># address to a code object offset. Also, determine if the ELF virtual address</span>
+<span class="c"># maps to an offset in a data region that is defined by the ELF file, but that</span>
+<span class="c"># does not occupy bytes in the ELF file. This is typically true of offsets that</span>
+<span class="c"># that refer to runtime or heap allocated memory. For ELF files with defined</span>
+<span class="c"># sections, these data regions are referred to as NOBITS or .bss sections.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] data The data object to be inspected for the given ELF virtual</span>
+<span class="c"># address. This should be of kind AMD_COMGR_DATA_KIND_EXECUTABLE.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] elf_virtual_address The address used to calculate the code object</span>
+<span class="c"># offset.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] code_object_offset The code object offset returned to the caller</span>
+<span class="c"># based on the given ELF virtual address.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] slice_size For nobits regions: the size in bytes, starting from</span>
+<span class="c"># the provided virtual address up to the end of the segment. In this case, the</span>
+<span class="c"># slice size represents the number of contiguous unreadable addresses following</span>
+<span class="c"># the provided address.</span>
+<span class="c"># </span>
+<span class="c"># For bits regions: the size in bytes, starting from the provided virtual</span>
+<span class="c"># address up to either the end of the segment, or the start of a NOBITS region.</span>
+<span class="c"># In this case, slice size represents the number of contiguous readable</span>
+<span class="c"># addresses following the provided address.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] nobits Set to true if the code object offset points to a location</span>
+<span class="c"># in a data region that does not occupy bytes in the ELF file, as described</span>
+<span class="c"># above.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS The function has been executed</span>
+<span class="c"># successfully.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR The provided code object has an invalid</span>
+<span class="c"># header due to a mismatch in magic, class, data, version, abi, type, or</span>
+<span class="c"># machine.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p data is not of</span>
+<span class="c"># kind AMD_COMGR_DATA_KIND_EXECUTABLE or invalid, or that the provided @p</span>
+<span class="c"># elf_virtual_address is not within the ranges covered by the object's</span>
+<span class="c"># load-type program headers.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_map_elf_virtual_address_to_code_object_offset</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="n">data</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">elf_virtual_address</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">code_object_offset</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">slice_size</span><span class="p">,</span><span class="n">_Bool</span> <span class="o">*</span> <span class="n">nobits</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># @brief Rewrite a code object from one ISA to another.</span>
+<span class="c"># </span>
+<span class="c"># Rewrites GPU instructions in the ELF code object so that it can execute</span>
+<span class="c"># on a different target ISA. This includes both same-family stepping</span>
+<span class="c"># patches (e.g. B0 to A0) and cross-family transpilation.</span>
+<span class="c"># The input ELF is not modified; a new data object is created and returned.</span>
+<span class="c"># </span>
+<span class="c"># A successful call means COMGR produced a valid output code object, not</span>
+<span class="c"># necessarily that the output bytes differ from the input. If the</span>
+<span class="c"># source/target ISA pair selects no enabled transformation, the output is a</span>
+<span class="c"># copy of the input.</span>
+<span class="c"># </span>
+<span class="c"># Currently supported transformations:</span>
+<span class="c">#   - GFX1250 B0 to A0</span>
+<span class="c"># </span>
+<span class="c"># Additional source/target ISA pairs may be added in future releases.</span>
+<span class="c"># Unsupported @p source_isa_name / @p target_isa_name combinations return</span>
+<span class="c"># @c AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] input A data object of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE</span>
+<span class="c">#   containing the input ELF code object bytes.</span>
+<span class="c"># @param[in] source_isa_name A null terminated string that is the isa name</span>
+<span class="c">#   the code object was compiled for. The isa name is defined as the Code</span>
+<span class="c">#   Object Target Identification string, described at</span>
+<span class="c">#   https://llvm.org/docs/AMDGPUUsage.html#code-object-target-identification</span>
+<span class="c"># @param[in] target_isa_name A null terminated string that is the isa name</span>
+<span class="c">#   of the target GPU.</span>
+<span class="c"># @param[out] output A handle to a data object of kind @p</span>
+<span class="c">#   AMD_COMGR_DATA_KIND_EXECUTABLE containing the rewritten ELF. The caller</span>
+<span class="c">#   must release this handle using @c amd_comgr_release_data when done.</span>
+<span class="c">#   @p output is not modified on failure.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS Patching completed successfully.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR An internal error occurred.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p input is an invalid</span>
+<span class="c">#   data object, is not of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE, does not</span>
+<span class="c">#   contain data bytes, or @p source_isa_name or @p target_isa_name is NULL,</span>
+<span class="c">#   or the source/target isa name combination is not supported.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to allocate</span>
+<span class="c">#   the output data object.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_hotswap_rewrite</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="nb">input</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">source_isa_name</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">target_isa_name</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="o">*</span> <span class="n">output</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"amd_comgr/amd_comgr.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">enum</span> <span class="nf">amd_comgr_hotswap_rewrite_flag_s</span><span class="p">:</span>
+        <span class="n">AMD_COMGR_HOTSWAP_REWRITE_FLAG_NONE</span>
+        <span class="n">AMD_COMGR_HOTSWAP_REWRITE_FLAG_ENTRY_TRAMPOLINES</span>
+        <span class="n">AMD_COMGR_HOTSWAP_REWRITE_FLAG_STRICT_MODE</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_hotswap_rewrite_flag_s</span> <span class="n">amd_comgr_hotswap_rewrite_flag_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">amd_comgr_hotswap_rewrite_options_s</span><span class="p">:</span>
+        <span class="n">size_t</span> <span class="n">size</span>
+        <span class="n">uint64_t</span> <span class="n">flags</span>
+
+    <span class="k">ctypedef</span> <span class="n">amd_comgr_hotswap_rewrite_options_s</span> <span class="n">amd_comgr_hotswap_rewrite_options_t</span>
+
+<span class="c"># </span>
+<span class="c"># @brief Rewrite a code object from one ISA to another with explicit options.</span>
+<span class="c"># </span>
+<span class="c"># Rewrites GPU instructions in the ELF code object so that it can execute</span>
+<span class="c"># on a different target ISA. This includes both same-family stepping</span>
+<span class="c"># patches (e.g. B0 to A0) and cross-family transpilation.</span>
+<span class="c"># The input ELF is not modified; a new data object is created and returned.</span>
+<span class="c"># </span>
+<span class="c"># A successful call means COMGR produced a valid output code object, not</span>
+<span class="c"># necessarily that the output bytes differ from the input. If the</span>
+<span class="c"># source/target ISA pair and rewrite options select no enabled transformation,</span>
+<span class="c"># the output is a copy of the input.</span>
+<span class="c"># </span>
+<span class="c"># Currently supported transformations:</span>
+<span class="c">#   - GFX1250 B0 to A0</span>
+<span class="c">#   - GFX125x entry trampolines when requested by @p rewrite_options</span>
+<span class="c">#   - GFX1250 B0 strict-mode mask workarounds when requested by</span>
+<span class="c">#     @p rewrite_options</span>
+<span class="c"># </span>
+<span class="c"># Additional source/target ISA pairs may be added in future releases.</span>
+<span class="c"># Unsupported @p source_isa_name / @p target_isa_name combinations return</span>
+<span class="c"># @c AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT.</span>
+<span class="c"># </span>
+<span class="c"># @param[in] input A data object of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE</span>
+<span class="c">#   containing the input ELF code object bytes.</span>
+<span class="c"># @param[in] source_isa_name A null terminated string that is the isa name</span>
+<span class="c">#   the code object was compiled for. The isa name is defined as the Code</span>
+<span class="c">#   Object Target Identification string, described at</span>
+<span class="c">#   https://llvm.org/docs/AMDGPUUsage.html#code-object-target-identification</span>
+<span class="c"># @param[in] target_isa_name A null terminated string that is the isa name</span>
+<span class="c">#   of the target GPU.</span>
+<span class="c"># @param[in] rewrite_options Options controlling optional rewrite behavior.</span>
+<span class="c">#   Must not be NULL. Unknown flag bits return</span>
+<span class="c">#   @c AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT.</span>
+<span class="c"># @param[out] output A handle to a data object of kind @p</span>
+<span class="c">#   AMD_COMGR_DATA_KIND_EXECUTABLE containing the rewritten ELF. The caller</span>
+<span class="c">#   must release this handle using @c amd_comgr_release_data when done.</span>
+<span class="c">#   @p output is not modified on failure.</span>
+<span class="c"># </span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_SUCCESS Patching completed successfully.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR An internal error occurred.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_INVALID_ARGUMENT @p input is an invalid</span>
+<span class="c">#   data object, is not of kind @p AMD_COMGR_DATA_KIND_EXECUTABLE, does not</span>
+<span class="c">#   contain data bytes, @p source_isa_name, @p target_isa_name, @p</span>
+<span class="c">#   rewrite_options, or @p output is NULL, the source/target isa name</span>
+<span class="c">#   combination is not supported, the options structure is too small, or</span>
+<span class="c">#   unsupported option flags are set.</span>
+<span class="c"># @retval ::AMD_COMGR_STATUS_ERROR_OUT_OF_RESOURCES Unable to allocate</span>
+<span class="c">#   the output data object.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">amd_comgr_status_s</span> <span class="nf">amd_comgr_hotswap_rewrite_with_options</span><span class="p">(</span><span class="n">amd_comgr_data_s</span> <span class="nb">input</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">source_isa_name</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">target_isa_name</span><span class="p">,</span><span class="n">const</span> <span class="n">amd_comgr_hotswap_rewrite_options_s</span> <span class="o">*</span> <span class="n">rewrite_options</span><span class="p">,</span><span class="n">amd_comgr_data_s</span> <span class="o">*</span> <span class="n">output</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">AMD_COMGR_STATUS_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__amd_comgr_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.cyhipsolver.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.cyhipsolver</p>
+</div>
+</a>
+<a class="right-next" href="cuda.bindings.cydriver.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">cuda.bindings.cydriver</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

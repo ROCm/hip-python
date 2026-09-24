@@ -1,0 +1,225 @@
+rocm.bindings.llvm.c.disassembler
+=================================
+
+.. py:module:: rocm.bindings.llvm.c.disassembler
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   rocm.bindings.llvm.c.disassembler.has_symbol
+   rocm.bindings.llvm.c.disassembler.LLVMCreateDisasm
+   rocm.bindings.llvm.c.disassembler.LLVMCreateDisasmCPU
+   rocm.bindings.llvm.c.disassembler.LLVMCreateDisasmCPUFeatures
+   rocm.bindings.llvm.c.disassembler.LLVMSetDisasmOptions
+   rocm.bindings.llvm.c.disassembler.LLVMDisasmDispose
+   rocm.bindings.llvm.c.disassembler.LLVMDisasmInstruction
+
+
+Module Contents
+---------------
+
+.. py:function:: has_symbol(name: str | bytes | bytearray) -> bool
+
+.. py:function:: LLVMCreateDisasm(TripleName, DisInfo, TagType, GetOpInfo, SymbolLookUp)
+
+   Create a disassembler for the TripleName.
+
+   Symbolic disassembly is supported
+   by passing a block of information in the DisInfo parameter and specifying the
+   TagType and callback functions as described above.  These can all be passed
+   as NULL.  If successful, this returns a disassembler context.  If not, it
+   returns NULL. This function is equivalent to calling
+   LLVMCreateDisasmCPUFeatures() with an empty CPU name and feature set.
+
+   Args:
+       TripleName (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       DisInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       TagType (:py:obj:`~.int`):
+           (undocumented)
+
+       GetOpInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       SymbolLookUp (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+   Returns:
+       :py:obj:`~.None`: (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       LLVMDisasmContextRef LLVMCreateDisasm(const char * TripleName, void * DisInfo, int TagType, LLVMOpInfoCallback GetOpInfo, LLVMSymbolLookupCallback SymbolLookUp)
+
+
+.. py:function:: LLVMCreateDisasmCPU(Triple, CPU, DisInfo, TagType, GetOpInfo, SymbolLookUp)
+
+   Create a disassembler for the TripleName and a specific CPU.
+
+   Symbolic
+   disassembly is supported by passing a block of information in the DisInfo
+   parameter and specifying the TagType and callback functions as described
+   above.  These can all be passed * as NULL.  If successful, this returns a
+   disassembler context.  If not, it returns NULL. This function is equivalent
+   to calling LLVMCreateDisasmCPUFeatures() with an empty feature set.
+
+   Args:
+       Triple (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       CPU (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       DisInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       TagType (:py:obj:`~.int`):
+           (undocumented)
+
+       GetOpInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       SymbolLookUp (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+   Returns:
+       :py:obj:`~.None`: (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       LLVMDisasmContextRef LLVMCreateDisasmCPU(const char * Triple, const char * CPU, void * DisInfo, int TagType, LLVMOpInfoCallback GetOpInfo, LLVMSymbolLookupCallback SymbolLookUp)
+
+
+.. py:function:: LLVMCreateDisasmCPUFeatures(Triple, CPU, Features, DisInfo, TagType, GetOpInfo, SymbolLookUp)
+
+   Create a disassembler for the TripleName, a specific CPU and specific feature
+   string.
+
+   Symbolic disassembly is supported by passing a block of information
+   in the DisInfo parameter and specifying the TagType and callback functions as
+   described above.  These can all be passed * as NULL.  If successful, this
+   returns a disassembler context.  If not, it returns NULL.
+
+   Args:
+       Triple (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       CPU (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       Features (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       DisInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       TagType (:py:obj:`~.int`):
+           (undocumented)
+
+       GetOpInfo (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       SymbolLookUp (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+   Returns:
+       :py:obj:`~.None`: (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       LLVMDisasmContextRef LLVMCreateDisasmCPUFeatures(const char * Triple, const char * CPU, const char * Features, void * DisInfo, int TagType, LLVMOpInfoCallback GetOpInfo, LLVMSymbolLookupCallback SymbolLookUp)
+
+
+.. py:function:: LLVMSetDisasmOptions(DC, Options)
+
+   Set the disassembler's options.
+
+   Returns 1 if it can set the Options and 0
+   otherwise.
+
+   Args:
+       DC (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       Options (:py:obj:`~.int`):
+           (undocumented)
+
+   Returns:
+       :py:obj:`~.int`: (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       int LLVMSetDisasmOptions(LLVMDisasmContextRef DC, uint64_t Options)
+
+
+.. py:function:: LLVMDisasmDispose(DC)
+
+   Dispose of a disassembler context.
+
+   Args:
+       DC (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       void LLVMDisasmDispose(LLVMDisasmContextRef DC)
+
+
+.. py:function:: LLVMDisasmInstruction(DC, Bytes, BytesSize, PC, OutString, OutStringSize)
+
+   Disassemble a single instruction using the disassembler context specified in
+   the parameter DC.
+
+   The bytes of the instruction are specified in the
+   parameter Bytes, and contains at least BytesSize number of bytes.  The
+   instruction is at the address specified by the PC parameter.  If a valid
+   instruction can be disassembled, its string is returned indirectly in
+   OutString whose size is specified in the parameter OutStringSize.  This
+   function returns the number of bytes in the instruction or zero if there was
+   no valid instruction.
+
+   Args:
+       DC (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       Bytes (:py:obj:`~.rocm.bindings.util.types.Pointer`/:py:obj:`~.object`):
+           (undocumented)
+
+       BytesSize (:py:obj:`~.int`):
+           (undocumented)
+
+       PC (:py:obj:`~.int`):
+           (undocumented)
+
+       OutString (:py:obj:`~.rocm.bindings.util.types.CStr`/:py:obj:`~.object`):
+           (undocumented)
+
+       OutStringSize (:py:obj:`~.int`):
+           (undocumented)
+
+   Returns:
+       :py:obj:`~.int`: (undocumented)
+
+   .. rubric:: C signature
+
+   .. code-block:: c
+
+       size_t LLVMDisasmInstruction(LLVMDisasmContextRef DC, uint8_t * Bytes, uint64_t BytesSize, uint64_t PC, char * OutString, size_t OutStringSize)
+
+

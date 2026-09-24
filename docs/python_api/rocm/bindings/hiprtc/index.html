@@ -1,0 +1,1338 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../../../../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.hiprtc — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../../../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../../../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../../../../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../../../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../../../../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../../../../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../../../../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../../../../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../../../../_static/search.js?v=90a4452c"></script>
+<script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm/bindings/hiprtc/index';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../../../../genindex.html" rel="index" title="Index"/>
+<link href="../../../../search.html" rel="search" title="Search"/>
+<link href="../hiprtc_pyext/index.html" rel="next" title="rocm.bindings.hiprtc_pyext"/>
+<link href="../hip/index.html" rel="prev" title="rocm.bindings.hip"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../../../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../../../../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../../../../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../../../../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.hiprtc</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.hiprtc</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.has_symbol"><code class="docutils literal notranslate"><span class="pre">has_symbol()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult"><code class="docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_SUCCESS</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_INPUT</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_OPTION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_OPTION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_LINKING"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_LINKING</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.ihiprtcLinkState"><code class="docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkState"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkState</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetErrorString"><code class="docutils literal notranslate"><span class="pre">hiprtcGetErrorString()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcVersion"><code class="docutils literal notranslate"><span class="pre">hiprtcVersion()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcProgram</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcAddNameExpression"><code class="docutils literal notranslate"><span class="pre">hiprtcAddNameExpression()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcCompileProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcCompileProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcCreateProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcDestroyProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcDestroyProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetLoweredName"><code class="docutils literal notranslate"><span class="pre">hiprtcGetLoweredName()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetProgramLog"><code class="docutils literal notranslate"><span class="pre">hiprtcGetProgramLog()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetProgramLogSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetProgramLogSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetCode"><code class="docutils literal notranslate"><span class="pre">hiprtcGetCode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetCodeSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetCodeSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetBitcode"><code class="docutils literal notranslate"><span class="pre">hiprtcGetBitcode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetBitcodeSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetBitcodeSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkCreate"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkCreate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkAddFile"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkAddFile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkAddData"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkAddData()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkComplete"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkComplete()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkDestroy"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkDestroy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="module-rocm.bindings.hiprtc">
+<span id="rocm-bindings-hiprtc"></span><h1>rocm.bindings.hiprtc<a class="headerlink" href="#module-rocm.bindings.hiprtc" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            12 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkState" title="rocm.bindings.hiprtc.hiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkState</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcProgram" title="rocm.bindings.hiprtc.hiprtcProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcProgram</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a></p></td>
+<td><p>(No short description)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.has_symbol" title="rocm.bindings.hiprtc.has_symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_symbol</span></code></a>(→ bool)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetErrorString" title="rocm.bindings.hiprtc.hiprtcGetErrorString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetErrorString</span></code></a>(result)</p></td>
+<td><p>Returns text string message to explain the error which occurred</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcVersion" title="rocm.bindings.hiprtc.hiprtcVersion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcVersion</span></code></a>()</p></td>
+<td><p>Sets the parameters as major and minor version.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcAddNameExpression" title="rocm.bindings.hiprtc.hiprtcAddNameExpression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcAddNameExpression</span></code></a>(prog, name_expression)</p></td>
+<td><p>Adds the given name exprssion to the runtime compilation program.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcCompileProgram" title="rocm.bindings.hiprtc.hiprtcCompileProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCompileProgram</span></code></a>(prog, numOptions, options)</p></td>
+<td><p>Compiles the given runtime compilation program.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcCreateProgram" title="rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcCreateProgram</span></code></a>(src, name, numHeaders, headers, ...)</p></td>
+<td><p>Creates an instance of hiprtcProgram with the given input parameters,</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcDestroyProgram" title="rocm.bindings.hiprtc.hiprtcDestroyProgram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcDestroyProgram</span></code></a>(prog)</p></td>
+<td><p>Destroys an instance of given hiprtcProgram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetLoweredName" title="rocm.bindings.hiprtc.hiprtcGetLoweredName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetLoweredName</span></code></a>(prog, name_expression)</p></td>
+<td><p>Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetProgramLog" title="rocm.bindings.hiprtc.hiprtcGetProgramLog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetProgramLog</span></code></a>(prog, log)</p></td>
+<td><p>Gets the log generated by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetProgramLogSize" title="rocm.bindings.hiprtc.hiprtcGetProgramLogSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetProgramLogSize</span></code></a>(prog)</p></td>
+<td><p>Gets the size of log generated by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetCode" title="rocm.bindings.hiprtc.hiprtcGetCode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetCode</span></code></a>(prog, code)</p></td>
+<td><p>Gets the pointer of compilation binary by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetCodeSize" title="rocm.bindings.hiprtc.hiprtcGetCodeSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetCodeSize</span></code></a>(prog)</p></td>
+<td><p>Gets the size of compilation binary by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetBitcode" title="rocm.bindings.hiprtc.hiprtcGetBitcode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetBitcode</span></code></a>(prog, bitcode)</p></td>
+<td><p>Gets the pointer of compiled bitcode by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcGetBitcodeSize" title="rocm.bindings.hiprtc.hiprtcGetBitcodeSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcGetBitcodeSize</span></code></a>(prog)</p></td>
+<td><p>Gets the size of compiled bitcode by the runtime compilation program instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkCreate" title="rocm.bindings.hiprtc.hiprtcLinkCreate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkCreate</span></code></a>(num_options, option_ptr, option_vals_pptr)</p></td>
+<td><p>Creates the link instance via hiprtc APIs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkAddFile" title="rocm.bindings.hiprtc.hiprtcLinkAddFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkAddFile</span></code></a>(hip_link_state, input_type, ...)</p></td>
+<td><p>Adds a file with bit code to be linked with options</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkAddData" title="rocm.bindings.hiprtc.hiprtcLinkAddData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkAddData</span></code></a>(hip_link_state, input_type, image, ...)</p></td>
+<td><p>Completes the linking of the given program.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkComplete" title="rocm.bindings.hiprtc.hiprtcLinkComplete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkComplete</span></code></a>(hip_link_state)</p></td>
+<td><p>Completes the linking of the given program.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcLinkDestroy" title="rocm.bindings.hiprtc.hiprtcLinkDestroy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcLinkDestroy</span></code></a>(hip_link_state)</p></td>
+<td><p>Deletes the link instance via hiprtc APIs.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.has_symbol">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">has_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytes" title="(in Python v3.14)"><span class="pre">bytes</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#bytearray" title="(in Python v3.14)"><span class="pre">bytearray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#rocm.bindings.hiprtc.has_symbol" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcResult</span></span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enum.IntEnum</span></code></a></p>
+<ul class="simple">
+<li></li>
+</ul>
+<p>hiprtc error code</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS">
+<span class="sig-name descname"><span class="pre">HIPRTC_SUCCESS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_OUT_OF_MEMORY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_PROGRAM_CREATION_FAILURE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_INPUT">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_INPUT" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_INVALID_PROGRAM</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_OPTION">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_INVALID_OPTION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_OPTION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_COMPILATION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_INTERNAL_ERROR</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_LINKING">
+<span class="sig-name descname"><span class="pre">HIPRTC_ERROR_LINKING</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_LINKING" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.ihiprtcLinkState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">ihiprtcLinkState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.util.types.Pointer</span></code></a></p>
+<p>(No short description)</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkState">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkState</span></span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkState" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetErrorString">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetErrorString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetErrorString" title="Link to this definition">#</a></dt>
+<dd><p>Returns text string message to explain the error which occurred</p>
+<dl class="simple">
+<dt>Warning:</dt><dd><p>In HIP, this function returns the name of the error,
+if the hiprtc result is defined, it will return “Invalid HIPRTC error code”</p>
+</dd>
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>result (<a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>) – <em>IN</em>:</dt><dd><p>code to convert to string.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>:</dt><dd><p>Always returns <a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS" title="rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a>.</p>
+</dd>
+</dl>
+</li>
+<li><p><a class="reference internal" href="../../../cuda/bindings/driver/index.html#cuda.bindings.driver.CUuuid_st.bytes" title="cuda.bindings.driver.CUuuid_st.bytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes</span></code></a>: const char pointer to the NULL-terminated error string</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">hiprtcGetErrorString</span><span class="p">(</span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcVersion">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcVersion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcVersion" title="Link to this definition">#</a></dt>
+<dd><p>Sets the parameters as major and minor version.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 3 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a>, <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>HIP Runtime Compilation major version.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>HIP Runtime Compilation minor version.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcVersion</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">major</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">minor</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcProgram">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcProgram</span></span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcProgram" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcAddNameExpression">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcAddNameExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcAddNameExpression" title="Link to this definition">#</a></dt>
+<dd><p>Adds the given name exprssion to the runtime compilation program.</p>
+<p>If const char pointer is NULL, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a>.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>name_expression (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>const char pointer to the name expression.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcAddNameExpression</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">name_expression</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcCompileProgram">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcCompileProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcCompileProgram" title="Link to this definition">#</a></dt>
+<dd><p>Compiles the given runtime compilation program.</p>
+<p>If the compiler failed to build the runtime compilation program,
+it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_COMPILATION" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_COMPILATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_COMPILATION</span></code></a>.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>numOptions (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>number of compiler options.</p>
+</dd>
+<dt>options (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>compiler options as const array of strins.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcCompileProgram</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numOptions</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcCreateProgram">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcCreateProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numHeaders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeNames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcCreateProgram" title="Link to this definition">#</a></dt>
+<dd><p>Creates an instance of hiprtcProgram with the given input parameters,
+and sets the output hiprtcProgram prog with it.</p>
+<p>Any invalide input parameter, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a>
+or <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_PROGRAM" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_PROGRAM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_PROGRAM</span></code></a>.</p>
+<p>If failed to create the program, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_PROGRAM_CREATION_FAILURE</span></code></a>.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>src (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>const char pointer to the program source.</p>
+</dd>
+<dt>name (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>const char pointer to the program name.</p>
+</dd>
+<dt>numHeaders (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>number of headers.</p>
+</dd>
+<dt>headers (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>array of strings pointing to headers.</p>
+</dd>
+<dt>includeNames (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfBytes" title="rocm.bindings.util.types.ListOfBytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfBytes</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>array of strings pointing to names included in program source.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcCreateProgram</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numHeaders</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">headers</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">includeNames</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcDestroyProgram">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcDestroyProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcDestroyProgram" title="Link to this definition">#</a></dt>
+<dd><p>Destroys an instance of given hiprtcProgram.</p>
+<p>If prog is NULL, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a>.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcDestroyProgram</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">prog</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetLoweredName">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetLoweredName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_expression</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetLoweredName" title="Link to this definition">#</a></dt>
+<dd><p>Gets the lowered (mangled) name from an instance of hiprtcProgram with the given input
+parameters, and sets the output lowered_name with it.</p>
+<p>If any invalide nullptr input parameters, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a></p>
+<p>If name_expression is not found, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID</span></code></a></p>
+<p>If failed to get lowered_name from the program, it will return <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_COMPILATION" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_COMPILATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_COMPILATION</span></code></a>.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>name_expression (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>const char pointer to the name expression.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>:</dt><dd><p>const char array to the lowered (mangled) name.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetLoweredName</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">name_expression</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">lowered_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetProgramLog">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetProgramLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetProgramLog" title="Link to this definition">#</a></dt>
+<dd><p>Gets the log generated by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>log (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>OUT</em>:</dt><dd><p>memory pointer to the generated log.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetProgramLog</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">log</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetProgramLogSize">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetProgramLogSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetProgramLogSize" title="Link to this definition">#</a></dt>
+<dd><p>Gets the size of log generated by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>size of generated log.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetProgramLogSize</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">logSizeRet</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetCode">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetCode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetCode" title="Link to this definition">#</a></dt>
+<dd><p>Gets the pointer of compilation binary by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>code (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.NDBuffer" title="rocm.bindings.util.types.NDBuffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDBuffer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>OUT</em>:</dt><dd><p>char pointer to binary.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetCode</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">code</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetCodeSize">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetCodeSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetCodeSize" title="Link to this definition">#</a></dt>
+<dd><p>Gets the size of compilation binary by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>the size of binary.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetCodeSize</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">codeSizeRet</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetBitcode">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetBitcode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitcode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetBitcode" title="Link to this definition">#</a></dt>
+<dd><p>Gets the pointer of compiled bitcode by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+<dt>bitcode (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.NDBuffer" title="rocm.bindings.util.types.NDBuffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDBuffer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>OUT</em>:</dt><dd><p>char pointer to bitcode.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: HIPRTC_SUCCESS</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetBitcode</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bitcode</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcGetBitcodeSize">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcGetBitcodeSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcGetBitcodeSize" title="Link to this definition">#</a></dt>
+<dd><p>Gets the size of compiled bitcode by the runtime compilation program instance.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>prog (<code class="xref py py-obj docutils literal notranslate"><span class="pre">_hiprtcProgram</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>runtime compilation program instance.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>the size of bitcode.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcGetBitcodeSize</span><span class="p">(</span><span class="n">hiprtcProgram</span><span class="w"> </span><span class="n">prog</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bitcode_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkCreate">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkCreate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_ptr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_vals_pptr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkCreate" title="Link to this definition">#</a></dt>
+<dd><p>Creates the link instance via hiprtc APIs.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>num_options (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>Number of options</p>
+</dd>
+<dt>option_ptr (<code class="xref py py-obj docutils literal notranslate"><span class="pre">HiprtcLinkCreate_option_ptr</span></code>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of options</p>
+</dd>
+<dt>option_vals_pptr (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfPointer" title="rocm.bindings.util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of option values cast to void*</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 2 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a>, <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a>, <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_OPTION" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_OPTION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_OPTION</span></code></a></p></li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a>:</dt><dd><p>hiprtc link state created upon success</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcLinkCreate</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_options</span><span class="p">,</span><span class="w"> </span><span class="n">hipJitOption</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">option_ptr</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">option_vals_pptr</span><span class="p">,</span><span class="w"> </span><span class="n">hiprtcLinkState</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">hip_link_state_ptr</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkAddFile">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkAddFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hip_link_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options_ptr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkAddFile" title="Link to this definition">#</a></dt>
+<dd><p>Adds a file with bit code to be linked with options</p>
+<p>If input values are invalid, it will</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>hip_link_state (<a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>hiprtc link state</p>
+</dd>
+<dt>input_type (<a class="reference internal" href="../hip/index.html#rocm.bindings.hip.hipJitInputType" title="rocm.bindings.hip.hipJitInputType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipJitInputType</span></code></a>) – <em>IN</em>:</dt><dd><p>Type of the input data or bitcode</p>
+</dd>
+<dt>file_path (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Path to the input file where bitcode is present</p>
+</dd>
+<dt>num_options (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>Size of the options</p>
+</dd>
+<dt>options_ptr (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of options applied to this input</p>
+</dd>
+<dt>option_values (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfPointer" title="rocm.bindings.util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of option values cast to void*</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: One of:</dt><dd><ul>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcLinkAddFile</span><span class="p">(</span><span class="n">hiprtcLinkState</span><span class="w"> </span><span class="n">hip_link_state</span><span class="p">,</span><span class="w"> </span><span class="n">hipJitInputType</span><span class="w"> </span><span class="n">input_type</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">file_path</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_options</span><span class="p">,</span><span class="w"> </span><span class="n">hipJitOption</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">options_ptr</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">option_values</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkAddData">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkAddData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hip_link_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options_ptr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkAddData" title="Link to this definition">#</a></dt>
+<dd><p>Completes the linking of the given program.</p>
+<p>If adding the file fails, it will</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>hip_link_state (<a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>hiprtc link state</p>
+</dd>
+<dt>input_type (<a class="reference internal" href="../hip/index.html#rocm.bindings.hip.hipJitInputType" title="rocm.bindings.hip.hipJitInputType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hipJitInputType</span></code></a>) – <em>IN</em>:</dt><dd><p>Type of the input data or bitcode</p>
+</dd>
+<dt>image (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Input data which is null terminated</p>
+</dd>
+<dt>image_size (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>Size of the input data</p>
+</dd>
+<dt>name (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.CStr" title="rocm.bindings.util.types.CStr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CStr</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Optional name for this input</p>
+</dd>
+<dt>num_options (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>) – <em>IN</em>:</dt><dd><p>Size of the options</p>
+</dd>
+<dt>options_ptr (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.Pointer" title="rocm.bindings.util.types.Pointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of options applied to this input</p>
+</dd>
+<dt>option_values (<a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.ListOfPointer" title="rocm.bindings.util.types.ListOfPointer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ListOfPointer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>Array of option values cast to void*</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: One of:</dt><dd><ul>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a>, <a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_INVALID_INPUT</span></code></a></p></li>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_PROGRAM_CREATION_FAILURE</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcLinkAddData</span><span class="p">(</span><span class="n">hiprtcLinkState</span><span class="w"> </span><span class="n">hip_link_state</span><span class="p">,</span><span class="w"> </span><span class="n">hipJitInputType</span><span class="w"> </span><span class="n">input_type</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">image</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">image_size</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_options</span><span class="p">,</span><span class="w"> </span><span class="n">hipJitOption</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">options_ptr</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">option_values</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkComplete">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkComplete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hip_link_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkComplete" title="Link to this definition">#</a></dt>
+<dd><p>Completes the linking of the given program.</p>
+<p>If adding the data fails, it will</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>hip_link_state (<a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>hiprtc link state</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 3 that contains (in that order):</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: One of:</dt><dd><ul>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+<li><p>py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_LINKING" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_ERROR_LINKING"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_ERROR_LINKING</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../util/types/index.html#rocm.bindings.util.types.NDBuffer" title="rocm.bindings.util.types.NDBuffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NDBuffer</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>:</dt><dd><p>Upon success, points to the output binary</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>:</dt><dd><p>Size of the binary is stored (optional)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcLinkComplete</span><span class="p">(</span><span class="n">hiprtcLinkState</span><span class="w"> </span><span class="n">hip_link_state</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">bin_out</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">size_out</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rocm.bindings.hiprtc.hiprtcLinkDestroy">
+<span class="sig-prename descclassname"><span class="pre">rocm.bindings.hiprtc.</span></span><span class="sig-name descname"><span class="pre">hiprtcLinkDestroy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hip_link_state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rocm.bindings.hiprtc.hiprtcLinkDestroy" title="Link to this definition">#</a></dt>
+<dd><p>Deletes the link instance via hiprtc APIs.</p>
+<dl class="simple">
+<dt>See:</dt><dd><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a></p>
+</dd>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>hip_link_state (<a class="reference internal" href="#rocm.bindings.hiprtc.ihiprtcLinkState" title="rocm.bindings.hiprtc.ihiprtcLinkState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a>/<a class="reference internal" href="../llvm/c/object/index.html#module-rocm.bindings.llvm.c.object" title="rocm.bindings.llvm.c.object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></a>) – <em>IN</em>:</dt><dd><p>link state instance</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>A <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of size 1 that contains (in that order):</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#rocm.bindings.hiprtc.hiprtcResult" title="rocm.bindings.hiprtc.hiprtcResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a>: py:obj:<a class="reference internal" href="../../../cuda/bindings/nvrtc/index.html#cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS" title="cuda.bindings.nvrtc.nvrtcResult.HIPRTC_SUCCESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HIPRTC_SUCCESS</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">C signature</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">hiprtcResult</span><span class="w"> </span><span class="n">hiprtcLinkDestroy</span><span class="p">(</span><span class="n">hiprtcLinkState</span><span class="w"> </span><span class="n">hip_link_state</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="../hip/index.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.hip</p>
+</div>
+</a>
+<a class="right-next" href="../hiprtc_pyext/index.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.hiprtc_pyext</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.has_symbol"><code class="docutils literal notranslate"><span class="pre">has_symbol()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult"><code class="docutils literal notranslate"><span class="pre">hiprtcResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_SUCCESS"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_SUCCESS</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_OUT_OF_MEMORY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_PROGRAM_CREATION_FAILURE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_INPUT"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_INPUT</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_PROGRAM</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INVALID_OPTION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INVALID_OPTION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_BUILTIN_OPERATION_FAILURE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NO_NAME_EXPRESSIONS_AFTER_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NO_LOWERED_NAMES_BEFORE_COMPILATION</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_NAME_EXPRESSION_NOT_VALID</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_INTERNAL_ERROR</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcResult.HIPRTC_ERROR_LINKING"><code class="docutils literal notranslate"><span class="pre">hiprtcResult.HIPRTC_ERROR_LINKING</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.ihiprtcLinkState"><code class="docutils literal notranslate"><span class="pre">ihiprtcLinkState</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkState"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkState</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetErrorString"><code class="docutils literal notranslate"><span class="pre">hiprtcGetErrorString()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcVersion"><code class="docutils literal notranslate"><span class="pre">hiprtcVersion()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcProgram</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcAddNameExpression"><code class="docutils literal notranslate"><span class="pre">hiprtcAddNameExpression()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcCompileProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcCompileProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcCreateProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcCreateProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcDestroyProgram"><code class="docutils literal notranslate"><span class="pre">hiprtcDestroyProgram()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetLoweredName"><code class="docutils literal notranslate"><span class="pre">hiprtcGetLoweredName()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetProgramLog"><code class="docutils literal notranslate"><span class="pre">hiprtcGetProgramLog()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetProgramLogSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetProgramLogSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetCode"><code class="docutils literal notranslate"><span class="pre">hiprtcGetCode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetCodeSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetCodeSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetBitcode"><code class="docutils literal notranslate"><span class="pre">hiprtcGetBitcode()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcGetBitcodeSize"><code class="docutils literal notranslate"><span class="pre">hiprtcGetBitcodeSize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkCreate"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkCreate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkAddFile"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkAddFile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkAddData"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkAddData()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkComplete"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkComplete()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rocm.bindings.hiprtc.hiprtcLinkDestroy"><code class="docutils literal notranslate"><span class="pre">hiprtcLinkDestroy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../../../../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

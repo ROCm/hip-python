@@ -1,0 +1,1349 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.cyhipsparselt — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.cyhipsparselt';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.cyhipsolver.html" rel="next" title="rocm.bindings.cyhipsolver"/>
+<link href="rocm.bindings.cyhipsparse.html" rel="prev" title="rocm.bindings.cyhipsparse"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.cyhipsparselt</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.cyhipsparselt</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-cyhipsparselt">
+<h1>rocm.bindings.cyhipsparselt<a class="headerlink" href="#rocm-bindings-cyhipsparselt" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            23 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.cyhipsparselt</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/hipsparselt/index.html"><span class="doc">rocm.bindings.hipsparselt</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhipsparse</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"hipsparselt/hipsparselt.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">hipsparseLtHandle_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">11024</span><span class="p">]</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">hipsparseLtMatDescriptor_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">11024</span><span class="p">]</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">hipsparseLtMatmulDescriptor_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">11024</span><span class="p">]</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">hipsparseLtMatmulAlgSelection_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">11024</span><span class="p">]</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">hipsparseLtMatmulPlan_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">11024</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtSparsity_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_SPARSITY_50_PERCENT</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtMatDescAttribute_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_MAT_NUM_BATCHES</span>
+        <span class="n">HIPSPARSELT_MAT_BATCH_STRIDE</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtComputetype_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_COMPUTE_16F</span>
+        <span class="n">HIPSPARSELT_COMPUTE_32I</span>
+        <span class="n">HIPSPARSELT_COMPUTE_32F</span>
+        <span class="n">HIPSPARSELT_COMPUTE_TF32</span>
+        <span class="n">HIPSPARSELT_COMPUTE_TF32_FAST</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtMatmulDescAttribute_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_RELU</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_RELU_UPPERBOUND</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_RELU_THRESHOLD</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_GELU</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_GELU_SCALING</span>
+        <span class="n">HIPSPARSELT_MATMUL_ALPHA_VECTOR_SCALING</span>
+        <span class="n">HIPSPARSELT_MATMUL_BETA_VECTOR_SCALING</span>
+        <span class="n">HIPSPARSELT_MATMUL_BIAS_STRIDE</span>
+        <span class="n">HIPSPARSELT_MATMUL_BIAS_POINTER</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_ABS</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_LEAKYRELU</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_LEAKYRELU_ALPHA</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_SIGMOID</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_TANH</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_TANH_ALPHA</span>
+        <span class="n">HIPSPARSELT_MATMUL_ACTIVATION_TANH_BETA</span>
+        <span class="n">HIPSPARSELT_MATMUL_BIAS_TYPE</span>
+        <span class="n">HIPSPARSELT_MATMUL_SPARSE_MAT_POINTER</span>
+        <span class="n">HIPSPARSELT_MATMUL_GATE_RESIDUAL_MAT_POINTER</span>
+        <span class="n">HIPSPARSELT_MATMUL_GATE_RESIDUAL_DESC</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtMatmulAlg_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_MATMUL_ALG_DEFAULT</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtMatmulAlgAttribute_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_MATMUL_ALG_CONFIG_ID</span>
+        <span class="n">HIPSPARSELT_MATMUL_ALG_CONFIG_MAX_ID</span>
+        <span class="n">HIPSPARSELT_MATMUL_SEARCH_ITERATIONS</span>
+        <span class="n">HIPSPARSELT_MATMUL_SPLIT_K</span>
+        <span class="n">HIPSPARSELT_MATMUL_SPLIT_K_MODE</span>
+        <span class="n">HIPSPARSELT_MATMUL_SPLIT_K_BUFFERS</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtPruneAlg_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_PRUNE_SPMMA_TILE</span>
+        <span class="n">HIPSPARSELT_PRUNE_SPMMA_STRIP</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipsparseLtSplitKMode_t</span><span class="p">:</span>
+        <span class="n">HIPSPARSELT_SPLIT_K_MODE_ONE_KERNEL</span>
+        <span class="n">HIPSPARSELT_SPLIT_K_MODE_TWO_KERNELS</span>
+
+<span class="c"># \ingroup aux_module</span>
+<span class="c"># \brief Initialize hipSPARSELt for the current HIP device.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtInitialize Initialize hipSPARSELt for the current HIP device to avoid costly startup time at the first call on that device.</span>
+<span class="c"># This function is only supported by the HIP backend.</span>
+<span class="c">#</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">hipsparseLtInitialize</span><span class="p">()</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Retrieve the version number of the hipSPARSELt library.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtGetVersion returns the version number of the hipSPARSELt library.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle   hipsparselt library handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># version  the version number of the library.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE the \p handle is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtGetVersion</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">version</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Retrieve the value of the requested property.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtGetProperty returns the value of the requested property.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># propertyType   hipLibraryPropertyType property type (as defined in library_types.h).</span>
+<span class="c"># @param[out]</span>
+<span class="c"># value          value of the requested property.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtGetProperty</span><span class="p">(</span><span class="n">hipLibraryPropertyType</span> <span class="n">propertyType</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtGetGitRevision</span><span class="p">(</span><span class="n">hipsparseLtHandle_t</span> <span class="n">handle</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">rev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtGetArchName</span><span class="p">(</span><span class="n">char</span> <span class="o">**</span> <span class="n">archName</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Create a hipSPARSELt handle</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtInit creates the hipSPARSELt library context. It must be</span>
+<span class="c"># initialized before any other hipSPARSELt API function is invoked and must be passed to</span>
+<span class="c"># all subsequent library function calls. The handle should be destroyed at the end</span>
+<span class="c"># using ``hipsparseLtDestroy_handle()``.</span>
+<span class="c"># </span>
+<span class="c"># @param[out]</span>
+<span class="c"># handle  hipsparselt library handle.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the initialization succeeded.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE the \p handle is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtInit</span><span class="p">(</span><span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Destroy a hipSPARSELt handle.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtDestroy destroys the hipSPARSELt library context and releases all</span>
+<span class="c"># resources used by the hipSPARSELt library.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle  hipsparselt library handle</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_INITIALIZED the \p handle is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matrix_desc_module</span>
+<span class="c"># \brief Create a descriptor for a dense matrix</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtDenseDescriptorInit creates and initializes a matrix descriptor.</span>
+<span class="c"># It should be destroyed at the end using \ref hipsparseLtMatDescriptorDestroy().</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle     the hipsparselt handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># matDescr   the pointer to the dense matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># rows       number of rows.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># cols       number of columns.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># ld         leading dimension.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># alignment  memory alignment in bytes (not used by the HIP backend).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># valueType  data type of the matrix. Data type: hipDataType.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># order      memory layout: \p HIPSPARSE_ORDER_COL or \p HIPSPARSE_ORDER_ROW.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p descr, \p rows, \p cols, or \p ld is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p rows, \p cols, \p ld, \p alignment, \p valueType, or \p order is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtDenseDescriptorInit</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matDescr</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">rows</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">cols</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">ld</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">alignment</span><span class="p">,</span><span class="n">hipDataType</span> <span class="n">valueType</span><span class="p">,</span><span class="n">hipsparseOrder_t</span> <span class="n">order</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matrix_desc_module</span>
+<span class="c"># \brief Create a descriptor for a structured matrix.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtStructuredDescriptorInit creates and initializes a matrix descriptor.</span>
+<span class="c"># It should be destroyed at the end using \ref hipsparseLtMatDescriptorDestroy().</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle     the hipsparselt handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># matDescr   the pointer to the dense matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># rows       number of rows.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># cols       number of columns.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># ld         leading dimension.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># alignment  memory alignment in bytes (not used by the HIP backend).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># valueType  data type of the matrix. Data type: hipDataType.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># order      memory layout: \p HIPSPARSE_ORDER_COL or \p HIPSPARSE_ORDER_ROW.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># sparsity   matrix sparsity ratio. See \ref hipsparseLtSparsity_t.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p descr, \p rows, \p cols,  or \p ld  is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p rows, \p cols, \p ld, \p alignment, \p valueType, or \p order is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtStructuredDescriptorInit</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matDescr</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">rows</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">cols</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">ld</span><span class="p">,</span><span class="n">uint32_t</span> <span class="n">alignment</span><span class="p">,</span><span class="n">hipDataType</span> <span class="n">valueType</span><span class="p">,</span><span class="n">hipsparseOrder_t</span> <span class="n">order</span><span class="p">,</span><span class="n">hipsparseLtSparsity_t</span> <span class="n">sparsity</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matrix_desc_module</span>
+<span class="c"># \brief Destroy a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatDescriptorDestroy destroys a matrix descriptor and releases all</span>
+<span class="c"># resources used by the descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># matDescr   the matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p descr is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatDescriptorDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matDescr</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matrix_desc_module</span>
+<span class="c"># \brief Specify the matrix attribute of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatDescSetAttribute sets the value of the specified attribute belonging</span>
+<span class="c"># to a matrix descriptor, such as number of batches and their stride.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># matDescr        the matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matAttribute    \ref HIPSPARSELT_MAT_NUM_BATCHES or \ref HIPSPARSELT_MAT_BATCH_STRIDE.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># data            pointer to the value to which the specified attribute will be set.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize        size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matmulDescr, \p data, or \p dataSize is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatDescSetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matDescr</span><span class="p">,</span><span class="n">hipsparseLtMatDescAttribute_t</span> <span class="n">matAttribute</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matrix_desc_module</span>
+<span class="c"># \brief Get the matrix type of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatDescGetAttribute returns the matrix attribute of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matDescr        the matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matAttribute    \ref HIPSPARSELT_MAT_NUM_BATCHES or \ref HIPSPARSELT_MAT_BATCH_STRIDE.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># data            the memory address containing the attribute value retrieved by this function.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize        size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p descr, \p data, or \p dataSize is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatDescGetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matDescr</span><span class="p">,</span><span class="n">hipsparseLtMatDescAttribute_t</span> <span class="n">matAttribute</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_desc_module</span>
+<span class="c"># \brief  Initializes the matrix multiplication descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulDescriptorInit creates a matrix multiplication descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># matmulDescr     the matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># opA             hipsparse operation for Matrix A: \p HIPSPARSE_OPERATION_NON_TRANSPOSE or \p HIPSPARSE_OPERATION_TRANSPOSE.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># opB             hipsparse operation for Matrix B: \p HIPSPARSE_OPERATION_NON_TRANSPOSE or \p HIPSPARSE_OPERATION_TRANSPOSE.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matA            the matrix descriptor (one and only one of matA or matB is a structured sparsity matrix).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matB            the matrix descriptor (one and only one of matA or matB is a structured sparsity matrix).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matC            the matrix descriptor (dense matrix).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matD            the matrix descriptor (dense matrix).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># computeType     size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matmulDescr, \p opA, \p opB, \p matA, \p matB, \p matC, \p matD, or \p computeType is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p opA, \p opB, or \p computeType is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulDescriptorInit</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">hipsparseOperation_t</span> <span class="n">opA</span><span class="p">,</span><span class="n">hipsparseOperation_t</span> <span class="n">opB</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matA</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matB</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matC</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">matD</span><span class="p">,</span><span class="n">hipsparseLtComputetype_t</span> <span class="n">computeType</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_desc_module</span>
+<span class="c"># \brief Specify the matrix attribute of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulDescSetAttribute sets the value of the specified attribute belonging</span>
+<span class="c"># to a matrix descriptor, such as number of batches and their stride.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># matmulDescr     the matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulAttribute see \ref hipsparseLtMatmulDescAttribute_t.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># data            pointer to the value to which the specified attribute will be set.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize        size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matDescr, \p data, or \p dataSize is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p hipsparseLtMatmulDescAttribute_t is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulDescSetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">hipsparseLtMatmulDescAttribute_t</span> <span class="n">matmulAttribute</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_desc_module</span>
+<span class="c"># \brief Get the matrix type of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulDescGetAttribute returns the matrix attribute of a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           the hipsparselt handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulDescr      the matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulAttribute  see \ref hipsparseLtMatmulDescAttribute_t.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># data             the memory address containing the attribute value retrieved by this function.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize         size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matDescr, \p data, or \p dataSize is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p hipsparseLtMatmulDescAttribute_t is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulDescGetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">hipsparseLtMatmulDescAttribute_t</span> <span class="n">matmulAttribute</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_algo_module</span>
+<span class="c"># \brief Initializes the algorithm selection descriptor.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulAlgSelectionInit creates a algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           the hipsparselt handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># algSelection     the pointer to the algorithm selection descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulDescr      the matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># alg              the algorithm used to perform the matrix multiplication.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matmulDescr, or \p algSelection is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulAlgSelectionInit</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulAlgSelection_t</span> <span class="o">*</span> <span class="n">algSelection</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">hipsparseLtMatmulAlg_t</span> <span class="n">alg</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_algo_module</span>
+<span class="c"># \brief Destroy the algorithm selection descriptor.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulAlgSelectionDestroy releases the resources used by an instance</span>
+<span class="c"># of the algorithm selection. This function is the last call with a specific algorithm selection</span>
+<span class="c"># instance.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># algSelection  the algorithm selection descriptor</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p algSelection is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulAlgSelectionDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtMatmulAlgSelection_t</span> <span class="o">*</span> <span class="n">algSelection</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_algo_module</span>
+<span class="c"># \brief Specify the algorithm attribute of a algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulAlgSetAttribute sets the value of the specified attribute</span>
+<span class="c"># belonging to a algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># algSelection    the algorithm selection descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># attribute       attributes are specified in \ref hipsparseLtMatmulAlgAttribute_t.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># data            pointer to the value to which the specified attribute will be set.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize        size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p  algSelection, \p attribute, \p data, or \p dataSize is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p attribute is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulAlgSetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulAlgSelection_t</span> <span class="o">*</span> <span class="n">algSelection</span><span class="p">,</span><span class="n">hipsparseLtMatmulAlgAttribute_t</span> <span class="n">attribute</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_algo_module</span>
+<span class="c"># \brief Get the specific algorithm attribute from the algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulAlgGetAttribute returns the value of the queried attribute belonging</span>
+<span class="c"># to the algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle          the hipsparselt handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># algSelection    the algorithm selection descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># attribute       attributes are specified in \ref hipsparseLtMatmulAlgAttribute_t.</span>
+<span class="c"># @param[inout]</span>
+<span class="c"># data            the memory address containing the attribute value retrieved by this function.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># dataSize        size in bytes of the attribute value used for verification.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p  algSelection, \p attribute, \p data, or \p dataSize is invalid.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_NOT_SUPPORTED \p attribute is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulAlgGetAttribute</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulAlgSelection_t</span> <span class="o">*</span> <span class="n">algSelection</span><span class="p">,</span><span class="n">hipsparseLtMatmulAlgAttribute_t</span> <span class="n">attribute</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span><span class="n">size_t</span> <span class="n">dataSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_module</span>
+<span class="c"># \brief Determines the required workspace size.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulGetWorkspace determines the required workspace size</span>
+<span class="c"># associated with the selected algorithm.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan             the matrix multiplication plan descriptor.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># workspaceSize    workspace size in bytes.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p algSelection, or \p workspaceSize is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulGetWorkspace</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">workspaceSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_module</span>
+<span class="c"># \brief Initializes the matrix multiplication plan descriptor.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulPlanInit creates a matrix multiplication plan descriptor.</span>
+<span class="c"># It should be destroyed at the end using \ref hipsparseLtMatmulPlanDestroy.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           hipsparselt library handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># plan             the matrix multiplication plan descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulDescr      the matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># algSelection     the algorithm selection descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p plan, \p matmulDescr, \p algSelection, or \p workspaceSize is invalid. \ref HIPSPARSELT_MAT_NUM_BATCHES from matrix A to D are inconsistent.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulPlanInit</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulAlgSelection_t</span> <span class="o">*</span> <span class="n">algSelection</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_module</span>
+<span class="c"># \brief Destroy a matrix multiplication plan descriptor.</span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulPlanDestroy releases the resources used by an instance</span>
+<span class="c"># of the matrix multiplication plan. This function is the last call with a specific plan</span>
+<span class="c"># instance.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan the matrix multiplication plan descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval HIPSPARSE_STATUS_INVALID_VALUE \p plan is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulPlanDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_module</span>
+<span class="c"># \brief Sparse matrix and dense matrix multiplication.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmul computes the matrix multiplication of matrices ``A`` and ``B`` to</span>
+<span class="c"># produce the output matrix ``D``, according to the following operation:</span>
+<span class="c"># \f[</span>
+<span class="c">#   D := Activation(\alpha \cdot op(A) \cdot op(B) + \beta \cdot C + bias) * scale</span>
+<span class="c"># \f]</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># This function is non-blocking and executed asynchronously with respect to the host.</span>
+<span class="c"># It can return before the actual computation has finished.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># This function only supports the case where ``D`` has the same shape of ``C``.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle      hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan        matrix multiplication plan.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># alpha       scalar \f$\alpha\f$ (float).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_A         Pointer to the structured matrix A.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_B         Pointer to the dense matrix B.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># beta        scalar \f$\beta\f$ (float).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_C         Pointer to the dense matrix C.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_D         Pointer to the dense matrix D.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># workspace   Pointer to the workspace.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># streams     Pointer to HIP stream array for the computation.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># numStreams  Number of HIP streams in \p streams.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_INITIALIZED \p handle or \p plan is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p plan, \p alpha, \p d_A, \p d_B, \p beta, \p d_C , \p d_D , \p workspace, \p streams, or \p numStreams is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmul</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_A</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_B</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">beta</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_C</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_D</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">workspace</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="o">*</span> <span class="n">streams</span><span class="p">,</span><span class="n">int32_t</span> <span class="n">numStreams</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup matmul_module</span>
+<span class="c"># \brief Sparse matrix and dense matrix multiplication</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtMatmulSearch evaluates all available algorithms for the matrix multiplication</span>
+<span class="c"># and automatically updates the plan by selecting the fastest one.</span>
+<span class="c"># The functionality is intended to be used for auto-tuning purposes when the same operation</span>
+<span class="c"># is repeated multiple times over different inputs.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># The behavior of this function is the same as \ref hipsparseLtMatmul.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># ``d_C`` and ``d_D`` must be two different memory buffers, otherwise the output will be incorrect.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># This function is NOT asynchronous with respect to ``streams[0]`` (blocking call).</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c"># The number of iterations for the evaluation can be set by using</span>
+<span class="c"># ``hipsparseLtMatmulAlgSetAttribute()`` with ``HIPSPARSELT_MATMUL_SEARCH_ITERATIONS``.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c">#     The selected algorithm id can be retrieved by using</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle      hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan        matrix multiplication plan.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># alpha       scalar \f$\alpha\f$ (float).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_A         pointer to the structured matrix A.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_B         pointer to the dense matrix B.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># beta        scalar \f$\beta\f$ (float).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_C         pointer to the dense matrix C.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_D         pointer to the dense matrix D.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># workspace   pointer to the worksapce.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># streams     pointer to HIP stream array for the computation.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># numStreams  number of HIP streams in \p streams.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_INITIALIZED \p handle or \p plan is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p plan, \p alpha, \p d_A, \p d_B, \p beta, \p d_C, \p d_D, \p workspace, \p streams, or \p numStreams is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtMatmulSearch</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_A</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_B</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">beta</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_C</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_D</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">workspace</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="o">*</span> <span class="n">streams</span><span class="p">,</span><span class="n">int32_t</span> <span class="n">numStreams</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Prune a dense matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMAPrune prunes the dense matrix ``d_in`` according to the specified</span>
+<span class="c"># algorithm ``pruneAlg``, which can be ``HIPSPARSELT_PRUNE_SPMMA_TILE`` or ``HIPSPARSELT_PRUNE_SPMMA_STRIP``.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c">#      The function requires no extra storage. It supports asynchronous execution with respect to ``stream``.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle      hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulDescr matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_in        pointer to the dense matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_out       pointer to the pruned matrix.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># pruneAlg    pruning algorithm.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream      HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matmulDescr, \p d_in, or \p d_out is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMAPrune</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_in</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_out</span><span class="p">,</span><span class="n">hipsparseLtPruneAlg_t</span> <span class="n">pruneAlg</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Check the correctness of the pruning structure for a given matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMAPruneCheck checks the correctness of the pruning structure for a given matrix.</span>
+<span class="c"># Contents in the provided matrix must have a sparsity of 2:4.</span>
+<span class="c"># </span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle      hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># matmulDescr matrix multiplication descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_in        pointer to the matrix to check.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_valid     validation results (0 is correct, and 1 is incorrect).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream      HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p matmulDescr, \p d_in, or \p d_valid is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMAPruneCheck</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulDescriptor_t</span> <span class="o">*</span> <span class="n">matmulDescr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_in</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">d_valid</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Prune a dense matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMAPrune2 prunes the dense matrix ``d_in`` according to the specified</span>
+<span class="c"># algorithm ``pruneAlg``, which can be ``HIPSPARSELT_PRUNE_SPMMA_TILE`` or ``HIPSPARSELT_PRUNE_SPMMA_STRIP``.</span>
+<span class="c"># </span>
+<span class="c"># \note</span>
+<span class="c">#      The function requires no extra storage. It supports asynchronous execution with respect to ``stream``.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle         hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># sparseMatDescr structured (sparse) matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># isSparseA      specify if the structured (or sparse) matrix is in the first position (matA or matB). (It currently only supports matA.)</span>
+<span class="c"># @param[in]</span>
+<span class="c"># op             operation that will be applied to the structured (or sparse) matrix in the multiplication.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_in           pointer to the dense matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_out          pointer to the pruned matrix.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># pruneAlg       pruning algorithm.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream         HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p sparseMatDescr, \p op, \p d_in, or \p d_out is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMAPrune2</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">sparseMatDescr</span><span class="p">,</span><span class="nb">int</span> <span class="n">isSparseA</span><span class="p">,</span><span class="n">hipsparseOperation_t</span> <span class="n">op</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_in</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_out</span><span class="p">,</span><span class="n">hipsparseLtPruneAlg_t</span> <span class="n">pruneAlg</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Check the correctness of the pruning structure for a given matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMAPruneCheck2 checks the correctness of the pruning structure for a given matrix.</span>
+<span class="c"># Contents in the provided matrix must have a sparsity of 2:4.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle         hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># sparseMatDescr structured (sparse) matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># isSparseA      specify if the structured (or sparse) matrix is in the first position (matA or matB). (The HIP backend only supports matA.)</span>
+<span class="c"># @param[in]</span>
+<span class="c"># op             operation that will be applied to the structured (or sparse) matrix in the multiplication.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_in           pointer to the matrix to check.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_valid        validation results (0 is correct, and 1 is incorrect).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream         HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p sparseMatDescr, \p op, \p d_in, or \p d_valid is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMAPruneCheck2</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">sparseMatDescr</span><span class="p">,</span><span class="nb">int</span> <span class="n">isSparseA</span><span class="p">,</span><span class="n">hipsparseOperation_t</span> <span class="n">op</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_in</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">d_valid</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Provide the size of the compressed matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMACompressedSize provides the size of the compressed matrix</span>
+<span class="c"># to be allocated before calling \ref hipsparseLtSpMMACompress() or \ref hipsparseLtSpMMACompress2().</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle                hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan                  matrix multiplication plan descriptor.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># compressedSize        size in bytes of the compressed matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># compressBufferSize    size in bytes for the buffer needed for the matrix compression.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p plan, \p compressedSize, or \p compressBufferSize is invalid.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMACompressedSize</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">compressedSize</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">compressBufferSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Compress a dense matrix to structured matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMACompress compresses the dense matrix ``d_dense``.</span>
+<span class="c"># The compressed matrix is intended to be used as the first/second operand A/B</span>
+<span class="c"># in the \ref hipsparseLtMatmul() function.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle             handle to the hipsparselt library context queue.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># plan               matrix multiplication plan descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_dense            pointer to the dense matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_compressed       compressed matrix and metadata.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_compressBuffer   temporary buffer for the compression.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream             HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p plan, \p d_dense, or \p d_compressed is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMACompress</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatmulPlan_t</span> <span class="o">*</span> <span class="n">plan</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_dense</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_compressed</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_compressBuffer</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Provide the size of the compressed matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMACompressedSize2 provides the size of the compressed matrix</span>
+<span class="c"># to be allocated before calling \ref hipsparseLtSpMMACompress or \ref hipsparseLtSpMMACompress2.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle                hipsparselt library handle.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># sparseMatDescr        structured (sparse) matrix descriptor.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># compressedSize        size in bytes of the compressed matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># compressBufferSize    size in bytes for the buffer needed for the matrix compression.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_INITIALIZED \p handle, \p sparseMatDescr, \p compressedSize, or \p compressBufferSize is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMACompressedSize2</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">sparseMatDescr</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">compressedSize</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">compressBufferSize</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup helper_module</span>
+<span class="c"># \brief Compress a dense matrix to structured matrix.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># \p hipsparseLtSpMMACompress2 compresses the dense matrix ``d_dense``.</span>
+<span class="c"># The compressed matrix is intended to be used as the first/second operand A/B</span>
+<span class="c"># in the \ref hipsparseLtMatmul() function.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle             handle to the hipsparselt library context queue.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># sparseMatDescr     structured (sparse) matrix descriptor.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># isSparseA          specify whether the structured (or sparse) matrix is in the first position (matA or matB).</span>
+<span class="c"># @param[in]</span>
+<span class="c"># op                 operation that will be applied to the structured (or sparse) matrix in the multiplication.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># d_dense            pointer to the dense matrix.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_compressed       compressed matrix and metadata.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># d_compressBuffer   temporary buffer for the compression.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># stream             HIP stream for the computation.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPSPARSE_STATUS_SUCCESS the operation completed successfully.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_INVALID_VALUE \p handle, \p sparseMatDescr, \p op, \p d_dense, or \p d_compressed is invalid.</span>
+<span class="c"># \retval     HIPSPARSE_STATUS_NOT_SUPPORTED the problem is not supported.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipsparseStatus_t</span> <span class="nf">hipsparseLtSpMMACompress2</span><span class="p">(</span><span class="n">const</span> <span class="n">hipsparseLtHandle_t</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">const</span> <span class="n">hipsparseLtMatDescriptor_t</span> <span class="o">*</span> <span class="n">sparseMatDescr</span><span class="p">,</span><span class="nb">int</span> <span class="n">isSparseA</span><span class="p">,</span><span class="n">hipsparseOperation_t</span> <span class="n">op</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">d_dense</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_compressed</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">d_compressBuffer</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPSPARSE_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__hipsparselt_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.cyhipsparse.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.cyhipsparse</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.cyhipsolver.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.cyhipsolver</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

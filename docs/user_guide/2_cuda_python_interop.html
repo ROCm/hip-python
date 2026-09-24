@@ -1,0 +1,1654 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>CUDA® Python Interoperability — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/2_cuda_python_interop';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="3_jit_compilation.html" rel="next" title="JIT Compilation and LLVM IR"/>
+<link href="1_basic_usage.html" rel="prev" title="Basic Usage and Examples"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../python_api/rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../python_api/rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../python_api/nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../python_api/nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_api/rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">CUDA® Python Interoperability</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>CUDA® Python Interoperability</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> Contents </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-python">Basic Usage (Python)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-example">Python Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cufile-shim-cuda-bindings-cufile">cuFile shim (<code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nvml-compatibility-shim-pynvml">NVML compatibility shim (<code class="docutils literal notranslate"><span class="pre">pynvml</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nvtx-compatibility-shim-nvtx">NVTX compatibility shim (<code class="docutils literal notranslate"><span class="pre">nvtx</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-core-compatibility-shim"><code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> compatibility shim</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-interoperating-with-other-libraries">Streams: interoperating with other libraries</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enum-constant-hallucination">Enum Constant Hallucination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-cython">Basic Usage (Cython)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cython-example">Cython Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hip-python-specific-code-modifications">HIP Python-Specific Code Modifications</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="cudareg-python-interoperability">
+<h1>CUDA® Python Interoperability<a class="headerlink" href="#cudareg-python-interoperability" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-10
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            20 min read
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>This chapter discusses HIP Python’s CUDA® Python interoperability layer
+that is shipped in a separate package with the name <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code>.
+In particular, we discuss how to run existing CUDA Python code on AMD GPUs,
+and if localized modifications are required, how to detect HIP Python and
+how to fall back to the underlying HIP Python Python and Cython modules.
+Moreover, a technique named “enum constant hallucination” is presented that
+allows HIP Python “invent” enum constants and their non-conflicting value
+on-the-fly for enum error types.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All examples in this chapter have been tested with ROCm™ 7.13 on Ubuntu 22.04.
+The <a class="reference internal" href="7_license.html#ch-license"><span class="std std-ref">License</span></a> applies to all examples in this chapter.</p>
+</div>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>HIP Python’s CUDA interoperability layer comes in a separate Python 3
+package with the name <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code>. Its dependencies are the
+<code class="docutils literal notranslate"><span class="pre">rocm-bindings-hip</span></code> and <code class="docutils literal notranslate"><span class="pre">rocm-bindings-systems</span></code> packages, each pinned
+to the exact same version number. The interop layer forwards CUDA calls
+into <code class="docutils literal notranslate"><span class="pre">rocm-bindings-hip</span></code>; the bundled <code class="docutils literal notranslate"><span class="pre">pynvml</span></code> shim (see
+<a class="reference internal" href="#sec-pynvml-shim"><span class="std std-ref">NVML compatibility shim (pynvml)</span></a>) is backed by <code class="docutils literal notranslate"><span class="pre">rocm.bindings.amdsmi</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">nvtx</span></code> shim (see <a class="reference internal" href="#sec-nvtx-shim"><span class="std std-ref">NVTX compatibility shim (nvtx)</span></a>) by <code class="docutils literal notranslate"><span class="pre">rocm.bindings.roctx</span></code>,
+both from <code class="docutils literal notranslate"><span class="pre">rocm-bindings-systems</span></code>.</p>
+<p>After having identified the correct package for your ROCm™
+installation, type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>hip-python-interop~<span class="o">=</span>&lt;rocm_version&gt;
+</pre></div>
+</div>
+<p>or, if you have a HIP Python wheel somewhere in your filesystem, type:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>&lt;path/to/hip_python_interop&gt;.whl
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="0_install.html#subsec-hip-python-versioning"><span class="std std-ref">HIP Python Versioning</span></a> for more details on the
+<code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> version number.</p>
+</div>
+</section>
+<section id="basic-usage-python">
+<h2>Basic Usage (Python)<a class="headerlink" href="#basic-usage-python" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can use HIP Python’s CUDA Python interoperability modules in my Python
+code.</p></li>
+</ul>
+</div>
+<p>After installing <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code>, you can import the individual
+modules that you need as shown below:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 18 </span><span class="caption-text">Importing the CUDA interop modules</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">driver</span>
+<span class="linenos">2</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">runtime</span>
+<span class="linenos">3</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">nvrtc</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">cuda.bindings</span></code> is the package; <code class="docutils literal notranslate"><span class="pre">driver</span></code> (CUDA Driver API),
+<code class="docutils literal notranslate"><span class="pre">runtime</span></code> (CUDA Runtime API), and <code class="docutils literal notranslate"><span class="pre">nvrtc</span></code> (NVRTC) are the
+modules. Importing them under shorter names (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">cuda</span> <span class="pre">import</span>
+<span class="pre">cuda</span></code> etc., as some older CUDA Python releases used to support)
+is <strong>not</strong> provided by <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cuda.bindings</span></code> modules above mirror the surface CUDA Python
+itself exposes under <code class="docutils literal notranslate"><span class="pre">cuda.bindings</span></code>. A fourth module,
+<a class="reference internal" href="#sec-cufile"><span class="std std-ref">cuFile shim (cuda.bindings.cufile)</span></a> (a cuFile file-IO shim), is built and
+shipped whenever the underlying hipFILE bindings are available. In
+addition, the <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> wheel ships three small
+convenience compatibility shims for common CUDA-ecosystem entry
+points: <a class="reference internal" href="#sec-pynvml-shim"><span class="std std-ref">NVML compatibility shim (pynvml)</span></a> (an NVML / <code class="docutils literal notranslate"><span class="pre">pynvml</span></code> shim),
+<a class="reference internal" href="#sec-nvtx-shim"><span class="std std-ref">NVTX compatibility shim (nvtx)</span></a> (an NVTX / <code class="docutils literal notranslate"><span class="pre">nvtx</span></code> shim) and
+<a class="reference internal" href="#sec-cuda-core-shim"><span class="std std-ref">cuda.core compatibility shim</span></a> (a minimal <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> shim).</p>
+</div>
+</section>
+<section id="python-example">
+<h2>Python Example<a class="headerlink" href="#python-example" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<p>How I can run simple CUDA Python applications directly on AMD GPUs via HIP Python.</p>
+</div>
+<p>After installing <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> (and its <code class="docutils literal notranslate"><span class="pre">rocm-bindings-hip</span></code>
+and <code class="docutils literal notranslate"><span class="pre">rocm-bindings-systems</span></code> dependencies), you can run the
+<a class="reference internal" href="#cuda-stream"><span class="std std-ref">example below</span></a> directly
+on AMD GPUs. There is nothing else to do. This works because all CUDA
+Python functions, types and even enum constants are aliases of HIP
+objects.</p>
+<div class="admonition-see admonition">
+<p class="admonition-title">See</p>
+<p><a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaError_t" title="cuda.bindings.runtime.cudaError_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaError_t</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaStreamCreate" title="cuda.bindings.runtime.cudaStreamCreate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamCreate</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaMemcpyAsync" title="cuda.bindings.runtime.cudaMemcpyAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaMemcpyAsync</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaMemsetAsync" title="cuda.bindings.runtime.cudaMemsetAsync"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaMemsetAsync</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaStreamSynchronize" title="cuda.bindings.runtime.cudaStreamSynchronize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamSynchronize</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaStreamDestroy" title="cuda.bindings.runtime.cudaStreamDestroy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaStreamDestroy</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.cudaFree" title="cuda.bindings.runtime.cudaFree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cudaFree</span></code></a></p>
+</div>
+<div class="literal-block-wrapper docutils container" id="cuda-stream">
+<div class="code-block-caption"><span class="caption-number">Listing 19 </span><span class="caption-text">CUDA Python Example</span><a class="headerlink" href="#cuda-stream" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">runtime</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">def</span><span class="w"> </span><span class="nf">cuda_check</span><span class="p">(</span><span class="n">call_result</span><span class="p">):</span>
+<span class="linenos"> 7</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">call_result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 9</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos">10</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">11</span>            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">12</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos">13</span>        <span class="c1"># Single-output funcs (e.g. cudaStreamCreate after the</span>
+<span class="linenos">14</span>        <span class="c1"># with-nogil codegen refactor) return the bare error enum,</span>
+<span class="linenos">15</span>        <span class="c1"># not a 1-tuple. Treat that as an empty-result call.</span>
+<span class="linenos">16</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">call_result</span>
+<span class="linenos">17</span>        <span class="n">result</span> <span class="o">=</span> <span class="p">()</span>
+<span class="linenos">18</span>    <span class="k">if</span> <span class="p">(</span>
+<span class="linenos">19</span>        <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">cudaError_t</span><span class="p">)</span>
+<span class="linenos">20</span>        <span class="ow">and</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">21</span>    <span class="p">):</span>
+<span class="linenos">22</span>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+<span class="linenos">23</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1"># inputs</span>
+<span class="linenos">27</span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="linenos">28</span><span class="n">x_h</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">"i"</span><span class="p">,</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)])</span>
+<span class="linenos">29</span><span class="n">num_bytes</span> <span class="o">=</span> <span class="n">x_h</span><span class="o">.</span><span class="n">itemsize</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_h</span><span class="p">)</span>
+<span class="linenos">30</span><span class="n">x_d</span> <span class="o">=</span> <span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaMalloc</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">))</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="n">stream</span> <span class="o">=</span> <span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaStreamCreate</span><span class="p">())</span>
+<span class="linenos">33</span><span class="n">cuda_check</span><span class="p">(</span>
+<span class="linenos">34</span>    <span class="n">runtime</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span>
+<span class="linenos">35</span>        <span class="n">x_d</span><span class="p">,</span>
+<span class="linenos">36</span>        <span class="n">x_h</span><span class="p">,</span>
+<span class="linenos">37</span>        <span class="n">num_bytes</span><span class="p">,</span>
+<span class="linenos">38</span>        <span class="n">runtime</span><span class="o">.</span><span class="n">cudaMemcpyKind</span><span class="o">.</span><span class="n">cudaMemcpyHostToDevice</span><span class="p">,</span>
+<span class="linenos">39</span>        <span class="n">stream</span><span class="p">,</span>
+<span class="linenos">40</span>    <span class="p">)</span>
+<span class="linenos">41</span><span class="p">)</span>
+<span class="linenos">42</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaMemsetAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">43</span><span class="n">cuda_check</span><span class="p">(</span>
+<span class="linenos">44</span>    <span class="n">runtime</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span>
+<span class="linenos">45</span>        <span class="n">x_h</span><span class="p">,</span>
+<span class="linenos">46</span>        <span class="n">x_d</span><span class="p">,</span>
+<span class="linenos">47</span>        <span class="n">num_bytes</span><span class="p">,</span>
+<span class="linenos">48</span>        <span class="n">runtime</span><span class="o">.</span><span class="n">cudaMemcpyKind</span><span class="o">.</span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">,</span>
+<span class="linenos">49</span>        <span class="n">stream</span><span class="p">,</span>
+<span class="linenos">50</span>    <span class="p">)</span>
+<span class="linenos">51</span><span class="p">)</span>
+<span class="linenos">52</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaStreamSynchronize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">53</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaStreamDestroy</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span><span class="c1"># deallocate device data</span>
+<span class="linenos">56</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaFree</span><span class="p">(</span><span class="n">x_d</span><span class="p">))</span>
+<span class="linenos">57</span>
+<span class="linenos">58</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_h</span><span class="p">):</span>
+<span class="linenos">59</span>    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">60</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected '0' for element </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, is: '</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+<span class="linenos">61</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-what-is-happening admonition">
+<p class="admonition-title">What is happening?</p>
+<p>See <a class="reference internal" href="1_basic_usage.html#sec-hip-streams"><span class="std std-ref">HIP Streams</span></a> for an explanation of a similar HIP program’s
+steps.</p>
+</div>
+</section>
+<section id="cufile-shim-cuda-bindings-cufile">
+<span id="sec-cufile"></span><h2>cuFile shim (<code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code>)<a class="headerlink" href="#cufile-shim-cuda-bindings-cufile" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">cuda.bindings</span> <span class="pre">import</span> <span class="pre">cufile</span></code> keeps working unchanged on
+AMD GPUs.</p></li>
+<li><p>How the cuFile API maps onto AMD’s hipFILE.</p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> wheel provides a <code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code>
+module: a compiled interop layer for the CUDA cuFile API, backed by
+AMD’s hipFILE via the low-level
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.cyhipfile</span></code> declarations. Code that already
+drives <code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code> — <code class="docutils literal notranslate"><span class="pre">driver_open</span></code>,
+<code class="docutils literal notranslate"><span class="pre">handle_register</span></code>, <code class="docutils literal notranslate"><span class="pre">buf_register</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code> / <code class="docutils literal notranslate"><span class="pre">write</span></code>, the async
+and batch APIs — can keep calling it unmodified on AMD hardware,
+where it dispatches into <code class="docutils literal notranslate"><span class="pre">libhipfile</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Unlike <a class="reference internal" href="../python_api/cuda/bindings/driver/index.html#module-cuda.bindings.driver" title="cuda.bindings.driver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.driver</span></code></a> / <code class="docutils literal notranslate"><span class="pre">runtime</span></code> / <code class="docutils literal notranslate"><span class="pre">nvrtc</span></code>,
+which are emitted by the HIP Python code generator, <code class="docutils literal notranslate"><span class="pre">cufile</span></code> is a
+hand-written module. Like the <code class="docutils literal notranslate"><span class="pre">rocm.bindings.hipfile</span></code> bindings it
+builds on, it is <strong>optional</strong>: it is only compiled and shipped when
+the hipFILE bindings (and a loadable <code class="docutils literal notranslate"><span class="pre">libhipfile.so</span></code>) are present.
+Use <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">cuda.bindings</span> <span class="pre">import</span> <span class="pre">cufile</span></code> guarded by a <code class="docutils literal notranslate"><span class="pre">try</span></code> /
+<code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">ImportError</span></code> if you need to run where hipFILE is absent.</p>
+</div>
+<p>The module mirrors CUDA Python’s <code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code> surface:</p>
+<ul class="simple">
+<li><p>snake_case functions that take <code class="docutils literal notranslate"><span class="pre">intptr_t</span></code> pointer arguments
+(device pointers, file handles, <code class="docutils literal notranslate"><span class="pre">hipFileDescr_t*</span></code>) as plain Python
+integers, and raise <code class="docutils literal notranslate"><span class="pre">cufile.cuFileError</span></code> on a non-success status;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read</span></code> / <code class="docutils literal notranslate"><span class="pre">write</span></code> return the number of bytes transferred and raise
+<a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#OSError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OSError</span></code></a> for a POSIX error (raw return <code class="docutils literal notranslate"><span class="pre">-1</span></code>);</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">Descr</span></code> / <code class="docutils literal notranslate"><span class="pre">IOParams</span></code> / <code class="docutils literal notranslate"><span class="pre">IOEvents</span></code> array helpers that expose
+the backing C structs and a <code class="docutils literal notranslate"><span class="pre">.ptr</span></code> address to hand to the calls;</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.IntEnum" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntEnum</span></code></a> mirrors of the cuFile enums (<code class="docutils literal notranslate"><span class="pre">OpError</span></code>,
+<code class="docutils literal notranslate"><span class="pre">FileHandleType</span></code>, <code class="docutils literal notranslate"><span class="pre">Status</span></code>, the config-parameter enums, …) whose
+member <em>names</em> follow cuda-python and whose <em>values</em> come from hipFILE.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Divergences from cuFile.</strong> <code class="docutils literal notranslate"><span class="pre">get_version()</span></code> returns the version
+packed into a single integer (<code class="docutils literal notranslate"><span class="pre">major*1000</span> <span class="pre">+</span> <span class="pre">minor*10</span> <span class="pre">+</span> <span class="pre">patch</span></code>),
+matching cuFile, even though hipFILE reports the three components
+separately. <code class="docutils literal notranslate"><span class="pre">cuFileError</span></code> additionally carries a <code class="docutils literal notranslate"><span class="pre">cu_err</span></code>
+attribute (the underlying <code class="docutils literal notranslate"><span class="pre">hipError_t</span></code> for <code class="docutils literal notranslate"><span class="pre">CUDA_DRIVER_ERROR</span></code>).</p>
+</div>
+<div class="admonition-see admonition">
+<p class="admonition-title">See</p>
+<p><a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.driver_open" title="cuda.bindings.cufile.driver_open"><code class="xref py py-obj docutils literal notranslate"><span class="pre">driver_open</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.buf_register" title="cuda.bindings.cufile.buf_register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buf_register</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.Descr" title="cuda.bindings.cufile.Descr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Descr</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.handle_register" title="cuda.bindings.cufile.handle_register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_register</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.read" title="cuda.bindings.cufile.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.write" title="cuda.bindings.cufile.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html#cuda.bindings.cufile.driver_close" title="cuda.bindings.cufile.driver_close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">driver_close</span></code></a></p>
+</div>
+<div class="literal-block-wrapper docutils container" id="cufile-copy-with-cuda-bindings">
+<div class="code-block-caption"><span class="caption-number">Listing 20 </span><span class="caption-text">File copy through the CUDA cuFile API</span><a class="headerlink" href="#cufile-copy-with-cuda-bindings" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="linenos">  2</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos">  3</span><span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="linenos">  4</span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="linenos">  5</span>
+<span class="linenos">  6</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">cufile</span><span class="p">,</span> <span class="n">runtime</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span><span class="k">def</span><span class="w"> </span><span class="nf">cuda_check</span><span class="p">(</span><span class="n">call_result</span><span class="p">):</span>
+<span class="linenos"> 10</span><span class="w">    </span><span class="sd">"""Unwrap the ``(error, *results)`` tuple returned by cuda.bindings.runtime."""</span>
+<span class="linenos"> 11</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">call_result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+<span class="linenos"> 12</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 13</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">call_result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos"> 14</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos"> 15</span>            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 16</span>    <span class="k">else</span><span class="p">:</span>
+<span class="linenos"> 17</span>        <span class="n">err</span> <span class="o">=</span> <span class="n">call_result</span>
+<span class="linenos"> 18</span>        <span class="n">result</span> <span class="o">=</span> <span class="p">()</span>
+<span class="linenos"> 19</span>    <span class="k">if</span> <span class="p">(</span>
+<span class="linenos"> 20</span>        <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">cudaError_t</span><span class="p">)</span>
+<span class="linenos"> 21</span>        <span class="ow">and</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos"> 22</span>    <span class="p">):</span>
+<span class="linenos"> 23</span>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+<span class="linenos"> 24</span>    <span class="k">return</span> <span class="n">result</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="k">def</span><span class="w"> </span><span class="nf">_register_handle</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
+<span class="linenos"> 28</span><span class="w">    </span><span class="sd">"""Build a cuFile file descriptor for ``fd`` and register it."""</span>
+<span class="linenos"> 29</span>    <span class="n">descr</span> <span class="o">=</span> <span class="n">cufile</span><span class="o">.</span><span class="n">Descr</span><span class="p">()</span>
+<span class="linenos"> 30</span>    <span class="n">descr</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">cufile</span><span class="o">.</span><span class="n">FileHandleType</span><span class="o">.</span><span class="n">OPAQUE_FD</span>
+<span class="linenos"> 31</span>    <span class="n">descr</span><span class="o">.</span><span class="n">handle</span><span class="o">.</span><span class="n">fd</span> <span class="o">=</span> <span class="n">fd</span>
+<span class="linenos"> 32</span>    <span class="c1"># Keep the Descr alive until the handle is registered (handle_register</span>
+<span class="linenos"> 33</span>    <span class="c1"># copies out of it); returning it lets the caller hold the reference.</span>
+<span class="linenos"> 34</span>    <span class="k">return</span> <span class="n">cufile</span><span class="o">.</span><span class="n">handle_register</span><span class="p">(</span><span class="n">descr</span><span class="o">.</span><span class="n">ptr</span><span class="p">),</span> <span class="n">descr</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cuFile Version: </span><span class="si">{</span><span class="n">cufile</span><span class="o">.</span><span class="n">get_version</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 38</span>
+<span class="linenos"> 39</span><span class="c1"># cuFile issues its reads/writes with O_DIRECT, so the scratch files must live</span>
+<span class="linenos"> 40</span><span class="c1"># on an O_DIRECT-capable filesystem. Default to the system temp dir and allow</span>
+<span class="linenos"> 41</span><span class="c1"># an override via HIPFILE_TMPDIR (e.g. point at an ext4 mount if the default</span>
+<span class="linenos"> 42</span><span class="c1"># temp dir is tmpfs).</span>
+<span class="linenos"> 43</span><span class="n">scratch_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HIPFILE_TMPDIR"</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="c1"># 2 MiB, block-aligned so the O_DIRECT transfers are valid.</span>
+<span class="linenos"> 46</span><span class="n">size</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span><span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">scratch_dir</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp_dir</span><span class="p">:</span>
+<span class="linenos"> 49</span>    <span class="n">input_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"random_2MiB.bin"</span>
+<span class="linenos"> 50</span>    <span class="n">output_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">tmp_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"output.bin"</span>
+<span class="linenos"> 51</span>
+<span class="linenos"> 52</span>    <span class="c1"># Create the random input up front so the example is fully self-contained.</span>
+<span class="linenos"> 53</span>    <span class="n">input_path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+<span class="linenos"> 54</span>
+<span class="linenos"> 55</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Driver Use Count Before: </span><span class="si">{</span><span class="n">cufile</span><span class="o">.</span><span class="n">use_count</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 56</span>
+<span class="linenos"> 57</span>    <span class="c1"># Allocate the device bounce buffer via the cuda-bindings runtime API.</span>
+<span class="linenos"> 58</span>    <span class="n">dev_ptr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaMalloc</span><span class="p">(</span><span class="n">size</span><span class="p">)))</span>
+<span class="linenos"> 59</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Buffer located at: </span><span class="si">{</span><span class="n">dev_ptr</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">dev_ptr</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span>    <span class="n">cufile</span><span class="o">.</span><span class="n">driver_open</span><span class="p">()</span>
+<span class="linenos"> 62</span>    <span class="n">fd_input</span> <span class="o">=</span> <span class="n">fd_output</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="linenos"> 63</span>    <span class="n">fh_input</span> <span class="o">=</span> <span class="n">fh_output</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="linenos"> 64</span>    <span class="n">buffer_registered</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 65</span>    <span class="k">try</span><span class="p">:</span>
+<span class="linenos"> 66</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Driver Use Count After: </span><span class="si">{</span><span class="n">cufile</span><span class="o">.</span><span class="n">use_count</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 67</span>
+<span class="linenos"> 68</span>        <span class="n">cufile</span><span class="o">.</span><span class="n">buf_register</span><span class="p">(</span><span class="n">dev_ptr</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 69</span>        <span class="n">buffer_registered</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos"> 70</span>
+<span class="linenos"> 71</span>        <span class="n">fd_input</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_DIRECT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span><span class="p">)</span>
+<span class="linenos"> 72</span>        <span class="n">fd_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+<span class="linenos"> 73</span>            <span class="n">output_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_DIRECT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_TRUNC</span>
+<span class="linenos"> 74</span>        <span class="p">)</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>        <span class="n">fh_input</span><span class="p">,</span> <span class="n">_descr_in</span> <span class="o">=</span> <span class="n">_register_handle</span><span class="p">(</span><span class="n">fd_input</span><span class="p">)</span>
+<span class="linenos"> 77</span>        <span class="n">fh_output</span><span class="p">,</span> <span class="n">_descr_out</span> <span class="o">=</span> <span class="n">_register_handle</span><span class="p">(</span><span class="n">fd_output</span><span class="p">)</span>
+<span class="linenos"> 78</span>
+<span class="linenos"> 79</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Transferring </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> bytes..."</span><span class="p">)</span>
+<span class="linenos"> 80</span>        <span class="n">bytes_read</span> <span class="o">=</span> <span class="n">cufile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fh_input</span><span class="p">,</span> <span class="n">dev_ptr</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 81</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bytes Read: </span><span class="si">{</span><span class="n">bytes_read</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 82</span>        <span class="n">bytes_written</span> <span class="o">=</span> <span class="n">cufile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fh_output</span><span class="p">,</span> <span class="n">dev_ptr</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 83</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bytes Written: </span><span class="si">{</span><span class="n">bytes_written</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos"> 84</span>    <span class="k">finally</span><span class="p">:</span>
+<span class="linenos"> 85</span>        <span class="k">if</span> <span class="n">fh_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 86</span>            <span class="n">cufile</span><span class="o">.</span><span class="n">handle_deregister</span><span class="p">(</span><span class="n">fh_output</span><span class="p">)</span>
+<span class="linenos"> 87</span>        <span class="k">if</span> <span class="n">fh_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 88</span>            <span class="n">cufile</span><span class="o">.</span><span class="n">handle_deregister</span><span class="p">(</span><span class="n">fh_input</span><span class="p">)</span>
+<span class="linenos"> 89</span>        <span class="k">if</span> <span class="n">buffer_registered</span><span class="p">:</span>
+<span class="linenos"> 90</span>            <span class="n">cufile</span><span class="o">.</span><span class="n">buf_deregister</span><span class="p">(</span><span class="n">dev_ptr</span><span class="p">)</span>
+<span class="linenos"> 91</span>        <span class="k">if</span> <span class="n">fd_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 92</span>            <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd_output</span><span class="p">)</span>
+<span class="linenos"> 93</span>        <span class="k">if</span> <span class="n">fd_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 94</span>            <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fd_input</span><span class="p">)</span>
+<span class="linenos"> 95</span>        <span class="n">cufile</span><span class="o">.</span><span class="n">driver_close</span><span class="p">()</span>
+<span class="linenos"> 96</span>        <span class="n">cuda_check</span><span class="p">(</span><span class="n">runtime</span><span class="o">.</span><span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_ptr</span><span class="p">))</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="s2">"br"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_in</span><span class="p">:</span>
+<span class="linenos"> 99</span>        <span class="n">hash_in</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+<span class="linenos">100</span>        <span class="n">chunk</span> <span class="o">=</span> <span class="n">file_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">101</span>        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">102</span>            <span class="n">hash_in</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<span class="linenos">103</span>            <span class="n">chunk</span> <span class="o">=</span> <span class="n">file_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">104</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Input File Hash: </span><span class="si">{</span><span class="n">hash_in</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">"br"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_out</span><span class="p">:</span>
+<span class="linenos">107</span>        <span class="n">hash_out</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+<span class="linenos">108</span>        <span class="n">chunk</span> <span class="o">=</span> <span class="n">file_out</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">109</span>        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">110</span>            <span class="n">hash_out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<span class="linenos">111</span>            <span class="n">chunk</span> <span class="o">=</span> <span class="n">file_out</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="linenos">112</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Output File Hash: </span><span class="si">{</span><span class="n">hash_out</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">113</span>
+<span class="linenos">114</span>    <span class="k">assert</span> <span class="n">hash_in</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">==</span> <span class="n">hash_out</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span> <span class="s2">"file hashes differ"</span>
+<span class="linenos">115</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>cuFile issues its transfers with <code class="docutils literal notranslate"><span class="pre">O_DIRECT</span></code>, which requires an
+<code class="docutils literal notranslate"><span class="pre">O_DIRECT</span></code>-capable filesystem. The example creates its own scratch
+files; point <code class="docutils literal notranslate"><span class="pre">HIPFILE_TMPDIR</span></code> at such a mount (e.g. an ext4 volume)
+if your default temp dir is <code class="docutils literal notranslate"><span class="pre">tmpfs</span></code>.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The full API reference for the module is at
+<a class="reference internal" href="../python_api/cuda/bindings/cufile/index.html"><span class="doc">cuda.bindings.cufile</span></a>. For the underlying
+AMD API see the high-level <a class="reference internal" href="../python_api/rocm/hipfile/index.html"><span class="doc">rocm.hipfile</span></a>
+wrappers and the <code class="docutils literal notranslate"><span class="pre">rocm.bindings.hipfile</span></code> bindings.</p>
+</div>
+</section>
+<section id="nvml-compatibility-shim-pynvml">
+<span id="sec-pynvml-shim"></span><h2>NVML compatibility shim (<code class="docutils literal notranslate"><span class="pre">pynvml</span></code>)<a class="headerlink" href="#nvml-compatibility-shim-pynvml" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pynvml</span></code> keeps working unchanged on AMD GPUs.</p></li>
+<li><p>Which part of the NVML surface the shim implements and how it
+behaves for concepts that do not exist on ROCm™.</p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> wheel installs a top-level <code class="docutils literal notranslate"><span class="pre">pynvml</span></code>
+module: a compatibility shim for the NVML Python API backed by AMD
+SMI via the high-level <a class="reference internal" href="../python_api/rocm/bindings/amdsmi/index.html#module-rocm.bindings.amdsmi" title="rocm.bindings.amdsmi"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.amdsmi</span></code></a> bindings. Code
+that already speaks NVML — for example HIP ports of RAPIDS-style
+projects — can keep calling <code class="docutils literal notranslate"><span class="pre">pynvml</span></code> unmodified on AMD hardware.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This shim is a fresh, MIT-licensed re-implementation of the subset
+of the NVML Python surface that HIP consumers commonly use. It is
+<strong>not</strong> a fork of the upstream <code class="docutils literal notranslate"><span class="pre">pynvml</span></code> / <code class="docutils literal notranslate"><span class="pre">nvidia-ml-py</span></code>
+package. Because it is backed by AMD SMI, the interop wheel pulls in
+<code class="docutils literal notranslate"><span class="pre">rocm-bindings-systems</span></code> (which provides <code class="docutils literal notranslate"><span class="pre">rocm.bindings.amdsmi</span></code>)
+in addition to <code class="docutils literal notranslate"><span class="pre">rocm-bindings-hip</span></code>.</p>
+</div>
+<p>The implemented surface covers the entry points HIP ports rely on:</p>
+<ul class="simple">
+<li><p>Lifecycle: <code class="docutils literal notranslate"><span class="pre">nvmlInit</span></code> / <code class="docutils literal notranslate"><span class="pre">nvmlInitWithFlags</span></code> / <code class="docutils literal notranslate"><span class="pre">nvmlShutdown</span></code>
+(reference-counted, mapping to <code class="docutils literal notranslate"><span class="pre">amdsmi_init</span></code> / <code class="docutils literal notranslate"><span class="pre">amdsmi_shut_down</span></code>).</p></li>
+<li><p>Device enumeration and handles: <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetCount</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetHandleByIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetHandleByUUID</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetIndex</span></code>.</p></li>
+<li><p>Device queries: <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetMemoryInfo</span></code>, <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetName</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetUUID</span></code>, <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetTemperature</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetPowerUsage</span></code>, <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetUtilizationRates</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetComputeRunningProcesses</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetCpuAffinity</span></code> — like NVML, a Linux-only capability;
+it raises <code class="docutils literal notranslate"><span class="pre">NVMLError_NotSupported</span></code> where AMD SMI cannot provide it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NVMLError</span></code> and the per-code subclasses consumers commonly catch
+(e.g. <code class="docutils literal notranslate"><span class="pre">NVMLError_NotSupported</span></code>), plus the <code class="docutils literal notranslate"><span class="pre">NVML_*</span></code> status and
+selector constants.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ROCm has no Multi-Instance GPU (MIG) concept. The MIG-related
+entry points (<code class="docutils literal notranslate"><span class="pre">nvmlDeviceIsMigDeviceHandle</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetMigMode</span></code>, <code class="docutils literal notranslate"><span class="pre">nvmlDeviceGetMaxMigDeviceCount</span></code>, …)
+are present and degrade gracefully: MIG always reports disabled and
+requests for MIG device handles raise <code class="docutils literal notranslate"><span class="pre">NVMLError_NotSupported</span></code>.</p>
+</div>
+<div class="literal-block-wrapper docutils container" id="pynvml-query-devices">
+<div class="code-block-caption"><span class="caption-number">Listing 21 </span><span class="caption-text">Querying AMD GPUs through the NVML (pynvml) API</span><a class="headerlink" href="#pynvml-query-devices" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">pynvml</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">def</span><span class="w"> </span><span class="nf">_gib</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">):</span>
+<span class="linenos"> 5</span>    <span class="k">return</span> <span class="n">num_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlInit</span><span class="p">()</span>
+<span class="linenos"> 9</span><span class="k">try</span><span class="p">:</span>
+<span class="linenos">10</span>    <span class="n">count</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetCount</span><span class="p">()</span>
+<span class="linenos">11</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"NVML reports </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> device(s)"</span><span class="p">)</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+<span class="linenos">14</span>        <span class="n">handle</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetHandleByIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>        <span class="n">name</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetName</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="linenos">17</span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+<span class="linenos">18</span>            <span class="n">name</span><span class="p">,</span> <span class="nb">bytes</span>
+<span class="linenos">19</span>        <span class="p">):</span>  <span class="c1"># upstream pynvml returns bytes on older versions</span>
+<span class="linenos">20</span>            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">,</span> <span class="s2">"replace"</span><span class="p">)</span>
+<span class="linenos">21</span>        <span class="n">uuid</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetUUID</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="n">mem</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetMemoryInfo</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"device </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">25</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  uuid:   </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">26</span>        <span class="nb">print</span><span class="p">(</span>
+<span class="linenos">27</span>            <span class="sa">f</span><span class="s2">"  memory: </span><span class="si">{</span><span class="n">_gib</span><span class="p">(</span><span class="n">mem</span><span class="o">.</span><span class="n">used</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">_gib</span><span class="p">(</span><span class="n">mem</span><span class="o">.</span><span class="n">total</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> GiB used"</span>
+<span class="linenos">28</span>        <span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>        <span class="c1"># Telemetry that may be unsupported on some platforms/drivers; NVML</span>
+<span class="linenos">31</span>        <span class="c1"># signals that with NVMLError_NotSupported, which we treat as "n/a".</span>
+<span class="linenos">32</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos">33</span>            <span class="n">temp</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetTemperature</span><span class="p">(</span>
+<span class="linenos">34</span>                <span class="n">handle</span><span class="p">,</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">NVML_TEMPERATURE_GPU</span>
+<span class="linenos">35</span>            <span class="p">)</span>
+<span class="linenos">36</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  temp:   </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2"> C"</span><span class="p">)</span>
+<span class="linenos">37</span>        <span class="k">except</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">NVMLError_NotSupported</span><span class="p">:</span>
+<span class="linenos">38</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">"  temp:   n/a"</span><span class="p">)</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos">41</span>            <span class="n">util</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetUtilizationRates</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
+<span class="linenos">42</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  util:   gpu </span><span class="si">{</span><span class="n">util</span><span class="o">.</span><span class="n">gpu</span><span class="si">}</span><span class="s2">% / mem </span><span class="si">{</span><span class="n">util</span><span class="o">.</span><span class="n">memory</span><span class="si">}</span><span class="s2">%"</span><span class="p">)</span>
+<span class="linenos">43</span>        <span class="k">except</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">NVMLError_NotSupported</span><span class="p">:</span>
+<span class="linenos">44</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">"  util:   n/a"</span><span class="p">)</span>
+<span class="linenos">45</span>
+<span class="linenos">46</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos">47</span>            <span class="n">power_w</span> <span class="o">=</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlDeviceGetPowerUsage</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.0</span>
+<span class="linenos">48</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  power:  </span><span class="si">{</span><span class="n">power_w</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> W"</span><span class="p">)</span>
+<span class="linenos">49</span>        <span class="k">except</span> <span class="n">pynvml</span><span class="o">.</span><span class="n">NVMLError_NotSupported</span><span class="p">:</span>
+<span class="linenos">50</span>            <span class="nb">print</span><span class="p">(</span><span class="s2">"  power:  n/a"</span><span class="p">)</span>
+<span class="linenos">51</span><span class="k">finally</span><span class="p">:</span>
+<span class="linenos">52</span>    <span class="n">pynvml</span><span class="o">.</span><span class="n">nvmlShutdown</span><span class="p">()</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The full API reference for the shim is at <a class="reference internal" href="../python_api/pynvml/index.html"><span class="doc">pynvml</span></a>.</p>
+</div>
+</section>
+<section id="nvtx-compatibility-shim-nvtx">
+<span id="sec-nvtx-shim"></span><h2>NVTX compatibility shim (<code class="docutils literal notranslate"><span class="pre">nvtx</span></code>)<a class="headerlink" href="#nvtx-compatibility-shim-nvtx" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">nvtx</span></code> keeps working unchanged on AMD GPUs.</p></li>
+<li><p>Which part of the NVTX surface is faithfully backed by ROCTX and
+which parts degrade because ROCTX cannot express them.</p></li>
+</ul>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">hip-python-interop</span></code> wheel installs a top-level <code class="docutils literal notranslate"><span class="pre">nvtx</span></code> module:
+a compatibility shim for the NVTX Python API backed by ROCTX via the
+high-level <a class="reference internal" href="../python_api/rocm/bindings/roctx/index.html#module-rocm.bindings.roctx" title="rocm.bindings.roctx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.roctx</span></code></a> bindings. Code that already
+annotates ranges and markers with <code class="docutils literal notranslate"><span class="pre">nvtx</span></code> — for example HIP ports
+of RAPIDS-style projects — can keep calling <code class="docutils literal notranslate"><span class="pre">nvtx</span></code> unmodified on
+AMD hardware. Profile the annotated program with a ROCm-aware tool
+(<code class="docutils literal notranslate"><span class="pre">rocprof-compute</span></code>) instead of Nsight Systems.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This shim is a fresh, MIT-licensed re-implementation of the <code class="docutils literal notranslate"><span class="pre">nvtx</span></code>
+Python surface. It is <strong>not</strong> a fork of the upstream (Apache-2.0)
+<code class="docutils literal notranslate"><span class="pre">nvtx</span></code> package. Because it is backed by ROCTX, the interop wheel
+pulls in <code class="docutils literal notranslate"><span class="pre">rocm-bindings-systems</span></code> (which provides
+<code class="docutils literal notranslate"><span class="pre">rocm.bindings.roctx</span></code>) in addition to <code class="docutils literal notranslate"><span class="pre">rocm-bindings-hip</span></code>.</p>
+</div>
+<p>The following surface is faithfully backed by ROCTX:</p>
+<ul class="simple">
+<li><p>Instantaneous markers: <code class="docutils literal notranslate"><span class="pre">nvtx.mark</span></code> (<code class="docutils literal notranslate"><span class="pre">roctxMarkA</span></code>).</p></li>
+<li><p>Nested, per-thread ranges: <code class="docutils literal notranslate"><span class="pre">nvtx.push_range</span></code> / <code class="docutils literal notranslate"><span class="pre">nvtx.pop_range</span></code>
+(<code class="docutils literal notranslate"><span class="pre">roctxRangePushA</span></code> / <code class="docutils literal notranslate"><span class="pre">roctxRangePop</span></code>).</p></li>
+<li><p>Process ranges that may cross threads: <code class="docutils literal notranslate"><span class="pre">nvtx.start_range</span></code> /
+<code class="docutils literal notranslate"><span class="pre">nvtx.end_range</span></code> (<code class="docutils literal notranslate"><span class="pre">roctxRangeStartA</span></code> / <code class="docutils literal notranslate"><span class="pre">roctxRangeStop</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.annotate</span></code> as both a decorator and a context manager.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.Profile</span></code> automatic function annotation (via
+<code class="docutils literal notranslate"><span class="pre">sys.setprofile</span></code> / <code class="docutils literal notranslate"><span class="pre">threading.setprofile</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.enabled</span></code> and the <code class="docutils literal notranslate"><span class="pre">NVTX_DISABLE</span></code> environment variable.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Limitations.</strong> ROCTX is a message-only tracing API: it has no
+concept of domains, colors, categories, payloads, registered strings
+or counters. The corresponding parts of the <code class="docutils literal notranslate"><span class="pre">nvtx</span></code> API are accepted
+for source compatibility but do <strong>not</strong> behave as they would on
+NVIDIA hardware.</p>
+<p>Accepted but silently <em>dropped</em> (only the message reaches ROCTX):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">domain</span></code> / <code class="docutils literal notranslate"><span class="pre">nvtx.get_domain</span></code> / <code class="docutils literal notranslate"><span class="pre">nvtx.Domain</span></code> — ROCTX has no
+domains, so every domain routes to the same global ROCTX calls;
+the domain name has no effect and cross-domain isolation is lost.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color</span></code> (and <code class="docutils literal notranslate"><span class="pre">nvtx.colors.color_to_hex</span></code>) — no color channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">category</span></code> / <code class="docutils literal notranslate"><span class="pre">Domain.get_category_id</span></code> — no category channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">payload</span></code> — no payload channel.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.RegisteredString</span></code> / <code class="docutils literal notranslate"><span class="pre">nvtx.EventAttributes</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">Domain.get_registered_string</span></code> / <code class="docutils literal notranslate"><span class="pre">get_event_attributes</span></code> /
+<code class="docutils literal notranslate"><span class="pre">set_event_attributes</span></code> helpers — lightweight holders only.</p></li>
+</ul>
+<p>Accepted but complete <em>no-ops</em> (record nothing):</p>
+<ul class="simple">
+<li><p>Counters: <code class="docutils literal notranslate"><span class="pre">nvtx.Counter</span></code>, <code class="docutils literal notranslate"><span class="pre">nvtx.Int64Counter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvtx.Float64Counter</span></code>, <code class="docutils literal notranslate"><span class="pre">nvtx.ExtCounter</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Domain.get_counter</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code> / <code class="docutils literal notranslate"><span class="pre">sample_no_value</span></code> /
+<code class="docutils literal notranslate"><span class="pre">batch_submit</span></code>, and <code class="docutils literal notranslate"><span class="pre">Domain.get_timestamp</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.CounterSemantics</span></code> and the enums <code class="docutils literal notranslate"><span class="pre">nvtx.CounterValueType</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nvtx.CounterInterpolation</span></code>, <code class="docutils literal notranslate"><span class="pre">nvtx.CounterNoValueReason</span></code> and
+<code class="docutils literal notranslate"><span class="pre">nvtx.TimestampType</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nvtx.numpy_dtype</span></code>.</p></li>
+</ul>
+<p>The counter/semantics surface additionally postdates NVTX
+release-v3 and is provided only as forward-compatible stubs.</p>
+</div>
+<p>To audit whether your code relies on any of the dropped/no-op features
+above, enable the shim’s <em>compatibility mode</em>. By default it stays
+<code class="docutils literal notranslate"><span class="pre">silent</span></code> (drop-in behavior); it can instead emit a warning
+(<code class="docutils literal notranslate"><span class="pre">nvtx.NvtxCompatWarning</span></code>) or raise (<code class="docutils literal notranslate"><span class="pre">nvtx.NvtxCompatError</span></code>) whenever an
+unsupported feature or dropped argument is used. Select it with the
+<code class="docutils literal notranslate"><span class="pre">HIP_PYTHON_NVTX_COMPAT</span></code> environment variable (<code class="docutils literal notranslate"><span class="pre">silent</span></code> / <code class="docutils literal notranslate"><span class="pre">warn</span></code> /
+<code class="docutils literal notranslate"><span class="pre">error</span></code>) or at runtime:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">nvtx</span>
+
+<span class="n">nvtx</span><span class="o">.</span><span class="n">set_compat_mode</span><span class="p">(</span><span class="s2">"error"</span><span class="p">)</span>   <span class="c1"># or "warn"; or set HIP_PYTHON_NVTX_COMPAT=error</span>
+<span class="n">nvtx</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s2">"checkpoint"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span>   <span class="c1"># raises NvtxCompatError (color is dropped)</span>
+</pre></div>
+</div>
+<p>The checks fire regardless of whether tracing is enabled, so they also flag
+non-portable usage in CI that runs without a ROCTX runtime.</p>
+<div class="literal-block-wrapper docutils container" id="nvtx-annotate-ranges">
+<div class="code-block-caption"><span class="caption-number">Listing 22 </span><span class="caption-text">Annotating code ranges through the NVTX (nvtx) API</span><a class="headerlink" href="#nvtx-annotate-ranges" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">nvtx</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># `annotate` works as a decorator. `color`/`domain` are accepted for</span>
+<span class="linenos"> 7</span><span class="c1"># source compatibility but have no effect on ROCTX (message only).</span>
+<span class="linenos"> 8</span><span class="nd">@nvtx</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">"work"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"green"</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">"demo"</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="k">def</span><span class="w"> </span><span class="nf">do_work</span><span class="p">():</span>
+<span class="linenos">10</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="linenos">14</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"nvtx enabled: </span><span class="si">{</span><span class="n">nvtx</span><span class="o">.</span><span class="n">enabled</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>    <span class="n">do_work</span><span class="p">()</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>    <span class="c1"># `annotate` also works as a context manager.</span>
+<span class="linenos">19</span>    <span class="k">with</span> <span class="n">nvtx</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">"phase"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">):</span>
+<span class="linenos">20</span>        <span class="c1"># An instantaneous marker.</span>
+<span class="linenos">21</span>        <span class="n">nvtx</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="s2">"checkpoint"</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>    <span class="c1"># Manually nested (per-thread) range.</span>
+<span class="linenos">25</span>    <span class="n">nvtx</span><span class="o">.</span><span class="n">push_range</span><span class="p">(</span><span class="s2">"manual"</span><span class="p">)</span>
+<span class="linenos">26</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">27</span>    <span class="n">nvtx</span><span class="o">.</span><span class="n">pop_range</span><span class="p">()</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>    <span class="c1"># Process range (may be started/stopped on different threads).</span>
+<span class="linenos">30</span>    <span class="n">range_id</span> <span class="o">=</span> <span class="n">nvtx</span><span class="o">.</span><span class="n">start_range</span><span class="p">(</span><span class="s2">"process"</span><span class="p">)</span>
+<span class="linenos">31</span>    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="linenos">32</span>    <span class="n">nvtx</span><span class="o">.</span><span class="n">end_range</span><span class="p">(</span><span class="n">range_id</span><span class="p">)</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="c1"># Automatic function annotation for a code region.</span>
+<span class="linenos">35</span>    <span class="n">profiler</span> <span class="o">=</span> <span class="n">nvtx</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
+<span class="linenos">36</span>    <span class="n">profiler</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+<span class="linenos">37</span>    <span class="n">do_work</span><span class="p">()</span>
+<span class="linenos">38</span>    <span class="n">profiler</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>    <span class="c1"># NOTE: counters have no ROCTX equivalent and are no-ops in this shim.</span>
+<span class="linenos">41</span>    <span class="n">domain</span> <span class="o">=</span> <span class="n">nvtx</span><span class="o">.</span><span class="n">get_domain</span><span class="p">(</span><span class="s2">"demo"</span><span class="p">)</span>
+<span class="linenos">42</span>    <span class="n">counter</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_counter</span><span class="p">(</span><span class="s2">"loss"</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="linenos">43</span>    <span class="n">counter</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mf">0.42</span><span class="p">)</span>  <span class="c1"># recorded on NVIDIA; no-op on ROCm</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+<span class="linenos">49</span>    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The full API reference for the shim is at <a class="reference internal" href="../python_api/nvtx/index.html"><span class="doc">nvtx</span></a>.</p>
+</div>
+</section>
+<section id="cuda-core-compatibility-shim">
+<span id="sec-cuda-core-shim"></span><h2><code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> compatibility shim<a class="headerlink" href="#cuda-core-compatibility-shim" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That a minimal <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> is available on AMD GPUs and what part
+of its surface is implemented.</p></li>
+<li><p>How to hand streams back and forth between HIP Python and another
+GPU library through the CUDA stream protocol.</p></li>
+</ul>
+</div>
+<p>The wheel also provides a minimal <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> shim, backed by the
+high-level <a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#module-rocm.bindings.hip" title="rocm.bindings.hip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.hip</span></code></a> HIP runtime API. It implements
+just enough of the high-level <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> surface for HIP ports of
+CUDA Python consumers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Device</span></code> — <code class="docutils literal notranslate"><span class="pre">device_id</span></code>, <code class="docutils literal notranslate"><span class="pre">uuid</span></code>, <code class="docutils literal notranslate"><span class="pre">set_current</span></code>, <code class="docutils literal notranslate"><span class="pre">sync</span></code>,
+<code class="docutils literal notranslate"><span class="pre">create_stream</span></code> and <code class="docutils literal notranslate"><span class="pre">default_stream</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Stream</span></code> — the <code class="docutils literal notranslate"><span class="pre">__cuda_stream__</span></code> vocabulary type, plus <code class="docutils literal notranslate"><span class="pre">handle</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sync</span></code> and <code class="docutils literal notranslate"><span class="pre">close</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DeviceMemoryResource</span></code> and <code class="docutils literal notranslate"><span class="pre">Buffer</span></code> — stream-ordered allocation
+from the device’s HIP memory pool.</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="cuda-core-device">
+<div class="code-block-caption"><span class="caption-number">Listing 23 </span><span class="caption-text">Using the cuda.core shim</span><a class="headerlink" href="#cuda-core-device" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span><span class="p">,</span> <span class="n">DeviceMemoryResource</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">dev</span> <span class="o">=</span> <span class="n">Device</span><span class="p">()</span>          <span class="c1"># current device; or Device(device_id)</span>
+<span class="linenos"> 4</span><span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">device_id</span><span class="p">)</span>    <span class="c1"># HIP device ordinal</span>
+<span class="linenos"> 5</span><span class="nb">print</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>         <span class="c1"># "GPU-&lt;uuid&gt;" string (via hipDeviceGetUuid)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">dev</span><span class="o">.</span><span class="n">set_current</span><span class="p">()</span>
+<span class="linenos"> 8</span><span class="n">stream</span> <span class="o">=</span> <span class="n">dev</span><span class="o">.</span><span class="n">create_stream</span><span class="p">()</span>          <span class="c1"># a non-blocking HIP stream</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="n">mr</span> <span class="o">=</span> <span class="n">DeviceMemoryResource</span><span class="p">(</span><span class="n">dev</span><span class="o">.</span><span class="n">device_id</span><span class="p">)</span>
+<span class="linenos">11</span><span class="n">buf</span> <span class="o">=</span> <span class="n">mr</span><span class="o">.</span><span class="n">allocate</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">buf</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">)</span>              <span class="c1"># stream-ordered free</span>
+<span class="linenos">13</span><span class="n">stream</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<section id="streams-interoperating-with-other-libraries">
+<h3>Streams: interoperating with other libraries<a class="headerlink" href="#streams-interoperating-with-other-libraries" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Device.create_stream</span></code> accepts any object implementing the <a class="reference external" href="https://nvidia.github.io/cuda-python/cuda-core/latest/interoperability.html#cuda-stream-protocol">CUDA stream
+protocol</a>
+— a <code class="docutils literal notranslate"><span class="pre">__cuda_stream__</span></code> method returning <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">&lt;address&gt;)</span></code> — which is
+how a stream created by RMM, CuPy or Numba is adopted without copying or
+recreating it. The wrapper holds a reference to the object it borrowed, so
+the underlying stream stays alive, and closing the wrapper releases that
+reference rather than destroying the stream. <code class="docutils literal notranslate"><span class="pre">Stream</span></code> implements the same
+protocol in the other direction, so those libraries can consume a HIP
+Python stream:</p>
+<div class="literal-block-wrapper docutils container" id="cuda-core-stream-protocol">
+<div class="code-block-caption"><span class="caption-number">Listing 24 </span><span class="caption-text">Exchanging streams with RMM through the CUDA stream protocol</span><a class="headerlink" href="#cuda-core-stream-protocol" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">rmm.pylibrmm.stream</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Device</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">dev</span> <span class="o">=</span> <span class="n">Device</span><span class="p">()</span>
+<span class="linenos"> 5</span><span class="n">dev</span><span class="o">.</span><span class="n">set_current</span><span class="p">()</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="c1"># RMM -&gt; cuda.core</span>
+<span class="linenos"> 8</span><span class="n">cuda_stream</span> <span class="o">=</span> <span class="n">dev</span><span class="o">.</span><span class="n">create_stream</span><span class="p">(</span><span class="n">rmm</span><span class="o">.</span><span class="n">pylibrmm</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">Stream</span><span class="p">())</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="c1"># cuda.core -&gt; RMM</span>
+<span class="linenos">11</span><span class="n">rmm_stream</span> <span class="o">=</span> <span class="n">rmm</span><span class="o">.</span><span class="n">pylibrmm</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">Stream</span><span class="p">(</span><span class="n">cuda_stream</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Because a new stream is associated with whichever device is current, HIP
+rather than the shim decides where it lands; <code class="docutils literal notranslate"><span class="pre">create_stream</span></code> therefore
+raises if the <code class="docutils literal notranslate"><span class="pre">Device</span></code> it was called on is not the current one. Call
+<code class="docutils literal notranslate"><span class="pre">Device.set_current</span></code> first, as the example does.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Device.default_stream</span></code> returns the NULL stream as a token. HIP has no
+equivalent of CUDA Python’s <code class="docutils literal notranslate"><span class="pre">CUDA_PYTHON_CUDA_PER_THREAD_DEFAULT_STREAM</span></code>
+environment variable, so it is always the legacy NULL stream.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>This is <strong>not</strong> a full port of NVIDIA’s <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> /
+<code class="docutils literal notranslate"><span class="pre">cuda.core.experimental</span></code> package; the members listed above are all
+that is implemented. Remaining abstractions (<code class="docutils literal notranslate"><span class="pre">Event</span></code>, <code class="docutils literal notranslate"><span class="pre">Program</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Linker</span></code>, …) are intentionally out of scope and can be added on
+demand. The module’s <code class="docutils literal notranslate"><span class="pre">__version__</span></code> names the <code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> API level
+the shim emulates — consumers gate their interoperability paths on it
+— and not the HIP Python release it ships in.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The full API reference for the shim is at <a class="reference internal" href="../python_api/cuda/core/index.html"><span class="doc">cuda.core</span></a>.</p>
+</div>
+</section>
+</section>
+<section id="enum-constant-hallucination">
+<h2>Enum Constant Hallucination<a class="headerlink" href="#enum-constant-hallucination" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can let HIP Python’s enum error types in the CUDA Python
+interoperability layer “invent” values for undefined enum constants (that do
+not conflict with the values of the defined constants).</p></li>
+</ul>
+</div>
+<p>We use <a class="reference internal" href="#cuda-error-hallucinate-enums"><span class="std std-ref">the example below</span></a> to demonstrate how
+you can deal with scenarios where a CUDA Python program, which we want to run
+on AMD GPUs, performs an error check that involves enum constants that are
+not relevant for HIP programs and/or AMD GPUs. As HIP Python’s routines will
+never return these enum constants, it is safe to generate values for them on
+the fly. Such behavior can be enabled selectively for CUDA Python
+interoperability layer enums — either via the respective environment
+variable <code class="docutils literal notranslate"><span class="pre">HIP_PYTHON_{myenumtype}_HALLUCINATE</span></code> and/or at runtime via the
+module variable with the same name in <a class="reference internal" href="../python_api/cuda/bindings/driver/index.html#module-cuda.bindings.driver" title="cuda.bindings.driver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.driver</span></code></a>,
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#module-cuda.bindings.runtime" title="cuda.bindings.runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.runtime</span></code></a>, or <a class="reference internal" href="../python_api/cuda/bindings/nvrtc/index.html#module-cuda.bindings.nvrtc" title="cuda.bindings.nvrtc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.nvrtc</span></code></a>.</p>
+<p><a class="reference internal" href="#cuda-error-hallucinate-enums"><span class="std std-ref">The example below</span></a> fails because there are no
+HIP analogues to the following constants:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorStartupFailure</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorNotPermitted</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorSystemNotReady</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorSystemDriverMismatch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorCompatNotSupportedOnDevice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorTimeout</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cudaError_t.cudaErrorApiFailureBase</span></code></p></li>
+</ul>
+<p>However, the example will run successfully if you set the environment
+variable <code class="docutils literal notranslate"><span class="pre">HIP_PYTHON_cudaError_t_HALLUCINATE</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">yes</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, or <code class="docutils literal notranslate"><span class="pre">true</span></code>
+(case does not matter). Alternatively, you could set the module variable
+<a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#cuda.bindings.runtime.HIP_PYTHON_cudaError_t_HALLUCINATE" title="cuda.bindings.runtime.HIP_PYTHON_cudaError_t_HALLUCINATE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.runtime.HIP_PYTHON_cudaError_t_HALLUCINATE</span></code></a> to <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#True" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a>;
+see <a class="reference internal" href="#sec-hip-python-specific-code-modifications"><span class="std std-ref">HIP Python-Specific Code Modifications</span></a> on different ways
+to detect HIP Python in order to introduce such a modification to your code.</p>
+<div class="literal-block-wrapper docutils container" id="cuda-error-hallucinate-enums">
+<div class="code-block-caption"><span class="caption-number">Listing 25 </span><span class="caption-text">CUDA Python Enum Constant Hallucination</span><a class="headerlink" href="#cuda-error-hallucinate-enums" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings.runtime</span><span class="w"> </span><span class="kn">import</span> <span class="n">cudaError_t</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">error_kinds</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># some of those do not exist in HIP</span>
+<span class="linenos"> 4</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInitializationError</span><span class="p">,</span>
+<span class="linenos"> 5</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInsufficientDriver</span><span class="p">,</span>
+<span class="linenos"> 6</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidDeviceFunction</span><span class="p">,</span>
+<span class="linenos"> 7</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidDevice</span><span class="p">,</span>
+<span class="hll"><span class="linenos"> 8</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorStartupFailure</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos"> 9</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorInvalidKernelImage</span><span class="p">,</span>
+<span class="linenos">10</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorAlreadyAcquired</span><span class="p">,</span>
+<span class="linenos">11</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorOperatingSystem</span><span class="p">,</span>
+<span class="hll"><span class="linenos">12</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorNotPermitted</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">13</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorNotSupported</span><span class="p">,</span>
+<span class="hll"><span class="linenos">14</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorSystemNotReady</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="hll"><span class="linenos">15</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorSystemDriverMismatch</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="hll"><span class="linenos">16</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorCompatNotSupportedOnDevice</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">17</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorDeviceUninitialized</span><span class="p">,</span>
+<span class="hll"><span class="linenos">18</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorTimeout</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">19</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorUnknown</span><span class="p">,</span>
+<span class="hll"><span class="linenos">20</span>    <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaErrorApiFailureBase</span><span class="p">,</span>  <span class="c1"># no HIP equivalent</span>
+</span><span class="linenos">21</span><span class="p">)</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">error_kinds</span><span class="p">:</span>
+<span class="linenos">24</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">cudaError_t</span><span class="p">)</span>
+<span class="linenos">25</span>    <span class="k">assert</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Enum constant hallucination should only be used for
+error return values and not for enum constants that are passed
+as argument to one of the CUDA Python interoperability layer’s functions.</p>
+</div>
+</section>
+<section id="basic-usage-cython">
+<h2>Basic Usage (Cython)<a class="headerlink" href="#basic-usage-cython" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>How I can use the CUDA Python interoperability layer’s Cython and Python
+modules in my code.</p></li>
+</ul>
+</div>
+<p>You can import the Python objects that you need into your <code class="docutils literal notranslate"><span class="pre">*.pyx</span></code> file as shown below:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 26 </span><span class="caption-text">Importing HIP Python Modules into Cython <code class="docutils literal notranslate"><span class="pre">*.pyx</span></code> file</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">import</span> <span class="n">driver</span>  <span class="c"># enum types, enum aliases, fields</span>
+<span class="linenos">2</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">import</span> <span class="n">runtime</span>
+<span class="linenos">3</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">import</span> <span class="n">nvrtc</span>
+<span class="linenos">4</span><span class="c"># ...</span>
+</pre></div>
+</div>
+</div>
+<p>In the same file, you can <strong>also or alternatively</strong> <code class="docutils literal notranslate"><span class="pre">cimport</span></code> the <code class="docutils literal notranslate"><span class="pre">cdef</span></code> entities
+as shown below:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 27 </span><span class="caption-text">Importing HIP Python Cython declaration files (<code class="docutils literal notranslate"><span class="pre">*.pxd</span></code>) into a Cython <code class="docutils literal notranslate"><span class="pre">*.pxd</span></code> or <code class="docutils literal notranslate"><span class="pre">*.pyx</span></code> file</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># The cy*-prefixed modules expose the C declarations and the lazy</span>
+<span class="linenos"> 2</span><span class="c"># function loaders that delegate to the underlying HIP/HIPRTC C API.</span>
+<span class="linenos"> 3</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cydriver</span>
+<span class="linenos"> 4</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cyruntime</span>
+<span class="linenos"> 5</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">cynvrtc</span>
+<span class="linenos"> 6</span><span class="c"># ...</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c"># The non-prefixed modules expose the `cdef class` and `ctypedef`</span>
+<span class="linenos"> 9</span><span class="c"># types created per C struct/union/typedef.</span>
+<span class="linenos">10</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">driver</span>
+<span class="linenos">11</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">runtime</span>
+<span class="linenos">12</span><span class="k">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="k">cimport</span> <span class="n">nvrtc</span>
+<span class="linenos">13</span><span class="c"># ...</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="cython-example">
+<h2>Cython Example<a class="headerlink" href="#cython-example" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That I can port CUDA Python Cython code to AMD GPUs with minor
+modifications.</p></li>
+<li><p>How I can introduce different compilation paths for HIP Python’s CUDA
+interoperability layer and CUDA Python.</p></li>
+</ul>
+</div>
+<p><a class="reference internal" href="#ccuda-stream-pyx"><span class="std std-ref">The example below</span></a> shows a CUDA Python example that can be
+compiled for and run on AMD GPUs. To do so, it is necessary to define the
+Cython compile-time flag <code class="docutils literal notranslate"><span class="pre">HIP_PYTHON</span></code> from within the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>
+script (see the script below). This will replace the qualified
+<code class="docutils literal notranslate"><span class="pre">C++</span></code>-like enum constant expression
+<code class="docutils literal notranslate"><span class="pre">cyruntime.cudaError_t.cudaSuccess</span></code> by the <code class="docutils literal notranslate"><span class="pre">C</span></code>-like expression
+<code class="docutils literal notranslate"><span class="pre">cyruntime.cudaSuccess</span></code> (the HIP/HIPRTC Cython enums expose enum
+constants directly at module scope, while CUDA Cython enums nest them
+inside the enum class).</p>
+<p>In the example, the <code class="docutils literal notranslate"><span class="pre">DEF</span></code> statement and the <code class="docutils literal notranslate"><span class="pre">IF</span></code> and <code class="docutils literal notranslate"><span class="pre">ELSE</span></code> statements are
+Cython <a class="reference external" href="https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions">compile time definitions</a>
+and <a class="reference external" href="https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html#compile-time-definitions">conditional statements</a>,
+respectively.</p>
+<div class="literal-block-wrapper docutils container" id="ccuda-stream-pyx">
+<div class="code-block-caption"><span class="caption-number">Listing 28 </span><span class="caption-text">CUDA Python Cython Program (cyruntime variant)</span><a class="headerlink" href="#ccuda-stream-pyx" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>
+<span class="linenos"> 2</span><span class="n">cimport</span> <span class="n">cuda</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyruntime</span> <span class="k">as</span> <span class="n">cyruntime</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">cdef</span> <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaError_t</span> <span class="n">err</span>
+<span class="linenos"> 6</span><span class="n">cdef</span> <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaStream_t</span> <span class="n">stream</span>
+<span class="hll"><span class="linenos"> 7</span><span class="n">DEF</span> <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="mi">100</span>
+</span><span class="linenos"> 8</span><span class="n">cdef</span> <span class="n">char</span><span class="p">[</span><span class="n">num_bytes</span><span class="p">]</span> <span class="n">x_h</span>
+<span class="linenos"> 9</span><span class="n">cdef</span> <span class="n">void</span><span class="o">*</span> <span class="n">x_d</span>
+<span class="linenos">10</span><span class="n">cdef</span> <span class="nb">int</span> <span class="n">x</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaError_t</span> <span class="n">err</span><span class="p">):</span>
+<span class="hll"><span class="linenos">14</span>    <span class="n">IF</span> <span class="n">HIP_PYTHON</span><span class="p">:</span>  <span class="c1"># HIP Python CUDA interop layer Cython interface is used like C API</span>
+</span><span class="hll"><span class="linenos">15</span>        <span class="n">success_status</span> <span class="o">=</span> <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaSuccess</span>
+</span><span class="hll"><span class="linenos">16</span>    <span class="n">ELSE</span><span class="p">:</span>
+</span><span class="hll"><span class="linenos">17</span>        <span class="n">success_status</span> <span class="o">=</span> <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaError_t</span><span class="o">.</span><span class="n">cudaSuccess</span>
+</span><span class="linenos">18</span>    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">success_status</span><span class="p">:</span>
+<span class="linenos">19</span>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"reason: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>
+<span class="hll"><span class="linenos">22</span><span class="n">IF</span> <span class="n">HIP_PYTHON</span><span class="p">:</span>
+</span><span class="linenos">23</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"using HIP Python wrapper for CUDA Python"</span><span class="p">)</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaStreamCreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">26</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMalloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x_d</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+<span class="linenos">27</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="n">x_h</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span>
+<span class="linenos">28</span>           <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMemcpyHostToDevice</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">29</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMemsetAsync</span><span class="p">(</span><span class="n">x_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">30</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMemcpyAsync</span><span class="p">(</span><span class="n">x_h</span><span class="p">,</span> <span class="n">x_d</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span>
+<span class="linenos">31</span>           <span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaMemcpyDeviceToHost</span><span class="p">,</span> <span class="n">stream</span><span class="p">))</span>
+<span class="linenos">32</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaStreamSynchronize</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">33</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaStreamDestroy</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="c1"># deallocate device data</span>
+<span class="linenos">36</span><span class="n">cuda_check</span><span class="p">(</span><span class="n">cyruntime</span><span class="o">.</span><span class="n">cudaFree</span><span class="p">(</span><span class="n">x_d</span><span class="p">))</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">num_bytes</span><span class="o">/</span><span class="mi">4</span><span class="p">)):</span>
+<span class="linenos">39</span>    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">*&gt;&amp;</span><span class="n">x_h</span><span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">40</span>    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">41</span>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected '0' for element </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">, is: '</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+<span class="linenos">42</span><span class="nb">print</span><span class="p">(</span><span class="s2">"ok"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition-what-is-happening admonition">
+<p class="admonition-title">What is happening?</p>
+<p>See <a class="reference internal" href="1_basic_usage.html#sec-hip-streams"><span class="std std-ref">HIP Streams</span></a> for an explanation of a similar HIP Python
+program’s steps.</p>
+</div>
+<p>The example can be compiled for AMD GPUs via the following
+<a class="reference internal" href="#cuda-cython-setup-py"><span class="std std-ref">setup.py script</span></a>,
+which specifies <code class="docutils literal notranslate"><span class="pre">compile_time_env=dict(HIP_PYTHON=True)</span></code> as keyword parameter
+of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cythonize</span></code> call in line</p>
+<div class="literal-block-wrapper docutils container" id="cuda-cython-setup-py">
+<div class="code-block-caption"><span class="caption-number">Listing 29 </span><span class="caption-text">Setup Script</span><a class="headerlink" href="#cuda-cython-setup-py" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Cython.Build</span><span class="w"> </span><span class="kn">import</span> <span class="n">cythonize</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extension</span><span class="p">,</span> <span class="n">setup</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">ROCM_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ROCM_PATH"</span><span class="p">,</span> <span class="s2">"/opt/rocm"</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="n">HIP_PLATFORM</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HIP_PLATFORM"</span><span class="p">,</span> <span class="s2">"amd"</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">if</span> <span class="n">HIP_PLATFORM</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"amd"</span><span class="p">,</span> <span class="s2">"hcc"</span><span class="p">):</span>
+<span class="linenos">10</span>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Currently only HIP_PLATFORM=amd is supported"</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">def</span><span class="w"> </span><span class="nf">create_extension</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="k">global</span> <span class="n">ROCM_PATH</span>
+<span class="linenos">15</span>    <span class="k">global</span> <span class="n">HIP_PLATFORM</span>
+<span class="linenos">16</span>    <span class="n">rocm_inc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROCM_PATH</span><span class="p">,</span> <span class="s2">"include"</span><span class="p">)</span>
+<span class="linenos">17</span>    <span class="n">rocm_lib_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROCM_PATH</span><span class="p">,</span> <span class="s2">"lib"</span><span class="p">)</span>
+<span class="linenos">18</span>    <span class="n">platform</span> <span class="o">=</span> <span class="n">HIP_PLATFORM</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="linenos">19</span>    <span class="n">cflags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"-D"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"__HIP_PLATFORM_</span><span class="si">{</span><span class="n">platform</span><span class="si">}</span><span class="s2">__"</span><span class="p">]</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="k">return</span> <span class="n">Extension</span><span class="p">(</span>
+<span class="linenos">22</span>        <span class="n">name</span><span class="p">,</span>
+<span class="linenos">23</span>        <span class="n">sources</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span>
+<span class="linenos">24</span>        <span class="n">include_dirs</span><span class="o">=</span><span class="p">[</span><span class="n">rocm_inc</span><span class="p">],</span>
+<span class="linenos">25</span>        <span class="n">library_dirs</span><span class="o">=</span><span class="p">[</span><span class="n">rocm_lib_dir</span><span class="p">],</span>
+<span class="linenos">26</span>        <span class="n">language</span><span class="o">=</span><span class="s2">"c"</span><span class="p">,</span>
+<span class="linenos">27</span>        <span class="n">extra_compile_args</span><span class="o">=</span><span class="n">cflags</span><span class="p">,</span>
+<span class="linenos">28</span>    <span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="n">setup</span><span class="p">(</span>
+<span class="linenos">32</span>    <span class="n">ext_modules</span><span class="o">=</span><span class="n">cythonize</span><span class="p">(</span>
+<span class="linenos">33</span>        <span class="p">[</span>
+<span class="linenos">34</span>            <span class="n">create_extension</span><span class="p">(</span>
+<span class="linenos">35</span>                <span class="s2">"cyruntime_cuda_stream"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"cyruntime_cuda_stream.pyx"</span><span class="p">]</span>
+<span class="linenos">36</span>            <span class="p">),</span>
+<span class="linenos">37</span>            <span class="n">create_extension</span><span class="p">(</span>
+<span class="linenos">38</span>                <span class="s2">"cyruntime_cuda_stream_with_cuda_bindings"</span><span class="p">,</span>
+<span class="hll"><span class="linenos">39</span>                <span class="p">[</span><span class="s2">"cyruntime_cuda_stream_with_cuda_bindings.pyx"</span><span class="p">],</span>
+</span><span class="linenos">40</span>            <span class="p">),</span>
+<span class="linenos">41</span>        <span class="p">],</span>
+<span class="linenos">42</span>        <span class="n">compiler_directives</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">language_level</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<span class="linenos">43</span>        <span class="n">compile_time_env</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">HIP_PYTHON</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="linenos">44</span>    <span class="p">)</span>
+<span class="linenos">45</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>For your convenience, you can use the <a class="reference internal" href="#cuda-cython-makefile"><span class="std std-ref">Makefile below</span></a>
+to build a Cython module in-place (via <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">build</span></code>) and run the code (by
+importing the module via <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code>).</p>
+<div class="literal-block-wrapper docutils container" id="cuda-cython-makefile">
+<div class="code-block-caption"><span class="caption-number">Listing 30 </span><span class="caption-text">Makefile</span><a class="headerlink" href="#cuda-cython-makefile" title="Link to this code">#</a></div>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="nv">PYTHON</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>python3
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">build</span> <span class="n">run</span> <span class="n">clean</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="nf">build</span><span class="o">:</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="k">$(</span>PYTHON<span class="k">)</span><span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>--inplace
+<span class="linenos"> 7</span><span class="nf">run</span><span class="o">:</span><span class="w"> </span><span class="n">build</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="k">$(</span>PYTHON<span class="k">)</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"import cyruntime_cuda_stream"</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="k">$(</span>PYTHON<span class="k">)</span><span class="w"> </span>-c<span class="w"> </span><span class="s2">"import cyruntime_cuda_stream_with_cuda_bindings"</span>
+<span class="linenos">10</span><span class="nf">clean</span><span class="o">:</span>
+<span class="linenos">11</span><span class="w">	</span>rm<span class="w"> </span>-rf<span class="w"> </span>*.so<span class="w"> </span>*.c<span class="w"> </span>build/
+</pre></div>
+</div>
+</div>
+</section>
+<section id="hip-python-specific-code-modifications">
+<span id="sec-hip-python-specific-code-modifications"></span><h2>HIP Python-Specific Code Modifications<a class="headerlink" href="#hip-python-specific-code-modifications" title="Link to this heading">#</a></h2>
+<div class="admonition-what-will-i-learn admonition">
+<p class="admonition-title">What will I learn?</p>
+<ul class="simple">
+<li><p>That I can use HIP objects (via member variables) when <code class="docutils literal notranslate"><span class="pre">import</span></code>ing the CUDA
+Python interoperability layer’s Python modules.</p></li>
+<li><p>That I can access HIP enum constants also via their CUDA interoperability
+layer type.</p></li>
+<li><p>That I can directly use HIP definitions too when <code class="docutils literal notranslate"><span class="pre">cimport</span></code>ing the CUDA
+Python interoperability layer’s Cython modules.</p></li>
+</ul>
+</div>
+<p>In scenarios where the HIP Python Python or Cython code will need to diverge
+from the original CUDA Python code, e.g. due to differences in a signature,
+we can directly access the underlying HIP Python Python modules from the
+CUDA interoperability layer’s Python modules. Each of
+<a class="reference internal" href="../python_api/cuda/bindings/driver/index.html#module-cuda.bindings.driver" title="cuda.bindings.driver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.driver</span></code></a>, <a class="reference internal" href="../python_api/cuda/bindings/runtime/index.html#module-cuda.bindings.runtime" title="cuda.bindings.runtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.runtime</span></code></a>, and
+<a class="reference internal" href="../python_api/cuda/bindings/nvrtc/index.html#module-cuda.bindings.nvrtc" title="cuda.bindings.nvrtc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda.bindings.nvrtc</span></code></a> exposes the following module-level
+attributes when served by HIP Python’s interop layer:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HIP_PYTHON</span></code> — the literal <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#True" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code></a>. Absent when the user is
+running NVIDIA’s stock <code class="docutils literal notranslate"><span class="pre">cuda-python</span></code> package instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hip_python_mod</span></code> — a reference to the underlying HIP Python module
+(<a class="reference internal" href="../python_api/rocm/bindings/hip/index.html#module-rocm.bindings.hip" title="rocm.bindings.hip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.hip</span></code></a> for <code class="docutils literal notranslate"><span class="pre">driver</span></code> / <code class="docutils literal notranslate"><span class="pre">runtime</span></code>,
+<a class="reference internal" href="../python_api/rocm/bindings/hiprtc/index.html#module-rocm.bindings.hiprtc" title="rocm.bindings.hiprtc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rocm.bindings.hiprtc</span></code></a> for <code class="docutils literal notranslate"><span class="pre">nvrtc</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hip</span></code> — same module as <code class="docutils literal notranslate"><span class="pre">hip_python_mod</span></code>, exposed under the short
+name on the <code class="docutils literal notranslate"><span class="pre">driver</span></code> and <code class="docutils literal notranslate"><span class="pre">runtime</span></code> modules. <em>Not</em> exposed on
+<code class="docutils literal notranslate"><span class="pre">nvrtc</span></code> (which uses <code class="docutils literal notranslate"><span class="pre">hiprtc</span></code> instead — see below).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hiprtc</span></code> — same module as <code class="docutils literal notranslate"><span class="pre">hip_python_mod</span></code>, exposed under the
+short name on <code class="docutils literal notranslate"><span class="pre">nvrtc</span></code>. Not exposed on <code class="docutils literal notranslate"><span class="pre">driver</span></code> / <code class="docutils literal notranslate"><span class="pre">runtime</span></code>.</p></li>
+</ul>
+<p>Use <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#hasattr" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">hasattr()</span></code></a> (or <code class="docutils literal notranslate"><span class="pre">__dict__</span></code> membership) to test for these.
+Module-level <code class="xref py py-obj docutils literal notranslate"><span class="pre">in</span></code> does <strong>not</strong> work — Python modules are not
+iterable, so <code class="docutils literal notranslate"><span class="pre">"HIP_PYTHON"</span> <span class="pre">in</span> <span class="pre">driver</span></code> raises <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#TypeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeError</span></code></a>.</p>
+<div class="literal-block-wrapper docutils container" id="detecting-hip-python">
+<div class="code-block-caption"><span class="caption-number">Listing 31 </span><span class="caption-text">Detecting HIP Python’s CUDA interoperability layer at runtime</span><a class="headerlink" href="#detecting-hip-python" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">driver</span>  <span class="c1"># or runtime; or nvrtc</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="c1"># Preferred test:</span>
+<span class="linenos"> 4</span><span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">"HIP_PYTHON"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+<span class="linenos"> 5</span>    <span class="c1"># We are running on HIP Python's interop layer.</span>
+<span class="linenos"> 6</span>    <span class="n">hip</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">hip</span>            <span class="c1"># or driver.hip_python_mod  (same module)</span>
+<span class="linenos"> 7</span>    <span class="c1"># ... use HIP-only APIs as needed ...</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># Equivalent forms:</span>
+<span class="linenos">10</span><span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="s2">"HIP_PYTHON"</span><span class="p">):</span>
+<span class="linenos">11</span>    <span class="o">...</span>
+<span class="linenos">12</span><span class="k">if</span> <span class="s2">"HIP_PYTHON"</span> <span class="ow">in</span> <span class="n">driver</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+<span class="linenos">13</span>    <span class="o">...</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># For `nvrtc`, the underlying module is exposed as `hiprtc` (no</span>
+<span class="linenos">16</span><span class="c1"># `hip` attribute), but `hip_python_mod` works on all three modules:</span>
+<span class="linenos">17</span><span class="kn">from</span><span class="w"> </span><span class="nn">cuda.bindings</span><span class="w"> </span><span class="kn">import</span> <span class="n">nvrtc</span>
+<span class="linenos">18</span><span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">nvrtc</span><span class="p">,</span> <span class="s2">"HIP_PYTHON"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+<span class="linenos">19</span>    <span class="n">hiprtc</span> <span class="o">=</span> <span class="n">nvrtc</span><span class="o">.</span><span class="n">hiprtc</span>       <span class="c1"># or nvrtc.hip_python_mod  (same module)</span>
+</pre></div>
+</div>
+</div>
+<p>Moreover, the interoperability layer’s Python enum types also contain all the
+enum constants of their HIP analogue as shown in the
+<a class="reference internal" href="#snippet-cuda-enum"><span class="std std-ref">snippet below</span></a>.</p>
+<div class="literal-block-wrapper docutils container" id="snippet-cuda-enum">
+<div class="code-block-caption"><span class="caption-number">Listing 32 </span><span class="caption-text">Python enum class in cuda/bindings/driver.pyx</span><a class="headerlink" href="#snippet-cuda-enum" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># [...]</span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">CUmemorytype</span><span class="p">(</span><span class="n">hip</span><span class="o">.</span><span class="n">_hipMemoryType__Base</span><span class="p">,</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_CUmemorytype_EnumMeta</span><span class="p">):</span>
+<span class="hll"><span class="linenos"> 3</span>   <span class="n">hipMemoryTypeHost</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+</span><span class="linenos"> 4</span>   <span class="n">CU_MEMORYTYPE_HOST</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+<span class="hll"><span class="linenos"> 5</span>   <span class="n">cudaMemoryTypeHost</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeHost</span>
+</span><span class="linenos"> 6</span>   <span class="n">hipMemoryTypeDevice</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+<span class="hll"><span class="linenos"> 7</span>   <span class="n">CU_MEMORYTYPE_DEVICE</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+</span><span class="linenos"> 8</span>   <span class="n">cudaMemoryTypeDevice</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeDevice</span>
+<span class="hll"><span class="linenos"> 9</span>   <span class="n">hipMemoryTypeArray</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeArray</span>
+</span><span class="linenos">10</span>   <span class="n">CU_MEMORYTYPE_ARRAY</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeArray</span>
+<span class="hll"><span class="linenos">11</span>   <span class="n">hipMemoryTypeUnified</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeUnified</span>
+</span><span class="linenos">12</span>   <span class="n">CU_MEMORYTYPE_UNIFIED</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeUnified</span>
+<span class="hll"><span class="linenos">13</span>   <span class="n">hipMemoryTypeManaged</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeManaged</span>
+</span><span class="linenos">14</span>   <span class="n">cudaMemoryTypeManaged</span> <span class="o">=</span> <span class="n">rocm</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">cyhip</span><span class="o">.</span><span class="n">hipMemoryTypeManaged</span>
+<span class="linenos">15</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">cy</span></code>-prefixed Cython declaration files
+(<code class="docutils literal notranslate"><span class="pre">cuda.bindings.cydriver.pxd</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda.bindings.cyruntime.pxd</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">cuda.bindings.cynvrtc.pxd</span></code>), you will further find that the
+<a class="reference internal" href="#ccuda-hip-names"><span class="std std-ref">HIP functions and union/struct types are directly included too</span></a>:</p>
+<div class="literal-block-wrapper docutils container" id="ccuda-hip-names">
+<div class="code-block-caption"><span class="caption-number">Listing 33 </span><span class="caption-text">Excerpt from cuda/bindings/cydriver.pxd</span><a class="headerlink" href="#ccuda-hip-names" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos">2</span><span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipDeviceProp_t</span>
+</span><span class="linenos">3</span><span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipDeviceProp_t</span> <span class="k">as</span> <span class="n">cudaDeviceProp</span>
+<span class="linenos">4</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos">5</span><span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipMemcpy</span>
+</span><span class="linenos">6</span><span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipMemcpy</span> <span class="k">as</span> <span class="n">cudaMemcpy</span>
+<span class="linenos">7</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+<p>In the Cython declaration files without <code class="docutils literal notranslate"><span class="pre">cy</span></code>-prefix
+(<code class="docutils literal notranslate"><span class="pre">cuda.bindings.driver.pxd</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda.bindings.runtime.pxd</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">cuda.bindings.nvrtc.pxd</span></code>), you will discover that the original HIP types
+(only those derived from unions and structs) are <code class="docutils literal notranslate"><span class="pre">cimport</span></code>ed too and
+that the CUDA interoperability layer types are made subclasses of the
+respective HIP type; see <a class="reference internal" href="#cuda-hip-names"><span class="std std-ref">the example below</span></a>. This allows
+to pass them to the CUDA interoperability layer’s Python functions, i.e., the
+aliased HIP Python functions.</p>
+<div class="literal-block-wrapper docutils container" id="cuda-hip-names">
+<div class="code-block-caption"><span class="caption-number">Listing 34 </span><span class="caption-text">Excerpt from cuda/bindings/driver.pxd</span><a class="headerlink" href="#cuda-hip-names" title="Link to this code">#</a></div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c"># [...]</span>
+<span class="hll"><span class="linenos"> 2</span><span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.hip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipKernelNodeParams</span> <span class="c"># here</span>
+</span><span class="hll"><span class="linenos"> 3</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS</span><span class="p">(</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 4</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 5</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS_st</span><span class="p">(</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 6</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 7</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">CUDA_KERNEL_NODE_PARAMS_v1</span><span class="p">(</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos"> 8</span>   <span class="k">pass</span>
+<span class="hll"><span class="linenos"> 9</span><span class="k">cdef</span><span class="w"> </span><span class="k">class</span> <span class="nf">cudaKernelNodeParams</span><span class="p">(</span><span class="n">hipKernelNodeParams</span><span class="p">):</span>
+</span><span class="linenos">10</span>   <span class="k">pass</span>
+<span class="linenos">11</span><span class="c"># [...]</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="1_basic_usage.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Basic Usage and Examples</p>
+</div>
+</a>
+<a class="right-next" href="3_jit_compilation.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">JIT Compilation and LLVM IR</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> Contents
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-python">Basic Usage (Python)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-example">Python Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cufile-shim-cuda-bindings-cufile">cuFile shim (<code class="docutils literal notranslate"><span class="pre">cuda.bindings.cufile</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nvml-compatibility-shim-pynvml">NVML compatibility shim (<code class="docutils literal notranslate"><span class="pre">pynvml</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nvtx-compatibility-shim-nvtx">NVTX compatibility shim (<code class="docutils literal notranslate"><span class="pre">nvtx</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-core-compatibility-shim"><code class="docutils literal notranslate"><span class="pre">cuda.core</span></code> compatibility shim</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#streams-interoperating-with-other-libraries">Streams: interoperating with other libraries</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enum-constant-hallucination">Enum Constant Hallucination</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage-cython">Basic Usage (Cython)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cython-example">Cython Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hip-python-specific-code-modifications">HIP Python-Specific Code Modifications</a></li>
+</ul>
+</nav></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

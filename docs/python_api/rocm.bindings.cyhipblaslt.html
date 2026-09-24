@@ -1,0 +1,1280 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.cyhipblaslt — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.cyhipblaslt';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.cyhiprand.html" rel="next" title="rocm.bindings.cyhiprand"/>
+<link href="rocm.bindings.cyhipblas.html" rel="prev" title="rocm.bindings.cyhipblas"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyrccl.html">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.cyhipblaslt</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.cyhipblaslt</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-cyhipblaslt">
+<h1>rocm.bindings.cyhipblaslt<a class="headerlink" href="#rocm-bindings-cyhipblaslt" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            23 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.cyhipblaslt</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/hipblaslt/index.html"><span class="doc">rocm.bindings.hipblaslt</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhipblas</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"hipblaslt/hipblaslt.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPBLASLT_VERSION_MAJOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPBLASLT_VERSION_MINOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">HIPBLASLT_VERSION_PATCH</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtEpilogue_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_EPILOGUE_DEFAULT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_RELU</span>
+        <span class="n">HIPBLASLT_EPILOGUE_BIAS</span>
+        <span class="n">HIPBLASLT_EPILOGUE_RELU_BIAS</span>
+        <span class="n">HIPBLASLT_EPILOGUE_GELU</span>
+        <span class="n">HIPBLASLT_EPILOGUE_GELU_BIAS</span>
+        <span class="n">HIPBLASLT_EPILOGUE_RELU_AUX</span>
+        <span class="n">HIPBLASLT_EPILOGUE_RELU_AUX_BIAS</span>
+        <span class="n">HIPBLASLT_EPILOGUE_DRELU</span>
+        <span class="n">HIPBLASLT_EPILOGUE_DRELU_BGRAD</span>
+        <span class="n">HIPBLASLT_EPILOGUE_GELU_AUX</span>
+        <span class="n">HIPBLASLT_EPILOGUE_GELU_AUX_BIAS</span>
+        <span class="n">HIPBLASLT_EPILOGUE_DGELU</span>
+        <span class="n">HIPBLASLT_EPILOGUE_DGELU_BGRAD</span>
+        <span class="n">HIPBLASLT_EPILOGUE_BGRADA</span>
+        <span class="n">HIPBLASLT_EPILOGUE_BGRADB</span>
+        <span class="n">HIPBLASLT_EPILOGUE_SIGMOID</span>
+        <span class="n">HIPBLASLT_EPILOGUE_SWISH_EXT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_SWISH_BIAS_EXT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_CLAMP_EXT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_CLAMP_BIAS_EXT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_CLAMP_AUX_EXT</span>
+        <span class="n">HIPBLASLT_EPILOGUE_CLAMP_AUX_BIAS_EXT</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtBatchMode_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_BATCH_MODE_STRIDED</span>
+        <span class="n">HIPBLASLT_BATCH_MODE_POINTER_ARRAY</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtMatrixLayoutAttribute_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_BATCH_COUNT</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_STRIDED_BATCH_OFFSET</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_TYPE</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_ORDER</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_ROWS</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_COLS</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_LD</span>
+        <span class="n">HIPBLASLT_MATRIX_LAYOUT_BATCH_MODE</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtPointerMode_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_POINTER_MODE_HOST</span>
+        <span class="n">HIPBLASLT_POINTER_MODE_DEVICE</span>
+        <span class="n">HIPBLASLT_POINTER_MODE_ALPHA_DEVICE_VECTOR_BETA_HOST</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtMatmulMatrixScale_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_SCALAR_32F</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC16_UE4M3</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC32_UE8M0</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_OUTER_VEC_32F</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC128_32F</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_BLK128x128_32F</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_BLK32_UE8M0_32_8_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC16_UE8M0_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC32_UE4M3_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC16_UE5M3_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_VEC32_UE5M3_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_MATRIX_SCALE_END</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtStreamKTileSchedulingMode_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_STREAMK_TILE_SCHEDULING_OFF</span>
+        <span class="n">HIPBLASLT_STREAMK_TILE_SCHEDULING_ON</span>
+        <span class="n">HIPBLASLT_STREAMK_TILE_SCHEDULING_AUTO</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtMatmulDescAttributes_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_TRANSA</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_TRANSB</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_BIAS_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_BIAS_DATA_TYPE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_A_SCALE_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_B_SCALE_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_C_SCALE_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_D_SCALE_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_AUX_SCALE_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_AUX_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_AUX_LD</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_AUX_BATCH_STRIDE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_POINTER_MODE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_AMAX_D_POINTER</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_AUX_DATA_TYPE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_BIAS_BATCH_STRIDE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_A_SCALE_MODE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_B_SCALE_MODE</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_SM_COUNT_TARGET</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_COMPUTE_INPUT_TYPE_A_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_COMPUTE_INPUT_TYPE_B_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_ACT_ARG0_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_EPILOGUE_ACT_ARG1_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_STREAMK_TILE_SCHEDULING_EXT</span>
+        <span class="n">HIPBLASLT_MATMUL_DESC_MAX</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtMatmulPreferenceAttributes_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_MATMUL_PREF_SEARCH_MODE</span>
+        <span class="n">HIPBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES</span>
+        <span class="n">HIPBLASLT_MATMUL_PREF_SM_COUNT_TARGET</span>
+        <span class="n">HIPBLASLT_MATMUL_PREF_MAX</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtOrder_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_ORDER_COL</span>
+        <span class="n">HIPBLASLT_ORDER_ROW</span>
+        <span class="n">HIPBLASLT_ORDER_COL16_4R32</span>
+        <span class="n">HIPBLASLT_ORDER_COL16_4R16</span>
+        <span class="n">HIPBLASLT_ORDER_COL16_4R8</span>
+        <span class="n">HIPBLASLT_ORDER_COL16_4R4</span>
+        <span class="n">HIPBLASLT_ORDER_COL16_4R2</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">hipblasLtMatrixTransformDescAttributes_t</span><span class="p">:</span>
+        <span class="n">HIPBLASLT_MATRIX_TRANSFORM_DESC_SCALE_TYPE</span>
+        <span class="n">HIPBLASLT_MATRIX_TRANSFORM_DESC_POINTER_MODE</span>
+        <span class="n">HIPBLASLT_MATRIX_TRANSFORM_DESC_TRANSA</span>
+        <span class="n">HIPBLASLT_MATRIX_TRANSFORM_DESC_TRANSB</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">hipblasLtMatmulDescOpaque_t</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">4</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">hipblasLtMatrixLayoutOpaque_t</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">4</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">hipblasLtMatmulPreferenceOpaque_t</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">5</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">hipblasLtMatrixTransformDescOpaque_t</span><span class="p">:</span>
+        <span class="n">uint64_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">8</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="n">hipblasLtMatrixTransformDescOpaque_t</span> <span class="o">*</span> <span class="n">hipblasLtMatrixTransformDesc_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">void</span> <span class="o">*</span> <span class="n">hipblasLtHandle_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">hipblasLtMatmulDescOpaque_t</span> <span class="o">*</span> <span class="n">hipblasLtMatmulDesc_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">hipblasLtMatrixLayoutOpaque_t</span> <span class="o">*</span> <span class="n">hipblasLtMatrixLayout_t</span>
+
+    <span class="k">ctypedef</span> <span class="n">hipblasLtMatmulPreferenceOpaque_t</span> <span class="o">*</span> <span class="n">hipblasLtMatmulPreference_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">_hipblasLtMatmulAlgo_t</span><span class="p">:</span>
+        <span class="n">uint8_t</span> <span class="n">data</span><span class="p">[</span><span class="mf">16</span><span class="p">]</span>
+        <span class="n">size_t</span> <span class="n">max_workspace_bytes</span>
+
+    <span class="k">ctypedef</span> <span class="n">_hipblasLtMatmulAlgo_t</span> <span class="n">hipblasLtMatmulAlgo_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">_hipblasLtMatmulHeuristicResult_t</span><span class="p">:</span>
+        <span class="n">_hipblasLtMatmulAlgo_t</span> <span class="n">algo</span>
+        <span class="n">size_t</span> <span class="n">workspaceSize</span>
+        <span class="n">hipblasStatus_t</span> <span class="n">state</span>
+        <span class="nb">float</span> <span class="n">wavesCount</span>
+        <span class="nb">int</span> <span class="n">reserved</span><span class="p">[</span><span class="mf">4</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="n">_hipblasLtMatmulHeuristicResult_t</span> <span class="n">hipblasLtMatmulHeuristicResult_t</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtGetVersion</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">version</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtGetGitRevision</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">char</span> <span class="o">*</span> <span class="n">rev</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtGetArchName</span><span class="p">(</span><span class="n">char</span> <span class="o">**</span> <span class="n">archName</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Create a hipBLASLt handle</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function initializes the hipBLASLt library and creates a handle to an</span>
+<span class="c"># opaque structure holding the hipBLASLt library context. It allocates light</span>
+<span class="c"># hardware resources on the host and device and must be called prior to making</span>
+<span class="c"># any other hipBLASLt library calls. The hipBLASLt library context is tied to</span>
+<span class="c"># the current ROCm device. To use the library on multiple devices, one</span>
+<span class="c"># hipBLASLt handle should be created for each device.</span>
+<span class="c"># </span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  handle  Pointer to the allocated hipBLASLt handle for the created hipBLASLt</span>
+<span class="c"># context.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS The allocation completed successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_INVALID_VALUE \p handle == NULL.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtCreate</span><span class="p">(</span><span class="n">void</span> <span class="o">**</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Destroy a hipBLASLt handle.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function releases hardware resources used by the hipBLASLt library.</span>
+<span class="c">#  It is usually the last call with a particular handle to the</span>
+<span class="c"># hipBLASLt library. Because hipblasLtCreate() allocates some internal</span>
+<span class="c"># resources and the release of those resources by calling hipblasLtDestroy()</span>
+<span class="c"># implicitly calls ``hipDeviceSynchronize``, it is recommended to minimize</span>
+<span class="c"># the number of hipblasLtCreate() / hipblasLtDestroy() occurrences.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  handle  Pointer to the hipBLASLt handle to be destroyed.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS The hipBLASLt context was successfully</span>
+<span class="c"># destroyed. \retval HIPBLAS_STATUS_NOT_INITIALIZED The hipBLASLt library was</span>
+<span class="c"># not initialized. \retval HIPBLAS_STATUS_INVALID_VALUE \p handle == NULL.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtDestroy</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span><span class="n">const</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Set the handle-level target compute-unit (CU / SM) count.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># The hipBLASLt analogue of cuBLAS's ``cublasSetSmCountTarget``. The value</span>
+<span class="c"># hints how many compute units hipBLASLt should target for kernel selection</span>
+<span class="c"># and persistent-grid sizing on subsequent matmul calls that use this handle.</span>
+<span class="c"># </span>
+<span class="c"># ``0`` (the default) means "no override; use all CUs the device exposes".</span>
+<span class="c"># Negative values are rejected with ``HIPBLAS_STATUS_INVALID_VALUE``. A</span>
+<span class="c"># per-matmul-descriptor (``HIPBLASLT_MATMUL_DESC_SM_COUNT_TARGET``) or</span>
+<span class="c"># per-preference (``HIPBLASLT_MATMUL_PREF_SM_COUNT_TARGET``) attribute, when</span>
+<span class="c"># set to a non-zero value, takes precedence over this handle-level value.</span>
+<span class="c"># </span>
+<span class="c"># The user must ensure thread safety when modifying handle state from</span>
+<span class="c"># multiple threads, the same as for any other handle-mutating helper.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           hipBLASLt library context.</span>
+<span class="c"># @param[in]</span>
+<span class="c"># smCountTarget    target CU/SM count; ``0`` for "use all CUs".</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS         value stored.</span>
+<span class="c"># \retval HIPBLAS_STATUS_NOT_INITIALIZED \p handle is null / uninitialized.</span>
+<span class="c"># \retval HIPBLAS_STATUS_INVALID_VALUE   \p smCountTarget is negative.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtSetSmCountTarget</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">int32_t</span> <span class="n">smCountTarget</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Return the handle-level target compute-unit (CU / SM) count.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># Returns the value previously programmed via ``hipblasLtSetSmCountTarget``.</span>
+<span class="c"># Equivalent to cuBLAS's ``cublasGetSmCountTarget``.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle           hipBLASLt library context.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># smCountTarget    receives the previously stored value (``0`` if never set).</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS         value returned.</span>
+<span class="c"># \retval HIPBLAS_STATUS_NOT_INITIALIZED \p handle is null / uninitialized.</span>
+<span class="c"># \retval HIPBLAS_STATUS_INVALID_VALUE   \p smCountTarget is null.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtGetSmCountTarget</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">int32_t</span> <span class="o">*</span> <span class="n">smCountTarget</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Drain the post-GEMM check-numerics flag without destroying the handle.</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># When \c HIPBLASLT_CHECK_NUMERICS is set, this function performs a</span>
+<span class="c"># device-wide synchronize, reads the persistent NaN flag, and resets it.</span>
+<span class="c"># The matmul \c call_id of the FIRST scanned NaN observed since the</span>
+<span class="c"># previous drain (or handle creation) is written to \p first_nan_call_id</span>
+<span class="c"># if non-null. Zero means no NaN was observed in that window. Frameworks</span>
+<span class="c"># (e.g. PyTorch) call this to obtain a result without relying on the</span>
+<span class="c"># handle destructor (which may not run if the process is killed).</span>
+<span class="c"># </span>
+<span class="c"># When the env var is not set, the function is a no-op and returns</span>
+<span class="c"># \c HIPBLAS_STATUS_SUCCESS with \p *first_nan_call_id set to 0.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># handle Pointer to the allocated hipBLASLt handle.</span>
+<span class="c"># @param[out]</span>
+<span class="c"># first_nan_call_id Optional. If non-null, receives the call_id of the</span>
+<span class="c"># first NaN seen in this drain window (0 = none).</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS Drain completed (or scanning disabled).</span>
+<span class="c"># \retval HIPBLAS_STATUS_NOT_INITIALIZED \p handle is null.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtCheckNumericsDrain</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">uint32_t</span> <span class="o">*</span> <span class="n">first_nan_call_id</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Create a matrix layout descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function creates a matrix layout descriptor by allocating the memory</span>
+<span class="c"># needed to hold its opaque structure.</span>
+<span class="c"># </span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  matLayout Pointer to the structure holding the matrix layout descriptor</span>
+<span class="c"># created by this function. See \ref hipblasLtMatrixLayout_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  type Enumerant that specifies the data precision for the matrix layout</span>
+<span class="c"># descriptor created by this function. See hipDataType.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  rows Number of rows of the matrix.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  cols Number of columns of the matrix.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  ld The leading dimension of the matrix. In column major layout, this is the</span>
+<span class="c"># number of elements to jump to reach the next column. Therefore, ld &gt;= m (number of</span>
+<span class="c"># rows).</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If the descriptor was created successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_ALLOC_FAILED If the memory could not be allocated.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixLayoutCreate</span><span class="p">(</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="o">*</span> <span class="n">matLayout</span><span class="p">,</span><span class="n">hipDataType</span> <span class="nb">type</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">rows</span><span class="p">,</span><span class="n">uint64_t</span> <span class="n">cols</span><span class="p">,</span><span class="n">int64_t</span> <span class="n">ld</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c"># \ingroup library_module</span>
+<span class="c"># \brief Destroy a matrix layout descriptor</span>
+<span class="c"># </span>
+<span class="c"># \details</span>
+<span class="c"># This function destroys a previously created matrix layout descriptor object.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]</span>
+<span class="c"># matLayout Pointer to the structure holding the matrix layout descriptor to</span>
+<span class="c"># be destroyed by this function. see \ref hipblasLtMatrixLayout_t.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS If the operation was successful.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixLayoutDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipblasLtMatrixLayout_t</span> <span class="n">matLayout</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief  Set an attribute for a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function sets the value of the specified attribute belonging to a</span>
+<span class="c"># previously created matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matLayout  Pointer to the previously created structure holding the matrix</span>
+<span class="c">#  descriptor queried by this function. See \ref hipblasLtMatrixLayout_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr    The attribute that will be set by this function. See \ref</span>
+<span class="c"># hipblasLtMatrixLayoutAttribute_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  buf  The value to which the specified attribute should be set.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the buf buffer (in bytes) for verification.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If the attribute was set successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_INVALID_VALUE If \p buf is NULL or \p sizeInBytes</span>
+<span class="c"># doesn't match the size of the internal storage for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixLayoutSetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">matLayout</span><span class="p">,</span><span class="n">hipblasLtMatrixLayoutAttribute_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Query an attribute from a matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function returns the value of the queried attribute belonging to a</span>
+<span class="c"># previously created matrix descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matLayout  Pointer to the previously created structure holding the matrix</span>
+<span class="c"># descriptor queried by this function. See \ref hipblasLtMatrixLayout_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr        The attribute that will be retrieved by this function. See</span>
+<span class="c"># \ref hipblasLtMatrixLayoutAttribute_t.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  buf         Memory address containing the attribute value retrieved by this</span>
+<span class="c"># function.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the \p buf buffer (in bytes) for verification.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  sizeWritten Valid only when the return value is HIPBLAS_STATUS_SUCCESS. If</span>
+<span class="c"># sizeInBytes is non-zero, then sizeWritten is the number of bytes actually</span>
+<span class="c"># written. If sizeInBytes is 0, then sizeWritten is the number of bytes needed</span>
+<span class="c"># to write the full contents.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS       If the attribute's value was successfully</span>
+<span class="c"># written to user memory. \retval HIPBLAS_STATUS_INVALID_VALUE If \p</span>
+<span class="c"># sizeInBytes is 0 and \p sizeWritten is NULL, or if \p sizeInBytes is non-zero</span>
+<span class="c"># and \p buf is NULL, or \p sizeInBytes doesn't match the size of the internal storage</span>
+<span class="c"># for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixLayoutGetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">matLayout</span><span class="p">,</span><span class="n">hipblasLtMatrixLayoutAttribute_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">sizeWritten</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Create a matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function creates a matrix multiply descriptor by allocating the memory</span>
+<span class="c"># needed to hold its opaque structure.</span>
+<span class="c"># </span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  matmulDesc  Pointer to the structure holding the matrix multiply descriptor</span>
+<span class="c"># created by this function. See \ref hipblasLtMatmulDesc_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  computeType  Enumerant that specifies the data precision for the matrix</span>
+<span class="c"># multiply descriptor this function creates. See hipblasComputeType_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  scaleType  Enumerant that specifies the data precision for the matrix</span>
+<span class="c"># transform descriptor this function creates. See hipDataType.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If the descriptor was created successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_ALLOC_FAILED If the memory could not be allocated.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulDescCreate</span><span class="p">(</span><span class="n">hipblasLtMatmulDesc_t</span> <span class="o">*</span> <span class="n">matmulDesc</span><span class="p">,</span><span class="n">hipblasComputeType_t</span> <span class="n">computeType</span><span class="p">,</span><span class="n">hipDataType</span> <span class="n">scaleType</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Destroy a matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function destroys a previously created matrix multiply descriptor</span>
+<span class="c"># object.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matmulDesc  Pointer to the structure holding the matrix multiply descriptor</span>
+<span class="c">#  to be destroyed by this function. See \ref hipblasLtMatmulDesc_t.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If operation was successful.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulDescDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipblasLtMatmulDesc_t</span> <span class="n">matmulDesc</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief  Set attribute to a matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function sets the value of the specified attribute belonging to a</span>
+<span class="c"># previously created matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matmulDesc  Pointer to the previously created structure holding the matrix</span>
+<span class="c"># multiply descriptor queried by this function. See \ref hipblasLtMatmulDesc_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr    The attribute that will be set by this function. See \ref</span>
+<span class="c"># hipblasLtMatmulDescAttributes_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  buf  The value to which the specified attribute should be set.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the buf buffer (in bytes) for verification.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If the attribute was set successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_INVALID_VALUE If \p buf is NULL or \p sizeInBytes</span>
+<span class="c"># doesn't match the size of the internal storage for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulDescSetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatmulDesc_t</span> <span class="n">matmulDesc</span><span class="p">,</span><span class="n">hipblasLtMatmulDescAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Query attribute from a matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function returns the value of the queried attribute belonging to a</span>
+<span class="c"># previously created matrix multiply descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matmulDesc  Pointer to the previously created structure holding the matrix</span>
+<span class="c"># multiply descriptor queried by this function. See \ref hipblasLtMatmulDesc_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr        The attribute that will be retrieved by this function. See</span>
+<span class="c"># \ref hipblasLtMatmulDescAttributes_t.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  buf         Memory address containing the attribute value retrieved by this</span>
+<span class="c"># function.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the \p buf buffer (in bytes) for verification.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  sizeWritten Valid only when the return value is HIPBLAS_STATUS_SUCCESS. If</span>
+<span class="c"># sizeInBytes is non-zero, then sizeWritten is the number of bytes actually</span>
+<span class="c"># written. If sizeInBytes is 0, then sizeWritten is the number of bytes needed</span>
+<span class="c"># to write the full contents.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS       If the attribute's value was successfully</span>
+<span class="c"># written to user memory. \retval HIPBLAS_STATUS_INVALID_VALUE If \p</span>
+<span class="c"># sizeInBytes is 0 and \p sizeWritten is NULL, or if \p sizeInBytes is non-zero</span>
+<span class="c"># and \p buf is NULL, or \p sizeInBytes doesn't match the size of the internal storage</span>
+<span class="c"># for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulDescGetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatmulDesc_t</span> <span class="n">matmulDesc</span><span class="p">,</span><span class="n">hipblasLtMatmulDescAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">sizeWritten</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Create a preference descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function creates a matrix multiply heuristic search preferences</span>
+<span class="c"># descriptor by allocating the memory needed to hold its opaque structure.</span>
+<span class="c"># </span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  pref  Pointer to the structure holding the matrix multiply preferences</span>
+<span class="c"># descriptor created by this function. see \ref hipblasLtMatmulPreference_t.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS         If the descriptor was created</span>
+<span class="c"># successfully. \retval HIPBLAS_STATUS_ALLOC_FAILED    If memory could not be</span>
+<span class="c"># allocated.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulPreferenceCreate</span><span class="p">(</span><span class="n">hipblasLtMatmulPreference_t</span> <span class="o">*</span> <span class="n">pref</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Destroy a preference descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function destroys a previously created matrix multiply preferences</span>
+<span class="c"># descriptor object.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  pref  Pointer to the structure holding the matrix multiply preferences</span>
+<span class="c"># descriptor to be destroyed by this function. See \ref</span>
+<span class="c"># hipblasLtMatmulPreference_t.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If operation was successful.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulPreferenceDestroy</span><span class="p">(</span><span class="n">const</span> <span class="n">hipblasLtMatmulPreference_t</span> <span class="n">pref</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Set attribute in a preference descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function sets the value of the specified attribute belonging to a</span>
+<span class="c"># previously created matrix multiply preferences descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  pref        Pointer to the previously created structure holding the matrix</span>
+<span class="c"># multiply preferences descriptor queried by this function. See \ref</span>
+<span class="c"># hipblasLtMatmulPreference_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr        The attribute that will be set by this function. See \ref</span>
+<span class="c"># hipblasLtMatmulPreferenceAttributes_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  buf         The value to which the specified attribute should be set.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the \p buf buffer (in bytes) for verification.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS If the attribute was set successfully.</span>
+<span class="c">#  \retval HIPBLAS_STATUS_INVALID_VALUE If \p buf is NULL or \p sizeInBytes</span>
+<span class="c"># doesn't match the size of the internal storage for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulPreferenceSetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatmulPreference_t</span> <span class="n">pref</span><span class="p">,</span><span class="n">hipblasLtMatmulPreferenceAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Query attribute from a preference descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function returns the value of the queried attribute belonging to a</span>
+<span class="c"># previously created matrix multiply heuristic search preferences descriptor.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  pref        Pointer to the previously created structure holding the matrix</span>
+<span class="c"># multiply heuristic search preferences descriptor queried by this function.</span>
+<span class="c"># See \ref hipblasLtMatmulPreference_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  attr        The attribute that will be retrieved by this function. See</span>
+<span class="c"># \ref hipblasLtMatmulPreferenceAttributes_t.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  buf         Memory address containing the attribute value retrieved by this</span>
+<span class="c"># function.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  sizeInBytes Size of the \p buf buffer (in bytes) for verification.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  sizeWritten Valid only when the return value is HIPBLAS_STATUS_SUCCESS. If</span>
+<span class="c"># sizeInBytes is non-zero, then sizeWritten is the number of bytes actually</span>
+<span class="c"># written. If sizeInBytes is 0, then sizeWritten is the number of bytes needed</span>
+<span class="c"># to write the full contents.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS       If the attribute's value was successfully</span>
+<span class="c"># written to user memory. \retval HIPBLAS_STATUS_INVALID_VALUE If \p</span>
+<span class="c"># sizeInBytes is 0 and \p sizeWritten is NULL, or if \p sizeInBytes is non-zero</span>
+<span class="c"># and \p buf is NULL, or \p sizeInBytes doesn't match the size of the internal storage</span>
+<span class="c"># for the selected attribute.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulPreferenceGetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatmulPreference_t</span> <span class="n">pref</span><span class="p">,</span><span class="n">hipblasLtMatmulPreferenceAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">sizeWritten</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Retrieve the possible algorithms.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function retrieves the possible algorithms for the matrix multiply</span>
+<span class="c"># operation hipblasLtMatmul() with the given input matrices A, B, and</span>
+<span class="c"># C, and the output matrix D. The output is placed in ``heuristicResultsArray``</span>
+<span class="c"># in order of increasing estimated compute time. Note that the wall duration</span>
+<span class="c"># increases if the ``requestedAlgoCount`` increases.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  handle                  Pointer to the allocated hipBLASLt handle for the</span>
+<span class="c"># hipBLASLt context. See \ref hipblasLtHandle_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matmulDesc              Handle to a previously created matrix multiplication</span>
+<span class="c"># descriptor of type \ref hipblasLtMatmulDesc_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  Adesc,Bdesc,Cdesc,Ddesc Handles to the previously created matrix layout</span>
+<span class="c"># descriptors of the type \ref hipblasLtMatrixLayout_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  pref                    Pointer to the structure holding the heuristic</span>
+<span class="c"># search preferences descriptor. See \ref hipblasLtMatmulPreference_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  requestedAlgoCount      Size of the \p heuristicResultsArray (in elements).</span>
+<span class="c"># This is the requested maximum number of algorithms to return.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  heuristicResultsArray[] Array containing the algorithm heuristics and</span>
+<span class="c"># associated runtime characteristics returned by this function, in order</span>
+<span class="c"># of increasing estimated compute time.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  returnAlgoCount         Number of algorithms returned by this function. This</span>
+<span class="c"># is the number of \p heuristicResultsArray elements written.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS           If query was successful. Inspect</span>
+<span class="c"># ``heuristicResultsArray[0 to (returnAlgoCount -1)].state`` for the status of the</span>
+<span class="c"># results. \retval HIPBLAS_STATUS_NOT_SUPPORTED     If no heuristic function is</span>
+<span class="c"># available for current configuration. \retval HIPBLAS_STATUS_INVALID_VALUE If</span>
+<span class="c"># \p requestedAlgoCount is less than or equal to zero.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmulAlgoGetHeuristic</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipblasLtMatmulDesc_t</span> <span class="n">matmulDesc</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Adesc</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Bdesc</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Cdesc</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Ddesc</span><span class="p">,</span><span class="n">hipblasLtMatmulPreference_t</span> <span class="n">pref</span><span class="p">,</span><span class="nb">int</span> <span class="n">requestedAlgoCount</span><span class="p">,</span><span class="n">_hipblasLtMatmulHeuristicResult_t</span> <span class="o">*</span> <span class="n">heuristicResultsArray</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">returnAlgoCount</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Compute a matrix multiplication on the described inputs.</span>
+<span class="c"># </span>
+<span class="c">#  \details</span>
+<span class="c">#  This function computes the matrix multiplication of matrices A and B to</span>
+<span class="c"># produce the output matrix D, according to the following operation: \p D = \p</span>
+<span class="c"># alpha*( \p A *\p B) + \p beta*( \p C ), where \p A, \p B, and \p C are input</span>
+<span class="c"># matrices, and \p alpha and \p beta are input scalars. Note: This function</span>
+<span class="c"># supports both in-place matrix multiplication (``C == D`` and ``Cdesc == Ddesc``) and</span>
+<span class="c"># out-of-place matrix multiplication (``C != D``, both matrices must have the same</span>
+<span class="c"># data type, number of rows, number of columns, batch size, and memory order).</span>
+<span class="c"># In the out-of-place case, the leading dimension of ``C`` can be different from</span>
+<span class="c"># the leading dimension of ``D``. Specifically, the leading dimension of ``C`` can be 0</span>
+<span class="c"># to achieve row or column broadcast. If ``Cdesc`` is omitted, this function</span>
+<span class="c"># assumes it to be equal to ``Ddesc``.</span>
+<span class="c"># </span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  handle                  Pointer to the allocated hipBLASLt handle for the</span>
+<span class="c"># hipBLASLt context. See \ref hipblasLtHandle_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  matmulDesc              Handle to a previously created matrix multiplication</span>
+<span class="c"># descriptor of type \ref hipblasLtMatmulDesc_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  alpha,beta              Pointers to the scalars used in the multiplication.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  Adesc,Bdesc,Cdesc,Ddesc Handles to the previously created matrix layout</span>
+<span class="c"># descriptors of the type \ref hipblasLtMatrixLayout_t.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  A,B,C                   Pointers to the GPU memory associated with the</span>
+<span class="c"># corresponding descriptors \p Adesc, \p Bdesc, and \p Cdesc.</span>
+<span class="c">#  @param[out]</span>
+<span class="c">#  D                       Pointer to the GPU memory associated with the</span>
+<span class="c"># descriptor \p Ddesc.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  algo                    Handle for matrix multiplication algorithm to be</span>
+<span class="c"># used. See \ref hipblasLtMatmulAlgo_t. When NULL, an implicit heuristics query</span>
+<span class="c"># with default search preferences will be performed to determine the actual</span>
+<span class="c"># algorithm to use.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  workspace               Pointer to the workspace buffer allocated in the GPU</span>
+<span class="c"># memory. Pointer must be 16B aligned (that is, the lowest 4 bits of the address must</span>
+<span class="c"># be 0).</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  workspaceSizeInBytes    Size of the workspace.</span>
+<span class="c">#  @param[in]</span>
+<span class="c">#  stream                  The HIP stream where all GPU work is</span>
+<span class="c"># submitted.</span>
+<span class="c"># </span>
+<span class="c">#  \retval HIPBLAS_STATUS_SUCCESS           If the operation completed</span>
+<span class="c"># successfully. \retval HIPBLAS_STATUS_EXECUTION_FAILED  If HIP reported an</span>
+<span class="c"># execution error from the device. \retval HIPBLAS_STATUS_ARCH_MISMATCH     If</span>
+<span class="c"># the configured operation cannot be run using the selected device. \retval</span>
+<span class="c"># HIPBLAS_STATUS_NOT_SUPPORTED     If the current implementation on the</span>
+<span class="c"># selected device doesn't support the configured operation. \retval</span>
+<span class="c"># HIPBLAS_STATUS_INVALID_VALUE     If the parameters are unexpectedly NULL, in</span>
+<span class="c"># conflict, or in an impossible configuration. For example, when</span>
+<span class="c"># workspaceSizeInBytes is less than the workspace required by the configured algorithm.</span>
+<span class="c">#  \retval HIBLAS_STATUS_NOT_INITIALIZED    If the hipBLASLt handle has not been</span>
+<span class="c"># initialized.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatmul</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">,</span><span class="n">hipblasLtMatmulDesc_t</span> <span class="n">matmulDesc</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Adesc</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">B</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Bdesc</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">beta</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">C</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Cdesc</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">D</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Ddesc</span><span class="p">,</span><span class="n">const</span> <span class="n">_hipblasLtMatmulAlgo_t</span> <span class="o">*</span> <span class="n">algo</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">workspace</span><span class="p">,</span><span class="n">size_t</span> <span class="n">workspaceSizeInBytes</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  Create a new matrix transform operation descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPBLAS_STATUS_ALLOC_FAILED  If memory could not be allocated.</span>
+<span class="c"># \retval     HIPBLAS_STATUS_SUCCESS       If the descriptor was created successfully.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixTransformDescCreate</span><span class="p">(</span><span class="n">hipblasLtMatrixTransformDesc_t</span> <span class="o">*</span> <span class="n">transformDesc</span><span class="p">,</span><span class="n">hipDataType</span> <span class="n">scaleType</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  Destroy a matrix transform operation descriptor.</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPBLAS_STATUS_SUCCESS  If the operation was successful.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixTransformDescDestroy</span><span class="p">(</span><span class="n">hipblasLtMatrixTransformDesc_t</span> <span class="n">transformDesc</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  Set a matrix transform operation descriptor attribute.</span>
+<span class="c"># </span>
+<span class="c"># \param[in]  transformDesc  The descriptor.</span>
+<span class="c"># \param[in]  attr           The attribute.</span>
+<span class="c"># \param[in]  buf            Memory address containing the new value.</span>
+<span class="c"># \param[in]  sizeInBytes    Size of the buf buffer for verification (in bytes).</span>
+<span class="c"># </span>
+<span class="c"># \retval     HIPBLAS_STATUS_INVALID_VALUE  If buf is NULL or sizeInBytes doesn't match the size of the internal storage for</span>
+<span class="c">#                                          the selected attribute.</span>
+<span class="c"># \retval     HIPBLAS_STATUS_SUCCESS        If the attribute was set successfully.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixTransformDescSetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatrixTransformDesc_t</span> <span class="n">transformDesc</span><span class="p">,</span><span class="n">hipblasLtMatrixTransformDescAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Gets the matrix transform attribute.</span>
+<span class="c">#  \details Gets the attribute from the matrix transform operation descriptor.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  transformDesc  The descriptor.</span>
+<span class="c"># @param[in]  attr           The attribute.</span>
+<span class="c"># @param[out] buf            Memory address containing the new value.</span>
+<span class="c"># @param[in]  sizeInBytes    Size of the buf buffer for verification (in bytes).</span>
+<span class="c"># @param[out] sizeWritten    Only valid when return value is HIPBLAS_STATUS_SUCCESS. If sizeInBytes is non-zero, the number</span>
+<span class="c"># of bytes actually written. If sizeInBytes is 0, the number of bytes needed to write the full contents.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_INVALID_VALUE  If sizeInBytes is 0 and sizeWritten is NULL, or sizeInBytes is non-zero</span>
+<span class="c">#                                          and buf is NULL, or sizeInBytes doesn't match the size of the internal storage for</span>
+<span class="c">#                                          the selected attribute.</span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS        If the attribute's value was successfully written to user memory.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixTransformDescGetAttribute</span><span class="p">(</span><span class="n">hipblasLtMatrixTransformDesc_t</span> <span class="n">transformDesc</span><span class="p">,</span><span class="n">hipblasLtMatrixTransformDescAttributes_t</span> <span class="n">attr</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buf</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sizeInBytes</span><span class="p">,</span><span class="n">size_t</span> <span class="o">*</span> <span class="n">sizeWritten</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="c">#  \ingroup library_module</span>
+<span class="c">#  \brief Matrix layout conversion helper.</span>
+<span class="c">#  \details</span>
+<span class="c">#   The matrix layout conversion helper (``C = alpha * op(A) + beta * op(B)``),</span>
+<span class="c"># can be used to change the memory order of the data or to scale and shift the values.</span>
+<span class="c"># @param[in]  lightHandle   Pointer to the allocated hipBLASLt handle for the</span>
+<span class="c"># hipBLASLt context. See \ref hipblasLtHandle_t.</span>
+<span class="c"># @param[in]  transformDesc Pointer to the allocated matrix transform descriptor.</span>
+<span class="c"># @param[in]  alpha         Pointer to scalar alpha. Pointer to either the host or device address.</span>
+<span class="c"># @param[in]  A             Pointer to matrix A. Must be a pointer to the device address.</span>
+<span class="c"># @param[in]  Adesc         Pointer to the layout for input matrix A.</span>
+<span class="c"># @param[in]  beta          Pointer to scalar beta. Pointer to either the host or device address.</span>
+<span class="c"># @param[in]  B             Pointer to the layout for matrix B. Must be a pointer to the device address.</span>
+<span class="c"># @param[in]  Bdesc         Pointer to the layout for input matrix B.</span>
+<span class="c"># @param[in]  C             Pointer to matrix C. Must be a pointer to the device address.</span>
+<span class="c"># @param[out] Cdesc         Pointer to the layout for output matrix C.</span>
+<span class="c"># @param[in] stream         The HIP stream where all the GPU work will be submitted.</span>
+<span class="c"># </span>
+<span class="c"># \retval HIPBLAS_STATUS_NOT_INITIALIZED   If the hipBLASLt handle has not been initialized.</span>
+<span class="c"># \retval HIPBLAS_STATUS_INVALID_VALUE     If the parameters are in conflict or in an impossible configuration, for example,</span>
+<span class="c">#                                              when A is not NULL but Adesc is NULL.</span>
+<span class="c"># \retval HIPBLAS_STATUS_NOT_SUPPORTED     If the current implementation on the selected device doesn't support the configured</span>
+<span class="c">#                                              operation.</span>
+<span class="c"># \retval HIPBLAS_STATUS_ARCH_MISMATCH     If the configured operation cannot be run using the selected device.</span>
+<span class="c"># \retval HIPBLAS_STATUS_EXECUTION_FAILED  If HIP reported an execution error from the device.</span>
+<span class="c"># \retval HIPBLAS_STATUS_SUCCESS           If the operation completed successfully.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">hipblasStatus_t</span> <span class="nf">hipblasLtMatrixTransform</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">lightHandle</span><span class="p">,</span><span class="n">hipblasLtMatrixTransformDesc_t</span> <span class="n">transformDesc</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">A</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Adesc</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">beta</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">B</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Bdesc</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">C</span><span class="p">,</span><span class="n">hipblasLtMatrixLayout_t</span> <span class="n">Cdesc</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">HIPBLAS_STATUS_INTERNAL_ERROR</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__hipblaslt_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.cyhipblas.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.cyhipblas</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.cyhiprand.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.cyhiprand</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>

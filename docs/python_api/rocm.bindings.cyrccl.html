@@ -1,0 +1,1380 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>rocm.bindings.cyrccl — HIP Python  documentation</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=643846e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_header.css?v=9557e3d1" rel="stylesheet" type="text/css"/>
+<link href="../_static/rocm_footer.css?v=7095035a" rel="stylesheet" type="text/css"/>
+<link href="../_static/fonts.css?v=fcff5274" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=91c4cb68"></script>
+<script async="async" src="../_static/code_word_breaks.js?v=327952c4"></script>
+<script async="async" src="../_static/renameVersionLinks.js?v=929fe5e4"></script>
+<script async="async" src="../_static/rdcMisc.js?v=01f88d96"></script>
+<script async="async" src="../_static/theme_mode_captions.js?v=15f4ec5d"></script>
+<script defer="defer" src="../_static/search.js?v=90a4452c"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'python_api/rocm.bindings.cyrccl';</script>
+<script async="async" src="https://download.amd.com/js/analytics/analyticsinit.js"></script>
+<link href="https://www.amd.com/content/dam/code/images/favicon/favicon.ico" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="rocm.bindings.cyroctx.html" rel="next" title="rocm.bindings.cyroctx"/>
+<link href="rocm.bindings.cyhiprtc.html" rel="prev" title="rocm.bindings.cyhiprtc"/>
+<meta content="vo35SZt_GASsTHAEmdww7AYKPCvZyzLvOXBl8guBME4" name="google-site-verification"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="common-header">
+<nav class="navbar navbar-expand-xl">
+<div class="container-fluid main-nav rocm-header">
+<button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler collapsed" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" data-tracking-information="mainMenuToggle" id="nav-icon" type="button">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<div class="header-logo">
+<a class="navbar-brand" href="https://www.amd.com/">
+<img alt="AMD Logo" class="d-inline-block align-text-top hover-opacity" src="../_static/images/amd-header-logo.svg" title="AMD Logo" width="90"/>
+</a>
+<div class="vr vr mx-40 my-25"></div>
+<a class="klavika-font hover-opacity" href="https://rocm.docs.amd.com/en/latest">ROCm™ Software release/rocm-rel-10.0.0</a>
+<a class="header-all-versions" href="https://rocm.docs.amd.com/en/latest/release/versions.html">Version List</a>
+</div>
+<div class="icon-nav text-center d-flex ms-auto">
+</div>
+</div>
+</nav>
+<nav class="navbar navbar-expand-xl second-level-nav">
+<div class="container-fluid main-nav">
+<div class="navbar-nav-container collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav nav-mega me-auto mb-2 mb-lg-0 col-xl-10">
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python" id="navgithub" role="button" target="_blank">
+                                GitHub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/ROCm/ROCm/discussions" id="navcommunity" role="button" target="_blank">
+                                Community
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://rocm.blogs.amd.com/" id="navblogs" role="button" target="_blank">
+                                Blogs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/rocm-hub.html" id="navrocm-developer-hub" role="button" target="_blank">
+                                ROCm Developer Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://instinct.docs.amd.com" id="navinstinct™-docs" role="button" target="_blank">
+                                Instinct™ Docs
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://www.amd.com/en/developer/resources/infinity-hub.html" id="navinfinity-hub" role="button" target="_blank">
+                                Infinity Hub
+                            </a>
+</li>
+<li class="nav-item">
+<a aria-expanded="false" class="nav-link top-level header-menu-links" href="https://github.com/AMD-AIOSS/hip-python/issues/new/choose" id="navsupport" role="button" target="_blank">
+                                Support
+                            </a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="https://rocm.docs.amd.com/en/latest">
+<p>ROCm documentation</p>
+</a></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
+<a class="navbar-brand logo" href="../index.html">
+<p class="title logo__title">HIP Python  documentation</p>
+</a></div>
+<div class="sidebar-primary-item">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/0_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/1_basic_usage.html">Basic Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/2_cuda_python_interop.html">CUDA® Python Interoperability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/3_jit_compilation.html">JIT Compilation and LLVM IR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/4_numba_hip.html">Kernel Programming in Python with Numba HIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/5_adapters.html">Adapter Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/6_build_from_source.html">Building from Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/7_license.html">License</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-core</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/util/index.html">rocm.bindings.util</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/paths/index.html">rocm.bindings.util.paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/util/types/index.html">rocm.bindings.util.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/version/index.html">rocm.version</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-hip</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hip/index.html">rocm.bindings.hip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc/index.html">rocm.bindings.hiprtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprtc_pyext/index.html">rocm.bindings.hiprtc_pyext</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-libraries</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblas/index.html">rocm.bindings.hipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipblaslt/index.html">rocm.bindings.hipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hiprand/index.html">rocm.bindings.hiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfft/index.html">rocm.bindings.hipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparse/index.html">rocm.bindings.hipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsparselt/index.html">rocm.bindings.hipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipsolver/index.html">rocm.bindings.hipsolver</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/rccl/index.html">rocm.bindings.rccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/roctx/index.html">rocm.bindings.roctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/hipfile/index.html">rocm.bindings.hipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amdsmi/index.html">rocm.bindings.amdsmi</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/hipfile/index.html">rocm.hipfile</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/buffer/index.html">rocm.hipfile.buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/driver/index.html">rocm.hipfile.driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/enums/index.html">rocm.hipfile.enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/error/index.html">rocm.hipfile.error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/file/index.html">rocm.hipfile.file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/hipfile/properties/index.html">rocm.hipfile.properties</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">rocm-bindings-compiler</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/llvm/index.html">rocm.bindings.llvm</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/index.html">rocm.bindings.llvm.c</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/analysis/index.html">rocm.bindings.llvm.c.analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitreader/index.html">rocm.bindings.llvm.c.bitreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/bitwriter/index.html">rocm.bindings.llvm.c.bitwriter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/blake3/index.html">rocm.bindings.llvm.c.blake3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/comdat/index.html">rocm.bindings.llvm.c.comdat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/core/index.html">rocm.bindings.llvm.c.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/datatypes/index.html">rocm.bindings.llvm.c.datatypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/debuginfo/index.html">rocm.bindings.llvm.c.debuginfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/deprecated/index.html">rocm.bindings.llvm.c.deprecated</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassembler/index.html">rocm.bindings.llvm.c.disassembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/disassemblertypes/index.html">rocm.bindings.llvm.c.disassemblertypes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/error/index.html">rocm.bindings.llvm.c.error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/errorhandling/index.html">rocm.bindings.llvm.c.errorhandling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/executionengine/index.html">rocm.bindings.llvm.c.executionengine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/irreader/index.html">rocm.bindings.llvm.c.irreader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/linker/index.html">rocm.bindings.llvm.c.linker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljit/index.html">rocm.bindings.llvm.c.lljit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lljitutils/index.html">rocm.bindings.llvm.c.lljitutils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/lto/index.html">rocm.bindings.llvm.c.lto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/object/index.html">rocm.bindings.llvm.c.object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orc/index.html">rocm.bindings.llvm.c.orc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/orcee/index.html">rocm.bindings.llvm.c.orcee</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/remarks/index.html">rocm.bindings.llvm.c.remarks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/support/index.html">rocm.bindings.llvm.c.support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/target/index.html">rocm.bindings.llvm.c.target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/targetmachine/index.html">rocm.bindings.llvm.c.targetmachine</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/index.html">rocm.bindings.llvm.c.transforms</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="rocm/bindings/llvm/c/transforms/passbuilder/index.html">rocm.bindings.llvm.c.transforms.passbuilder</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/types/index.html">rocm.bindings.llvm.c.types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/c/visibility/index.html">rocm.bindings.llvm.c.visibility</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="rocm/bindings/llvm/config/index.html">rocm.bindings.llvm.config</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="rocm/bindings/llvm/config/llvm_config/index.html">rocm.bindings.llvm.config.llvm_config</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm/bindings/amd_comgr/index.html">rocm.bindings.amd_comgr</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/bindings/clang/index.html">rocm.bindings.clang</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/bindings/clang/cindex/index.html">rocm.bindings.clang.cindex</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="rocm/comgr/index.html">rocm.comgr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amd_hsa_kernel_descriptor/index.html">rocm.comgr.amd_hsa_kernel_descriptor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/amdhsa_kernel_directives/index.html">rocm.comgr.amdhsa_kernel_directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/comgr/index.html">rocm.comgr.comgr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rocm/comgr/hiprtc_header/index.html">rocm.comgr.hiprtc_header</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python-interop (CUDA compat)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/driver/index.html">cuda.bindings.driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/runtime/index.html">cuda.bindings.runtime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/nvrtc/index.html">cuda.bindings.nvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/bindings/cufile/index.html">cuda.bindings.cufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda/core/index.html">cuda.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pynvml/index.html">pynvml</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nvtx/index.html">nvtx</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="nvtx/colors/index.html">nvtx.colors</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">hip-python (hip.* alias package)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="hip/index.html">hip</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cython-level declarations (advanced — for cimport users)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhip.html">rocm.bindings.cyhip</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprtc.html">rocm.bindings.cyhiprtc</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">rocm.bindings.cyrccl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyroctx.html">rocm.bindings.cyroctx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfile.html">rocm.bindings.cyhipfile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamdsmi.html">rocm.bindings.cyamdsmi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblas.html">rocm.bindings.cyhipblas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipblaslt.html">rocm.bindings.cyhipblaslt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhiprand.html">rocm.bindings.cyhiprand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipfft.html">rocm.bindings.cyhipfft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparse.html">rocm.bindings.cyhipsparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsparselt.html">rocm.bindings.cyhipsparselt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyhipsolver.html">rocm.bindings.cyhipsolver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.cyamd_comgr.html">rocm.bindings.cyamd_comgr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cydriver.html">cuda.bindings.cydriver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cyruntime.html">cuda.bindings.cyruntime</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cynvrtc.html">cuda.bindings.cynvrtc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cuda.bindings.cycufile.html">cuda.bindings.cycufile</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassembler.html">rocm.bindings.llvm.c.cydisassembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljit.html">rocm.bindings.llvm.c.cylljit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylto.html">rocm.bindings.llvm.c.cylto</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydebuginfo.html">rocm.bindings.llvm.c.cydebuginfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyexecutionengine.html">rocm.bindings.llvm.c.cyexecutionengine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorc.html">rocm.bindings.llvm.c.cyorc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyanalysis.html">rocm.bindings.llvm.c.cyanalysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydisassemblertypes.html">rocm.bindings.llvm.c.cydisassemblertypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyblake3.html">rocm.bindings.llvm.c.cyblake3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyremarks.html">rocm.bindings.llvm.c.cyremarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycomdat.html">rocm.bindings.llvm.c.cycomdat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytargetmachine.html">rocm.bindings.llvm.c.cytargetmachine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyorcee.html">rocm.bindings.llvm.c.cyorcee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerror.html">rocm.bindings.llvm.c.cyerror</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitwriter.html">rocm.bindings.llvm.c.cybitwriter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cybitreader.html">rocm.bindings.llvm.c.cybitreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytypes.html">rocm.bindings.llvm.c.cytypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cysupport.html">rocm.bindings.llvm.c.cysupport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cycore.html">rocm.bindings.llvm.c.cycore</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydatatypes.html">rocm.bindings.llvm.c.cydatatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyvisibility.html">rocm.bindings.llvm.c.cyvisibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cytarget.html">rocm.bindings.llvm.c.cytarget</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyerrorhandling.html">rocm.bindings.llvm.c.cyerrorhandling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyirreader.html">rocm.bindings.llvm.c.cyirreader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylinker.html">rocm.bindings.llvm.c.cylinker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cylljitutils.html">rocm.bindings.llvm.c.cylljitutils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cyobject.html">rocm.bindings.llvm.c.cyobject</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.cydeprecated.html">rocm.bindings.llvm.c.cydeprecated</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.c.transforms.cypassbuilder.html">rocm.bindings.llvm.c.transforms.cypassbuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rocm.bindings.llvm.config.cyllvm_config.html">rocm.bindings.llvm.config.cyllvm_config</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="sbt-scroll-pixel-helper"></div>
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" for="__primary" title="Toggle primary sidebar">
+<span class="fa-solid fa-angle-right"></span>
+</label></div>
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">rocm.bindings.cyrccl</span></li>
+</ul>
+</nav>
+</div>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<div class="article-header-buttons">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button>
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+</div></div>
+</div>
+</div>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>rocm.bindings.cyrccl</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="rocm-bindings-cyrccl">
+<h1>rocm.bindings.cyrccl<a class="headerlink" href="#rocm-bindings-cyrccl" title="Link to this heading">#</a></h1><div class="sd-container-fluid sd-sphinx-override sd-p-0 sd-mt-2 sd-mb-4 sd-p-2 sd-rounded-1 docutils" id="rocm-docs-core-article-info">
+<div class="sd-row sd-row-cols-2 sd-gx-2 sd-gy-1 docutils">
+<div class="sd-col sd-d-flex-row sd-align-minor-center docutils">
+<div class="sd-container-fluid sd-sphinx-override docutils">
+<div class="sd-row sd-row-cols-2 sd-row-cols-xs-2 sd-row-cols-sm-3 sd-row-cols-md-3 sd-row-cols-lg-3 sd-gx-3 sd-gy-1 docutils">
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-date-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-calendar" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5h8.5a.25.25 0 01.25.25V6h-11V3.75a.25.25 0 01.25-.25h2zm-2.25 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            2026-09-24
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">
+<span class="sd-pr-2 article-info-read-time-svg">
+<svg aria-hidden="true" class="sd-octicon sd-octicon-clock" height="16.0px" version="1.1" viewbox="0 0 16 16" width="16.0px">
+<path d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zm.5 4.75a.75.75 0 00-1.5 0v3.5a.75.75 0 00.471.696l2.5 1a.75.75 0 00.557-1.392L8.5 7.742V4.75z" fill-rule="evenodd"></path>
+</svg>
+</span>
+                            30 min read time
+                        </p>
+</div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils" style="color:gray;">
+                        Applies to Linux and Windows
+                    </div>
+<div class="sd-col sd-col-auto sd-d-flex-row sd-align-minor-center docutils">
+<p class="sd-p-0 sd-m-0" style="color:gray;">Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com></hip-python.maintainer@amd.com></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p>Cython declarations for the C-level interface. Use
+<code class="docutils literal notranslate"><span class="pre">cimport</span> <span class="pre">rocm.bindings.cyrccl</span></code> from your Cython code to access
+these declarations directly.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The high-level Python API is documented at <a class="reference internal" href="rocm/bindings/rccl/index.html"><span class="doc">rocm.bindings.rccl</span></a>.</p>
+</div>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="c"># MIT License</span>
+<span class="c">#</span>
+<span class="c"># Copyright (c) 2021-2026 Advanced Micro Devices, Inc.</span>
+<span class="c">#</span>
+<span class="c"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c"># of this software and associated documentation files (the "Software"), to deal</span>
+<span class="c"># in the Software without restriction, including without limitation the rights</span>
+<span class="c"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c"># furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c"># The above copyright notice and this permission notice shall be included in all</span>
+<span class="c"># copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c"># SOFTWARE.</span>
+
+
+<span class="c"># This file has been autogenerated, do not modify.</span>
+
+<span class="k">from</span><span class="w"> </span><span class="nn">libc.stdint</span><span class="w"> </span><span class="k">cimport</span> <span class="o">*</span>
+<span class="k">ctypedef</span> <span class="nb">bint</span> <span class="n">_Bool</span> <span class="c"># bool is not a reserved keyword in C, _Bool is</span>
+<span class="k">from</span><span class="w"> </span><span class="nn">rocm.bindings.cyhip</span><span class="w"> </span><span class="k">cimport</span> <span class="n">hipStream_t</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"rccl/rccl.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">NCCL_MAJOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">NCCL_MINOR</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">NCCL_PATCH</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">char</span> * <span class="nf">NCCL_SUFFIX</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">NCCL_VERSION_CODE</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">RCCL_BFLOAT16</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">RCCL_GATHER_SCATTER</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">RCCL_ALLTOALLV</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="kt">int</span> <span class="nf">NCCL_UNIQUE_ID_BYTES</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">ncclComm</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">ncclComm</span> <span class="o">*</span> <span class="n">ncclComm_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">ncclWindow_vidmem</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">ncclWindow_vidmem</span> <span class="o">*</span> <span class="n">ncclWindow_t</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">ncclUniqueId</span><span class="p">:</span>
+        <span class="n">char</span> <span class="n">internal</span><span class="p">[</span><span class="mf">128</span><span class="p">]</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclResult_t</span><span class="p">:</span>
+        <span class="n">ncclSuccess</span>
+        <span class="n">ncclUnhandledCudaError</span>
+        <span class="n">ncclSystemError</span>
+        <span class="n">ncclInternalError</span>
+        <span class="n">ncclInvalidArgument</span>
+        <span class="n">ncclInvalidUsage</span>
+        <span class="n">ncclRemoteError</span>
+        <span class="n">ncclInProgress</span>
+        <span class="n">ncclTimeout</span>
+        <span class="n">ncclNumResults</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">ncclConfig_v22800</span><span class="p">:</span>
+        <span class="n">size_t</span> <span class="n">size</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">magic</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">version</span>
+        <span class="nb">int</span> <span class="n">blocking</span>
+        <span class="nb">int</span> <span class="n">cgaClusterSize</span>
+        <span class="nb">int</span> <span class="n">minCTAs</span>
+        <span class="nb">int</span> <span class="n">maxCTAs</span>
+        <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">netName</span>
+        <span class="nb">int</span> <span class="n">splitShare</span>
+        <span class="nb">int</span> <span class="n">trafficClass</span>
+        <span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">commName</span>
+        <span class="nb">int</span> <span class="n">collnetEnable</span>
+        <span class="nb">int</span> <span class="n">CTAPolicy</span>
+        <span class="nb">int</span> <span class="n">shrinkShare</span>
+        <span class="nb">int</span> <span class="n">nvlsCTAs</span>
+        <span class="nb">int</span> <span class="n">nChannelsPerNetPeer</span>
+        <span class="nb">int</span> <span class="n">nvlinkCentricSched</span>
+        <span class="nb">int</span> <span class="n">graphUsageMode</span>
+        <span class="nb">int</span> <span class="n">numRmaCtx</span>
+        <span class="nb">int</span> <span class="n">maxP2pPeers</span>
+
+    <span class="k">ctypedef</span> <span class="n">ncclConfig_v22800</span> <span class="n">ncclConfig_t</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">ncclSimInfo_v22200</span><span class="p">:</span>
+        <span class="n">size_t</span> <span class="n">size</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">magic</span>
+        <span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">version</span>
+        <span class="nb">float</span> <span class="n">estimatedTime</span>
+
+    <span class="k">ctypedef</span> <span class="n">ncclSimInfo_v22200</span> <span class="n">ncclSimInfo_t</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclMemAlloc</span><span class="p">(</span><span class="n">void</span> <span class="o">**</span> <span class="n">ptr</span><span class="p">,</span><span class="n">size_t</span> <span class="n">size</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclMemFree</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">ptr</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Return the RCCL_VERSION_CODE of RCCL in the supplied integer.</span>
+<span class="c"># @details    This integer is coded with the MAJOR, MINOR and PATCH level of RCCL.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] version       Pointer to where version will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGetVersion</span><span class="p">(</span><span class="nb">int</span> <span class="o">*</span> <span class="n">version</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Generates an ID for ncclCommInitRank.</span>
+<span class="c"># @details    Generates an ID to be used in ncclCommInitRank.</span>
+<span class="c">#             ncclGetUniqueId should be called once by a single rank and the</span>
+<span class="c">#             ID should be distributed to all ranks in the communicator before</span>
+<span class="c">#             using it as a parameter for ncclCommInitRank.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] uniqueId      Pointer to where uniqueId will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGetUniqueId</span><span class="p">(</span><span class="n">ncclUniqueId</span> <span class="o">*</span> <span class="n">uniqueId</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Create a new communicator with config.</span>
+<span class="c"># @details    Create a new communicator (multi thread/process version) with a configuration</span>
+<span class="c">#             set by users. See @ref rccl_config_type for more details.</span>
+<span class="c">#             Each rank is associated to a CUDA device, which has to be set before calling</span>
+<span class="c">#             ncclCommInitRank.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] comm          Pointer to created communicator</span>
+<span class="c"># @param[in]  nranks        Total number of ranks participating in this communicator</span>
+<span class="c"># @param[in]  commId        UniqueId required for initialization</span>
+<span class="c"># @param[in]  rank          Current rank to create communicator for. [0 to nranks-1]</span>
+<span class="c"># @param[in]  config        Pointer to communicator configuration</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommInitRankConfig</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">nranks</span><span class="p">,</span><span class="n">ncclUniqueId</span> <span class="n">commId</span><span class="p">,</span><span class="nb">int</span> <span class="n">rank</span><span class="p">,</span><span class="n">ncclConfig_v22800</span> <span class="o">*</span> <span class="n">config</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Creates a new communicator (multi thread/process version).</span>
+<span class="c"># @details    Rank must be between 0 and nranks-1 and unique within a communicator clique.</span>
+<span class="c">#             Each rank is associated to a CUDA device, which has to be set before calling</span>
+<span class="c">#             ncclCommInitRank.  ncclCommInitRank implicitly syncronizes with other ranks,</span>
+<span class="c">#             so it must be called by different threads/processes or use ncclGroupStart/ncclGroupEnd.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] comm          Pointer to created communicator</span>
+<span class="c"># @param[in]  nranks        Total number of ranks participating in this communicator</span>
+<span class="c"># @param[in]  commId        UniqueId required for initialization</span>
+<span class="c"># @param[in]  rank          Current rank to create communicator for</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommInitRank</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">nranks</span><span class="p">,</span><span class="n">ncclUniqueId</span> <span class="n">commId</span><span class="p">,</span><span class="nb">int</span> <span class="n">rank</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Creates a clique of communicators (single process version).</span>
+<span class="c"># @details    This is a convenience function to create a single-process communicator clique.</span>
+<span class="c">#             Returns an array of ndev newly initialized communicators in comm.</span>
+<span class="c">#             comm should be pre-allocated with size at least ndev*sizeof(ncclComm_t).</span>
+<span class="c">#             If devlist is NULL, the first ndev HIP devices are used.</span>
+<span class="c">#             Order of devlist defines user-order of processors within the communicator.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] comm          Pointer to array of created communicators</span>
+<span class="c"># @param[in]  ndev          Total number of ranks participating in this communicator</span>
+<span class="c"># @param[in]  devlist       Array of GPU device indices to create for</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommInitAll</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">ndev</span><span class="p">,</span><span class="n">const</span> <span class="nb">int</span> <span class="o">*</span> <span class="n">devlist</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Finalize a communicator.</span>
+<span class="c"># @details    ncclCommFinalize flushes all issued communications</span>
+<span class="c">#             and marks communicator state as ncclInProgress. The state will change to ncclSuccess</span>
+<span class="c">#             when the communicator is globally quiescent and related resources are freed; then,</span>
+<span class="c">#             calling ncclCommDestroy can locally free the rest of the resources (e.g. communicator</span>
+<span class="c">#             itself) without blocking.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to finalize</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommFinalize</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Frees local resources associated with communicator object.</span>
+<span class="c"># @details    Destroy all local resources associated with the passed in communicator object</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to destroy</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommDestroy</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Abort any in-progress calls and destroy the communicator object.</span>
+<span class="c"># @details    Frees resources associated with communicator object and aborts any operations</span>
+<span class="c">#             that might still be running on the device.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to abort and destroy</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommAbort</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Revoke a communicator without destroying it.</span>
+<span class="c"># @details    Aborts in-flight collectives by raising the comm's abort flag,</span>
+<span class="c">#             stops the proxy service, and rejects subsequently enqueued</span>
+<span class="c">#             collectives with ncclInvalidUsage. The abort flag is cleared</span>
+<span class="c">#             once the asynchronous revoke job completes, so the communicator</span>
+<span class="c">#             remains valid as a parent for ncclCommSplit / ncclCommShrink /</span>
+<span class="c">#             ncclCommGrow, and may be torn down via ncclCommDestroy /</span>
+<span class="c">#             ncclCommAbort.</span>
+<span class="c">#             Because in-flight collectives are aborted (not drained), revoke</span>
+<span class="c">#             can recover from peers that have failed mid-collective; output</span>
+<span class="c">#             buffers of an aborted collective contain undefined data.</span>
+<span class="c">#             ncclCommFinalize on a revoked communicator is invalid and returns</span>
+<span class="c">#             ncclInvalidUsage.</span>
+<span class="c">#             Pass NCCL_REVOKE_DEFAULT for revokeFlags; other values are rejected</span>
+<span class="c">#             with ncclInvalidArgument.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to revoke</span>
+<span class="c"># @param[in]  revokeFlags   Reserved; must be NCCL_REVOKE_DEFAULT</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommRevoke</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">revokeFlags</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Create one or more communicators from an existing one.</span>
+<span class="c"># @details    Creates one or more communicators from an existing one.</span>
+<span class="c">#             Ranks with the same color will end up in the same communicator.</span>
+<span class="c">#             Within the new communicator, key will be used to order ranks.</span>
+<span class="c">#             NCCL_SPLIT_NOCOLOR as color will indicate the rank will not be part of any group</span>
+<span class="c">#             and will therefore return a NULL communicator.</span>
+<span class="c">#             If config is NULL, the new communicator will inherit the original communicator's configuration</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Original communicator object for this rank</span>
+<span class="c"># @param[in]  color         Color to assign this rank</span>
+<span class="c"># @param[in]  key           Key used to order ranks within the same new communicator</span>
+<span class="c"># @param[out] newcomm       Pointer to new communicator</span>
+<span class="c"># @param[in]  config        Config file for new communicator. May be NULL to inherit from comm</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommSplit</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">color</span><span class="p">,</span><span class="nb">int</span> <span class="n">key</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">newcomm</span><span class="p">,</span><span class="n">ncclConfig_v22800</span> <span class="o">*</span> <span class="n">config</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Shrink existing communicator.</span>
+<span class="c"># @details    Ranks in excludeRanksList will be removed form the existing communicator.</span>
+<span class="c">#             Within the new communicator, ranks will be re-ordered to fill the gap of removed ones.</span>
+<span class="c">#             If config is NULL, the new communicator will inherit the original communicator's configuration.</span>
+<span class="c">#             The flag enables NCCL to adapt to various states of the parent communicator, see NCCL_SHRINK flags.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm                  Original communicator object for this rank</span>
+<span class="c"># @param[in]  excludeRanksList      List of ranks to be exluded</span>
+<span class="c"># @param[in]  excludeRanksCount     Number of ranks to be excluded</span>
+<span class="c"># @param[out] newcomm               Pointer to new communicator</span>
+<span class="c"># @param[in]  config                Config file for new communicator. May be NULL to inherit from comm</span>
+<span class="c"># @param[in]  shrinkFlags           Flag to adapt to various states of the parent communicator (see NCCL_SHRINK flags)</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommShrink</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">excludeRanksList</span><span class="p">,</span><span class="nb">int</span> <span class="n">excludeRanksCount</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">newcomm</span><span class="p">,</span><span class="n">ncclConfig_v22800</span> <span class="o">*</span> <span class="n">config</span><span class="p">,</span><span class="nb">int</span> <span class="n">shrinkFlags</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Generate a per-communicator unique ID for growing a communicator.</span>
+<span class="c"># @details    Generates a unique ID on an existing communicator. The ID must be</span>
+<span class="c">#             distributed to the ranks joining through ncclCommGrow.</span>
+<span class="c">#             Constraints:</span>
+<span class="c">#             - A new ID cannot be generated while a previous ID is unconsumed.</span>
+<span class="c">#             - Each ID can only be used once (no reuse after consumption).</span>
+<span class="c">#             - The grow operation must complete before calling this again.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Existing communicator that coordinates the grow</span>
+<span class="c"># @param[out] uniqueId      Pointer to the generated unique ID</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommGetUniqueId</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">ncclUniqueId</span> <span class="o">*</span> <span class="n">uniqueId</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Grow a communicator by adding new ranks.</span>
+<span class="c"># @details    Creates a larger communicator from an existing one plus newly</span>
+<span class="c">#             joining ranks. The unique ID obtained from ncclCommGetUniqueId</span>
+<span class="c">#             must be distributed to the new ranks. Parameter usage:</span>
+<span class="c">#             - Existing non-root ranks: comm set, uniqueId = NULL, rank = -1</span>
+<span class="c">#             - Existing root rank: comm set, uniqueId = &amp;id, rank = -1</span>
+<span class="c">#             - New ranks: comm = NULL, uniqueId = &amp;id, rank = assigned</span>
+<span class="c">#             The unique ID is consumed upon a successful grow and cannot be reused.</span>
+<span class="c">#             If config is NULL, the new communicator inherits the original</span>
+<span class="c">#             communicator's configuration.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Existing communicator, or NULL for newly joining ranks</span>
+<span class="c"># @param[in]  nRanks        Total number of ranks in the new communicator</span>
+<span class="c"># @param[in]  uniqueId      Unique ID from ncclCommGetUniqueId; NULL on existing non-root ranks</span>
+<span class="c"># @param[in]  rank          Rank in the new communicator for joining ranks; -1 for existing ranks</span>
+<span class="c"># @param[out] newcomm       Pointer to the new communicator</span>
+<span class="c"># @param[in]  config        Config for the new communicator. May be NULL to inherit from comm</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommGrow</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">nRanks</span><span class="p">,</span><span class="n">const</span> <span class="n">ncclUniqueId</span> <span class="o">*</span> <span class="n">uniqueId</span><span class="p">,</span><span class="nb">int</span> <span class="n">rank</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">newcomm</span><span class="p">,</span><span class="n">ncclConfig_v22800</span> <span class="o">*</span> <span class="n">config</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Creates a new communicator (multi thread/process version), similar to ncclCommInitRankConfig.</span>
+<span class="c">#  @details    Allows to use more than one ncclUniqueId (up to one per rank),</span>
+<span class="c">#              indicated by nId, to accelerate the init operation.</span>
+<span class="c">#              The number of ncclUniqueIds and their order must be the same for every rank.</span>
+<span class="c">#  @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c">#  @param[out] newcomm       Pointer to new communicator</span>
+<span class="c">#  @param[in]  nranks        Total number of ranks participating in this communicator</span>
+<span class="c">#  @param[in]  myrank        Current rank</span>
+<span class="c">#  @param[in]  nId           Number of unique IDs</span>
+<span class="c">#  @param[in]  commIds       List of unique IDs</span>
+<span class="c">#  @param[in]  config        Config file for new communicator. May be NULL to inherit from comm</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommInitRankScalable</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="o">*</span> <span class="n">newcomm</span><span class="p">,</span><span class="nb">int</span> <span class="n">nranks</span><span class="p">,</span><span class="nb">int</span> <span class="n">myrank</span><span class="p">,</span><span class="nb">int</span> <span class="n">nId</span><span class="p">,</span><span class="n">ncclUniqueId</span> <span class="o">*</span> <span class="n">commIds</span><span class="p">,</span><span class="n">ncclConfig_v22800</span> <span class="o">*</span> <span class="n">config</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Returns a string for each result code.</span>
+<span class="c"># @details    Returns a human-readable string describing the given result code.</span>
+<span class="c"># @return     String containing description of result code.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  result        Result code to get description for</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">ncclGetErrorString</span><span class="p">(</span><span class="n">ncclResult_t</span> <span class="n">result</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># Returns a human-readable message of the last error that occurred.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">const</span> <span class="kt">char</span> * <span class="nf">ncclGetLastError</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># Reload environment variables that determine logging.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">ncclResetDebugInit</span><span class="p">()</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Checks whether the comm has encountered any asynchronous errors</span>
+<span class="c"># @details    Query whether the provided communicator has encountered any asynchronous errors</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to query</span>
+<span class="c"># @param[out] asyncError    Pointer to where result code will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommGetAsyncError</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">ncclResult_t</span> <span class="o">*</span> <span class="n">asyncError</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Gets the number of ranks in the communicator clique.</span>
+<span class="c"># @details    Returns the number of ranks in the communicator clique (as set during initialization)</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to query</span>
+<span class="c"># @param[out] count         Pointer to where number of ranks will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommCount</span><span class="p">(</span><span class="n">const</span> <span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Get the ROCm device index associated with a communicator</span>
+<span class="c"># @details    Returns the ROCm device number associated with the provided communicator.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to query</span>
+<span class="c"># @param[out] device        Pointer to where the associated ROCm device index will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommCuDevice</span><span class="p">(</span><span class="n">const</span> <span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">device</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Get the rank associated with a communicator</span>
+<span class="c"># @details    Returns the user-ordered "rank" associated with the provided communicator.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to query</span>
+<span class="c"># @param[out] rank          Pointer to where the associated rank will be stored</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommUserRank</span><span class="p">(</span><span class="n">const</span> <span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">rank</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># Register CUDA buffer for zero-copy operation</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommRegister</span><span class="p">(</span><span class="n">const</span> <span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">size</span><span class="p">,</span><span class="n">void</span> <span class="o">**</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># Deregister CUDA buffer</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommDeregister</span><span class="p">(</span><span class="n">const</span> <span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">handle</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Suspend communicator operations to free resources.</span>
+<span class="c"># @details    Releases the resources selected by @p flags. The communicator</span>
+<span class="c">#             cannot be used until @ref ncclCommResume is called.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to suspend</span>
+<span class="c"># @param[in]  flags         Bitmask of NCCL_SUSPEND_* flags (e.g. @ref NCCL_SUSPEND_MEM)</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommSuspend</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="nb">int</span> <span class="n">flags</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Resume a previously suspended communicator.</span>
+<span class="c"># @details    Reacquires every resource that was released by the matching</span>
+<span class="c">#             @ref ncclCommSuspend call.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to resume</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommResume</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"rccl/rccl.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclCommMemStat_t</span><span class="p">:</span>
+        <span class="n">ncclStatGpuMemSuspend</span>
+        <span class="n">ncclStatGpuMemSuspended</span>
+        <span class="n">ncclStatGpuMemPersist</span>
+        <span class="n">ncclStatGpuMemTotal</span>
+
+<span class="c"># @brief      Query communicator memory statistics.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  comm          Communicator to query</span>
+<span class="c"># @param[in]  stat          One of @ref ncclCommMemStat_t values</span>
+<span class="c"># @param[out] value         Pointer to receive the memory statistic value</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommMemStats</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">ncclCommMemStat_t</span> <span class="n">stat</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">value</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># Register memory window</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommWindowRegister</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">buff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">size</span><span class="p">,</span><span class="n">ncclWindow_t</span> <span class="o">*</span> <span class="n">win</span><span class="p">,</span><span class="nb">int</span> <span class="n">winFlags</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># Deregister symmetric memory</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclCommWindowDeregister</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">ncclWindow_t</span> <span class="n">win</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># Get the user pointer from the window</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclWinGetUserPtr</span><span class="p">(</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">ncclWindow_t</span> <span class="n">win</span><span class="p">,</span><span class="n">void</span> <span class="o">**</span> <span class="n">outUserPtr</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"rccl/rccl.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclRedOp_dummy_t</span><span class="p">:</span>
+        <span class="n">ncclNumOps_dummy</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclRedOp_t</span><span class="p">:</span>
+        <span class="n">ncclSum</span>
+        <span class="n">ncclProd</span>
+        <span class="n">ncclMax</span>
+        <span class="n">ncclMin</span>
+        <span class="n">ncclAvg</span>
+        <span class="n">ncclNumOps</span>
+        <span class="n">ncclMaxRedOp</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclDataType_t</span><span class="p">:</span>
+        <span class="n">ncclInt8</span>
+        <span class="n">ncclChar</span>
+        <span class="n">ncclUint8</span>
+        <span class="n">ncclInt32</span>
+        <span class="n">ncclInt</span>
+        <span class="n">ncclUint32</span>
+        <span class="n">ncclInt64</span>
+        <span class="n">ncclUint64</span>
+        <span class="n">ncclFloat16</span>
+        <span class="n">ncclHalf</span>
+        <span class="n">ncclFloat32</span>
+        <span class="n">ncclFloat</span>
+        <span class="n">ncclFloat64</span>
+        <span class="n">ncclDouble</span>
+        <span class="n">ncclBfloat16</span>
+        <span class="n">ncclFloat8e4m3</span>
+        <span class="n">ncclFloat8e5m2</span>
+        <span class="n">ncclNumTypes</span>
+
+    <span class="k">ctypedef</span> <span class="n">enum</span> <span class="n">ncclScalarResidence_t</span><span class="p">:</span>
+        <span class="n">ncclScalarDevice</span>
+        <span class="n">ncclScalarHostImmediate</span>
+
+<span class="c"># @brief      Create a custom pre-multiplier reduction operator</span>
+<span class="c"># @details    Creates a new reduction operator which pre-multiplies input values by a given</span>
+<span class="c">#             scalar locally before reducing them with peer values via summation. For use</span>
+<span class="c">#             only with collectives launched against *comm* and *datatype*. The</span>
+<span class="c">#              residence* argument indicates how/when the memory pointed to by *scalar*</span>
+<span class="c">#             will be dereferenced. Upon return, the newly created operator's handle</span>
+<span class="c">#             is stored in *op*.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[out] op            Pointer to where newly created custom reduction operator is to be stored</span>
+<span class="c"># @param[in]  scalar        Pointer to scalar value.</span>
+<span class="c"># @param[in]  datatype      Scalar value datatype</span>
+<span class="c"># @param[in]  residence     Memory type of the scalar value</span>
+<span class="c"># @param[in]  comm          Communicator to associate with this custom reduction operator</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclRedOpCreatePreMulSum</span><span class="p">(</span><span class="n">ncclRedOp_t</span> <span class="o">*</span> <span class="n">op</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">scalar</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclScalarResidence_t</span> <span class="n">residence</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Destroy custom reduction operator</span>
+<span class="c"># @details    Destroys the reduction operator *op*. The operator must have been created by</span>
+<span class="c">#             ncclRedOpCreatePreMul with the matching communicator *comm*. An operator may be</span>
+<span class="c">#             destroyed as soon as the last RCCL function which is given that operator returns.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  op            Custom reduction operator is to be destroyed</span>
+<span class="c"># @param[in]  comm          Communicator associated with this reduction operator</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclRedOpDestroy</span><span class="p">(</span><span class="n">ncclRedOp_t</span> <span class="n">op</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Reduce</span>
+<span class="c"># @details    Reduces data arrays of length *count* in *sendbuff* into *recvbuff* using *op*</span>
+<span class="c">#             operation.</span>
+<span class="c">#              recvbuff* may be NULL on all calls except for root device.</span>
+<span class="c">#              root* is the rank (not the HIP device) where data will reside after the</span>
+<span class="c">#              operation is complete.</span>
+<span class="c">#             In-place operation will happen if sendbuff == recvbuff.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Local device data buffer to be reduced</span>
+<span class="c"># @param[in,out] recvbuff      Data buffer where result is stored (only for *root* rank).  May be null for other ranks.</span>
+<span class="c"># @param[in]  count         Number of elements in every send buffer</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  op            Reduction operator type</span>
+<span class="c"># @param[in]  root          Rank where result data array will be stored</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclReduce</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclRedOp_t</span> <span class="n">op</span><span class="p">,</span><span class="nb">int</span> <span class="n">root</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      (Deprecated) Broadcast (in-place)</span>
+<span class="c"># @details    Copies *count* values from *root* to all other devices.</span>
+<span class="c">#             root is the rank (not the CUDA device) where data resides before the</span>
+<span class="c">#             operation is started.</span>
+<span class="c">#             This operation is implicitly in-place.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in,out]  buff      Input array on *root* to be copied to other ranks.  Output array for all ranks.</span>
+<span class="c"># @param[in]  count         Number of elements in data buffer</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  root          Rank owning buffer to be copied to others</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclBcast</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">buff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">root</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Broadcast</span>
+<span class="c"># @details    Copies *count* values from *sendbuff* on *root* to *recvbuff* on all devices.</span>
+<span class="c">#              root* is the rank (not the HIP device) where data resides before the operation is started.</span>
+<span class="c">#              sendbuff* may be NULL on ranks other than *root*.</span>
+<span class="c">#             In-place operation will happen if *sendbuff* == *recvbuff*.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to copy (if *root*).  May be NULL for other ranks</span>
+<span class="c"># @param[in,out] recvbuff   Data array to store received array</span>
+<span class="c"># @param[in]  count         Number of elements in data buffer</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  root          Rank of broadcast root</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclBroadcast</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">root</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-Reduce</span>
+<span class="c"># @details    Reduces data arrays of length *count* in *sendbuff* using *op* operation, and</span>
+<span class="c">#             leaves identical copies of result on each *recvbuff*.</span>
+<span class="c">#             In-place operation will happen if sendbuff == recvbuff.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Input data array to reduce</span>
+<span class="c"># @param[in,out] recvbuff      Data array to store reduced result array</span>
+<span class="c"># @param[in]  count         Number of elements in data buffer</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  op            Reduction operator</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAllReduce</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclRedOp_t</span> <span class="n">op</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-Reduce-with-Bias</span>
+<span class="c"># @details    Reduces data arrays of length *count* in *sendbuff* using *op* operation, and</span>
+<span class="c">#             leaves identical copies of result on each *recvbuff*.</span>
+<span class="c">#             In-place operation will happen if sendbuff == recvbuff.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Input data array to reduce</span>
+<span class="c"># @param[in,out] recvbuff      Data array to store reduced result array</span>
+<span class="c"># @param[in]  count         Number of elements in data buffer</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  op            Reduction operator</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="c"># @param[in]  acc           Bias data array to reduce</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAllReduceWithBias</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclRedOp_t</span> <span class="n">op</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">,</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">acc</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Reduce-Scatter</span>
+<span class="c"># @details    Reduces data in *sendbuff* using *op* operation and leaves reduced result</span>
+<span class="c">#             scattered over the devices so that *recvbuff* on rank i will contain the i-th</span>
+<span class="c">#             block of the result.</span>
+<span class="c">#             Assumes sendcount is equal to nranks*recvcount, which means that *sendbuff*</span>
+<span class="c">#             should have a size of at least nranks*recvcount elements.</span>
+<span class="c">#             In-place operations will happen if recvbuff == sendbuff + rank * recvcount.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Input data array to reduce</span>
+<span class="c"># @param[in,out] recvbuff      Data array to store reduced result subarray</span>
+<span class="c"># @param[in]  recvcount     Number of elements each rank receives</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  op            Reduction operator</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclReduceScatter</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">recvcount</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclRedOp_t</span> <span class="n">op</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-Gather</span>
+<span class="c"># @details    Each device gathers *sendcount* values from other GPUs into *recvbuff*,</span>
+<span class="c">#             receiving data from rank i at offset i*sendcount.</span>
+<span class="c">#             Assumes recvcount is equal to nranks*sendcount, which means that recvbuff</span>
+<span class="c">#             should have a size of at least nranks*sendcount elements.</span>
+<span class="c">#             In-place operations will happen if sendbuff == recvbuff + rank * sendcount.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Input data array to send</span>
+<span class="c"># @param[in,out] recvbuff      Data array to store the gathered result</span>
+<span class="c"># @param[in]  sendcount     Number of elements each rank sends</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAllGather</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">sendcount</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-to-All</span>
+<span class="c"># @details    Each device sends count values to all other devices and receives count values</span>
+<span class="c">#             from all other devices. Data to send to destination rank j is taken from</span>
+<span class="c">#             sendbuff+j*count and data received from source rank i is placed at</span>
+<span class="c">#             recvbuff+i*count.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send (contains blocks for each other rank)</span>
+<span class="c"># @param[in,out] recvbuff      Data array to receive (contains blocks from each other rank)</span>
+<span class="c"># @param[in]  count         Number of elements to send between each pair of ranks</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAlltoAll</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-To-Allv</span>
+<span class="c"># @details    Device (i) sends sendcounts[j] of data from offset sdispls[j]</span>
+<span class="c">#             to device (j). At the same time, device (i) receives recvcounts[j] of data</span>
+<span class="c">#             from device (j) to be placed at rdispls[j].</span>
+<span class="c">#             sendcounts, sdispls, recvcounts and rdispls are all measured in the units</span>
+<span class="c">#             of datatype, not bytes.</span>
+<span class="c">#             In-place operation will happen if sendbuff == recvbuff.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send (contains blocks for each other rank)</span>
+<span class="c"># @param[in]  sendcounts    Array containing number of elements to send to each participating rank</span>
+<span class="c"># @param[in]  sdispls       Array of offsets into *sendbuff* for each participating rank</span>
+<span class="c"># @param[in,out] recvbuff      Data array to receive (contains blocks from each other rank)</span>
+<span class="c"># @param[in]  recvcounts    Array containing number of elements to receive from each participating rank</span>
+<span class="c"># @param[in]  rdispls       Array of offsets into *recvbuff* for each participating rank</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAlltoAllv</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">sendcounts</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">sdispls</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">recvcounts</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">rdispls</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Gather</span>
+<span class="c"># @details    Each rank sends count elements from sendbuff to the root rank.</span>
+<span class="c">#             On the root rank, data from rank i is placed at recvbuff + i*count.</span>
+<span class="c">#             On non-root ranks, recvbuff is not used.</span>
+<span class="c">#             root is the rank where data will be gathered.</span>
+<span class="c"># </span>
+<span class="c">#             In-place operations will happen if sendbuff == recvbuff + root * count.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send</span>
+<span class="c"># @param[in,out] recvbuff   Data array to recv</span>
+<span class="c"># @param[in]  count         Number of elements</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  root          Rank of gather root</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGather</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">root</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Scatter</span>
+<span class="c"># @details    On the root rank, count elements from sendbuff+i*count are sent to rank i.</span>
+<span class="c">#             On non-root ranks, sendbuff is not used.</span>
+<span class="c">#             Each rank receives count elements into recvbuff.</span>
+<span class="c">#             root is the rank that will distribute the data.</span>
+<span class="c"># </span>
+<span class="c">#             In-place operations will happen if recvbuff == sendbuff + root * count.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send</span>
+<span class="c"># @param[in,out] recvbuff   Data array to recv</span>
+<span class="c"># @param[in]  count         Number of elements</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  root          Rank of scatter root</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclScatter</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">root</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-To-All</span>
+<span class="c"># @details    Device (i) send (j)th block of data to device (j) and be placed as (i)th</span>
+<span class="c">#             block. Each block for sending/receiving has *count* elements, which means</span>
+<span class="c">#             that *recvbuff* and *sendbuff* should have a size of nranks*count elements.</span>
+<span class="c">#             In-place operation is NOT supported. It is the user's responsibility</span>
+<span class="c">#             to ensure that sendbuff and recvbuff are distinct.</span>
+<span class="c"># @deprecated ncclAllToAll is replaced with ncclAlltoAll and will be removed in the future.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send (contains blocks for each other rank)</span>
+<span class="c"># @param[in,out] recvbuff      Data array to receive (contains blocks from each other rank)</span>
+<span class="c"># @param[in]  count         Number of elements to send between each pair of ranks</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAllToAll</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      All-To-Allv</span>
+<span class="c"># @details    Device (i) sends sendcounts[j] of data from offset sdispls[j]</span>
+<span class="c">#             to device (j). At the same time, device (i) receives recvcounts[j] of data</span>
+<span class="c">#             from device (j) to be placed at rdispls[j].</span>
+<span class="c">#             sendcounts, sdispls, recvcounts and rdispls are all measured in the units</span>
+<span class="c">#             of datatype, not bytes.</span>
+<span class="c">#             In-place operation will happen if sendbuff == recvbuff.</span>
+<span class="c"># @deprecated ncclAllToAllv is replaced with ncclAlltoAllv and will be removed in the future.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send (contains blocks for each other rank)</span>
+<span class="c"># @param[in]  sendcounts    Array containing number of elements to send to each participating rank</span>
+<span class="c"># @param[in]  sdispls       Array of offsets into *sendbuff* for each participating rank</span>
+<span class="c"># @param[in,out] recvbuff      Data array to receive (contains blocks from each other rank)</span>
+<span class="c"># @param[in]  recvcounts    Array containing number of elements to receive from each participating rank</span>
+<span class="c"># @param[in]  rdispls       Array of offsets into *recvbuff* for each participating rank</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclAllToAllv</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">sendcounts</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">sdispls</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">recvcounts</span><span class="p">,</span><span class="n">const</span> <span class="n">size_t</span> <span class="o">*</span> <span class="n">rdispls</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Send</span>
+<span class="c"># @details    Send data from *sendbuff* to rank *peer*.</span>
+<span class="c">#             Rank *peer* needs to call ncclRecv with the same *datatype* and the same *count*</span>
+<span class="c">#             as this rank.</span>
+<span class="c">#             This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations</span>
+<span class="c">#             need to progress concurrently to complete, they must be fused within a ncclGroupStart /</span>
+<span class="c">#             ncclGroupEnd section.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in]  sendbuff      Data array to send</span>
+<span class="c"># @param[in]  count         Number of elements to send</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  peer          Peer rank to send to</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclSend</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">sendbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">peer</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Receive</span>
+<span class="c"># @details    Receive data from rank *peer* into *recvbuff*.</span>
+<span class="c">#             Rank *peer* needs to call ncclSend with the same datatype and the same count</span>
+<span class="c">#             as this rank.</span>
+<span class="c">#             This operation is blocking for the GPU. If multiple ncclSend and ncclRecv operations</span>
+<span class="c">#             need to progress concurrently to complete, they must be fused within a ncclGroupStart/</span>
+<span class="c">#             ncclGroupEnd section.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="c"># </span>
+<span class="c"># @param[in,out] recvbuff      Data array to receive</span>
+<span class="c"># @param[in]  count         Number of elements to receive</span>
+<span class="c"># @param[in]  datatype      Data buffer element datatype</span>
+<span class="c"># @param[in]  peer          Peer rank to send to</span>
+<span class="c"># @param[in]  comm          Communicator group object to execute on</span>
+<span class="c"># @param[in]  stream        HIP stream to execute collective on</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclRecv</span><span class="p">(</span><span class="n">void</span> <span class="o">*</span> <span class="n">recvbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">peer</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Put</span>
+<span class="c"># </span>
+<span class="c"># One-sided communication operation that writes data from the local buffer to a</span>
+<span class="c"># remote peer's registered memory window without explicit participation from the</span>
+<span class="c"># target process.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclPutSignal</span><span class="p">(</span><span class="n">const</span> <span class="n">void</span> <span class="o">*</span> <span class="n">localbuff</span><span class="p">,</span><span class="n">size_t</span> <span class="n">count</span><span class="p">,</span><span class="n">ncclDataType_t</span> <span class="n">datatype</span><span class="p">,</span><span class="nb">int</span> <span class="n">peer</span><span class="p">,</span><span class="n">ncclWindow_t</span> <span class="n">peerWin</span><span class="p">,</span><span class="n">size_t</span> <span class="n">peerWinOffset</span><span class="p">,</span><span class="nb">int</span> <span class="n">sigIdx</span><span class="p">,</span><span class="nb">int</span> <span class="n">ctx</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">flags</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclSignal</span><span class="p">(</span><span class="nb">int</span> <span class="n">peer</span><span class="p">,</span><span class="nb">int</span> <span class="n">sigIdx</span><span class="p">,</span><span class="nb">int</span> <span class="n">ctx</span><span class="p">,</span><span class="nb">unsigned</span> <span class="nb">int</span> <span class="n">flags</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"rccl/rccl.h"</span><span class="p">:</span>
+
+    <span class="k">ctypedef</span> <span class="k">struct</span><span class="w"> </span><span class="nc">ncclWaitSignalDesc_t</span><span class="p">:</span>
+        <span class="nb">int</span> <span class="n">opCnt</span>
+        <span class="nb">int</span> <span class="n">peer</span>
+        <span class="nb">int</span> <span class="n">sigIdx</span>
+        <span class="nb">int</span> <span class="n">ctx</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclWaitSignal</span><span class="p">(</span><span class="nb">int</span> <span class="n">nDesc</span><span class="p">,</span><span class="n">ncclWaitSignalDesc_t</span> <span class="o">*</span> <span class="n">signalDescs</span><span class="p">,</span><span class="n">ncclComm_t</span> <span class="n">comm</span><span class="p">,</span><span class="n">hipStream_t</span> <span class="n">stream</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Group Start</span>
+<span class="c"># @details    Start a group call. All calls to RCCL until ncclGroupEnd will be fused into</span>
+<span class="c">#             a single RCCL operation. Nothing will be started on the HIP stream until</span>
+<span class="c">#             ncclGroupEnd.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGroupStart</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># @brief      Group End</span>
+<span class="c"># @details    End a group call. Start a fused RCCL operation consisting of all calls since</span>
+<span class="c">#             ncclGroupStart. Operations on the HIP stream depending on the RCCL operations</span>
+<span class="c">#             need to be called after ncclGroupEnd.</span>
+<span class="c"># @return     Result code. See @ref rccl_result_code for more details.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGroupEnd</span><span class="p">()</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="c"># </span>
+<span class="c"># Group Simulate End</span>
+<span class="c"># </span>
+<span class="c"># Simulate a ncclGroupEnd() call and return NCCL's simulation info in a struct.</span>
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclGroupSimulateEnd</span><span class="p">(</span><span class="n">ncclSimInfo_v22200</span> <span class="o">*</span> <span class="n">simInfo</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kr">extern</span> <span class="k">from</span> <span class="s">"rccl/rccl.h"</span><span class="p">:</span>
+
+    <span class="k">cdef</span><span class="w"> </span><span class="k">struct</span> <span class="nf">ncclParamHandle</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">ctypedef</span> <span class="n">ncclParamHandle</span> <span class="n">ncclParamHandle_t</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamBind</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">**</span> <span class="n">out</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">key</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetI8</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">int8_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetI16</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">int16_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetI32</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">int32_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetI64</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">int64_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetU8</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">uint8_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetU16</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">uint16_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetU32</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">uint32_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetU64</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">uint64_t</span> <span class="o">*</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetStr</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">out</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGet</span><span class="p">(</span><span class="n">ncclParamHandle</span> <span class="o">*</span> <span class="n">h</span><span class="p">,</span><span class="n">void</span> <span class="o">*</span> <span class="n">out</span><span class="p">,</span><span class="nb">int</span> <span class="n">maxLen</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="nb">len</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetParameter</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">*</span> <span class="n">key</span><span class="p">,</span><span class="n">const</span> <span class="n">char</span> <span class="o">**</span> <span class="n">value</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">valueLen</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">ncclResult_t</span> <span class="nf">ncclParamGetAllParameterKeys</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span> <span class="o">***</span> <span class="n">table</span><span class="p">,</span><span class="nb">int</span> <span class="o">*</span> <span class="n">tableLen</span><span class="p">)</span> <span class="k">except</span><span class="o">?</span> <span class="n">ncclInternalError</span> <span class="k">nogil</span>
+
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">void</span> <span class="nf">ncclParamDumpAll</span><span class="p">()</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+
+
+<span class="k">cdef</span><span class="w"> </span><span class="kt">bint</span> <span class="nf">__rccl_has_symbol</span><span class="p">(</span><span class="n">const</span> <span class="n">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="n">noexcept</span> <span class="k">nogil</span>
+</pre></div>
+</div>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="rocm.bindings.cyhiprtc.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">rocm.bindings.cyhiprtc</p>
+</div>
+</a>
+<a class="right-next" href="rocm.bindings.cyroctx.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">rocm.bindings.cyroctx</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+<p>
+</p>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="rocm-footer">
+<div class="container-lg">
+<section class="bottom-menu menu py-45">
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<ul>
+<li><a href="https://www.amd.com/en/corporate/copyright" target="_blank">Terms and Conditions</a></li>
+<li><a href="https://rocm.docs.amd.com/en/latest/about/license.html">ROCm Licenses and Disclaimers</a></li>
+<li><a href="https://www.amd.com/en/corporate/privacy" target="_blank">Privacy</a></li>
+<li><a href="https://www.amd.com/en/corporate/trademarks" target="_blank">Trademarks</a></li>
+<li><a href="https://www.amd.com/system/files/documents/statement-human-trafficking-forced-labor.pdf" target="_blank">Statement on Forced Labor</a></li>
+<li><a href="https://www.amd.com/en/corporate/competition" target="_blank">Fair and Open Competition</a></li>
+<li><a href="https://www.amd.com/system/files/documents/amd-uk-tax-strategy.pdf" target="_blank">UK Tax Strategy</a></li>
+<li><a href="https://www.amd.com/en/corporate/cookies" target="_blank">Cookie Policy</a></li>
+<!-- OneTrust Cookies Settings button start -->
+<li><a class="ot-sdk-show-settings" href="#cookie-settings" id="ot-sdk-btn">Cookie Settings</a></li>
+<!-- OneTrust Cookies Settings button end -->
+</ul>
+</div>
+</div>
+<div class="row d-flex align-items-center">
+<div class="col-12 text-center">
+<div>
+<span class="copyright">© 2025 Advanced Micro Devices, Inc</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</footer>
+<!-- <div id="rdc-watermark-container">
+    <img id="rdc-watermark" src="../_static/images/alpha-watermark.svg" alt="DRAFT watermark"/>
+</div> -->
+</body>
+</html>
