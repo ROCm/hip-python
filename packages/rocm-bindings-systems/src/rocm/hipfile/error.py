@@ -32,7 +32,9 @@ __author__ = (
     "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com> (port)"
 )
 
-from rocm.bindings.hipfile import hipFileGetOpErrorString as _get_op_error_string
+from rocm.bindings.hipfile import (
+    hipFileGetOpErrorString as _get_op_error_string,
+)
 
 from .enums import OpError
 

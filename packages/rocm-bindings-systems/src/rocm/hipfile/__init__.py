@@ -75,4 +75,6 @@ __all__ = [
     "driver_get_properties",
     "get_version",
 ]
-__version__ = f"{int(_VERSION_MAJOR)}.{int(_VERSION_MINOR)}.{int(_VERSION_PATCH)}"
+__version__ = (
+    f"{int(_VERSION_MAJOR)}.{int(_VERSION_MINOR)}.{int(_VERSION_PATCH)}"
+)
