@@ -56,8 +56,13 @@ def create_extension(name, sources):
 setup(
     ext_modules=cythonize(
         [
-            create_extension("cyruntime_cuda_stream", ["cyruntime_cuda_stream.pyx"]),
-            create_extension("cyruntime_cuda_stream_with_cuda_bindings", ["cyruntime_cuda_stream_with_cuda_bindings.pyx"]),
+            create_extension(
+                "cyruntime_cuda_stream", ["cyruntime_cuda_stream.pyx"]
+            ),
+            create_extension(
+                "cyruntime_cuda_stream_with_cuda_bindings",
+                ["cyruntime_cuda_stream_with_cuda_bindings.pyx"],
+            ),
         ],
         compiler_directives=dict(language_level=3),
         compile_time_env=dict(HIP_PYTHON=True),

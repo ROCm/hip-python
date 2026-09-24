@@ -78,28 +78,49 @@ x_val_d = hip_check(hip.hipMalloc(x_val_h.nbytes))
 x_ind_d = hip_check(hip.hipMalloc(x_ind_h.nbytes))
 y_d = hip_check(hip.hipMalloc(y_h.nbytes))
 
-hip_check(hip.hipMemcpy(x_val_d, x_val_h, x_val_h.nbytes,
-                         hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(x_ind_d, x_ind_h, x_ind_h.nbytes,
-                         hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(y_d, y_h, y_h.nbytes,
-                         hip.hipMemcpyKind.hipMemcpyHostToDevice))
+hip_check(
+    hip.hipMemcpy(
+        x_val_d,
+        x_val_h,
+        x_val_h.nbytes,
+        hip.hipMemcpyKind.hipMemcpyHostToDevice,
+    )
+)
+hip_check(
+    hip.hipMemcpy(
+        x_ind_d,
+        x_ind_h,
+        x_ind_h.nbytes,
+        hip.hipMemcpyKind.hipMemcpyHostToDevice,
+    )
+)
+hip_check(
+    hip.hipMemcpy(
+        y_d, y_h, y_h.nbytes, hip.hipMemcpyKind.hipMemcpyHostToDevice
+    )
+)
 
 # Run hipsparseSaxpyi.
 handle = hip_check(hipsparse.hipsparseCreate())
 hip_check(
     hipsparse.hipsparseSaxpyi(
-        handle, nnz,
+        handle,
+        nnz,
         ctypes.addressof(alpha),
-        x_val_d, x_ind_d, y_d,
+        x_val_d,
+        x_ind_d,
+        y_d,
         hipsparse.hipsparseIndexBase_t.HIPSPARSE_INDEX_BASE_ZERO,
     )
 )
 hip_check(hipsparse.hipsparseDestroy(handle))
 
 # Copy result back and verify.
-hip_check(hip.hipMemcpy(y_h, y_d, y_h.nbytes,
-                         hip.hipMemcpyKind.hipMemcpyDeviceToHost))
+hip_check(
+    hip.hipMemcpy(
+        y_h, y_d, y_h.nbytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost
+    )
+)
 
 if np.allclose(y_h, y_expected):
     print("ok")

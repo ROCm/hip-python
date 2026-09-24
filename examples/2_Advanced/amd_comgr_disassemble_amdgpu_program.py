@@ -53,9 +53,7 @@ expected_instructions = [
 ]
 
 arch = "gfx90a"
-source = comgr.disassemble_program(
-    f"amdgcn-amd-amdhsa--{arch}", program
-)
+source = comgr.disassemble_program(f"amdgcn-amd-amdhsa--{arch}", program)
 instructions = source.rstrip().split("\n")
 assert len(expected_instructions) == len(
     instructions

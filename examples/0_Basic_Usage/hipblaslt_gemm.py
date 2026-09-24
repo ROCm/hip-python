@@ -70,9 +70,15 @@ max_workspace_size = 32 * 1024 * 1024  # 32 MiB
 # Fortran order — their raw bytes then match the column-major layout the
 # device reads with leading dimensions lda=m, ldb=k, ldc=ldd=m.
 rng = np.random.default_rng(seed=0)
-a_h = np.asfortranarray(rng.standard_normal((m, k), dtype=np.float32).astype(np.float16))
-b_h = np.asfortranarray(rng.standard_normal((k, n), dtype=np.float32).astype(np.float16))
-c_h = np.asfortranarray(rng.standard_normal((m, n), dtype=np.float32).astype(np.float16))
+a_h = np.asfortranarray(
+    rng.standard_normal((m, k), dtype=np.float32).astype(np.float16)
+)
+b_h = np.asfortranarray(
+    rng.standard_normal((k, n), dtype=np.float32).astype(np.float16)
+)
+c_h = np.asfortranarray(
+    rng.standard_normal((m, n), dtype=np.float32).astype(np.float16)
+)
 # Reference computed in fp32 for accuracy comparison.
 d_expected = (
     alpha.value * a_h.astype(np.float32) @ b_h.astype(np.float32)
@@ -89,20 +95,35 @@ d_c = hip_check(hip.hipMalloc(c_bytes))
 d_d = hip_check(hip.hipMalloc(c_bytes))
 d_workspace = hip_check(hip.hipMalloc(max_workspace_size))
 
-hip_check(hip.hipMemcpy(d_a, a_h, a_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(d_b, b_h, b_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
-hip_check(hip.hipMemcpy(d_c, c_h, c_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice))
+hip_check(
+    hip.hipMemcpy(d_a, a_h, a_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
+hip_check(
+    hip.hipMemcpy(d_b, b_h, b_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
+hip_check(
+    hip.hipMemcpy(d_c, c_h, c_bytes, hip.hipMemcpyKind.hipMemcpyHostToDevice)
+)
 
 # Build matrix layout descriptors (col-major: lda=m, ldb=k, ldc=ldd=m).
-matA = hip_check(hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, k, m))
-matB = hip_check(hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, k, n, k))
-matC = hip_check(hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, n, m))
-matD = hip_check(hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, n, m))
+matA = hip_check(
+    hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, k, m)
+)
+matB = hip_check(
+    hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, k, n, k)
+)
+matC = hip_check(
+    hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, n, m)
+)
+matD = hip_check(
+    hipblaslt.hipblasLtMatrixLayoutCreate(hip.hipDataType.HIP_R_16F, m, n, m)
+)
 
 # Matmul descriptor: FP32 accumulation, FP32 scale.
 matmul = hip_check(
     hipblaslt.hipblasLtMatmulDescCreate(
-        hipblas.hipblasComputeType_t.HIPBLAS_COMPUTE_32F, hip.hipDataType.HIP_R_32F
+        hipblas.hipblasComputeType_t.HIPBLAS_COMPUTE_32F,
+        hip.hipDataType.HIP_R_32F,
     )
 )
 trans_n = ctypes.c_int32(int(hipblas.hipblasOperation_t.HIPBLAS_OP_N))
@@ -139,7 +160,14 @@ hip_check(
 heuristic_results = hipblaslt.hipblasLtMatmulHeuristicResult_t.allocate(1)
 returned = hip_check(
     hipblaslt.hipblasLtMatmulAlgoGetHeuristic(
-        handle, matmul, matA, matB, matC, matD, pref, 1,
+        handle,
+        matmul,
+        matA,
+        matB,
+        matC,
+        matD,
+        pref,
+        1,
         heuristic_results,
     )
 )
@@ -148,13 +176,21 @@ assert returned > 0, "hipBLASLt found no algorithm for this problem"
 # Run the matmul on the default stream.
 hip_check(
     hipblaslt.hipblasLtMatmul(
-        handle, matmul,
+        handle,
+        matmul,
         ctypes.addressof(alpha),
-        d_a, matA, d_b, matB,
+        d_a,
+        matA,
+        d_b,
+        matB,
         ctypes.addressof(beta),
-        d_c, matC, d_d, matD,
+        d_c,
+        matC,
+        d_d,
+        matD,
         heuristic_results.algo,
-        d_workspace, heuristic_results.workspaceSize,
+        d_workspace,
+        heuristic_results.workspaceSize,
         None,  # default stream
     )
 )
@@ -162,13 +198,19 @@ hip_check(hip.hipDeviceSynchronize())
 
 # Copy result back and verify.
 d_h = np.empty_like(c_h)
-hip_check(hip.hipMemcpy(d_h, d_d, c_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost))
+hip_check(
+    hip.hipMemcpy(d_h, d_d, c_bytes, hip.hipMemcpyKind.hipMemcpyDeviceToHost)
+)
 
-if np.allclose(d_h.astype(np.float32), d_expected.astype(np.float32), atol=1e-1, rtol=1e-2):
+if np.allclose(
+    d_h.astype(np.float32), d_expected.astype(np.float32), atol=1e-1, rtol=1e-2
+):
     print("ok")
 else:
     diff = np.abs(d_h.astype(np.float32) - d_expected.astype(np.float32))
-    print(f"FAILED: max abs diff = {diff.max():.4f}, mean abs diff = {diff.mean():.4f}")
+    print(
+        f"FAILED: max abs diff = {diff.max():.4f}, mean abs diff = {diff.mean():.4f}"
+    )
 
 # Clean up.
 hip_check(hipblaslt.hipblasLtMatmulPreferenceDestroy(pref))
