@@ -212,11 +212,13 @@ Two things are easy to forget:
   not depend on it. Commit `<module>.pyx` and `<module>.pyi` together.
   Never hand-edit a stub carrying the `AUTO-GENERATED` banner — rerun the
   target instead, from a build tree configured without
-  `HIP_PYTHON_ABI3_FLOOR`. The one hand-maintained stub is
-  `cuda.bindings.cufile`'s, which stubgen cannot produce usefully; the
-  `tests/stubs` suite checks that it still covers the module's public
-  surface. See [share/design/BUILDING.md](share/design/BUILDING.md),
-  section "Regenerating stubs for handcoded Cython modules".
+  `HIP_PYTHON_ABI3_FLOOR`. Two stubs are hand-maintained instead:
+  `cuda.bindings.cufile`'s, which stubgen cannot produce usefully, and
+  `hip/__init__.pyi`, whose module is pure Python re-exports. The
+  `tests/stubs` and `tests/hip-python` suites check that each still
+  covers its module's public surface. See
+  [share/design/BUILDING.md](share/design/BUILDING.md), section
+  "Regenerating stubs for handcoded Cython modules".
 - **Platform guards.** An example or test that needs a library ROCm does
   not ship everywhere must skip with a reason rather than fail. The
   Windows availability matrix is in the user guide

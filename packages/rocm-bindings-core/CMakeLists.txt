@@ -146,6 +146,21 @@ install(
   COMPONENT rocm-bindings-core
 )
 
+# PEP 561 markers for the `rocm` and `rocm.bindings` namespace packages.
+# Without them type checkers ignore every .pyi the sibling packages install.
+# This package ships them for the whole namespace, since a path may come
+# from one wheel only.
+install(
+  FILES src/rocm/py.typed
+  DESTINATION rocm
+  COMPONENT rocm-bindings-core
+)
+install(
+  FILES src/rocm/bindings/py.typed
+  DESTINATION rocm/bindings
+  COMPONENT rocm-bindings-core
+)
+
 # Aggregate target for this package (for build.targets in pyproject.toml)
 set(HIP_PYTHON_CORE_MODULE_TARGETS
   rocm_bindings_core_types

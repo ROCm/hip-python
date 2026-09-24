@@ -54,5 +54,10 @@ Issues = "https://github.com/rocm/hip-python/issues"
 where = ["src"]
 include = ["hip*"]
 
+# setuptools ships only .py files unless told otherwise, and without the
+# PEP 561 marker every type checker ignores the stub next to it.
+[tool.setuptools.package-data]
+hip = ["py.typed", "*.pyi"]
+
 [tool.setuptools.dynamic]
 version = {file = "VERSION"}

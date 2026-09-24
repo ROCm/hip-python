@@ -936,6 +936,11 @@ that sphinx-autoapi renders into the API reference. Edit
 `tests/stubs` suite checks that the stub still names every public
 symbol the module exposes, which is the drift that reaches users.
 
+It is the only exception *in this workflow*. The pure-Python `hip`
+compatibility package also ships a hand-written `__init__.pyi`,
+stubgen having no compiled extension to introspect there;
+`tests/hip-python` guards that one.
+
 ### Stubs are generated artifacts — never edit them
 
 Every stub written by this workflow opens with:
