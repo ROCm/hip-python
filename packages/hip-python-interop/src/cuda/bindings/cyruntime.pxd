@@ -1,0 +1,2883 @@
+# MIT License
+# 
+# Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+cimport rocm.bindings.cyhip as cyhip
+from cuda.bindings.cynvrtc cimport nvrtcResult
+from cuda.bindings.cynvrtc cimport CUlinkState_st
+from cuda.bindings.cynvrtc cimport CUlinkState
+from cuda.bindings.cynvrtc cimport nvrtcGetErrorString
+from cuda.bindings.cynvrtc cimport nvrtcVersion
+from cuda.bindings.cynvrtc cimport _nvrtcProgram
+from cuda.bindings.cynvrtc cimport nvrtcProgram
+from cuda.bindings.cynvrtc cimport nvrtcAddNameExpression
+from cuda.bindings.cynvrtc cimport nvrtcCompileProgram
+from cuda.bindings.cynvrtc cimport nvrtcCreateProgram
+from cuda.bindings.cynvrtc cimport nvrtcDestroyProgram
+from cuda.bindings.cynvrtc cimport nvrtcGetLoweredName
+from cuda.bindings.cynvrtc cimport nvrtcGetProgramLog
+from cuda.bindings.cynvrtc cimport nvrtcGetProgramLogSize
+from cuda.bindings.cynvrtc cimport nvrtcGetPTX
+from cuda.bindings.cynvrtc cimport nvrtcGetPTXSize
+from cuda.bindings.cynvrtc cimport nvrtcGetCUBIN
+from cuda.bindings.cynvrtc cimport nvrtcGetCUBINSize
+from cuda.bindings.cynvrtc cimport cuLinkCreate
+from cuda.bindings.cynvrtc cimport cuLinkCreate_v2
+from cuda.bindings.cynvrtc cimport cuLinkAddFile
+from cuda.bindings.cynvrtc cimport cuLinkAddFile_v2
+from cuda.bindings.cynvrtc cimport cuLinkAddData
+from cuda.bindings.cynvrtc cimport cuLinkAddData_v2
+from cuda.bindings.cynvrtc cimport cuLinkComplete
+from cuda.bindings.cynvrtc cimport cuLinkDestroy
+
+from rocm.bindings.cyhip cimport HIP_TRSA_OVERRIDE_FORMAT as CU_TRSA_OVERRIDE_FORMAT
+from rocm.bindings.cyhip cimport HIP_TRSF_READ_AS_INTEGER as CU_TRSF_READ_AS_INTEGER
+from rocm.bindings.cyhip cimport HIP_TRSF_NORMALIZED_COORDINATES as CU_TRSF_NORMALIZED_COORDINATES
+from rocm.bindings.cyhip cimport HIP_TRSF_SRGB as CU_TRSF_SRGB
+from rocm.bindings.cyhip cimport hipTextureType1D as cudaTextureType1D
+from rocm.bindings.cyhip cimport hipTextureType2D as cudaTextureType2D
+from rocm.bindings.cyhip cimport hipTextureType3D as cudaTextureType3D
+from rocm.bindings.cyhip cimport hipTextureTypeCubemap as cudaTextureTypeCubemap
+from rocm.bindings.cyhip cimport hipTextureType1DLayered as cudaTextureType1DLayered
+from rocm.bindings.cyhip cimport hipTextureType2DLayered as cudaTextureType2DLayered
+from rocm.bindings.cyhip cimport hipTextureTypeCubemapLayered as cudaTextureTypeCubemapLayered
+from rocm.bindings.cyhip cimport HIP_LAUNCH_PARAM_BUFFER_POINTER as CU_LAUNCH_PARAM_BUFFER_POINTER
+from rocm.bindings.cyhip cimport HIP_LAUNCH_PARAM_BUFFER_SIZE as CU_LAUNCH_PARAM_BUFFER_SIZE
+from rocm.bindings.cyhip cimport HIP_LAUNCH_PARAM_END as CU_LAUNCH_PARAM_END
+from rocm.bindings.cyhip cimport hipIpcMemLazyEnablePeerAccess as CU_IPC_MEM_LAZY_ENABLE_PEER_ACCESS
+from rocm.bindings.cyhip cimport hipIpcMemLazyEnablePeerAccess as cudaIpcMemLazyEnablePeerAccess
+from rocm.bindings.cyhip cimport HIP_IPC_HANDLE_SIZE as CUDA_IPC_HANDLE_SIZE
+from rocm.bindings.cyhip cimport HIP_IPC_HANDLE_SIZE as CU_IPC_HANDLE_SIZE
+from rocm.bindings.cyhip cimport hipStreamDefault as CU_STREAM_DEFAULT
+from rocm.bindings.cyhip cimport hipStreamDefault as cudaStreamDefault
+from rocm.bindings.cyhip cimport hipStreamNonBlocking as CU_STREAM_NON_BLOCKING
+from rocm.bindings.cyhip cimport hipStreamNonBlocking as cudaStreamNonBlocking
+from rocm.bindings.cyhip cimport hipEventDefault as CU_EVENT_DEFAULT
+from rocm.bindings.cyhip cimport hipEventDefault as cudaEventDefault
+from rocm.bindings.cyhip cimport hipEventBlockingSync as CU_EVENT_BLOCKING_SYNC
+from rocm.bindings.cyhip cimport hipEventBlockingSync as cudaEventBlockingSync
+from rocm.bindings.cyhip cimport hipEventDisableTiming as CU_EVENT_DISABLE_TIMING
+from rocm.bindings.cyhip cimport hipEventDisableTiming as cudaEventDisableTiming
+from rocm.bindings.cyhip cimport hipEventInterprocess as CU_EVENT_INTERPROCESS
+from rocm.bindings.cyhip cimport hipEventInterprocess as cudaEventInterprocess
+from rocm.bindings.cyhip cimport hipHostMallocDefault as cudaHostAllocDefault
+from rocm.bindings.cyhip cimport hipHostMallocPortable as CU_MEMHOSTALLOC_PORTABLE
+from rocm.bindings.cyhip cimport hipHostMallocPortable as cudaHostAllocPortable
+from rocm.bindings.cyhip cimport hipHostMallocMapped as CU_MEMHOSTALLOC_DEVICEMAP
+from rocm.bindings.cyhip cimport hipHostMallocMapped as cudaHostAllocMapped
+from rocm.bindings.cyhip cimport hipHostMallocWriteCombined as CU_MEMHOSTALLOC_WRITECOMBINED
+from rocm.bindings.cyhip cimport hipHostMallocWriteCombined as cudaHostAllocWriteCombined
+from rocm.bindings.cyhip cimport hipMemAttachGlobal as CU_MEM_ATTACH_GLOBAL
+from rocm.bindings.cyhip cimport hipMemAttachGlobal as cudaMemAttachGlobal
+from rocm.bindings.cyhip cimport hipMemAttachHost as CU_MEM_ATTACH_HOST
+from rocm.bindings.cyhip cimport hipMemAttachHost as cudaMemAttachHost
+from rocm.bindings.cyhip cimport hipMemAttachSingle as CU_MEM_ATTACH_SINGLE
+from rocm.bindings.cyhip cimport hipMemAttachSingle as cudaMemAttachSingle
+from rocm.bindings.cyhip cimport hipHostRegisterDefault as cudaHostRegisterDefault
+from rocm.bindings.cyhip cimport hipHostRegisterPortable as CU_MEMHOSTREGISTER_PORTABLE
+from rocm.bindings.cyhip cimport hipHostRegisterPortable as cudaHostRegisterPortable
+from rocm.bindings.cyhip cimport hipHostRegisterMapped as CU_MEMHOSTREGISTER_DEVICEMAP
+from rocm.bindings.cyhip cimport hipHostRegisterMapped as cudaHostRegisterMapped
+from rocm.bindings.cyhip cimport hipHostRegisterIoMemory as CU_MEMHOSTREGISTER_IOMEMORY
+from rocm.bindings.cyhip cimport hipHostRegisterIoMemory as cudaHostRegisterIoMemory
+from rocm.bindings.cyhip cimport hipDeviceScheduleAuto as CU_CTX_SCHED_AUTO
+from rocm.bindings.cyhip cimport hipDeviceScheduleAuto as cudaDeviceScheduleAuto
+from rocm.bindings.cyhip cimport hipDeviceScheduleSpin as CU_CTX_SCHED_SPIN
+from rocm.bindings.cyhip cimport hipDeviceScheduleSpin as cudaDeviceScheduleSpin
+from rocm.bindings.cyhip cimport hipDeviceScheduleYield as CU_CTX_SCHED_YIELD
+from rocm.bindings.cyhip cimport hipDeviceScheduleYield as cudaDeviceScheduleYield
+from rocm.bindings.cyhip cimport hipDeviceScheduleBlockingSync as CU_CTX_BLOCKING_SYNC
+from rocm.bindings.cyhip cimport hipDeviceScheduleBlockingSync as CU_CTX_SCHED_BLOCKING_SYNC
+from rocm.bindings.cyhip cimport hipDeviceScheduleBlockingSync as cudaDeviceBlockingSync
+from rocm.bindings.cyhip cimport hipDeviceScheduleBlockingSync as cudaDeviceScheduleBlockingSync
+from rocm.bindings.cyhip cimport hipDeviceScheduleMask as CU_CTX_SCHED_MASK
+from rocm.bindings.cyhip cimport hipDeviceScheduleMask as cudaDeviceScheduleMask
+from rocm.bindings.cyhip cimport hipDeviceMapHost as CU_CTX_MAP_HOST
+from rocm.bindings.cyhip cimport hipDeviceMapHost as cudaDeviceMapHost
+from rocm.bindings.cyhip cimport hipDeviceLmemResizeToMax as CU_CTX_LMEM_RESIZE_TO_MAX
+from rocm.bindings.cyhip cimport hipDeviceLmemResizeToMax as cudaDeviceLmemResizeToMax
+from rocm.bindings.cyhip cimport hipArrayDefault as cudaArrayDefault
+from rocm.bindings.cyhip cimport hipArrayLayered as CUDA_ARRAY3D_LAYERED
+from rocm.bindings.cyhip cimport hipArrayLayered as cudaArrayLayered
+from rocm.bindings.cyhip cimport hipArraySurfaceLoadStore as CUDA_ARRAY3D_SURFACE_LDST
+from rocm.bindings.cyhip cimport hipArraySurfaceLoadStore as cudaArraySurfaceLoadStore
+from rocm.bindings.cyhip cimport hipArrayCubemap as CUDA_ARRAY3D_CUBEMAP
+from rocm.bindings.cyhip cimport hipArrayCubemap as cudaArrayCubemap
+from rocm.bindings.cyhip cimport hipArrayTextureGather as CUDA_ARRAY3D_TEXTURE_GATHER
+from rocm.bindings.cyhip cimport hipArrayTextureGather as cudaArrayTextureGather
+from rocm.bindings.cyhip cimport hipOccupancyDefault as CU_OCCUPANCY_DEFAULT
+from rocm.bindings.cyhip cimport hipOccupancyDefault as cudaOccupancyDefault
+from rocm.bindings.cyhip cimport hipCooperativeLaunchMultiDeviceNoPreSync as CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_PRE_LAUNCH_SYNC
+from rocm.bindings.cyhip cimport hipCooperativeLaunchMultiDeviceNoPreSync as cudaCooperativeLaunchMultiDeviceNoPreSync
+from rocm.bindings.cyhip cimport hipCooperativeLaunchMultiDeviceNoPostSync as CUDA_COOPERATIVE_LAUNCH_MULTI_DEVICE_NO_POST_LAUNCH_SYNC
+from rocm.bindings.cyhip cimport hipCooperativeLaunchMultiDeviceNoPostSync as cudaCooperativeLaunchMultiDeviceNoPostSync
+from rocm.bindings.cyhip cimport hipCpuDeviceId as CU_DEVICE_CPU
+from rocm.bindings.cyhip cimport hipCpuDeviceId as cudaCpuDeviceId
+from rocm.bindings.cyhip cimport hipInvalidDeviceId as CU_DEVICE_INVALID
+from rocm.bindings.cyhip cimport hipInvalidDeviceId as cudaInvalidDeviceId
+from rocm.bindings.cyhip cimport hipStreamWaitValueGte as CU_STREAM_WAIT_VALUE_GEQ
+from rocm.bindings.cyhip cimport hipStreamWaitValueEq as CU_STREAM_WAIT_VALUE_EQ
+from rocm.bindings.cyhip cimport hipStreamWaitValueAnd as CU_STREAM_WAIT_VALUE_AND
+from rocm.bindings.cyhip cimport hipStreamWaitValueNor as CU_STREAM_WAIT_VALUE_NOR
+from rocm.bindings.cyhip cimport hipJitOption as CUjit_option
+from rocm.bindings.cyhip cimport hipJitOptionMaxRegisters
+from rocm.bindings.cyhip cimport hipJitOptionMaxRegisters as CU_JIT_MAX_REGISTERS
+from rocm.bindings.cyhip cimport hipJitOptionMaxRegisters as cudaJitMaxRegisters
+from rocm.bindings.cyhip cimport hipJitOptionThreadsPerBlock
+from rocm.bindings.cyhip cimport hipJitOptionThreadsPerBlock as CU_JIT_THREADS_PER_BLOCK
+from rocm.bindings.cyhip cimport hipJitOptionThreadsPerBlock as cudaJitThreadsPerBlock
+from rocm.bindings.cyhip cimport hipJitOptionWallTime
+from rocm.bindings.cyhip cimport hipJitOptionWallTime as CU_JIT_WALL_TIME
+from rocm.bindings.cyhip cimport hipJitOptionWallTime as cudaJitWallTime
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBuffer
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBuffer as CU_JIT_INFO_LOG_BUFFER
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBuffer as cudaJitInfoLogBuffer
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBufferSizeBytes
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBufferSizeBytes as CU_JIT_INFO_LOG_BUFFER_SIZE_BYTES
+from rocm.bindings.cyhip cimport hipJitOptionInfoLogBufferSizeBytes as cudaJitInfoLogBufferSizeBytes
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBuffer
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBuffer as CU_JIT_ERROR_LOG_BUFFER
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBuffer as cudaJitErrorLogBuffer
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBufferSizeBytes
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBufferSizeBytes as CU_JIT_ERROR_LOG_BUFFER_SIZE_BYTES
+from rocm.bindings.cyhip cimport hipJitOptionErrorLogBufferSizeBytes as cudaJitErrorLogBufferSizeBytes
+from rocm.bindings.cyhip cimport hipJitOptionOptimizationLevel
+from rocm.bindings.cyhip cimport hipJitOptionOptimizationLevel as CU_JIT_OPTIMIZATION_LEVEL
+from rocm.bindings.cyhip cimport hipJitOptionOptimizationLevel as cudaJitOptimizationLevel
+from rocm.bindings.cyhip cimport hipJitOptionTargetFromContext
+from rocm.bindings.cyhip cimport hipJitOptionTargetFromContext as CU_JIT_TARGET_FROM_CUCONTEXT
+from rocm.bindings.cyhip cimport hipJitOptionTarget
+from rocm.bindings.cyhip cimport hipJitOptionTarget as CU_JIT_TARGET
+from rocm.bindings.cyhip cimport hipJitOptionFallbackStrategy
+from rocm.bindings.cyhip cimport hipJitOptionFallbackStrategy as CU_JIT_FALLBACK_STRATEGY
+from rocm.bindings.cyhip cimport hipJitOptionFallbackStrategy as cudaJitFallbackStrategy
+from rocm.bindings.cyhip cimport hipJitOptionGenerateDebugInfo
+from rocm.bindings.cyhip cimport hipJitOptionGenerateDebugInfo as CU_JIT_GENERATE_DEBUG_INFO
+from rocm.bindings.cyhip cimport hipJitOptionGenerateDebugInfo as cudaJitGenerateDebugInfo
+from rocm.bindings.cyhip cimport hipJitOptionLogVerbose
+from rocm.bindings.cyhip cimport hipJitOptionLogVerbose as CU_JIT_LOG_VERBOSE
+from rocm.bindings.cyhip cimport hipJitOptionLogVerbose as cudaJitLogVerbose
+from rocm.bindings.cyhip cimport hipJitOptionGenerateLineInfo
+from rocm.bindings.cyhip cimport hipJitOptionGenerateLineInfo as CU_JIT_GENERATE_LINE_INFO
+from rocm.bindings.cyhip cimport hipJitOptionGenerateLineInfo as cudaJitGenerateLineInfo
+from rocm.bindings.cyhip cimport hipJitOptionCacheMode
+from rocm.bindings.cyhip cimport hipJitOptionCacheMode as CU_JIT_CACHE_MODE
+from rocm.bindings.cyhip cimport hipJitOptionCacheMode as cudaJitCacheMode
+from rocm.bindings.cyhip cimport hipJitOptionSm3xOpt
+from rocm.bindings.cyhip cimport hipJitOptionSm3xOpt as CU_JIT_NEW_SM3X_OPT
+from rocm.bindings.cyhip cimport hipJitOptionFastCompile
+from rocm.bindings.cyhip cimport hipJitOptionFastCompile as CU_JIT_FAST_COMPILE
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolNames
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolNames as CU_JIT_GLOBAL_SYMBOL_NAMES
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolAddresses
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolAddresses as CU_JIT_GLOBAL_SYMBOL_ADDRESSES
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolCount
+from rocm.bindings.cyhip cimport hipJitOptionGlobalSymbolCount as CU_JIT_GLOBAL_SYMBOL_COUNT
+from rocm.bindings.cyhip cimport hipJitOptionLto
+from rocm.bindings.cyhip cimport hipJitOptionLto as CU_JIT_LTO
+from rocm.bindings.cyhip cimport hipJitOptionFtz
+from rocm.bindings.cyhip cimport hipJitOptionFtz as CU_JIT_FTZ
+from rocm.bindings.cyhip cimport hipJitOptionPrecDiv
+from rocm.bindings.cyhip cimport hipJitOptionPrecDiv as CU_JIT_PREC_DIV
+from rocm.bindings.cyhip cimport hipJitOptionPrecSqrt
+from rocm.bindings.cyhip cimport hipJitOptionPrecSqrt as CU_JIT_PREC_SQRT
+from rocm.bindings.cyhip cimport hipJitOptionFma
+from rocm.bindings.cyhip cimport hipJitOptionFma as CU_JIT_FMA
+from rocm.bindings.cyhip cimport hipJitOptionPositionIndependentCode
+from rocm.bindings.cyhip cimport hipJitOptionPositionIndependentCode as CU_JIT_POSITION_INDEPENDENT_CODE
+from rocm.bindings.cyhip cimport hipJitOptionPositionIndependentCode as cudaJitPositionIndependentCode
+from rocm.bindings.cyhip cimport hipJitOptionMinCTAPerSM
+from rocm.bindings.cyhip cimport hipJitOptionMinCTAPerSM as CU_JIT_MIN_CTA_PER_SM
+from rocm.bindings.cyhip cimport hipJitOptionMinCTAPerSM as cudaJitMinCtaPerSm
+from rocm.bindings.cyhip cimport hipJitOptionMaxThreadsPerBlock
+from rocm.bindings.cyhip cimport hipJitOptionMaxThreadsPerBlock as CU_JIT_MAX_THREADS_PER_BLOCK
+from rocm.bindings.cyhip cimport hipJitOptionMaxThreadsPerBlock as cudaJitMaxThreadsPerBlock
+from rocm.bindings.cyhip cimport hipJitOptionOverrideDirectiveValues
+from rocm.bindings.cyhip cimport hipJitOptionOverrideDirectiveValues as CU_JIT_OVERRIDE_DIRECTIVE_VALUES
+from rocm.bindings.cyhip cimport hipJitOptionOverrideDirectiveValues as cudaJitOverrideDirectiveValues
+from rocm.bindings.cyhip cimport hipJitOptionNumOptions
+from rocm.bindings.cyhip cimport hipJitOptionNumOptions as CU_JIT_NUM_OPTIONS
+from rocm.bindings.cyhip cimport hipJitOptionIRtoISAOptExt
+from rocm.bindings.cyhip cimport hipJitOptionIRtoISAOptCountExt
+ctypedef CUjit_option CUjit_option_enum
+from rocm.bindings.cyhip cimport hipJitInputType as CUjitInputType
+from rocm.bindings.cyhip cimport hipJitInputCubin
+from rocm.bindings.cyhip cimport hipJitInputCubin as CU_JIT_INPUT_CUBIN
+from rocm.bindings.cyhip cimport hipJitInputPtx
+from rocm.bindings.cyhip cimport hipJitInputPtx as CU_JIT_INPUT_PTX
+from rocm.bindings.cyhip cimport hipJitInputFatBinary
+from rocm.bindings.cyhip cimport hipJitInputFatBinary as CU_JIT_INPUT_FATBINARY
+from rocm.bindings.cyhip cimport hipJitInputObject
+from rocm.bindings.cyhip cimport hipJitInputObject as CU_JIT_INPUT_OBJECT
+from rocm.bindings.cyhip cimport hipJitInputLibrary
+from rocm.bindings.cyhip cimport hipJitInputLibrary as CU_JIT_INPUT_LIBRARY
+from rocm.bindings.cyhip cimport hipJitInputNvvm
+from rocm.bindings.cyhip cimport hipJitInputNvvm as CU_JIT_INPUT_NVVM
+from rocm.bindings.cyhip cimport hipJitNumLegacyInputTypes
+from rocm.bindings.cyhip cimport hipJitNumLegacyInputTypes as CU_JIT_NUM_INPUT_TYPES
+from rocm.bindings.cyhip cimport hipJitInputLLVMBitcode
+from rocm.bindings.cyhip cimport hipJitInputLLVMBundledBitcode
+from rocm.bindings.cyhip cimport hipJitInputLLVMArchivesOfBundledBitcode
+from rocm.bindings.cyhip cimport hipJitInputSpirv
+from rocm.bindings.cyhip cimport hipJitNumInputTypes
+ctypedef CUjitInputType CUjitInputType_enum
+from rocm.bindings.cyhip cimport hipLibraryOption_e as CUlibraryOption_enum
+from rocm.bindings.cyhip cimport hipLibraryHostUniversalFunctionAndDataTable
+from rocm.bindings.cyhip cimport hipLibraryHostUniversalFunctionAndDataTable as CU_LIBRARY_HOST_UNIVERSAL_FUNCTION_AND_DATA_TABLE
+from rocm.bindings.cyhip cimport hipLibraryHostUniversalFunctionAndDataTable as cudaLibraryHostUniversalFunctionAndDataTable
+from rocm.bindings.cyhip cimport hipLibraryBinaryIsPreserved
+from rocm.bindings.cyhip cimport hipLibraryBinaryIsPreserved as CU_LIBRARY_BINARY_IS_PRESERVED
+from rocm.bindings.cyhip cimport hipLibraryBinaryIsPreserved as cudaLibraryBinaryIsPreserved
+ctypedef CUlibraryOption_enum CUlibraryOption
+ctypedef CUlibraryOption_enum cudaLibraryOption
+from rocm.bindings.cyhip cimport hipUUID_t as CUuuid_st
+from rocm.bindings.cyhip cimport hipUUID as CUuuid
+from rocm.bindings.cyhip cimport hipUUID as cudaUUID_t
+from rocm.bindings.cyhip cimport hipDeviceProp_t as cudaDeviceProp
+from rocm.bindings.cyhip cimport hipMemoryType as CUmemorytype
+from rocm.bindings.cyhip cimport hipMemoryTypeUnregistered
+from rocm.bindings.cyhip cimport hipMemoryTypeUnregistered as cudaMemoryTypeUnregistered
+from rocm.bindings.cyhip cimport hipMemoryTypeHost
+from rocm.bindings.cyhip cimport hipMemoryTypeHost as CU_MEMORYTYPE_HOST
+from rocm.bindings.cyhip cimport hipMemoryTypeHost as cudaMemoryTypeHost
+from rocm.bindings.cyhip cimport hipMemoryTypeDevice
+from rocm.bindings.cyhip cimport hipMemoryTypeDevice as CU_MEMORYTYPE_DEVICE
+from rocm.bindings.cyhip cimport hipMemoryTypeDevice as cudaMemoryTypeDevice
+from rocm.bindings.cyhip cimport hipMemoryTypeManaged
+from rocm.bindings.cyhip cimport hipMemoryTypeManaged as cudaMemoryTypeManaged
+from rocm.bindings.cyhip cimport hipMemoryTypeArray
+from rocm.bindings.cyhip cimport hipMemoryTypeArray as CU_MEMORYTYPE_ARRAY
+from rocm.bindings.cyhip cimport hipMemoryTypeUnified
+from rocm.bindings.cyhip cimport hipMemoryTypeUnified as CU_MEMORYTYPE_UNIFIED
+ctypedef CUmemorytype CUmemorytype_enum
+ctypedef CUmemorytype cudaMemoryType
+from rocm.bindings.cyhip cimport hipPointerAttribute_t as cudaPointerAttributes
+from rocm.bindings.cyhip cimport hipError_t as CUresult
+from rocm.bindings.cyhip cimport hipSuccess
+from rocm.bindings.cyhip cimport hipSuccess as CUDA_SUCCESS
+from rocm.bindings.cyhip cimport hipSuccess as cudaSuccess
+from rocm.bindings.cyhip cimport hipErrorInvalidValue
+from rocm.bindings.cyhip cimport hipErrorInvalidValue as CUDA_ERROR_INVALID_VALUE
+from rocm.bindings.cyhip cimport hipErrorInvalidValue as cudaErrorInvalidValue
+from rocm.bindings.cyhip cimport hipErrorOutOfMemory
+from rocm.bindings.cyhip cimport hipErrorOutOfMemory as CUDA_ERROR_OUT_OF_MEMORY
+from rocm.bindings.cyhip cimport hipErrorOutOfMemory as cudaErrorMemoryAllocation
+from rocm.bindings.cyhip cimport hipErrorMemoryAllocation
+from rocm.bindings.cyhip cimport hipErrorNotInitialized
+from rocm.bindings.cyhip cimport hipErrorNotInitialized as CUDA_ERROR_NOT_INITIALIZED
+from rocm.bindings.cyhip cimport hipErrorNotInitialized as cudaErrorInitializationError
+from rocm.bindings.cyhip cimport hipErrorInitializationError
+from rocm.bindings.cyhip cimport hipErrorDeinitialized
+from rocm.bindings.cyhip cimport hipErrorDeinitialized as CUDA_ERROR_DEINITIALIZED
+from rocm.bindings.cyhip cimport hipErrorDeinitialized as cudaErrorCudartUnloading
+from rocm.bindings.cyhip cimport hipErrorProfilerDisabled
+from rocm.bindings.cyhip cimport hipErrorProfilerDisabled as CUDA_ERROR_PROFILER_DISABLED
+from rocm.bindings.cyhip cimport hipErrorProfilerDisabled as cudaErrorProfilerDisabled
+from rocm.bindings.cyhip cimport hipErrorProfilerNotInitialized
+from rocm.bindings.cyhip cimport hipErrorProfilerNotInitialized as CUDA_ERROR_PROFILER_NOT_INITIALIZED
+from rocm.bindings.cyhip cimport hipErrorProfilerNotInitialized as cudaErrorProfilerNotInitialized
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStarted
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStarted as CUDA_ERROR_PROFILER_ALREADY_STARTED
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStarted as cudaErrorProfilerAlreadyStarted
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStopped
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStopped as CUDA_ERROR_PROFILER_ALREADY_STOPPED
+from rocm.bindings.cyhip cimport hipErrorProfilerAlreadyStopped as cudaErrorProfilerAlreadyStopped
+from rocm.bindings.cyhip cimport hipErrorInvalidConfiguration
+from rocm.bindings.cyhip cimport hipErrorInvalidConfiguration as cudaErrorInvalidConfiguration
+from rocm.bindings.cyhip cimport hipErrorInvalidPitchValue
+from rocm.bindings.cyhip cimport hipErrorInvalidPitchValue as cudaErrorInvalidPitchValue
+from rocm.bindings.cyhip cimport hipErrorInvalidSymbol
+from rocm.bindings.cyhip cimport hipErrorInvalidSymbol as cudaErrorInvalidSymbol
+from rocm.bindings.cyhip cimport hipErrorInvalidDevicePointer
+from rocm.bindings.cyhip cimport hipErrorInvalidDevicePointer as cudaErrorInvalidDevicePointer
+from rocm.bindings.cyhip cimport hipErrorInvalidMemcpyDirection
+from rocm.bindings.cyhip cimport hipErrorInvalidMemcpyDirection as cudaErrorInvalidMemcpyDirection
+from rocm.bindings.cyhip cimport hipErrorInsufficientDriver
+from rocm.bindings.cyhip cimport hipErrorInsufficientDriver as cudaErrorInsufficientDriver
+from rocm.bindings.cyhip cimport hipErrorMissingConfiguration
+from rocm.bindings.cyhip cimport hipErrorMissingConfiguration as cudaErrorMissingConfiguration
+from rocm.bindings.cyhip cimport hipErrorPriorLaunchFailure
+from rocm.bindings.cyhip cimport hipErrorPriorLaunchFailure as cudaErrorPriorLaunchFailure
+from rocm.bindings.cyhip cimport hipErrorInvalidDeviceFunction
+from rocm.bindings.cyhip cimport hipErrorInvalidDeviceFunction as cudaErrorInvalidDeviceFunction
+from rocm.bindings.cyhip cimport hipErrorNoDevice
+from rocm.bindings.cyhip cimport hipErrorNoDevice as CUDA_ERROR_NO_DEVICE
+from rocm.bindings.cyhip cimport hipErrorNoDevice as cudaErrorNoDevice
+from rocm.bindings.cyhip cimport hipErrorInvalidDevice
+from rocm.bindings.cyhip cimport hipErrorInvalidDevice as CUDA_ERROR_INVALID_DEVICE
+from rocm.bindings.cyhip cimport hipErrorInvalidDevice as cudaErrorInvalidDevice
+from rocm.bindings.cyhip cimport hipErrorInvalidImage
+from rocm.bindings.cyhip cimport hipErrorInvalidImage as CUDA_ERROR_INVALID_IMAGE
+from rocm.bindings.cyhip cimport hipErrorInvalidImage as cudaErrorInvalidKernelImage
+from rocm.bindings.cyhip cimport hipErrorInvalidContext
+from rocm.bindings.cyhip cimport hipErrorInvalidContext as CUDA_ERROR_INVALID_CONTEXT
+from rocm.bindings.cyhip cimport hipErrorInvalidContext as cudaErrorDeviceUninitialized
+from rocm.bindings.cyhip cimport hipErrorContextAlreadyCurrent
+from rocm.bindings.cyhip cimport hipErrorContextAlreadyCurrent as CUDA_ERROR_CONTEXT_ALREADY_CURRENT
+from rocm.bindings.cyhip cimport hipErrorMapFailed
+from rocm.bindings.cyhip cimport hipErrorMapFailed as CUDA_ERROR_MAP_FAILED
+from rocm.bindings.cyhip cimport hipErrorMapFailed as cudaErrorMapBufferObjectFailed
+from rocm.bindings.cyhip cimport hipErrorMapBufferObjectFailed
+from rocm.bindings.cyhip cimport hipErrorUnmapFailed
+from rocm.bindings.cyhip cimport hipErrorUnmapFailed as CUDA_ERROR_UNMAP_FAILED
+from rocm.bindings.cyhip cimport hipErrorUnmapFailed as cudaErrorUnmapBufferObjectFailed
+from rocm.bindings.cyhip cimport hipErrorArrayIsMapped
+from rocm.bindings.cyhip cimport hipErrorArrayIsMapped as CUDA_ERROR_ARRAY_IS_MAPPED
+from rocm.bindings.cyhip cimport hipErrorArrayIsMapped as cudaErrorArrayIsMapped
+from rocm.bindings.cyhip cimport hipErrorAlreadyMapped
+from rocm.bindings.cyhip cimport hipErrorAlreadyMapped as CUDA_ERROR_ALREADY_MAPPED
+from rocm.bindings.cyhip cimport hipErrorAlreadyMapped as cudaErrorAlreadyMapped
+from rocm.bindings.cyhip cimport hipErrorNoBinaryForGpu
+from rocm.bindings.cyhip cimport hipErrorNoBinaryForGpu as CUDA_ERROR_NO_BINARY_FOR_GPU
+from rocm.bindings.cyhip cimport hipErrorNoBinaryForGpu as cudaErrorNoKernelImageForDevice
+from rocm.bindings.cyhip cimport hipErrorAlreadyAcquired
+from rocm.bindings.cyhip cimport hipErrorAlreadyAcquired as CUDA_ERROR_ALREADY_ACQUIRED
+from rocm.bindings.cyhip cimport hipErrorAlreadyAcquired as cudaErrorAlreadyAcquired
+from rocm.bindings.cyhip cimport hipErrorNotMapped
+from rocm.bindings.cyhip cimport hipErrorNotMapped as CUDA_ERROR_NOT_MAPPED
+from rocm.bindings.cyhip cimport hipErrorNotMapped as cudaErrorNotMapped
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsArray
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsArray as CUDA_ERROR_NOT_MAPPED_AS_ARRAY
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsArray as cudaErrorNotMappedAsArray
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsPointer
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsPointer as CUDA_ERROR_NOT_MAPPED_AS_POINTER
+from rocm.bindings.cyhip cimport hipErrorNotMappedAsPointer as cudaErrorNotMappedAsPointer
+from rocm.bindings.cyhip cimport hipErrorECCNotCorrectable
+from rocm.bindings.cyhip cimport hipErrorECCNotCorrectable as CUDA_ERROR_ECC_UNCORRECTABLE
+from rocm.bindings.cyhip cimport hipErrorECCNotCorrectable as cudaErrorECCUncorrectable
+from rocm.bindings.cyhip cimport hipErrorUnsupportedLimit
+from rocm.bindings.cyhip cimport hipErrorUnsupportedLimit as CUDA_ERROR_UNSUPPORTED_LIMIT
+from rocm.bindings.cyhip cimport hipErrorUnsupportedLimit as cudaErrorUnsupportedLimit
+from rocm.bindings.cyhip cimport hipErrorContextAlreadyInUse
+from rocm.bindings.cyhip cimport hipErrorContextAlreadyInUse as CUDA_ERROR_CONTEXT_ALREADY_IN_USE
+from rocm.bindings.cyhip cimport hipErrorContextAlreadyInUse as cudaErrorDeviceAlreadyInUse
+from rocm.bindings.cyhip cimport hipErrorPeerAccessUnsupported
+from rocm.bindings.cyhip cimport hipErrorPeerAccessUnsupported as CUDA_ERROR_PEER_ACCESS_UNSUPPORTED
+from rocm.bindings.cyhip cimport hipErrorPeerAccessUnsupported as cudaErrorPeerAccessUnsupported
+from rocm.bindings.cyhip cimport hipErrorInvalidKernelFile
+from rocm.bindings.cyhip cimport hipErrorInvalidKernelFile as CUDA_ERROR_INVALID_PTX
+from rocm.bindings.cyhip cimport hipErrorInvalidKernelFile as cudaErrorInvalidPtx
+from rocm.bindings.cyhip cimport hipErrorInvalidGraphicsContext
+from rocm.bindings.cyhip cimport hipErrorInvalidGraphicsContext as CUDA_ERROR_INVALID_GRAPHICS_CONTEXT
+from rocm.bindings.cyhip cimport hipErrorInvalidGraphicsContext as cudaErrorInvalidGraphicsContext
+from rocm.bindings.cyhip cimport hipErrorInvalidSource
+from rocm.bindings.cyhip cimport hipErrorInvalidSource as CUDA_ERROR_INVALID_SOURCE
+from rocm.bindings.cyhip cimport hipErrorInvalidSource as cudaErrorInvalidSource
+from rocm.bindings.cyhip cimport hipErrorFileNotFound
+from rocm.bindings.cyhip cimport hipErrorFileNotFound as CUDA_ERROR_FILE_NOT_FOUND
+from rocm.bindings.cyhip cimport hipErrorFileNotFound as cudaErrorFileNotFound
+from rocm.bindings.cyhip cimport hipErrorSharedObjectSymbolNotFound
+from rocm.bindings.cyhip cimport hipErrorSharedObjectSymbolNotFound as CUDA_ERROR_SHARED_OBJECT_SYMBOL_NOT_FOUND
+from rocm.bindings.cyhip cimport hipErrorSharedObjectSymbolNotFound as cudaErrorSharedObjectSymbolNotFound
+from rocm.bindings.cyhip cimport hipErrorSharedObjectInitFailed
+from rocm.bindings.cyhip cimport hipErrorSharedObjectInitFailed as CUDA_ERROR_SHARED_OBJECT_INIT_FAILED
+from rocm.bindings.cyhip cimport hipErrorSharedObjectInitFailed as cudaErrorSharedObjectInitFailed
+from rocm.bindings.cyhip cimport hipErrorOperatingSystem
+from rocm.bindings.cyhip cimport hipErrorOperatingSystem as CUDA_ERROR_OPERATING_SYSTEM
+from rocm.bindings.cyhip cimport hipErrorOperatingSystem as cudaErrorOperatingSystem
+from rocm.bindings.cyhip cimport hipErrorInvalidHandle
+from rocm.bindings.cyhip cimport hipErrorInvalidHandle as CUDA_ERROR_INVALID_HANDLE
+from rocm.bindings.cyhip cimport hipErrorInvalidHandle as cudaErrorInvalidResourceHandle
+from rocm.bindings.cyhip cimport hipErrorInvalidResourceHandle
+from rocm.bindings.cyhip cimport hipErrorIllegalState
+from rocm.bindings.cyhip cimport hipErrorIllegalState as CUDA_ERROR_ILLEGAL_STATE
+from rocm.bindings.cyhip cimport hipErrorIllegalState as cudaErrorIllegalState
+from rocm.bindings.cyhip cimport hipErrorNotFound
+from rocm.bindings.cyhip cimport hipErrorNotFound as CUDA_ERROR_NOT_FOUND
+from rocm.bindings.cyhip cimport hipErrorNotFound as cudaErrorSymbolNotFound
+from rocm.bindings.cyhip cimport hipErrorNotReady
+from rocm.bindings.cyhip cimport hipErrorNotReady as CUDA_ERROR_NOT_READY
+from rocm.bindings.cyhip cimport hipErrorNotReady as cudaErrorNotReady
+from rocm.bindings.cyhip cimport hipErrorIllegalAddress
+from rocm.bindings.cyhip cimport hipErrorIllegalAddress as CUDA_ERROR_ILLEGAL_ADDRESS
+from rocm.bindings.cyhip cimport hipErrorIllegalAddress as cudaErrorIllegalAddress
+from rocm.bindings.cyhip cimport hipErrorLaunchOutOfResources
+from rocm.bindings.cyhip cimport hipErrorLaunchOutOfResources as CUDA_ERROR_LAUNCH_OUT_OF_RESOURCES
+from rocm.bindings.cyhip cimport hipErrorLaunchOutOfResources as cudaErrorLaunchOutOfResources
+from rocm.bindings.cyhip cimport hipErrorLaunchTimeOut
+from rocm.bindings.cyhip cimport hipErrorLaunchTimeOut as CUDA_ERROR_LAUNCH_TIMEOUT
+from rocm.bindings.cyhip cimport hipErrorLaunchTimeOut as cudaErrorLaunchTimeout
+from rocm.bindings.cyhip cimport hipErrorPeerAccessAlreadyEnabled
+from rocm.bindings.cyhip cimport hipErrorPeerAccessAlreadyEnabled as CUDA_ERROR_PEER_ACCESS_ALREADY_ENABLED
+from rocm.bindings.cyhip cimport hipErrorPeerAccessAlreadyEnabled as cudaErrorPeerAccessAlreadyEnabled
+from rocm.bindings.cyhip cimport hipErrorPeerAccessNotEnabled
+from rocm.bindings.cyhip cimport hipErrorPeerAccessNotEnabled as CUDA_ERROR_PEER_ACCESS_NOT_ENABLED
+from rocm.bindings.cyhip cimport hipErrorPeerAccessNotEnabled as cudaErrorPeerAccessNotEnabled
+from rocm.bindings.cyhip cimport hipErrorSetOnActiveProcess
+from rocm.bindings.cyhip cimport hipErrorSetOnActiveProcess as CUDA_ERROR_PRIMARY_CONTEXT_ACTIVE
+from rocm.bindings.cyhip cimport hipErrorSetOnActiveProcess as cudaErrorSetOnActiveProcess
+from rocm.bindings.cyhip cimport hipErrorContextIsDestroyed
+from rocm.bindings.cyhip cimport hipErrorContextIsDestroyed as CUDA_ERROR_CONTEXT_IS_DESTROYED
+from rocm.bindings.cyhip cimport hipErrorContextIsDestroyed as cudaErrorContextIsDestroyed
+from rocm.bindings.cyhip cimport hipErrorAssert
+from rocm.bindings.cyhip cimport hipErrorAssert as CUDA_ERROR_ASSERT
+from rocm.bindings.cyhip cimport hipErrorAssert as cudaErrorAssert
+from rocm.bindings.cyhip cimport hipErrorHostMemoryAlreadyRegistered
+from rocm.bindings.cyhip cimport hipErrorHostMemoryAlreadyRegistered as CUDA_ERROR_HOST_MEMORY_ALREADY_REGISTERED
+from rocm.bindings.cyhip cimport hipErrorHostMemoryAlreadyRegistered as cudaErrorHostMemoryAlreadyRegistered
+from rocm.bindings.cyhip cimport hipErrorHostMemoryNotRegistered
+from rocm.bindings.cyhip cimport hipErrorHostMemoryNotRegistered as CUDA_ERROR_HOST_MEMORY_NOT_REGISTERED
+from rocm.bindings.cyhip cimport hipErrorHostMemoryNotRegistered as cudaErrorHostMemoryNotRegistered
+from rocm.bindings.cyhip cimport hipErrorLaunchFailure
+from rocm.bindings.cyhip cimport hipErrorLaunchFailure as CUDA_ERROR_LAUNCH_FAILED
+from rocm.bindings.cyhip cimport hipErrorLaunchFailure as cudaErrorLaunchFailure
+from rocm.bindings.cyhip cimport hipErrorCooperativeLaunchTooLarge
+from rocm.bindings.cyhip cimport hipErrorCooperativeLaunchTooLarge as CUDA_ERROR_COOPERATIVE_LAUNCH_TOO_LARGE
+from rocm.bindings.cyhip cimport hipErrorCooperativeLaunchTooLarge as cudaErrorCooperativeLaunchTooLarge
+from rocm.bindings.cyhip cimport hipErrorNotSupported
+from rocm.bindings.cyhip cimport hipErrorNotSupported as CUDA_ERROR_NOT_SUPPORTED
+from rocm.bindings.cyhip cimport hipErrorNotSupported as cudaErrorNotSupported
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnsupported
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnsupported as CUDA_ERROR_STREAM_CAPTURE_UNSUPPORTED
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnsupported as cudaErrorStreamCaptureUnsupported
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureInvalidated
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureInvalidated as CUDA_ERROR_STREAM_CAPTURE_INVALIDATED
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureInvalidated as cudaErrorStreamCaptureInvalidated
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureMerge
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureMerge as CUDA_ERROR_STREAM_CAPTURE_MERGE
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureMerge as cudaErrorStreamCaptureMerge
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnmatched
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnmatched as CUDA_ERROR_STREAM_CAPTURE_UNMATCHED
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnmatched as cudaErrorStreamCaptureUnmatched
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnjoined
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnjoined as CUDA_ERROR_STREAM_CAPTURE_UNJOINED
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureUnjoined as cudaErrorStreamCaptureUnjoined
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureIsolation
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureIsolation as CUDA_ERROR_STREAM_CAPTURE_ISOLATION
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureIsolation as cudaErrorStreamCaptureIsolation
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureImplicit
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureImplicit as CUDA_ERROR_STREAM_CAPTURE_IMPLICIT
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureImplicit as cudaErrorStreamCaptureImplicit
+from rocm.bindings.cyhip cimport hipErrorCapturedEvent
+from rocm.bindings.cyhip cimport hipErrorCapturedEvent as CUDA_ERROR_CAPTURED_EVENT
+from rocm.bindings.cyhip cimport hipErrorCapturedEvent as cudaErrorCapturedEvent
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureWrongThread
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureWrongThread as CUDA_ERROR_STREAM_CAPTURE_WRONG_THREAD
+from rocm.bindings.cyhip cimport hipErrorStreamCaptureWrongThread as cudaErrorStreamCaptureWrongThread
+from rocm.bindings.cyhip cimport hipErrorGraphExecUpdateFailure
+from rocm.bindings.cyhip cimport hipErrorGraphExecUpdateFailure as CUDA_ERROR_GRAPH_EXEC_UPDATE_FAILURE
+from rocm.bindings.cyhip cimport hipErrorGraphExecUpdateFailure as cudaErrorGraphExecUpdateFailure
+from rocm.bindings.cyhip cimport hipErrorInvalidChannelDescriptor
+from rocm.bindings.cyhip cimport hipErrorInvalidChannelDescriptor as cudaErrorInvalidChannelDescriptor
+from rocm.bindings.cyhip cimport hipErrorInvalidTexture
+from rocm.bindings.cyhip cimport hipErrorInvalidTexture as cudaErrorInvalidTexture
+from rocm.bindings.cyhip cimport hipErrorInvalidResourceType
+from rocm.bindings.cyhip cimport hipErrorInvalidResourceConfiguration
+from rocm.bindings.cyhip cimport hipErrorStreamDetached
+from rocm.bindings.cyhip cimport hipErrorUnknown
+from rocm.bindings.cyhip cimport hipErrorUnknown as CUDA_ERROR_UNKNOWN
+from rocm.bindings.cyhip cimport hipErrorUnknown as cudaErrorUnknown
+from rocm.bindings.cyhip cimport hipErrorRuntimeMemory
+from rocm.bindings.cyhip cimport hipErrorRuntimeOther
+from rocm.bindings.cyhip cimport hipErrorInvalidClusterSize
+from rocm.bindings.cyhip cimport hipErrorTbd
+ctypedef CUresult cudaError
+ctypedef CUresult cudaError_enum
+ctypedef CUresult cudaError_t
+from rocm.bindings.cyhip cimport hipDeviceAttribute_t as CUdevice_attribute
+from rocm.bindings.cyhip cimport hipDeviceAttributeCudaCompatibleBegin
+from rocm.bindings.cyhip cimport hipDeviceAttributeEccEnabled
+from rocm.bindings.cyhip cimport hipDeviceAttributeEccEnabled as CU_DEVICE_ATTRIBUTE_ECC_ENABLED
+from rocm.bindings.cyhip cimport hipDeviceAttributeEccEnabled as cudaDevAttrEccEnabled
+from rocm.bindings.cyhip cimport hipDeviceAttributeAccessPolicyMaxWindowSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsyncEngineCount
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsyncEngineCount as CU_DEVICE_ATTRIBUTE_ASYNC_ENGINE_COUNT
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsyncEngineCount as CU_DEVICE_ATTRIBUTE_GPU_OVERLAP
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsyncEngineCount as cudaDevAttrAsyncEngineCount
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsyncEngineCount as cudaDevAttrGpuOverlap
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanMapHostMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanMapHostMemory as CU_DEVICE_ATTRIBUTE_CAN_MAP_HOST_MEMORY
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanMapHostMemory as cudaDevAttrCanMapHostMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem as CU_DEVICE_ATTRIBUTE_CAN_USE_HOST_POINTER_FOR_REGISTERED_MEM
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseHostPointerForRegisteredMem as cudaDevAttrCanUseHostPointerForRegisteredMem
+from rocm.bindings.cyhip cimport hipDeviceAttributeClockRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeClockRate as CU_DEVICE_ATTRIBUTE_CLOCK_RATE
+from rocm.bindings.cyhip cimport hipDeviceAttributeClockRate as cudaDevAttrClockRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeMode
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeMode as CU_DEVICE_ATTRIBUTE_COMPUTE_MODE
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeMode as cudaDevAttrComputeMode
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputePreemptionSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputePreemptionSupported as CU_DEVICE_ATTRIBUTE_COMPUTE_PREEMPTION_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputePreemptionSupported as cudaDevAttrComputePreemptionSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentKernels
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentKernels as CU_DEVICE_ATTRIBUTE_CONCURRENT_KERNELS
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentKernels as cudaDevAttrConcurrentKernels
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentManagedAccess
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentManagedAccess as CU_DEVICE_ATTRIBUTE_CONCURRENT_MANAGED_ACCESS
+from rocm.bindings.cyhip cimport hipDeviceAttributeConcurrentManagedAccess as cudaDevAttrConcurrentManagedAccess
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeLaunch
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeLaunch as CU_DEVICE_ATTRIBUTE_COOPERATIVE_LAUNCH
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeLaunch as cudaDevAttrCooperativeLaunch
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch as CU_DEVICE_ATTRIBUTE_COOPERATIVE_MULTI_DEVICE_LAUNCH
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch as cudaDevAttrCooperativeMultiDeviceLaunch
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceLaunch as cudaDevAttrReserved96
+from rocm.bindings.cyhip cimport hipDeviceAttributeDeviceOverlap
+from rocm.bindings.cyhip cimport hipDeviceAttributeDirectManagedMemAccessFromHost
+from rocm.bindings.cyhip cimport hipDeviceAttributeDirectManagedMemAccessFromHost as CU_DEVICE_ATTRIBUTE_DIRECT_MANAGED_MEM_ACCESS_FROM_HOST
+from rocm.bindings.cyhip cimport hipDeviceAttributeDirectManagedMemAccessFromHost as cudaDevAttrDirectManagedMemAccessFromHost
+from rocm.bindings.cyhip cimport hipDeviceAttributeGlobalL1CacheSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeGlobalL1CacheSupported as CU_DEVICE_ATTRIBUTE_GLOBAL_L1_CACHE_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeGlobalL1CacheSupported as cudaDevAttrGlobalL1CacheSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNativeAtomicSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNativeAtomicSupported as CU_DEVICE_ATTRIBUTE_HOST_NATIVE_ATOMIC_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNativeAtomicSupported as cudaDevAttrHostNativeAtomicSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeIntegrated
+from rocm.bindings.cyhip cimport hipDeviceAttributeIntegrated as CU_DEVICE_ATTRIBUTE_INTEGRATED
+from rocm.bindings.cyhip cimport hipDeviceAttributeIntegrated as cudaDevAttrIntegrated
+from rocm.bindings.cyhip cimport hipDeviceAttributeIsMultiGpuBoard
+from rocm.bindings.cyhip cimport hipDeviceAttributeIsMultiGpuBoard as CU_DEVICE_ATTRIBUTE_MULTI_GPU_BOARD
+from rocm.bindings.cyhip cimport hipDeviceAttributeIsMultiGpuBoard as cudaDevAttrIsMultiGpuBoard
+from rocm.bindings.cyhip cimport hipDeviceAttributeKernelExecTimeout
+from rocm.bindings.cyhip cimport hipDeviceAttributeKernelExecTimeout as CU_DEVICE_ATTRIBUTE_KERNEL_EXEC_TIMEOUT
+from rocm.bindings.cyhip cimport hipDeviceAttributeKernelExecTimeout as cudaDevAttrKernelExecTimeout
+from rocm.bindings.cyhip cimport hipDeviceAttributeL2CacheSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeL2CacheSize as CU_DEVICE_ATTRIBUTE_L2_CACHE_SIZE
+from rocm.bindings.cyhip cimport hipDeviceAttributeL2CacheSize as cudaDevAttrL2CacheSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeLocalL1CacheSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeLocalL1CacheSupported as CU_DEVICE_ATTRIBUTE_LOCAL_L1_CACHE_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeLocalL1CacheSupported as cudaDevAttrLocalL1CacheSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeLuid
+from rocm.bindings.cyhip cimport hipDeviceAttributeLuidDeviceNodeMask
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMajor
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMajor as CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MAJOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMajor as cudaDevAttrComputeCapabilityMajor
+from rocm.bindings.cyhip cimport hipDeviceAttributeManagedMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeManagedMemory as CU_DEVICE_ATTRIBUTE_MANAGED_MEMORY
+from rocm.bindings.cyhip cimport hipDeviceAttributeManagedMemory as cudaDevAttrManagedMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlocksPerMultiProcessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimX
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimX as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimX as cudaDevAttrMaxBlockDimX
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimY
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimY as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Y
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimY as cudaDevAttrMaxBlockDimY
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimZ
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimZ as CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_Z
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxBlockDimZ as cudaDevAttrMaxBlockDimZ
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimX
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimX as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_X
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimX as cudaDevAttrMaxGridDimX
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimY
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimY as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Y
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimY as cudaDevAttrMaxGridDimY
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimZ
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimZ as CU_DEVICE_ATTRIBUTE_MAX_GRID_DIM_Z
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxGridDimZ as cudaDevAttrMaxGridDimZ
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1D
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1D as cudaDevAttrMaxSurface1DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1DLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE1D_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface1DLayered as cudaDevAttrMaxSurface1DLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2D
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2D as cudaDevAttrMaxSurface2DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2D as cudaDevAttrMaxSurface2DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2DLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE2D_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2DLayered as cudaDevAttrMaxSurface2DLayeredHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface2DLayered as cudaDevAttrMaxSurface2DLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_DEPTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACE3D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DDepth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurface3D as cudaDevAttrMaxSurface3DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemap
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemap as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemap as cudaDevAttrMaxSurfaceCubemapWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemapLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemapLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_SURFACECUBEMAP_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSurfaceCubemapLayered as cudaDevAttrMaxSurfaceCubemapLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DWidth as cudaDevAttrMaxTexture1DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLayered as cudaDevAttrMaxTexture1DLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLinear
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_LINEAR_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DLinear as cudaDevAttrMaxTexture1DLinearWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DMipmap
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE1D_MIPMAPPED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture1DMipmap as cudaDevAttrMaxTexture1DMipmappedWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DWidth as cudaDevAttrMaxTexture2DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DHeight as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DHeight as cudaDevAttrMaxTexture2DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DGather
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DGather as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DGather as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_GATHER_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DGather as cudaDevAttrMaxTexture2DGatherHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DGather as cudaDevAttrMaxTexture2DGatherWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_ARRAY_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as cudaDevAttrMaxTexture2DLayeredHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLayered as cudaDevAttrMaxTexture2DLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_PITCH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_LINEAR_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearPitch
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DLinear as cudaDevAttrMaxTexture2DLinearWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DMipmap
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DMipmap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE2D_MIPMAPPED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DMipmap as cudaDevAttrMaxTexture2DMipmappedHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture2DMipmap as cudaDevAttrMaxTexture2DMipmappedWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DWidth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DWidth as cudaDevAttrMaxTexture3DWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DHeight as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DHeight as cudaDevAttrMaxTexture3DHeight
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DDepth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DDepth as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DDepth as cudaDevAttrMaxTexture3DDepth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_DEPTH_ALTERNATE
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_HEIGHT_ALTERNATE
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURE3D_WIDTH_ALTERNATE
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DDepthAlt
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DHeightAlt
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTexture3DAlt as cudaDevAttrMaxTexture3DWidthAlt
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemap
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemap as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemap as cudaDevAttrMaxTextureCubemapWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemapLayered
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemapLayered as CU_DEVICE_ATTRIBUTE_MAXIMUM_TEXTURECUBEMAP_LAYERED_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxTextureCubemapLayered as cudaDevAttrMaxTextureCubemapLayeredWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsDim
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerBlock as CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerBlock as cudaDevAttrMaxThreadsPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor as CU_DEVICE_ATTRIBUTE_MAX_THREADS_PER_MULTIPROCESSOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxThreadsPerMultiProcessor as cudaDevAttrMaxThreadsPerMultiProcessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxPitch
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxPitch as CU_DEVICE_ATTRIBUTE_MAX_PITCH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxPitch as cudaDevAttrMaxPitch
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryBusWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryBusWidth as CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryBusWidth as cudaDevAttrGlobalMemoryBusWidth
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryClockRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryClockRate as CU_DEVICE_ATTRIBUTE_MEMORY_CLOCK_RATE
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryClockRate as cudaDevAttrMemoryClockRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMinor
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMinor as CU_DEVICE_ATTRIBUTE_COMPUTE_CAPABILITY_MINOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeComputeCapabilityMinor as cudaDevAttrComputeCapabilityMinor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMultiGpuBoardGroupID
+from rocm.bindings.cyhip cimport hipDeviceAttributeMultiGpuBoardGroupID as cudaDevAttrMultiGpuBoardGroupID
+from rocm.bindings.cyhip cimport hipDeviceAttributeMultiprocessorCount
+from rocm.bindings.cyhip cimport hipDeviceAttributeMultiprocessorCount as CU_DEVICE_ATTRIBUTE_MULTIPROCESSOR_COUNT
+from rocm.bindings.cyhip cimport hipDeviceAttributeMultiprocessorCount as cudaDevAttrMultiProcessorCount
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnused1
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccess
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccess as CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccess as cudaDevAttrPageableMemoryAccess
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables as CU_DEVICE_ATTRIBUTE_PAGEABLE_MEMORY_ACCESS_USES_HOST_PAGE_TABLES
+from rocm.bindings.cyhip cimport hipDeviceAttributePageableMemoryAccessUsesHostPageTables as cudaDevAttrPageableMemoryAccessUsesHostPageTables
+from rocm.bindings.cyhip cimport hipDeviceAttributePciBusId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciBusId as CU_DEVICE_ATTRIBUTE_PCI_BUS_ID
+from rocm.bindings.cyhip cimport hipDeviceAttributePciBusId as cudaDevAttrPciBusId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDeviceId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDeviceId as CU_DEVICE_ATTRIBUTE_PCI_DEVICE_ID
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDeviceId as cudaDevAttrPciDeviceId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDomainId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDomainId as CU_DEVICE_ATTRIBUTE_PCI_DOMAIN_ID
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDomainId as cudaDevAttrPciDomainId
+from rocm.bindings.cyhip cimport hipDeviceAttributePciDomainID
+from rocm.bindings.cyhip cimport hipDeviceAttributePersistingL2CacheMaxSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerBlock as CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_BLOCK
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerBlock as CU_DEVICE_ATTRIBUTE_REGISTERS_PER_BLOCK
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerBlock as cudaDevAttrMaxRegistersPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor as CU_DEVICE_ATTRIBUTE_MAX_REGISTERS_PER_MULTIPROCESSOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxRegistersPerMultiprocessor as cudaDevAttrMaxRegistersPerMultiprocessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeReservedSharedMemPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as CU_DEVICE_ATTRIBUTE_SHARED_MEMORY_PER_BLOCK
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerBlock as cudaDevAttrMaxSharedMemoryPerBlock
+from rocm.bindings.cyhip cimport hipDeviceAttributeSharedMemPerBlockOptin
+from rocm.bindings.cyhip cimport hipDeviceAttributeSharedMemPerBlockOptin as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_BLOCK_OPTIN
+from rocm.bindings.cyhip cimport hipDeviceAttributeSharedMemPerBlockOptin as cudaDevAttrMaxSharedMemoryPerBlockOptin
+from rocm.bindings.cyhip cimport hipDeviceAttributeSharedMemPerMultiprocessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio
+from rocm.bindings.cyhip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio as CU_DEVICE_ATTRIBUTE_SINGLE_TO_DOUBLE_PRECISION_PERF_RATIO
+from rocm.bindings.cyhip cimport hipDeviceAttributeSingleToDoublePrecisionPerfRatio as cudaDevAttrSingleToDoublePrecisionPerfRatio
+from rocm.bindings.cyhip cimport hipDeviceAttributeStreamPrioritiesSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeStreamPrioritiesSupported as CU_DEVICE_ATTRIBUTE_STREAM_PRIORITIES_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeStreamPrioritiesSupported as cudaDevAttrStreamPrioritiesSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeSurfaceAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeSurfaceAlignment as CU_DEVICE_ATTRIBUTE_SURFACE_ALIGNMENT
+from rocm.bindings.cyhip cimport hipDeviceAttributeSurfaceAlignment as cudaDevAttrSurfaceAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeTccDriver
+from rocm.bindings.cyhip cimport hipDeviceAttributeTccDriver as CU_DEVICE_ATTRIBUTE_TCC_DRIVER
+from rocm.bindings.cyhip cimport hipDeviceAttributeTccDriver as cudaDevAttrTccDriver
+from rocm.bindings.cyhip cimport hipDeviceAttributeTextureAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeTextureAlignment as CU_DEVICE_ATTRIBUTE_TEXTURE_ALIGNMENT
+from rocm.bindings.cyhip cimport hipDeviceAttributeTextureAlignment as cudaDevAttrTextureAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeTexturePitchAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeTexturePitchAlignment as CU_DEVICE_ATTRIBUTE_TEXTURE_PITCH_ALIGNMENT
+from rocm.bindings.cyhip cimport hipDeviceAttributeTexturePitchAlignment as cudaDevAttrTexturePitchAlignment
+from rocm.bindings.cyhip cimport hipDeviceAttributeTotalConstantMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeTotalConstantMemory as CU_DEVICE_ATTRIBUTE_TOTAL_CONSTANT_MEMORY
+from rocm.bindings.cyhip cimport hipDeviceAttributeTotalConstantMemory as cudaDevAttrTotalConstantMemory
+from rocm.bindings.cyhip cimport hipDeviceAttributeTotalGlobalMem
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnifiedAddressing
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnifiedAddressing as CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnifiedAddressing as cudaDevAttrUnifiedAddressing
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnused2
+from rocm.bindings.cyhip cimport hipDeviceAttributeWarpSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeWarpSize as CU_DEVICE_ATTRIBUTE_WARP_SIZE
+from rocm.bindings.cyhip cimport hipDeviceAttributeWarpSize as cudaDevAttrWarpSize
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryPoolsSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryPoolsSupported as CU_DEVICE_ATTRIBUTE_MEMORY_POOLS_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryPoolsSupported as cudaDevAttrMemoryPoolsSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeVirtualMemoryManagementSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeVirtualMemoryManagementSupported as CU_DEVICE_ATTRIBUTE_VIRTUAL_MEMORY_MANAGEMENT_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostRegisterSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostRegisterSupported as CU_DEVICE_ATTRIBUTE_HOST_REGISTER_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostRegisterSupported as cudaDevAttrHostRegisterSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeMemoryPoolSupportedHandleTypes
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNumaId
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNumaId as CU_DEVICE_ATTRIBUTE_HOST_NUMA_ID
+from rocm.bindings.cyhip cimport hipDeviceAttributeHostNumaId as cudaDevAttrHostNumaId
+from rocm.bindings.cyhip cimport hipDeviceAttributeDmaBufSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeDmaBufSupported as CU_DEVICE_ATTRIBUTE_DMA_BUF_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeGPUDirectRDMAWithHipVMMSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeHandleTypeFabricSupported
+from rocm.bindings.cyhip cimport hipDeviceAttributeHandleTypeFabricSupported as CU_DEVICE_ATTRIBUTE_HANDLE_TYPE_FABRIC_SUPPORTED
+from rocm.bindings.cyhip cimport hipDeviceAttributeCudaCompatibleEnd
+from rocm.bindings.cyhip cimport hipDeviceAttributeAmdSpecificBegin
+from rocm.bindings.cyhip cimport hipDeviceAttributeClockInstructionRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnused3
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor as CU_DEVICE_ATTRIBUTE_MAX_SHARED_MEMORY_PER_MULTIPROCESSOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxSharedMemoryPerMultiprocessor as cudaDevAttrMaxSharedMemoryPerMultiprocessor
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnused4
+from rocm.bindings.cyhip cimport hipDeviceAttributeUnused5
+from rocm.bindings.cyhip cimport hipDeviceAttributeHdpMemFlushCntl
+from rocm.bindings.cyhip cimport hipDeviceAttributeHdpRegFlushCntl
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedFunc
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedGridDim
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedBlockDim
+from rocm.bindings.cyhip cimport hipDeviceAttributeCooperativeMultiDeviceUnmatchedSharedMem
+from rocm.bindings.cyhip cimport hipDeviceAttributeIsLargeBar
+from rocm.bindings.cyhip cimport hipDeviceAttributeAsicRevision
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseStreamWaitValue
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseStreamWaitValue as CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseStreamWaitValue as CU_DEVICE_ATTRIBUTE_CAN_USE_STREAM_WAIT_VALUE_NOR_V1
+from rocm.bindings.cyhip cimport hipDeviceAttributeCanUseStreamWaitValue as cudaDevAttrReserved94
+from rocm.bindings.cyhip cimport hipDeviceAttributeImageSupport
+from rocm.bindings.cyhip cimport hipDeviceAttributePhysicalMultiProcessorCount
+from rocm.bindings.cyhip cimport hipDeviceAttributeFineGrainSupport
+from rocm.bindings.cyhip cimport hipDeviceAttributeWallClockRate
+from rocm.bindings.cyhip cimport hipDeviceAttributeNumberOfXccs
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxAvailableVgprsPerThread
+from rocm.bindings.cyhip cimport hipDeviceAttributePciChipId
+from rocm.bindings.cyhip cimport hipDeviceAttributeExpertSchedMode
+from rocm.bindings.cyhip cimport hipDeviceAttributeMaxDynDataPrefetchRegions
+from rocm.bindings.cyhip cimport hipDeviceAttributeAmdSpecificEnd
+from rocm.bindings.cyhip cimport hipDeviceAttributeVendorSpecificBegin
+ctypedef CUdevice_attribute CUdevice_attribute_enum
+ctypedef CUdevice_attribute cudaDeviceAttr
+from rocm.bindings.cyhip cimport hipDriverProcAddressQueryResult as CUdriverProcAddressQueryResult
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_SUCCESS
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_SUCCESS as CU_GET_PROC_ADDRESS_SUCCESS
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_SYMBOL_NOT_FOUND
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_SYMBOL_NOT_FOUND as CU_GET_PROC_ADDRESS_SYMBOL_NOT_FOUND
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_VERSION_NOT_SUFFICIENT
+from rocm.bindings.cyhip cimport HIP_GET_PROC_ADDRESS_VERSION_NOT_SUFFICIENT as CU_GET_PROC_ADDRESS_VERSION_NOT_SUFFICIENT
+ctypedef CUdriverProcAddressQueryResult CUdriverProcAddressQueryResult_enum
+from rocm.bindings.cyhip cimport hipComputeMode as CUcomputemode
+from rocm.bindings.cyhip cimport hipComputeModeDefault
+from rocm.bindings.cyhip cimport hipComputeModeDefault as CU_COMPUTEMODE_DEFAULT
+from rocm.bindings.cyhip cimport hipComputeModeDefault as cudaComputeModeDefault
+from rocm.bindings.cyhip cimport hipComputeModeExclusive
+from rocm.bindings.cyhip cimport hipComputeModeExclusive as CU_COMPUTEMODE_EXCLUSIVE
+from rocm.bindings.cyhip cimport hipComputeModeExclusive as cudaComputeModeExclusive
+from rocm.bindings.cyhip cimport hipComputeModeProhibited
+from rocm.bindings.cyhip cimport hipComputeModeProhibited as CU_COMPUTEMODE_PROHIBITED
+from rocm.bindings.cyhip cimport hipComputeModeProhibited as cudaComputeModeProhibited
+from rocm.bindings.cyhip cimport hipComputeModeExclusiveProcess
+from rocm.bindings.cyhip cimport hipComputeModeExclusiveProcess as CU_COMPUTEMODE_EXCLUSIVE_PROCESS
+from rocm.bindings.cyhip cimport hipComputeModeExclusiveProcess as cudaComputeModeExclusiveProcess
+ctypedef CUcomputemode CUcomputemode_enum
+ctypedef CUcomputemode cudaComputeMode
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptions as CUflushGPUDirectRDMAWritesOptions
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionHost
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionHost as CU_FLUSH_GPU_DIRECT_RDMA_WRITES_OPTION_HOST
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionHost as cudaFlushGPUDirectRDMAWritesOptionHost
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionMemOps
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionMemOps as CU_FLUSH_GPU_DIRECT_RDMA_WRITES_OPTION_MEMOPS
+from rocm.bindings.cyhip cimport hipFlushGPUDirectRDMAWritesOptionMemOps as cudaFlushGPUDirectRDMAWritesOptionMemOps
+ctypedef CUflushGPUDirectRDMAWritesOptions CUflushGPUDirectRDMAWritesOptions_enum
+ctypedef CUflushGPUDirectRDMAWritesOptions cudaFlushGPUDirectRDMAWritesOptions
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrdering as CUGPUDirectRDMAWritesOrdering
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingNone
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingNone as CU_GPU_DIRECT_RDMA_WRITES_ORDERING_NONE
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingNone as cudaGPUDirectRDMAWritesOrderingNone
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingOwner
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingOwner as CU_GPU_DIRECT_RDMA_WRITES_ORDERING_OWNER
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingOwner as cudaGPUDirectRDMAWritesOrderingOwner
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingAllDevices
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingAllDevices as CU_GPU_DIRECT_RDMA_WRITES_ORDERING_ALL_DEVICES
+from rocm.bindings.cyhip cimport hipGPUDirectRDMAWritesOrderingAllDevices as cudaGPUDirectRDMAWritesOrderingAllDevices
+ctypedef CUGPUDirectRDMAWritesOrdering CUGPUDirectRDMAWritesOrdering_enum
+ctypedef CUGPUDirectRDMAWritesOrdering cudaGPUDirectRDMAWritesOrdering
+from rocm.bindings.cyhip cimport hipDeviceptr_t as CUdeviceptr
+from rocm.bindings.cyhip cimport hipDeviceptr_t as CUdeviceptr_v1
+from rocm.bindings.cyhip cimport hipDeviceptr_t as CUdeviceptr_v2
+from rocm.bindings.cyhip cimport hipChannelFormatKind as cudaChannelFormatKind
+from rocm.bindings.cyhip cimport hipChannelFormatKindSigned
+from rocm.bindings.cyhip cimport hipChannelFormatKindSigned as cudaChannelFormatKindSigned
+from rocm.bindings.cyhip cimport hipChannelFormatKindUnsigned
+from rocm.bindings.cyhip cimport hipChannelFormatKindUnsigned as cudaChannelFormatKindUnsigned
+from rocm.bindings.cyhip cimport hipChannelFormatKindFloat
+from rocm.bindings.cyhip cimport hipChannelFormatKindFloat as cudaChannelFormatKindFloat
+from rocm.bindings.cyhip cimport hipChannelFormatKindNone
+from rocm.bindings.cyhip cimport hipChannelFormatKindNone as cudaChannelFormatKindNone
+from rocm.bindings.cyhip cimport hipChannelFormatDesc as cudaChannelFormatDesc
+from rocm.bindings.cyhip cimport hipArray as CUarray_st
+from rocm.bindings.cyhip cimport hipArray as cudaArray
+from rocm.bindings.cyhip cimport hipArray_t as CUarray
+from rocm.bindings.cyhip cimport hipArray_t as cudaArray_t
+from rocm.bindings.cyhip cimport hipArray_const_t as cudaArray_const_t
+from rocm.bindings.cyhip cimport hipArray_Format as CUarray_format
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT8
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT8 as CU_AD_FORMAT_UNSIGNED_INT8
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT16
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT16 as CU_AD_FORMAT_UNSIGNED_INT16
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT32
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_UNSIGNED_INT32 as CU_AD_FORMAT_UNSIGNED_INT32
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT8
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT8 as CU_AD_FORMAT_SIGNED_INT8
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT16
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT16 as CU_AD_FORMAT_SIGNED_INT16
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT32
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_SIGNED_INT32 as CU_AD_FORMAT_SIGNED_INT32
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_HALF
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_HALF as CU_AD_FORMAT_HALF
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_FLOAT
+from rocm.bindings.cyhip cimport HIP_AD_FORMAT_FLOAT as CU_AD_FORMAT_FLOAT
+ctypedef CUarray_format CUarray_format_enum
+from rocm.bindings.cyhip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR
+from rocm.bindings.cyhip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR_st
+from rocm.bindings.cyhip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR_v1
+from rocm.bindings.cyhip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR_v1_st
+from rocm.bindings.cyhip cimport HIP_ARRAY_DESCRIPTOR as CUDA_ARRAY_DESCRIPTOR_v2
+from rocm.bindings.cyhip cimport HIP_ARRAY3D_DESCRIPTOR as CUDA_ARRAY3D_DESCRIPTOR
+from rocm.bindings.cyhip cimport HIP_ARRAY3D_DESCRIPTOR as CUDA_ARRAY3D_DESCRIPTOR_st
+from rocm.bindings.cyhip cimport HIP_ARRAY3D_DESCRIPTOR as CUDA_ARRAY3D_DESCRIPTOR_v2
+from rocm.bindings.cyhip cimport hip_Memcpy2D as CUDA_MEMCPY2D
+from rocm.bindings.cyhip cimport hip_Memcpy2D as CUDA_MEMCPY2D_st
+from rocm.bindings.cyhip cimport hip_Memcpy2D as CUDA_MEMCPY2D_v1
+from rocm.bindings.cyhip cimport hip_Memcpy2D as CUDA_MEMCPY2D_v1_st
+from rocm.bindings.cyhip cimport hip_Memcpy2D as CUDA_MEMCPY2D_v2
+from rocm.bindings.cyhip cimport hipMipmappedArray as CUmipmappedArray_st
+from rocm.bindings.cyhip cimport hipMipmappedArray as cudaMipmappedArray
+from rocm.bindings.cyhip cimport hipMipmappedArray_t as CUmipmappedArray
+from rocm.bindings.cyhip cimport hipMipmappedArray_t as cudaMipmappedArray_t
+from rocm.bindings.cyhip cimport hipMipmappedArray_const_t as cudaMipmappedArray_const_t
+from rocm.bindings.cyhip cimport hipResourceType as cudaResourceType
+from rocm.bindings.cyhip cimport hipResourceTypeArray
+from rocm.bindings.cyhip cimport hipResourceTypeArray as cudaResourceTypeArray
+from rocm.bindings.cyhip cimport hipResourceTypeMipmappedArray
+from rocm.bindings.cyhip cimport hipResourceTypeMipmappedArray as cudaResourceTypeMipmappedArray
+from rocm.bindings.cyhip cimport hipResourceTypeLinear
+from rocm.bindings.cyhip cimport hipResourceTypeLinear as cudaResourceTypeLinear
+from rocm.bindings.cyhip cimport hipResourceTypePitch2D
+from rocm.bindings.cyhip cimport hipResourceTypePitch2D as cudaResourceTypePitch2D
+from rocm.bindings.cyhip cimport HIPresourcetype_enum as CUresourcetype_enum
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_ARRAY
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_ARRAY as CU_RESOURCE_TYPE_ARRAY
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_MIPMAPPED_ARRAY as CU_RESOURCE_TYPE_MIPMAPPED_ARRAY
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_LINEAR
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_LINEAR as CU_RESOURCE_TYPE_LINEAR
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_PITCH2D
+from rocm.bindings.cyhip cimport HIP_RESOURCE_TYPE_PITCH2D as CU_RESOURCE_TYPE_PITCH2D
+ctypedef CUresourcetype_enum CUresourcetype
+from rocm.bindings.cyhip cimport HIPaddress_mode_enum as CUaddress_mode_enum
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_WRAP
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_WRAP as CU_TR_ADDRESS_MODE_WRAP
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_CLAMP
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_CLAMP as CU_TR_ADDRESS_MODE_CLAMP
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_MIRROR
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_MIRROR as CU_TR_ADDRESS_MODE_MIRROR
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_BORDER
+from rocm.bindings.cyhip cimport HIP_TR_ADDRESS_MODE_BORDER as CU_TR_ADDRESS_MODE_BORDER
+ctypedef CUaddress_mode_enum CUaddress_mode
+from rocm.bindings.cyhip cimport HIPfilter_mode_enum as CUfilter_mode_enum
+from rocm.bindings.cyhip cimport HIP_TR_FILTER_MODE_POINT
+from rocm.bindings.cyhip cimport HIP_TR_FILTER_MODE_POINT as CU_TR_FILTER_MODE_POINT
+from rocm.bindings.cyhip cimport HIP_TR_FILTER_MODE_LINEAR
+from rocm.bindings.cyhip cimport HIP_TR_FILTER_MODE_LINEAR as CU_TR_FILTER_MODE_LINEAR
+ctypedef CUfilter_mode_enum CUfilter_mode
+from rocm.bindings.cyhip cimport HIP_TEXTURE_DESC_st as CUDA_TEXTURE_DESC_st
+from rocm.bindings.cyhip cimport HIP_TEXTURE_DESC as CUDA_TEXTURE_DESC
+from rocm.bindings.cyhip cimport HIP_TEXTURE_DESC as CUDA_TEXTURE_DESC_v1
+from rocm.bindings.cyhip cimport hipResourceViewFormat as cudaResourceViewFormat
+from rocm.bindings.cyhip cimport hipResViewFormatNone
+from rocm.bindings.cyhip cimport hipResViewFormatNone as cudaResViewFormatNone
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar1 as cudaResViewFormatUnsignedChar1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar2 as cudaResViewFormatUnsignedChar2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedChar4 as cudaResViewFormatUnsignedChar4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar1 as cudaResViewFormatSignedChar1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar2 as cudaResViewFormatSignedChar2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedChar4 as cudaResViewFormatSignedChar4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort1 as cudaResViewFormatUnsignedShort1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort2 as cudaResViewFormatUnsignedShort2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedShort4 as cudaResViewFormatUnsignedShort4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort1 as cudaResViewFormatSignedShort1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort2 as cudaResViewFormatSignedShort2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedShort4 as cudaResViewFormatSignedShort4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt1 as cudaResViewFormatUnsignedInt1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt2 as cudaResViewFormatUnsignedInt2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedInt4 as cudaResViewFormatUnsignedInt4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt1 as cudaResViewFormatSignedInt1
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt2 as cudaResViewFormatSignedInt2
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedInt4 as cudaResViewFormatSignedInt4
+from rocm.bindings.cyhip cimport hipResViewFormatHalf1
+from rocm.bindings.cyhip cimport hipResViewFormatHalf1 as cudaResViewFormatHalf1
+from rocm.bindings.cyhip cimport hipResViewFormatHalf2
+from rocm.bindings.cyhip cimport hipResViewFormatHalf2 as cudaResViewFormatHalf2
+from rocm.bindings.cyhip cimport hipResViewFormatHalf4
+from rocm.bindings.cyhip cimport hipResViewFormatHalf4 as cudaResViewFormatHalf4
+from rocm.bindings.cyhip cimport hipResViewFormatFloat1
+from rocm.bindings.cyhip cimport hipResViewFormatFloat1 as cudaResViewFormatFloat1
+from rocm.bindings.cyhip cimport hipResViewFormatFloat2
+from rocm.bindings.cyhip cimport hipResViewFormatFloat2 as cudaResViewFormatFloat2
+from rocm.bindings.cyhip cimport hipResViewFormatFloat4
+from rocm.bindings.cyhip cimport hipResViewFormatFloat4 as cudaResViewFormatFloat4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed1 as cudaResViewFormatUnsignedBlockCompressed1
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed2 as cudaResViewFormatUnsignedBlockCompressed2
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed3
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed3 as cudaResViewFormatUnsignedBlockCompressed3
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed4 as cudaResViewFormatUnsignedBlockCompressed4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed4
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed4 as cudaResViewFormatSignedBlockCompressed4
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed5
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed5 as cudaResViewFormatUnsignedBlockCompressed5
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed5
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed5 as cudaResViewFormatSignedBlockCompressed5
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed6H
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed6H as cudaResViewFormatUnsignedBlockCompressed6H
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed6H
+from rocm.bindings.cyhip cimport hipResViewFormatSignedBlockCompressed6H as cudaResViewFormatSignedBlockCompressed6H
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed7
+from rocm.bindings.cyhip cimport hipResViewFormatUnsignedBlockCompressed7 as cudaResViewFormatUnsignedBlockCompressed7
+from rocm.bindings.cyhip cimport HIPresourceViewFormat_enum as CUresourceViewFormat_enum
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_NONE
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_NONE as CU_RES_VIEW_FORMAT_NONE
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X8 as CU_RES_VIEW_FORMAT_UINT_1X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X8 as CU_RES_VIEW_FORMAT_UINT_2X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X8 as CU_RES_VIEW_FORMAT_UINT_4X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X8 as CU_RES_VIEW_FORMAT_SINT_1X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X8 as CU_RES_VIEW_FORMAT_SINT_2X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X8 as CU_RES_VIEW_FORMAT_SINT_4X8
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X16 as CU_RES_VIEW_FORMAT_UINT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X16 as CU_RES_VIEW_FORMAT_UINT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X16 as CU_RES_VIEW_FORMAT_UINT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X16 as CU_RES_VIEW_FORMAT_SINT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X16 as CU_RES_VIEW_FORMAT_SINT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X16 as CU_RES_VIEW_FORMAT_SINT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_1X32 as CU_RES_VIEW_FORMAT_UINT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_2X32 as CU_RES_VIEW_FORMAT_UINT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UINT_4X32 as CU_RES_VIEW_FORMAT_UINT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_1X32 as CU_RES_VIEW_FORMAT_SINT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_2X32 as CU_RES_VIEW_FORMAT_SINT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SINT_4X32 as CU_RES_VIEW_FORMAT_SINT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X16 as CU_RES_VIEW_FORMAT_FLOAT_1X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X16 as CU_RES_VIEW_FORMAT_FLOAT_2X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X16 as CU_RES_VIEW_FORMAT_FLOAT_4X16
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_1X32 as CU_RES_VIEW_FORMAT_FLOAT_1X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_2X32 as CU_RES_VIEW_FORMAT_FLOAT_2X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_FLOAT_4X32 as CU_RES_VIEW_FORMAT_FLOAT_4X32
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC1
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC1 as CU_RES_VIEW_FORMAT_UNSIGNED_BC1
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC2
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC2 as CU_RES_VIEW_FORMAT_UNSIGNED_BC2
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC3
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC3 as CU_RES_VIEW_FORMAT_UNSIGNED_BC3
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC4
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC4 as CU_RES_VIEW_FORMAT_UNSIGNED_BC4
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC4
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC4 as CU_RES_VIEW_FORMAT_SIGNED_BC4
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC5
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC5 as CU_RES_VIEW_FORMAT_UNSIGNED_BC5
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC5
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC5 as CU_RES_VIEW_FORMAT_SIGNED_BC5
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC6H as CU_RES_VIEW_FORMAT_UNSIGNED_BC6H
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC6H
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_SIGNED_BC6H as CU_RES_VIEW_FORMAT_SIGNED_BC6H
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC7
+from rocm.bindings.cyhip cimport HIP_RES_VIEW_FORMAT_UNSIGNED_BC7 as CU_RES_VIEW_FORMAT_UNSIGNED_BC7
+ctypedef CUresourceViewFormat_enum CUresourceViewFormat
+from rocm.bindings.cyhip cimport hipResourceDesc as cudaResourceDesc
+from rocm.bindings.cyhip cimport HIP_RESOURCE_DESC_st as CUDA_RESOURCE_DESC_st
+from rocm.bindings.cyhip cimport HIP_RESOURCE_DESC as CUDA_RESOURCE_DESC
+from rocm.bindings.cyhip cimport HIP_RESOURCE_DESC as CUDA_RESOURCE_DESC_v1
+from rocm.bindings.cyhip cimport hipResourceViewDesc as cudaResourceViewDesc
+from rocm.bindings.cyhip cimport HIP_RESOURCE_VIEW_DESC_st as CUDA_RESOURCE_VIEW_DESC_st
+from rocm.bindings.cyhip cimport HIP_RESOURCE_VIEW_DESC as CUDA_RESOURCE_VIEW_DESC
+from rocm.bindings.cyhip cimport HIP_RESOURCE_VIEW_DESC as CUDA_RESOURCE_VIEW_DESC_v1
+from rocm.bindings.cyhip cimport hipMemcpyKind as cudaMemcpyKind
+from rocm.bindings.cyhip cimport hipMemcpyHostToHost
+from rocm.bindings.cyhip cimport hipMemcpyHostToHost as cudaMemcpyHostToHost
+from rocm.bindings.cyhip cimport hipMemcpyHostToDevice
+from rocm.bindings.cyhip cimport hipMemcpyHostToDevice as cudaMemcpyHostToDevice
+from rocm.bindings.cyhip cimport hipMemcpyDeviceToHost
+from rocm.bindings.cyhip cimport hipMemcpyDeviceToHost as cudaMemcpyDeviceToHost
+from rocm.bindings.cyhip cimport hipMemcpyDeviceToDevice
+from rocm.bindings.cyhip cimport hipMemcpyDeviceToDevice as cudaMemcpyDeviceToDevice
+from rocm.bindings.cyhip cimport hipMemcpyDefault
+from rocm.bindings.cyhip cimport hipMemcpyDefault as cudaMemcpyDefault
+from rocm.bindings.cyhip cimport hipMemcpyDeviceToDeviceNoCU
+from rocm.bindings.cyhip cimport hipPitchedPtr as cudaPitchedPtr
+from rocm.bindings.cyhip cimport hipExtent as cudaExtent
+from rocm.bindings.cyhip cimport hipPos as cudaPos
+from rocm.bindings.cyhip cimport hipMemcpy3DParms as cudaMemcpy3DParms
+from rocm.bindings.cyhip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D
+from rocm.bindings.cyhip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_st
+from rocm.bindings.cyhip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v1
+from rocm.bindings.cyhip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v1_st
+from rocm.bindings.cyhip cimport HIP_MEMCPY3D as CUDA_MEMCPY3D_v2
+from rocm.bindings.cyhip cimport hipMemLocationType as CUmemLocationType
+from rocm.bindings.cyhip cimport hipMemLocationTypeInvalid
+from rocm.bindings.cyhip cimport hipMemLocationTypeInvalid as CU_MEM_LOCATION_TYPE_INVALID
+from rocm.bindings.cyhip cimport hipMemLocationTypeInvalid as cudaMemLocationTypeInvalid
+from rocm.bindings.cyhip cimport hipMemLocationTypeNone
+from rocm.bindings.cyhip cimport hipMemLocationTypeNone as CU_MEM_LOCATION_TYPE_NONE
+from rocm.bindings.cyhip cimport hipMemLocationTypeNone as cudaMemLocationTypeNone
+from rocm.bindings.cyhip cimport hipMemLocationTypeDevice
+from rocm.bindings.cyhip cimport hipMemLocationTypeDevice as CU_MEM_LOCATION_TYPE_DEVICE
+from rocm.bindings.cyhip cimport hipMemLocationTypeDevice as cudaMemLocationTypeDevice
+from rocm.bindings.cyhip cimport hipMemLocationTypeHost
+from rocm.bindings.cyhip cimport hipMemLocationTypeHost as CU_MEM_LOCATION_TYPE_HOST
+from rocm.bindings.cyhip cimport hipMemLocationTypeHost as cudaMemLocationTypeHost
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNuma
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNuma as CU_MEM_LOCATION_TYPE_HOST_NUMA
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNuma as cudaMemLocationTypeHostNuma
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNumaCurrent
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNumaCurrent as CU_MEM_LOCATION_TYPE_HOST_NUMA_CURRENT
+from rocm.bindings.cyhip cimport hipMemLocationTypeHostNumaCurrent as cudaMemLocationTypeHostNumaCurrent
+ctypedef CUmemLocationType CUmemLocationType_enum
+ctypedef CUmemLocationType cudaMemLocationType
+from rocm.bindings.cyhip cimport hipMemLocation as CUmemLocation
+from rocm.bindings.cyhip cimport hipMemLocation as CUmemLocation_st
+from rocm.bindings.cyhip cimport hipMemLocation as CUmemLocation_v1
+from rocm.bindings.cyhip cimport hipMemLocation as cudaMemLocation
+from rocm.bindings.cyhip cimport hipMemcpyFlags as CUmemcpyFlags
+from rocm.bindings.cyhip cimport hipMemcpyFlagDefault
+from rocm.bindings.cyhip cimport hipMemcpyFlagDefault as CU_MEMCPY_FLAG_DEFAULT
+from rocm.bindings.cyhip cimport hipMemcpyFlagDefault as cudaMemcpyFlagDefault
+from rocm.bindings.cyhip cimport hipMemcpyFlagPreferOverlapWithCompute
+from rocm.bindings.cyhip cimport hipMemcpyFlagPreferOverlapWithCompute as CU_MEMCPY_FLAG_PREFER_OVERLAP_WITH_COMPUTE
+from rocm.bindings.cyhip cimport hipMemcpyFlagPreferOverlapWithCompute as cudaMemcpyFlagPreferOverlapWithCompute
+from rocm.bindings.cyhip cimport hipMemcpyFlagExtPreferCE
+from rocm.bindings.cyhip cimport hipMemcpyFlagExtOpSwap
+from rocm.bindings.cyhip cimport hipMemcpyFlagExtOpIndirectSrc
+from rocm.bindings.cyhip cimport hipMemcpyFlagExtOpIndirectDst
+ctypedef CUmemcpyFlags CUmemcpyFlags_enum
+ctypedef CUmemcpyFlags cudaMemcpyFlags
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrder as CUmemcpySrcAccessOrder
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderInvalid
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderInvalid as CU_MEMCPY_SRC_ACCESS_ORDER_INVALID
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderInvalid as cudaMemcpySrcAccessOrderInvalid
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderStream
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderStream as CU_MEMCPY_SRC_ACCESS_ORDER_STREAM
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderStream as cudaMemcpySrcAccessOrderStream
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderDuringApiCall
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderDuringApiCall as CU_MEMCPY_SRC_ACCESS_ORDER_DURING_API_CALL
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderDuringApiCall as cudaMemcpySrcAccessOrderDuringApiCall
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderAny
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderAny as CU_MEMCPY_SRC_ACCESS_ORDER_ANY
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderAny as cudaMemcpySrcAccessOrderAny
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderMax
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderMax as CU_MEMCPY_SRC_ACCESS_ORDER_MAX
+from rocm.bindings.cyhip cimport hipMemcpySrcAccessOrderMax as cudaMemcpySrcAccessOrderMax
+ctypedef CUmemcpySrcAccessOrder CUmemcpySrcAccessOrder_enum
+ctypedef CUmemcpySrcAccessOrder cudaMemcpySrcAccessOrder
+from rocm.bindings.cyhip cimport hipMemcpyAttributes as CUmemcpyAttributes
+from rocm.bindings.cyhip cimport hipMemcpyAttributes as CUmemcpyAttributes_st
+from rocm.bindings.cyhip cimport hipMemcpyAttributes as CUmemcpyAttributes_v1
+from rocm.bindings.cyhip cimport hipMemcpyAttributes as cudaMemcpyAttributes
+from rocm.bindings.cyhip cimport hipMemcpy3DOperandType as CUmemcpy3DOperandType
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypePointer
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypePointer as CU_MEMCPY_OPERAND_TYPE_POINTER
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypePointer as cudaMemcpyOperandTypePointer
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeArray
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeArray as CU_MEMCPY_OPERAND_TYPE_ARRAY
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeArray as cudaMemcpyOperandTypeArray
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeMax
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeMax as CU_MEMCPY_OPERAND_TYPE_MAX
+from rocm.bindings.cyhip cimport hipMemcpyOperandTypeMax as cudaMemcpyOperandTypeMax
+ctypedef CUmemcpy3DOperandType CUmemcpy3DOperandType_enum
+ctypedef CUmemcpy3DOperandType cudaMemcpy3DOperandType
+from rocm.bindings.cyhip cimport hipOffset3D as CUoffset3D
+from rocm.bindings.cyhip cimport hipOffset3D as CUoffset3D_st
+from rocm.bindings.cyhip cimport hipOffset3D as CUoffset3D_v1
+from rocm.bindings.cyhip cimport hipOffset3D as cudaOffset3D
+from rocm.bindings.cyhip cimport hipMemcpy3DOperand as CUmemcpy3DOperand
+from rocm.bindings.cyhip cimport hipMemcpy3DOperand as CUmemcpy3DOperand_st
+from rocm.bindings.cyhip cimport hipMemcpy3DOperand as CUmemcpy3DOperand_v1
+from rocm.bindings.cyhip cimport hipMemcpy3DOperand as cudaMemcpy3DOperand
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchOp as CUDA_MEMCPY3D_BATCH_OP
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchOp as CUDA_MEMCPY3D_BATCH_OP_st
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchOp as CUDA_MEMCPY3D_BATCH_OP_v1
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchOp as cudaMemcpy3DBatchOp
+from rocm.bindings.cyhip cimport hipMemcpy3DPeerParms as cudaMemcpy3DPeerParms
+from rocm.bindings.cyhip cimport hipFunction_attribute as CUfunction_attribute
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK as CU_FUNC_ATTRIBUTE_MAX_THREADS_PER_BLOCK
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES as CU_FUNC_ATTRIBUTE_SHARED_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CONST_SIZE_BYTES as CU_FUNC_ATTRIBUTE_CONST_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES as CU_FUNC_ATTRIBUTE_LOCAL_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_NUM_REGS
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_NUM_REGS as CU_FUNC_ATTRIBUTE_NUM_REGS
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_PTX_VERSION
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_PTX_VERSION as CU_FUNC_ATTRIBUTE_PTX_VERSION
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_BINARY_VERSION
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_BINARY_VERSION as CU_FUNC_ATTRIBUTE_BINARY_VERSION
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CACHE_MODE_CA as CU_FUNC_ATTRIBUTE_CACHE_MODE_CA
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES as CU_FUNC_ATTRIBUTE_MAX_DYNAMIC_SHARED_SIZE_BYTES
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT as CU_FUNC_ATTRIBUTE_PREFERRED_SHARED_MEMORY_CARVEOUT
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CLUSTER_DIM_MUST_BE_SET
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_REQUIRED_CLUSTER_WIDTH
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_REQUIRED_CLUSTER_HEIGHT
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_REQUIRED_CLUSTER_DEPTH
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_NON_PORTABLE_CLUSTER_SIZE_ALLOWED
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_CLUSTER_SCHEDULING_POLICY_PREFERENCE
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX
+from rocm.bindings.cyhip cimport HIP_FUNC_ATTRIBUTE_MAX as CU_FUNC_ATTRIBUTE_MAX
+ctypedef CUfunction_attribute CUfunction_attribute_enum
+from rocm.bindings.cyhip cimport hipPointer_attribute as CUpointer_attribute
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_CONTEXT
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_CONTEXT as CU_POINTER_ATTRIBUTE_CONTEXT
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MEMORY_TYPE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MEMORY_TYPE as CU_POINTER_ATTRIBUTE_MEMORY_TYPE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_DEVICE_POINTER
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_DEVICE_POINTER as CU_POINTER_ATTRIBUTE_DEVICE_POINTER
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_HOST_POINTER
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_HOST_POINTER as CU_POINTER_ATTRIBUTE_HOST_POINTER
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_P2P_TOKENS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_P2P_TOKENS as CU_POINTER_ATTRIBUTE_P2P_TOKENS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_SYNC_MEMOPS as CU_POINTER_ATTRIBUTE_SYNC_MEMOPS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_BUFFER_ID
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_BUFFER_ID as CU_POINTER_ATTRIBUTE_BUFFER_ID
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_MANAGED
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_MANAGED as CU_POINTER_ATTRIBUTE_IS_MANAGED
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_DEVICE_ORDINAL as CU_POINTER_ATTRIBUTE_DEVICE_ORDINAL
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_LEGACY_HIP_IPC_CAPABLE as CU_POINTER_ATTRIBUTE_IS_LEGACY_CUDA_IPC_CAPABLE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_RANGE_START_ADDR as CU_POINTER_ATTRIBUTE_RANGE_START_ADDR
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_RANGE_SIZE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_RANGE_SIZE as CU_POINTER_ATTRIBUTE_RANGE_SIZE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MAPPED
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MAPPED as CU_POINTER_ATTRIBUTE_MAPPED
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES as CU_POINTER_ATTRIBUTE_ALLOWED_HANDLE_TYPES
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE as CU_POINTER_ATTRIBUTE_IS_GPU_DIRECT_RDMA_CAPABLE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_ACCESS_FLAGS as CU_POINTER_ATTRIBUTE_ACCESS_FLAGS
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+from rocm.bindings.cyhip cimport HIP_POINTER_ATTRIBUTE_MEMPOOL_HANDLE as CU_POINTER_ATTRIBUTE_MEMPOOL_HANDLE
+ctypedef CUpointer_attribute CUpointer_attribute_enum
+from rocm.bindings.cyhip cimport uchar1 as uchar1
+from rocm.bindings.cyhip cimport uchar2 as uchar2
+from rocm.bindings.cyhip cimport uchar3 as uchar3
+from rocm.bindings.cyhip cimport uchar4 as uchar4
+from rocm.bindings.cyhip cimport char1 as char1
+from rocm.bindings.cyhip cimport char2 as char2
+from rocm.bindings.cyhip cimport char3 as char3
+from rocm.bindings.cyhip cimport char4 as char4
+from rocm.bindings.cyhip cimport ushort1 as ushort1
+from rocm.bindings.cyhip cimport ushort2 as ushort2
+from rocm.bindings.cyhip cimport ushort3 as ushort3
+from rocm.bindings.cyhip cimport ushort4 as ushort4
+from rocm.bindings.cyhip cimport short1 as short1
+from rocm.bindings.cyhip cimport short2 as short2
+from rocm.bindings.cyhip cimport short3 as short3
+from rocm.bindings.cyhip cimport short4 as short4
+from rocm.bindings.cyhip cimport uint1 as uint1
+from rocm.bindings.cyhip cimport uint2 as uint2
+from rocm.bindings.cyhip cimport uint3 as uint3
+from rocm.bindings.cyhip cimport uint4 as uint4
+from rocm.bindings.cyhip cimport int1 as int1
+from rocm.bindings.cyhip cimport int2 as int2
+from rocm.bindings.cyhip cimport int3 as int3
+from rocm.bindings.cyhip cimport int4 as int4
+from rocm.bindings.cyhip cimport ulong1 as ulong1
+from rocm.bindings.cyhip cimport ulong2 as ulong2
+from rocm.bindings.cyhip cimport ulong3 as ulong3
+from rocm.bindings.cyhip cimport ulong4 as ulong4
+from rocm.bindings.cyhip cimport long1 as long1
+from rocm.bindings.cyhip cimport long2 as long2
+from rocm.bindings.cyhip cimport long3 as long3
+from rocm.bindings.cyhip cimport long4 as long4
+from rocm.bindings.cyhip cimport ulonglong1 as ulonglong1
+from rocm.bindings.cyhip cimport ulonglong2 as ulonglong2
+from rocm.bindings.cyhip cimport ulonglong3 as ulonglong3
+from rocm.bindings.cyhip cimport ulonglong4 as ulonglong4
+from rocm.bindings.cyhip cimport longlong1 as longlong1
+from rocm.bindings.cyhip cimport longlong2 as longlong2
+from rocm.bindings.cyhip cimport longlong3 as longlong3
+from rocm.bindings.cyhip cimport longlong4 as longlong4
+from rocm.bindings.cyhip cimport float1 as float1
+from rocm.bindings.cyhip cimport float2 as float2
+from rocm.bindings.cyhip cimport float3 as float3
+from rocm.bindings.cyhip cimport float4 as float4
+from rocm.bindings.cyhip cimport double1 as double1
+from rocm.bindings.cyhip cimport double2 as double2
+from rocm.bindings.cyhip cimport double3 as double3
+from rocm.bindings.cyhip cimport double4 as double4
+from rocm.bindings.cyhip cimport hipCreateChannelDesc as cudaCreateChannelDesc
+from rocm.bindings.cyhip cimport hipTextureObject_t as CUtexObject
+from rocm.bindings.cyhip cimport hipTextureObject_t as CUtexObject_v1
+from rocm.bindings.cyhip cimport hipTextureObject_t as cudaTextureObject_t
+from rocm.bindings.cyhip cimport hipTextureAddressMode as cudaTextureAddressMode
+from rocm.bindings.cyhip cimport hipAddressModeWrap
+from rocm.bindings.cyhip cimport hipAddressModeWrap as cudaAddressModeWrap
+from rocm.bindings.cyhip cimport hipAddressModeClamp
+from rocm.bindings.cyhip cimport hipAddressModeClamp as cudaAddressModeClamp
+from rocm.bindings.cyhip cimport hipAddressModeMirror
+from rocm.bindings.cyhip cimport hipAddressModeMirror as cudaAddressModeMirror
+from rocm.bindings.cyhip cimport hipAddressModeBorder
+from rocm.bindings.cyhip cimport hipAddressModeBorder as cudaAddressModeBorder
+from rocm.bindings.cyhip cimport hipTextureFilterMode as cudaTextureFilterMode
+from rocm.bindings.cyhip cimport hipFilterModePoint
+from rocm.bindings.cyhip cimport hipFilterModePoint as cudaFilterModePoint
+from rocm.bindings.cyhip cimport hipFilterModeLinear
+from rocm.bindings.cyhip cimport hipFilterModeLinear as cudaFilterModeLinear
+from rocm.bindings.cyhip cimport hipTextureReadMode as cudaTextureReadMode
+from rocm.bindings.cyhip cimport hipReadModeElementType
+from rocm.bindings.cyhip cimport hipReadModeElementType as cudaReadModeElementType
+from rocm.bindings.cyhip cimport hipReadModeNormalizedFloat
+from rocm.bindings.cyhip cimport hipReadModeNormalizedFloat as cudaReadModeNormalizedFloat
+from rocm.bindings.cyhip cimport textureReference as CUtexref_st
+from rocm.bindings.cyhip cimport textureReference as textureReference
+from rocm.bindings.cyhip cimport hipTextureDesc as cudaTextureDesc
+from rocm.bindings.cyhip cimport hipSurfaceObject_t as CUsurfObject
+from rocm.bindings.cyhip cimport hipSurfaceObject_t as CUsurfObject_v1
+from rocm.bindings.cyhip cimport hipSurfaceObject_t as cudaSurfaceObject_t
+from rocm.bindings.cyhip cimport surfaceReference as surfaceReference
+from rocm.bindings.cyhip cimport hipSurfaceBoundaryMode as cudaSurfaceBoundaryMode
+from rocm.bindings.cyhip cimport hipBoundaryModeZero
+from rocm.bindings.cyhip cimport hipBoundaryModeZero as cudaBoundaryModeZero
+from rocm.bindings.cyhip cimport hipBoundaryModeTrap
+from rocm.bindings.cyhip cimport hipBoundaryModeTrap as cudaBoundaryModeTrap
+from rocm.bindings.cyhip cimport hipBoundaryModeClamp
+from rocm.bindings.cyhip cimport hipBoundaryModeClamp as cudaBoundaryModeClamp
+from rocm.bindings.cyhip cimport ihipCtx_t as CUctx_st
+from rocm.bindings.cyhip cimport hipCtx_t as CUcontext
+ctypedef int CUdevice
+ctypedef int CUdevice_v1
+from rocm.bindings.cyhip cimport hipDeviceP2PAttr as CUdevice_P2PAttribute
+from rocm.bindings.cyhip cimport hipDevP2PAttrPerformanceRank
+from rocm.bindings.cyhip cimport hipDevP2PAttrPerformanceRank as CU_DEVICE_P2P_ATTRIBUTE_PERFORMANCE_RANK
+from rocm.bindings.cyhip cimport hipDevP2PAttrPerformanceRank as cudaDevP2PAttrPerformanceRank
+from rocm.bindings.cyhip cimport hipDevP2PAttrAccessSupported
+from rocm.bindings.cyhip cimport hipDevP2PAttrAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ACCESS_SUPPORTED
+from rocm.bindings.cyhip cimport hipDevP2PAttrAccessSupported as cudaDevP2PAttrAccessSupported
+from rocm.bindings.cyhip cimport hipDevP2PAttrNativeAtomicSupported
+from rocm.bindings.cyhip cimport hipDevP2PAttrNativeAtomicSupported as CU_DEVICE_P2P_ATTRIBUTE_NATIVE_ATOMIC_SUPPORTED
+from rocm.bindings.cyhip cimport hipDevP2PAttrNativeAtomicSupported as cudaDevP2PAttrNativeAtomicSupported
+from rocm.bindings.cyhip cimport hipDevP2PAttrHipArrayAccessSupported
+from rocm.bindings.cyhip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ACCESS_ACCESS_SUPPORTED
+from rocm.bindings.cyhip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_ARRAY_ACCESS_ACCESS_SUPPORTED
+from rocm.bindings.cyhip cimport hipDevP2PAttrHipArrayAccessSupported as CU_DEVICE_P2P_ATTRIBUTE_CUDA_ARRAY_ACCESS_SUPPORTED
+from rocm.bindings.cyhip cimport hipDevP2PAttrHipArrayAccessSupported as cudaDevP2PAttrCudaArrayAccessSupported
+ctypedef CUdevice_P2PAttribute CUdevice_P2PAttribute_enum
+ctypedef CUdevice_P2PAttribute cudaDeviceP2PAttr
+from rocm.bindings.cyhip cimport hipDriverEntryPointQueryResult as cudaDriverEntryPointQueryResult
+from rocm.bindings.cyhip cimport hipDriverEntryPointSuccess
+from rocm.bindings.cyhip cimport hipDriverEntryPointSuccess as cudaDriverEntryPointSuccess
+from rocm.bindings.cyhip cimport hipDriverEntryPointSymbolNotFound
+from rocm.bindings.cyhip cimport hipDriverEntryPointSymbolNotFound as cudaDriverEntryPointSymbolNotFound
+from rocm.bindings.cyhip cimport hipDriverEntryPointVersionNotSufficent
+from rocm.bindings.cyhip cimport hipDriverEntryPointVersionNotSufficent as cudaDriverEntryPointVersionNotSufficent
+from rocm.bindings.cyhip cimport ihipStream_t as CUstream_st
+from rocm.bindings.cyhip cimport hipStream_t as CUstream
+from rocm.bindings.cyhip cimport hipStream_t as cudaStream_t
+from rocm.bindings.cyhip cimport hipIpcMemHandle_st as CUipcMemHandle_st
+from rocm.bindings.cyhip cimport hipIpcMemHandle_st as cudaIpcMemHandle_st
+from rocm.bindings.cyhip cimport hipIpcMemHandle_t as CUipcMemHandle
+from rocm.bindings.cyhip cimport hipIpcMemHandle_t as CUipcMemHandle_v1
+from rocm.bindings.cyhip cimport hipIpcMemHandle_t as cudaIpcMemHandle_t
+from rocm.bindings.cyhip cimport hipIpcEventHandle_st as CUipcEventHandle_st
+from rocm.bindings.cyhip cimport hipIpcEventHandle_st as cudaIpcEventHandle_st
+from rocm.bindings.cyhip cimport hipIpcEventHandle_t as CUipcEventHandle
+from rocm.bindings.cyhip cimport hipIpcEventHandle_t as CUipcEventHandle_v1
+from rocm.bindings.cyhip cimport hipIpcEventHandle_t as cudaIpcEventHandle_t
+from rocm.bindings.cyhip cimport ihipModule_t as CUmod_st
+from rocm.bindings.cyhip cimport hipModule_t as CUmodule
+from rocm.bindings.cyhip cimport ihipModuleSymbol_t as CUfunc_st
+from rocm.bindings.cyhip cimport hipFunction_t as CUfunction
+from rocm.bindings.cyhip cimport hipFunction_t as cudaFunction_t
+from rocm.bindings.cyhip cimport ihipLibrary_t as CUlib_st
+from rocm.bindings.cyhip cimport hipLibrary_t as CUlibrary
+from rocm.bindings.cyhip cimport hipLibrary_t as cudaLibrary_t
+from rocm.bindings.cyhip cimport ihipKernel_t as CUkern_st
+from rocm.bindings.cyhip cimport hipKernel_t as CUkernel
+from rocm.bindings.cyhip cimport hipKernel_t as cudaKernel_t
+from rocm.bindings.cyhip cimport ihipMemPoolHandle_t as CUmemPoolHandle_st
+from rocm.bindings.cyhip cimport hipMemPool_t as CUmemoryPool
+from rocm.bindings.cyhip cimport hipMemPool_t as cudaMemPool_t
+from rocm.bindings.cyhip cimport hipFuncAttributes as cudaFuncAttributes
+from rocm.bindings.cyhip cimport ihipEvent_t as CUevent_st
+from rocm.bindings.cyhip cimport hipEvent_t as CUevent
+from rocm.bindings.cyhip cimport hipEvent_t as cudaEvent_t
+from rocm.bindings.cyhip cimport hipLimit_t as CUlimit
+from rocm.bindings.cyhip cimport hipLimitStackSize
+from rocm.bindings.cyhip cimport hipLimitStackSize as CU_LIMIT_STACK_SIZE
+from rocm.bindings.cyhip cimport hipLimitStackSize as cudaLimitStackSize
+from rocm.bindings.cyhip cimport hipLimitPrintfFifoSize
+from rocm.bindings.cyhip cimport hipLimitPrintfFifoSize as CU_LIMIT_PRINTF_FIFO_SIZE
+from rocm.bindings.cyhip cimport hipLimitPrintfFifoSize as cudaLimitPrintfFifoSize
+from rocm.bindings.cyhip cimport hipLimitMallocHeapSize
+from rocm.bindings.cyhip cimport hipLimitMallocHeapSize as CU_LIMIT_MALLOC_HEAP_SIZE
+from rocm.bindings.cyhip cimport hipLimitMallocHeapSize as cudaLimitMallocHeapSize
+from rocm.bindings.cyhip cimport hipExtLimitScratchMin
+from rocm.bindings.cyhip cimport hipExtLimitScratchMax
+from rocm.bindings.cyhip cimport hipExtLimitScratchCurrent
+from rocm.bindings.cyhip cimport hipLimitRange
+ctypedef CUlimit CUlimit_enum
+ctypedef CUlimit cudaLimit
+from rocm.bindings.cyhip cimport hipStreamBatchMemOpType as CUstreamBatchMemOpType
+from rocm.bindings.cyhip cimport hipStreamMemOpWaitValue32
+from rocm.bindings.cyhip cimport hipStreamMemOpWaitValue32 as CU_STREAM_MEM_OP_WAIT_VALUE_32
+from rocm.bindings.cyhip cimport hipStreamMemOpWriteValue32
+from rocm.bindings.cyhip cimport hipStreamMemOpWriteValue32 as CU_STREAM_MEM_OP_WRITE_VALUE_32
+from rocm.bindings.cyhip cimport hipStreamMemOpWaitValue64
+from rocm.bindings.cyhip cimport hipStreamMemOpWaitValue64 as CU_STREAM_MEM_OP_WAIT_VALUE_64
+from rocm.bindings.cyhip cimport hipStreamMemOpWriteValue64
+from rocm.bindings.cyhip cimport hipStreamMemOpWriteValue64 as CU_STREAM_MEM_OP_WRITE_VALUE_64
+from rocm.bindings.cyhip cimport hipStreamMemOpBarrier
+from rocm.bindings.cyhip cimport hipStreamMemOpBarrier as CU_STREAM_MEM_OP_BARRIER
+from rocm.bindings.cyhip cimport hipStreamMemOpFlushRemoteWrites
+from rocm.bindings.cyhip cimport hipStreamMemOpFlushRemoteWrites as CU_STREAM_MEM_OP_FLUSH_REMOTE_WRITES
+ctypedef CUstreamBatchMemOpType CUstreamBatchMemOpType_enum
+from rocm.bindings.cyhip cimport hipStreamBatchMemOpParams_union as CUstreamBatchMemOpParams_union
+from rocm.bindings.cyhip cimport hipStreamBatchMemOpParams as CUstreamBatchMemOpParams
+from rocm.bindings.cyhip cimport hipStreamBatchMemOpParams as CUstreamBatchMemOpParams_v1
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS_v1_st
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS_v2
+from rocm.bindings.cyhip cimport hipBatchMemOpNodeParams as CUDA_BATCH_MEM_OP_NODE_PARAMS_v2_st
+from rocm.bindings.cyhip cimport hipMemoryAdvise as CUmem_advise
+from rocm.bindings.cyhip cimport hipMemAdviseSetReadMostly
+from rocm.bindings.cyhip cimport hipMemAdviseSetReadMostly as CU_MEM_ADVISE_SET_READ_MOSTLY
+from rocm.bindings.cyhip cimport hipMemAdviseSetReadMostly as cudaMemAdviseSetReadMostly
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetReadMostly
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetReadMostly as CU_MEM_ADVISE_UNSET_READ_MOSTLY
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetReadMostly as cudaMemAdviseUnsetReadMostly
+from rocm.bindings.cyhip cimport hipMemAdviseSetPreferredLocation
+from rocm.bindings.cyhip cimport hipMemAdviseSetPreferredLocation as CU_MEM_ADVISE_SET_PREFERRED_LOCATION
+from rocm.bindings.cyhip cimport hipMemAdviseSetPreferredLocation as cudaMemAdviseSetPreferredLocation
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetPreferredLocation
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetPreferredLocation as CU_MEM_ADVISE_UNSET_PREFERRED_LOCATION
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetPreferredLocation as cudaMemAdviseUnsetPreferredLocation
+from rocm.bindings.cyhip cimport hipMemAdviseSetAccessedBy
+from rocm.bindings.cyhip cimport hipMemAdviseSetAccessedBy as CU_MEM_ADVISE_SET_ACCESSED_BY
+from rocm.bindings.cyhip cimport hipMemAdviseSetAccessedBy as cudaMemAdviseSetAccessedBy
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetAccessedBy
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetAccessedBy as CU_MEM_ADVISE_UNSET_ACCESSED_BY
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetAccessedBy as cudaMemAdviseUnsetAccessedBy
+from rocm.bindings.cyhip cimport hipMemAdviseSetCoarseGrain
+from rocm.bindings.cyhip cimport hipMemAdviseUnsetCoarseGrain
+ctypedef CUmem_advise CUmem_advise_enum
+ctypedef CUmem_advise cudaMemoryAdvise
+from rocm.bindings.cyhip cimport hipMemRangeAttribute as CUmem_range_attribute
+from rocm.bindings.cyhip cimport hipMemRangeAttributeReadMostly
+from rocm.bindings.cyhip cimport hipMemRangeAttributeReadMostly as CU_MEM_RANGE_ATTRIBUTE_READ_MOSTLY
+from rocm.bindings.cyhip cimport hipMemRangeAttributeReadMostly as cudaMemRangeAttributeReadMostly
+from rocm.bindings.cyhip cimport hipMemRangeAttributePreferredLocation
+from rocm.bindings.cyhip cimport hipMemRangeAttributePreferredLocation as CU_MEM_RANGE_ATTRIBUTE_PREFERRED_LOCATION
+from rocm.bindings.cyhip cimport hipMemRangeAttributePreferredLocation as cudaMemRangeAttributePreferredLocation
+from rocm.bindings.cyhip cimport hipMemRangeAttributeAccessedBy
+from rocm.bindings.cyhip cimport hipMemRangeAttributeAccessedBy as CU_MEM_RANGE_ATTRIBUTE_ACCESSED_BY
+from rocm.bindings.cyhip cimport hipMemRangeAttributeAccessedBy as cudaMemRangeAttributeAccessedBy
+from rocm.bindings.cyhip cimport hipMemRangeAttributeLastPrefetchLocation
+from rocm.bindings.cyhip cimport hipMemRangeAttributeLastPrefetchLocation as CU_MEM_RANGE_ATTRIBUTE_LAST_PREFETCH_LOCATION
+from rocm.bindings.cyhip cimport hipMemRangeAttributeLastPrefetchLocation as cudaMemRangeAttributeLastPrefetchLocation
+from rocm.bindings.cyhip cimport hipMemRangeAttributeCoherencyMode
+ctypedef CUmem_range_attribute CUmem_range_attribute_enum
+ctypedef CUmem_range_attribute cudaMemRangeAttribute
+from rocm.bindings.cyhip cimport hipMemPoolAttr as CUmemPool_attribute
+from rocm.bindings.cyhip cimport hipMemPoolReuseFollowEventDependencies
+from rocm.bindings.cyhip cimport hipMemPoolReuseFollowEventDependencies as CU_MEMPOOL_ATTR_REUSE_FOLLOW_EVENT_DEPENDENCIES
+from rocm.bindings.cyhip cimport hipMemPoolReuseFollowEventDependencies as cudaMemPoolReuseFollowEventDependencies
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowOpportunistic
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowOpportunistic as CU_MEMPOOL_ATTR_REUSE_ALLOW_OPPORTUNISTIC
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowOpportunistic as cudaMemPoolReuseAllowOpportunistic
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowInternalDependencies
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowInternalDependencies as CU_MEMPOOL_ATTR_REUSE_ALLOW_INTERNAL_DEPENDENCIES
+from rocm.bindings.cyhip cimport hipMemPoolReuseAllowInternalDependencies as cudaMemPoolReuseAllowInternalDependencies
+from rocm.bindings.cyhip cimport hipMemPoolAttrReleaseThreshold
+from rocm.bindings.cyhip cimport hipMemPoolAttrReleaseThreshold as CU_MEMPOOL_ATTR_RELEASE_THRESHOLD
+from rocm.bindings.cyhip cimport hipMemPoolAttrReleaseThreshold as cudaMemPoolAttrReleaseThreshold
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemCurrent
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemCurrent as CU_MEMPOOL_ATTR_RESERVED_MEM_CURRENT
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemCurrent as cudaMemPoolAttrReservedMemCurrent
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemHigh
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemHigh as CU_MEMPOOL_ATTR_RESERVED_MEM_HIGH
+from rocm.bindings.cyhip cimport hipMemPoolAttrReservedMemHigh as cudaMemPoolAttrReservedMemHigh
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemCurrent
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemCurrent as CU_MEMPOOL_ATTR_USED_MEM_CURRENT
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemCurrent as cudaMemPoolAttrUsedMemCurrent
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemHigh
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemHigh as CU_MEMPOOL_ATTR_USED_MEM_HIGH
+from rocm.bindings.cyhip cimport hipMemPoolAttrUsedMemHigh as cudaMemPoolAttrUsedMemHigh
+ctypedef CUmemPool_attribute CUmemPool_attribute_enum
+ctypedef CUmemPool_attribute cudaMemPoolAttr
+from rocm.bindings.cyhip cimport hipMemAccessFlags as CUmemAccess_flags
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtNone
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtNone as CU_MEM_ACCESS_FLAGS_PROT_NONE
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtNone as cudaMemAccessFlagsProtNone
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtRead
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtRead as CU_MEM_ACCESS_FLAGS_PROT_READ
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtRead as cudaMemAccessFlagsProtRead
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtReadWrite
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtReadWrite as CU_MEM_ACCESS_FLAGS_PROT_READWRITE
+from rocm.bindings.cyhip cimport hipMemAccessFlagsProtReadWrite as cudaMemAccessFlagsProtReadWrite
+ctypedef CUmemAccess_flags CUmemAccess_flags_enum
+ctypedef CUmemAccess_flags cudaMemAccessFlags
+from rocm.bindings.cyhip cimport hipMemAccessDesc as CUmemAccessDesc
+from rocm.bindings.cyhip cimport hipMemAccessDesc as CUmemAccessDesc_st
+from rocm.bindings.cyhip cimport hipMemAccessDesc as CUmemAccessDesc_v1
+from rocm.bindings.cyhip cimport hipMemAccessDesc as cudaMemAccessDesc
+from rocm.bindings.cyhip cimport hipMemAllocationType as CUmemAllocationType
+from rocm.bindings.cyhip cimport hipMemAllocationTypeInvalid
+from rocm.bindings.cyhip cimport hipMemAllocationTypeInvalid as CU_MEM_ALLOCATION_TYPE_INVALID
+from rocm.bindings.cyhip cimport hipMemAllocationTypeInvalid as cudaMemAllocationTypeInvalid
+from rocm.bindings.cyhip cimport hipMemAllocationTypePinned
+from rocm.bindings.cyhip cimport hipMemAllocationTypePinned as CU_MEM_ALLOCATION_TYPE_PINNED
+from rocm.bindings.cyhip cimport hipMemAllocationTypePinned as cudaMemAllocationTypePinned
+from rocm.bindings.cyhip cimport hipMemAllocationTypeManaged
+from rocm.bindings.cyhip cimport hipMemAllocationTypeUncached
+from rocm.bindings.cyhip cimport hipMemAllocationTypeMax
+from rocm.bindings.cyhip cimport hipMemAllocationTypeMax as CU_MEM_ALLOCATION_TYPE_MAX
+from rocm.bindings.cyhip cimport hipMemAllocationTypeMax as cudaMemAllocationTypeMax
+ctypedef CUmemAllocationType CUmemAllocationType_enum
+ctypedef CUmemAllocationType cudaMemAllocationType
+from rocm.bindings.cyhip cimport hipMemAllocationHandleType as CUmemAllocationHandleType
+from rocm.bindings.cyhip cimport hipMemHandleTypeNone
+from rocm.bindings.cyhip cimport hipMemHandleTypeNone as CU_MEM_HANDLE_TYPE_NONE
+from rocm.bindings.cyhip cimport hipMemHandleTypeNone as cudaMemHandleTypeNone
+from rocm.bindings.cyhip cimport hipMemHandleTypePosixFileDescriptor
+from rocm.bindings.cyhip cimport hipMemHandleTypePosixFileDescriptor as CU_MEM_HANDLE_TYPE_POSIX_FILE_DESCRIPTOR
+from rocm.bindings.cyhip cimport hipMemHandleTypePosixFileDescriptor as cudaMemHandleTypePosixFileDescriptor
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32 as CU_MEM_HANDLE_TYPE_WIN32
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32 as cudaMemHandleTypeWin32
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32Kmt
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32Kmt as CU_MEM_HANDLE_TYPE_WIN32_KMT
+from rocm.bindings.cyhip cimport hipMemHandleTypeWin32Kmt as cudaMemHandleTypeWin32Kmt
+from rocm.bindings.cyhip cimport hipMemHandleTypeFabric
+from rocm.bindings.cyhip cimport hipMemHandleTypeFabric as CU_MEM_HANDLE_TYPE_FABRIC
+ctypedef CUmemAllocationHandleType CUmemAllocationHandleType_enum
+ctypedef CUmemAllocationHandleType cudaMemAllocationHandleType
+from rocm.bindings.cyhip cimport hipMemPoolProps as CUmemPoolProps
+from rocm.bindings.cyhip cimport hipMemPoolProps as CUmemPoolProps_st
+from rocm.bindings.cyhip cimport hipMemPoolProps as CUmemPoolProps_v1
+from rocm.bindings.cyhip cimport hipMemPoolProps as cudaMemPoolProps
+from rocm.bindings.cyhip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData
+from rocm.bindings.cyhip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData_st
+from rocm.bindings.cyhip cimport hipMemPoolPtrExportData as CUmemPoolPtrExportData_v1
+from rocm.bindings.cyhip cimport hipMemPoolPtrExportData as cudaMemPoolPtrExportData
+from rocm.bindings.cyhip cimport hipFuncAttribute as cudaFuncAttribute
+from rocm.bindings.cyhip cimport hipFuncAttributeMaxDynamicSharedMemorySize
+from rocm.bindings.cyhip cimport hipFuncAttributeMaxDynamicSharedMemorySize as cudaFuncAttributeMaxDynamicSharedMemorySize
+from rocm.bindings.cyhip cimport hipFuncAttributePreferredSharedMemoryCarveout
+from rocm.bindings.cyhip cimport hipFuncAttributePreferredSharedMemoryCarveout as cudaFuncAttributePreferredSharedMemoryCarveout
+from rocm.bindings.cyhip cimport hipFuncAttributeClusterDimMustBeSet
+from rocm.bindings.cyhip cimport hipFuncAttributeRequiredClusterWidth
+from rocm.bindings.cyhip cimport hipFuncAttributeRequiredClusterHeight
+from rocm.bindings.cyhip cimport hipFuncAttributeRequiredClusterDepth
+from rocm.bindings.cyhip cimport hipFuncAttributeNonPortableClusterSizeAllowed
+from rocm.bindings.cyhip cimport hipFuncAttributeClusterSchedulingPolicyPreference
+from rocm.bindings.cyhip cimport hipFuncAttributeMax
+from rocm.bindings.cyhip cimport hipFuncAttributeMax as cudaFuncAttributeMax
+from rocm.bindings.cyhip cimport hipFuncCache_t as CUfunc_cache
+from rocm.bindings.cyhip cimport hipFuncCachePreferNone
+from rocm.bindings.cyhip cimport hipFuncCachePreferNone as CU_FUNC_CACHE_PREFER_NONE
+from rocm.bindings.cyhip cimport hipFuncCachePreferNone as cudaFuncCachePreferNone
+from rocm.bindings.cyhip cimport hipFuncCachePreferShared
+from rocm.bindings.cyhip cimport hipFuncCachePreferShared as CU_FUNC_CACHE_PREFER_SHARED
+from rocm.bindings.cyhip cimport hipFuncCachePreferShared as cudaFuncCachePreferShared
+from rocm.bindings.cyhip cimport hipFuncCachePreferL1
+from rocm.bindings.cyhip cimport hipFuncCachePreferL1 as CU_FUNC_CACHE_PREFER_L1
+from rocm.bindings.cyhip cimport hipFuncCachePreferL1 as cudaFuncCachePreferL1
+from rocm.bindings.cyhip cimport hipFuncCachePreferEqual
+from rocm.bindings.cyhip cimport hipFuncCachePreferEqual as CU_FUNC_CACHE_PREFER_EQUAL
+from rocm.bindings.cyhip cimport hipFuncCachePreferEqual as cudaFuncCachePreferEqual
+ctypedef CUfunc_cache CUfunc_cache_enum
+ctypedef CUfunc_cache cudaFuncCache
+from rocm.bindings.cyhip cimport hipSharedMemConfig as CUsharedconfig
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeDefault
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeDefault as CU_SHARED_MEM_CONFIG_DEFAULT_BANK_SIZE
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeDefault as cudaSharedMemBankSizeDefault
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeFourByte
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeFourByte as CU_SHARED_MEM_CONFIG_FOUR_BYTE_BANK_SIZE
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeFourByte as cudaSharedMemBankSizeFourByte
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeEightByte
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeEightByte as CU_SHARED_MEM_CONFIG_EIGHT_BYTE_BANK_SIZE
+from rocm.bindings.cyhip cimport hipSharedMemBankSizeEightByte as cudaSharedMemBankSizeEightByte
+ctypedef CUsharedconfig CUsharedconfig_enum
+ctypedef CUsharedconfig cudaSharedMemConfig
+from rocm.bindings.cyhip cimport hipLaunchParams as cudaLaunchParams
+from rocm.bindings.cyhip cimport hipFunctionLaunchParams_t as CUDA_LAUNCH_PARAMS_st
+from rocm.bindings.cyhip cimport hipFunctionLaunchParams as CUDA_LAUNCH_PARAMS
+from rocm.bindings.cyhip cimport hipFunctionLaunchParams as CUDA_LAUNCH_PARAMS_v1
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleType_enum as CUexternalMemoryHandleType_enum
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueFd
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueFd as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueFd as cudaExternalMemoryHandleTypeOpaqueFd
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32 as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32 as cudaExternalMemoryHandleTypeOpaqueWin32
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt as CU_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeOpaqueWin32Kmt as cudaExternalMemoryHandleTypeOpaqueWin32Kmt
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Heap
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Heap as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Heap as cudaExternalMemoryHandleTypeD3D12Heap
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Resource
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Resource as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D12Resource as cudaExternalMemoryHandleTypeD3D12Resource
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11Resource
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11Resource as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11Resource as cudaExternalMemoryHandleTypeD3D11Resource
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt as CU_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_RESOURCE_KMT
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeD3D11ResourceKmt as cudaExternalMemoryHandleTypeD3D11ResourceKmt
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleTypeNvSciBuf
+ctypedef CUexternalMemoryHandleType_enum CUexternalMemoryHandleType
+ctypedef CUexternalMemoryHandleType_enum cudaExternalMemoryHandleType
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleDesc_st as CUDA_EXTERNAL_MEMORY_HANDLE_DESC_st
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleDesc as CUDA_EXTERNAL_MEMORY_HANDLE_DESC
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleDesc as CUDA_EXTERNAL_MEMORY_HANDLE_DESC_v1
+from rocm.bindings.cyhip cimport hipExternalMemoryHandleDesc as cudaExternalMemoryHandleDesc
+from rocm.bindings.cyhip cimport hipExternalMemoryBufferDesc_st as CUDA_EXTERNAL_MEMORY_BUFFER_DESC_st
+from rocm.bindings.cyhip cimport hipExternalMemoryBufferDesc as CUDA_EXTERNAL_MEMORY_BUFFER_DESC
+from rocm.bindings.cyhip cimport hipExternalMemoryBufferDesc as CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1
+from rocm.bindings.cyhip cimport hipExternalMemoryBufferDesc as cudaExternalMemoryBufferDesc
+from rocm.bindings.cyhip cimport hipExternalMemory_t as CUexternalMemory
+from rocm.bindings.cyhip cimport hipExternalMemory_t as cudaExternalMemory_t
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleType_enum as CUexternalSemaphoreHandleType_enum
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueFd
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueFd as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueFd as cudaExternalSemaphoreHandleTypeOpaqueFd
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32 as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32 as cudaExternalSemaphoreHandleTypeOpaqueWin32
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeOpaqueWin32Kmt as cudaExternalSemaphoreHandleTypeOpaqueWin32Kmt
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeD3D12Fence
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeD3D12Fence as CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeD3D12Fence as cudaExternalSemaphoreHandleTypeD3D12Fence
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeD3D11Fence
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeNvSciSync
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeKeyedMutex
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeKeyedMutexKmt
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeTimelineSemaphoreFd
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleTypeTimelineSemaphoreWin32
+ctypedef CUexternalSemaphoreHandleType_enum CUexternalSemaphoreHandleType
+ctypedef CUexternalSemaphoreHandleType_enum cudaExternalSemaphoreHandleType
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleDesc_st as CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleDesc as CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleDesc as CUDA_EXTERNAL_SEMAPHORE_HANDLE_DESC_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreHandleDesc as cudaExternalSemaphoreHandleDesc
+from rocm.bindings.cyhip cimport hipExternalSemaphore_t as CUexternalSemaphore
+from rocm.bindings.cyhip cimport hipExternalSemaphore_t as cudaExternalSemaphore_t
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalParams_st as CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalParams as CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalParams as CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalParams as cudaExternalSemaphoreSignalParams
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalParams as cudaExternalSemaphoreSignalParams_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitParams_st as CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitParams as CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitParams as CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitParams as cudaExternalSemaphoreWaitParams
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitParams as cudaExternalSemaphoreWaitParams_v1
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlags as CUgraphicsRegisterFlags
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsNone
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsNone as CU_GRAPHICS_REGISTER_FLAGS_NONE
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsNone as cudaGraphicsRegisterFlagsNone
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsReadOnly
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsReadOnly as CU_GRAPHICS_REGISTER_FLAGS_READ_ONLY
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsReadOnly as cudaGraphicsRegisterFlagsReadOnly
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsWriteDiscard
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsWriteDiscard as CU_GRAPHICS_REGISTER_FLAGS_WRITE_DISCARD
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsWriteDiscard as cudaGraphicsRegisterFlagsWriteDiscard
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsSurfaceLoadStore
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsSurfaceLoadStore as CU_GRAPHICS_REGISTER_FLAGS_SURFACE_LDST
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsSurfaceLoadStore as cudaGraphicsRegisterFlagsSurfaceLoadStore
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsTextureGather
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsTextureGather as CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER
+from rocm.bindings.cyhip cimport hipGraphicsRegisterFlagsTextureGather as cudaGraphicsRegisterFlagsTextureGather
+ctypedef CUgraphicsRegisterFlags CUgraphicsRegisterFlags_enum
+ctypedef CUgraphicsRegisterFlags cudaGraphicsRegisterFlags
+from rocm.bindings.cyhip cimport hipGraphicsResource as CUgraphicsResource_st
+from rocm.bindings.cyhip cimport hipGraphicsResource as cudaGraphicsResource
+from rocm.bindings.cyhip cimport hipGraphicsResource_t as CUgraphicsResource
+from rocm.bindings.cyhip cimport hipGraphicsResource_t as cudaGraphicsResource_t
+from rocm.bindings.cyhip cimport ihipGraph as CUgraph_st
+from rocm.bindings.cyhip cimport hipGraph_t as CUgraph
+from rocm.bindings.cyhip cimport hipGraph_t as cudaGraph_t
+from rocm.bindings.cyhip cimport hipGraphNode as CUgraphNode_st
+from rocm.bindings.cyhip cimport hipGraphNode_t as CUgraphNode
+from rocm.bindings.cyhip cimport hipGraphNode_t as cudaGraphNode_t
+from rocm.bindings.cyhip cimport hipGraphExec as CUgraphExec_st
+from rocm.bindings.cyhip cimport hipGraphExec_t as CUgraphExec
+from rocm.bindings.cyhip cimport hipGraphExec_t as cudaGraphExec_t
+from rocm.bindings.cyhip cimport hipUserObject as CUuserObject_st
+from rocm.bindings.cyhip cimport hipUserObject_t as CUuserObject
+from rocm.bindings.cyhip cimport hipUserObject_t as cudaUserObject_t
+from rocm.bindings.cyhip cimport hipGraphNodeType as CUgraphNodeType
+from rocm.bindings.cyhip cimport hipGraphNodeTypeKernel
+from rocm.bindings.cyhip cimport hipGraphNodeTypeKernel as CU_GRAPH_NODE_TYPE_KERNEL
+from rocm.bindings.cyhip cimport hipGraphNodeTypeKernel as cudaGraphNodeTypeKernel
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemcpy
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemcpy as CU_GRAPH_NODE_TYPE_MEMCPY
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemcpy as cudaGraphNodeTypeMemcpy
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemset
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemset as CU_GRAPH_NODE_TYPE_MEMSET
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemset as cudaGraphNodeTypeMemset
+from rocm.bindings.cyhip cimport hipGraphNodeTypeHost
+from rocm.bindings.cyhip cimport hipGraphNodeTypeHost as CU_GRAPH_NODE_TYPE_HOST
+from rocm.bindings.cyhip cimport hipGraphNodeTypeHost as cudaGraphNodeTypeHost
+from rocm.bindings.cyhip cimport hipGraphNodeTypeGraph
+from rocm.bindings.cyhip cimport hipGraphNodeTypeGraph as CU_GRAPH_NODE_TYPE_GRAPH
+from rocm.bindings.cyhip cimport hipGraphNodeTypeGraph as cudaGraphNodeTypeGraph
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEmpty
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEmpty as CU_GRAPH_NODE_TYPE_EMPTY
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEmpty as cudaGraphNodeTypeEmpty
+from rocm.bindings.cyhip cimport hipGraphNodeTypeWaitEvent
+from rocm.bindings.cyhip cimport hipGraphNodeTypeWaitEvent as CU_GRAPH_NODE_TYPE_WAIT_EVENT
+from rocm.bindings.cyhip cimport hipGraphNodeTypeWaitEvent as cudaGraphNodeTypeWaitEvent
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEventRecord
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEventRecord as CU_GRAPH_NODE_TYPE_EVENT_RECORD
+from rocm.bindings.cyhip cimport hipGraphNodeTypeEventRecord as cudaGraphNodeTypeEventRecord
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreSignal
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreSignal as CU_GRAPH_NODE_TYPE_EXT_SEMAS_SIGNAL
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreSignal as cudaGraphNodeTypeExtSemaphoreSignal
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreWait
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreWait as CU_GRAPH_NODE_TYPE_EXT_SEMAS_WAIT
+from rocm.bindings.cyhip cimport hipGraphNodeTypeExtSemaphoreWait as cudaGraphNodeTypeExtSemaphoreWait
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemAlloc
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemAlloc as CU_GRAPH_NODE_TYPE_MEM_ALLOC
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemAlloc as cudaGraphNodeTypeMemAlloc
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemFree
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemFree as CU_GRAPH_NODE_TYPE_MEM_FREE
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemFree as cudaGraphNodeTypeMemFree
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemcpyFromSymbol
+from rocm.bindings.cyhip cimport hipGraphNodeTypeMemcpyToSymbol
+from rocm.bindings.cyhip cimport hipGraphNodeTypeBatchMemOp
+from rocm.bindings.cyhip cimport hipGraphNodeTypeBatchMemOp as CU_GRAPH_NODE_TYPE_BATCH_MEM_OP
+from rocm.bindings.cyhip cimport hipGraphNodeTypeCount
+from rocm.bindings.cyhip cimport hipGraphNodeTypeCount as CU_GRAPH_NODE_TYPE_COUNT
+from rocm.bindings.cyhip cimport hipGraphNodeTypeCount as cudaGraphNodeTypeCount
+ctypedef CUgraphNodeType CUgraphNodeType_enum
+ctypedef CUgraphNodeType cudaGraphNodeType
+from rocm.bindings.cyhip cimport hipHostFn_t as CUhostFn
+from rocm.bindings.cyhip cimport hipHostFn_t as cudaHostFn_t
+from rocm.bindings.cyhip cimport hipHostNodeParams as CUDA_HOST_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipHostNodeParams as CUDA_HOST_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipHostNodeParams as CUDA_HOST_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipHostNodeParams as cudaHostNodeParams
+from rocm.bindings.cyhip cimport hipKernelNodeParams as CUDA_KERNEL_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipKernelNodeParams as CUDA_KERNEL_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipKernelNodeParams as CUDA_KERNEL_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipKernelNodeParams as cudaKernelNodeParams
+from rocm.bindings.cyhip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipMemsetParams as CUDA_MEMSET_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipMemsetParams as cudaMemsetParams
+from rocm.bindings.cyhip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipMemAllocNodeParams as CUDA_MEM_ALLOC_NODE_PARAMS_v1_st
+from rocm.bindings.cyhip cimport hipMemAllocNodeParams as cudaMemAllocNodeParams
+from rocm.bindings.cyhip cimport hipAccessProperty as CUaccessProperty
+from rocm.bindings.cyhip cimport hipAccessPropertyNormal
+from rocm.bindings.cyhip cimport hipAccessPropertyNormal as CU_ACCESS_PROPERTY_NORMAL
+from rocm.bindings.cyhip cimport hipAccessPropertyNormal as cudaAccessPropertyNormal
+from rocm.bindings.cyhip cimport hipAccessPropertyStreaming
+from rocm.bindings.cyhip cimport hipAccessPropertyStreaming as CU_ACCESS_PROPERTY_STREAMING
+from rocm.bindings.cyhip cimport hipAccessPropertyStreaming as cudaAccessPropertyStreaming
+from rocm.bindings.cyhip cimport hipAccessPropertyPersisting
+from rocm.bindings.cyhip cimport hipAccessPropertyPersisting as CU_ACCESS_PROPERTY_PERSISTING
+from rocm.bindings.cyhip cimport hipAccessPropertyPersisting as cudaAccessPropertyPersisting
+ctypedef CUaccessProperty CUaccessProperty_enum
+ctypedef CUaccessProperty cudaAccessProperty
+from rocm.bindings.cyhip cimport hipAccessPolicyWindow as CUaccessPolicyWindow
+from rocm.bindings.cyhip cimport hipAccessPolicyWindow as CUaccessPolicyWindow_st
+from rocm.bindings.cyhip cimport hipAccessPolicyWindow as cudaAccessPolicyWindow
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainMap as CUlaunchMemSyncDomainMap
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainMap as CUlaunchMemSyncDomainMap_st
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainMap as cudaLaunchMemSyncDomainMap
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainMap as cudaLaunchMemSyncDomainMap_st
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomain as CUlaunchMemSyncDomain
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainDefault
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainDefault as CU_LAUNCH_MEM_SYNC_DOMAIN_DEFAULT
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainDefault as cudaLaunchMemSyncDomainDefault
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainRemote
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainRemote as CU_LAUNCH_MEM_SYNC_DOMAIN_REMOTE
+from rocm.bindings.cyhip cimport hipLaunchMemSyncDomainRemote as cudaLaunchMemSyncDomainRemote
+ctypedef CUlaunchMemSyncDomain CUlaunchMemSyncDomain_enum
+ctypedef CUlaunchMemSyncDomain cudaLaunchMemSyncDomain
+from rocm.bindings.cyhip cimport hipSynchronizationPolicy as CUsynchronizationPolicy
+from rocm.bindings.cyhip cimport hipSyncPolicyAuto
+from rocm.bindings.cyhip cimport hipSyncPolicyAuto as CU_SYNC_POLICY_AUTO
+from rocm.bindings.cyhip cimport hipSyncPolicyAuto as cudaSyncPolicyAuto
+from rocm.bindings.cyhip cimport hipSyncPolicySpin
+from rocm.bindings.cyhip cimport hipSyncPolicySpin as CU_SYNC_POLICY_SPIN
+from rocm.bindings.cyhip cimport hipSyncPolicySpin as cudaSyncPolicySpin
+from rocm.bindings.cyhip cimport hipSyncPolicyYield
+from rocm.bindings.cyhip cimport hipSyncPolicyYield as CU_SYNC_POLICY_YIELD
+from rocm.bindings.cyhip cimport hipSyncPolicyYield as cudaSyncPolicyYield
+from rocm.bindings.cyhip cimport hipSyncPolicyBlockingSync
+from rocm.bindings.cyhip cimport hipSyncPolicyBlockingSync as CU_SYNC_POLICY_BLOCKING_SYNC
+from rocm.bindings.cyhip cimport hipSyncPolicyBlockingSync as cudaSyncPolicyBlockingSync
+ctypedef CUsynchronizationPolicy CUsynchronizationPolicy_enum
+ctypedef CUsynchronizationPolicy cudaSynchronizationPolicy
+from rocm.bindings.cyhip cimport hipLaunchAttributeID as CUlaunchAttributeID
+from rocm.bindings.cyhip cimport hipLaunchAttributeIgnore
+from rocm.bindings.cyhip cimport hipLaunchAttributeAccessPolicyWindow
+from rocm.bindings.cyhip cimport hipLaunchAttributeAccessPolicyWindow as CU_LAUNCH_ATTRIBUTE_ACCESS_POLICY_WINDOW
+from rocm.bindings.cyhip cimport hipLaunchAttributeAccessPolicyWindow as CU_STREAM_ATTRIBUTE_ACCESS_POLICY_WINDOW
+from rocm.bindings.cyhip cimport hipLaunchAttributeAccessPolicyWindow as cudaLaunchAttributeAccessPolicyWindow
+from rocm.bindings.cyhip cimport hipLaunchAttributeAccessPolicyWindow as cudaStreamAttributeAccessPolicyWindow
+from rocm.bindings.cyhip cimport hipLaunchAttributeCooperative
+from rocm.bindings.cyhip cimport hipLaunchAttributeCooperative as CU_LAUNCH_ATTRIBUTE_COOPERATIVE
+from rocm.bindings.cyhip cimport hipLaunchAttributeCooperative as cudaLaunchAttributeCooperative
+from rocm.bindings.cyhip cimport hipLaunchAttributeSynchronizationPolicy
+from rocm.bindings.cyhip cimport hipLaunchAttributeSynchronizationPolicy as CU_LAUNCH_ATTRIBUTE_SYNCHRONIZATION_POLICY
+from rocm.bindings.cyhip cimport hipLaunchAttributeSynchronizationPolicy as CU_STREAM_ATTRIBUTE_SYNCHRONIZATION_POLICY
+from rocm.bindings.cyhip cimport hipLaunchAttributeSynchronizationPolicy as cudaLaunchAttributeSynchronizationPolicy
+from rocm.bindings.cyhip cimport hipLaunchAttributeSynchronizationPolicy as cudaStreamAttributeSynchronizationPolicy
+from rocm.bindings.cyhip cimport hipLaunchAttributeClusterDimension
+from rocm.bindings.cyhip cimport hipLaunchAttributeClusterSchedulingPolicyPreference
+from rocm.bindings.cyhip cimport hipLaunchAttributePriority
+from rocm.bindings.cyhip cimport hipLaunchAttributePriority as CU_LAUNCH_ATTRIBUTE_PRIORITY
+from rocm.bindings.cyhip cimport hipLaunchAttributePriority as CU_STREAM_ATTRIBUTE_PRIORITY
+from rocm.bindings.cyhip cimport hipLaunchAttributePriority as cudaLaunchAttributePriority
+from rocm.bindings.cyhip cimport hipLaunchAttributePriority as cudaStreamAttributePriority
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomainMap
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomainMap as CU_LAUNCH_ATTRIBUTE_MEM_SYNC_DOMAIN_MAP
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomainMap as CU_STREAM_ATTRIBUTE_MEM_SYNC_DOMAIN_MAP
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomainMap as cudaLaunchAttributeMemSyncDomainMap
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomainMap as cudaStreamAttributeMemSyncDomainMap
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomain
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomain as CU_LAUNCH_ATTRIBUTE_MEM_SYNC_DOMAIN
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomain as CU_STREAM_ATTRIBUTE_MEM_SYNC_DOMAIN
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomain as cudaLaunchAttributeMemSyncDomain
+from rocm.bindings.cyhip cimport hipLaunchAttributeMemSyncDomain as cudaStreamAttributeMemSyncDomain
+from rocm.bindings.cyhip cimport hipLaunchAttributeExtDynDataPrefetch
+from rocm.bindings.cyhip cimport hipLaunchAttributeMax
+from rocm.bindings.cyhip cimport hipLaunchAttributeMax as CU_LAUNCH_ATTRIBUTE_MAX
+ctypedef CUlaunchAttributeID CUlaunchAttributeID_enum
+ctypedef CUlaunchAttributeID CUstreamAttrID
+ctypedef CUlaunchAttributeID CUstreamAttrID_enum
+ctypedef CUlaunchAttributeID cudaLaunchAttributeID
+ctypedef CUlaunchAttributeID cudaStreamAttrID
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as CUlaunchAttributeValue
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as CUlaunchAttributeValue_union
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as CUstreamAttrValue
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as CUstreamAttrValue_union
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as CUstreamAttrValue_v1
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as cudaLaunchAttributeValue
+from rocm.bindings.cyhip cimport hipLaunchAttributeValue as cudaStreamAttrValue
+from rocm.bindings.cyhip cimport hipGraphExecUpdateResult as CUgraphExecUpdateResult
+from rocm.bindings.cyhip cimport hipGraphExecUpdateSuccess
+from rocm.bindings.cyhip cimport hipGraphExecUpdateSuccess as CU_GRAPH_EXEC_UPDATE_SUCCESS
+from rocm.bindings.cyhip cimport hipGraphExecUpdateSuccess as cudaGraphExecUpdateSuccess
+from rocm.bindings.cyhip cimport hipGraphExecUpdateError
+from rocm.bindings.cyhip cimport hipGraphExecUpdateError as CU_GRAPH_EXEC_UPDATE_ERROR
+from rocm.bindings.cyhip cimport hipGraphExecUpdateError as cudaGraphExecUpdateError
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorTopologyChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorTopologyChanged as CU_GRAPH_EXEC_UPDATE_ERROR_TOPOLOGY_CHANGED
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorTopologyChanged as cudaGraphExecUpdateErrorTopologyChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNodeTypeChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNodeTypeChanged as CU_GRAPH_EXEC_UPDATE_ERROR_NODE_TYPE_CHANGED
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNodeTypeChanged as cudaGraphExecUpdateErrorNodeTypeChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorFunctionChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorFunctionChanged as CU_GRAPH_EXEC_UPDATE_ERROR_FUNCTION_CHANGED
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorFunctionChanged as cudaGraphExecUpdateErrorFunctionChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorParametersChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorParametersChanged as CU_GRAPH_EXEC_UPDATE_ERROR_PARAMETERS_CHANGED
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorParametersChanged as cudaGraphExecUpdateErrorParametersChanged
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNotSupported
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNotSupported as CU_GRAPH_EXEC_UPDATE_ERROR_NOT_SUPPORTED
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorNotSupported as cudaGraphExecUpdateErrorNotSupported
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange as CU_GRAPH_EXEC_UPDATE_ERROR_UNSUPPORTED_FUNCTION_CHANGE
+from rocm.bindings.cyhip cimport hipGraphExecUpdateErrorUnsupportedFunctionChange as cudaGraphExecUpdateErrorUnsupportedFunctionChange
+ctypedef CUgraphExecUpdateResult CUgraphExecUpdateResult_enum
+ctypedef CUgraphExecUpdateResult cudaGraphExecUpdateResult
+from rocm.bindings.cyhip cimport hipStreamCaptureMode as CUstreamCaptureMode
+from rocm.bindings.cyhip cimport hipStreamCaptureModeGlobal
+from rocm.bindings.cyhip cimport hipStreamCaptureModeGlobal as CU_STREAM_CAPTURE_MODE_GLOBAL
+from rocm.bindings.cyhip cimport hipStreamCaptureModeGlobal as cudaStreamCaptureModeGlobal
+from rocm.bindings.cyhip cimport hipStreamCaptureModeThreadLocal
+from rocm.bindings.cyhip cimport hipStreamCaptureModeThreadLocal as CU_STREAM_CAPTURE_MODE_THREAD_LOCAL
+from rocm.bindings.cyhip cimport hipStreamCaptureModeThreadLocal as cudaStreamCaptureModeThreadLocal
+from rocm.bindings.cyhip cimport hipStreamCaptureModeRelaxed
+from rocm.bindings.cyhip cimport hipStreamCaptureModeRelaxed as CU_STREAM_CAPTURE_MODE_RELAXED
+from rocm.bindings.cyhip cimport hipStreamCaptureModeRelaxed as cudaStreamCaptureModeRelaxed
+ctypedef CUstreamCaptureMode CUstreamCaptureMode_enum
+ctypedef CUstreamCaptureMode cudaStreamCaptureMode
+from rocm.bindings.cyhip cimport hipStreamCaptureStatus as CUstreamCaptureStatus
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusNone
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusNone as CU_STREAM_CAPTURE_STATUS_NONE
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusNone as cudaStreamCaptureStatusNone
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusActive
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusActive as CU_STREAM_CAPTURE_STATUS_ACTIVE
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusActive as cudaStreamCaptureStatusActive
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusInvalidated
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusInvalidated as CU_STREAM_CAPTURE_STATUS_INVALIDATED
+from rocm.bindings.cyhip cimport hipStreamCaptureStatusInvalidated as cudaStreamCaptureStatusInvalidated
+ctypedef CUstreamCaptureStatus CUstreamCaptureStatus_enum
+ctypedef CUstreamCaptureStatus cudaStreamCaptureStatus
+from rocm.bindings.cyhip cimport hipStreamUpdateCaptureDependenciesFlags as CUstreamUpdateCaptureDependencies_flags
+from rocm.bindings.cyhip cimport hipStreamAddCaptureDependencies
+from rocm.bindings.cyhip cimport hipStreamAddCaptureDependencies as CU_STREAM_ADD_CAPTURE_DEPENDENCIES
+from rocm.bindings.cyhip cimport hipStreamAddCaptureDependencies as cudaStreamAddCaptureDependencies
+from rocm.bindings.cyhip cimport hipStreamSetCaptureDependencies
+from rocm.bindings.cyhip cimport hipStreamSetCaptureDependencies as CU_STREAM_SET_CAPTURE_DEPENDENCIES
+from rocm.bindings.cyhip cimport hipStreamSetCaptureDependencies as cudaStreamSetCaptureDependencies
+ctypedef CUstreamUpdateCaptureDependencies_flags CUstreamUpdateCaptureDependencies_flags_enum
+ctypedef CUstreamUpdateCaptureDependencies_flags cudaStreamUpdateCaptureDependenciesFlags
+from rocm.bindings.cyhip cimport hipGraphMemAttributeType as CUgraphMem_attribute
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemCurrent
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemCurrent as CU_GRAPH_MEM_ATTR_USED_MEM_CURRENT
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemCurrent as cudaGraphMemAttrUsedMemCurrent
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemHigh
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemHigh as CU_GRAPH_MEM_ATTR_USED_MEM_HIGH
+from rocm.bindings.cyhip cimport hipGraphMemAttrUsedMemHigh as cudaGraphMemAttrUsedMemHigh
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemCurrent
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemCurrent as CU_GRAPH_MEM_ATTR_RESERVED_MEM_CURRENT
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemCurrent as cudaGraphMemAttrReservedMemCurrent
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemHigh
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemHigh as CU_GRAPH_MEM_ATTR_RESERVED_MEM_HIGH
+from rocm.bindings.cyhip cimport hipGraphMemAttrReservedMemHigh as cudaGraphMemAttrReservedMemHigh
+ctypedef CUgraphMem_attribute CUgraphMem_attribute_enum
+ctypedef CUgraphMem_attribute cudaGraphMemAttributeType
+from rocm.bindings.cyhip cimport hipUserObjectFlags as CUuserObject_flags
+from rocm.bindings.cyhip cimport hipUserObjectNoDestructorSync
+from rocm.bindings.cyhip cimport hipUserObjectNoDestructorSync as CU_USER_OBJECT_NO_DESTRUCTOR_SYNC
+from rocm.bindings.cyhip cimport hipUserObjectNoDestructorSync as cudaUserObjectNoDestructorSync
+ctypedef CUuserObject_flags CUuserObject_flags_enum
+ctypedef CUuserObject_flags cudaUserObjectFlags
+from rocm.bindings.cyhip cimport hipUserObjectRetainFlags as CUuserObjectRetain_flags
+from rocm.bindings.cyhip cimport hipGraphUserObjectMove
+from rocm.bindings.cyhip cimport hipGraphUserObjectMove as CU_GRAPH_USER_OBJECT_MOVE
+from rocm.bindings.cyhip cimport hipGraphUserObjectMove as cudaGraphUserObjectMove
+ctypedef CUuserObjectRetain_flags CUuserObjectRetain_flags_enum
+ctypedef CUuserObjectRetain_flags cudaUserObjectRetainFlags
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlags as CUgraphInstantiate_flags
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagAutoFreeOnLaunch
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as CUDA_GRAPH_INSTANTIATE_FLAG_AUTO_FREE_ON_LAUNCH
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagAutoFreeOnLaunch as cudaGraphInstantiateFlagAutoFreeOnLaunch
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUpload
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUpload as CUDA_GRAPH_INSTANTIATE_FLAG_UPLOAD
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUpload as cudaGraphInstantiateFlagUpload
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagDeviceLaunch
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagDeviceLaunch as CUDA_GRAPH_INSTANTIATE_FLAG_DEVICE_LAUNCH
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagDeviceLaunch as cudaGraphInstantiateFlagDeviceLaunch
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUseNodePriority
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUseNodePriority as CUDA_GRAPH_INSTANTIATE_FLAG_USE_NODE_PRIORITY
+from rocm.bindings.cyhip cimport hipGraphInstantiateFlagUseNodePriority as cudaGraphInstantiateFlagUseNodePriority
+ctypedef CUgraphInstantiate_flags CUgraphInstantiate_flags_enum
+ctypedef CUgraphInstantiate_flags cudaGraphInstantiateFlags
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlags as CUgraphDebugDot_flags
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsVerbose
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsVerbose as CU_GRAPH_DEBUG_DOT_FLAGS_VERBOSE
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsVerbose as cudaGraphDebugDotFlagsVerbose
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeParams as cudaGraphDebugDotFlagsKernelNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemcpyNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemcpyNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_MEMCPY_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemcpyNodeParams as cudaGraphDebugDotFlagsMemcpyNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemsetNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemsetNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_MEMSET_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsMemsetNodeParams as cudaGraphDebugDotFlagsMemsetNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHostNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHostNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_HOST_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHostNodeParams as cudaGraphDebugDotFlagsHostNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsEventNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsEventNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EVENT_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsEventNodeParams as cudaGraphDebugDotFlagsEventNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_SIGNAL_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasSignalNodeParams as cudaGraphDebugDotFlagsExtSemasSignalNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams as CU_GRAPH_DEBUG_DOT_FLAGS_EXT_SEMAS_WAIT_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsExtSemasWaitNodeParams as cudaGraphDebugDotFlagsExtSemasWaitNodeParams
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeAttributes
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeAttributes as CU_GRAPH_DEBUG_DOT_FLAGS_KERNEL_NODE_ATTRIBUTES
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsKernelNodeAttributes as cudaGraphDebugDotFlagsKernelNodeAttributes
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHandles
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHandles as CU_GRAPH_DEBUG_DOT_FLAGS_HANDLES
+from rocm.bindings.cyhip cimport hipGraphDebugDotFlagsHandles as cudaGraphDebugDotFlagsHandles
+ctypedef CUgraphDebugDot_flags CUgraphDebugDot_flags_enum
+ctypedef CUgraphDebugDot_flags cudaGraphDebugDotFlags
+from rocm.bindings.cyhip cimport hipGraphInstantiateResult as CUgraphInstantiateResult
+from rocm.bindings.cyhip cimport hipGraphInstantiateSuccess
+from rocm.bindings.cyhip cimport hipGraphInstantiateSuccess as CUDA_GRAPH_INSTANTIATE_SUCCESS
+from rocm.bindings.cyhip cimport hipGraphInstantiateSuccess as cudaGraphInstantiateSuccess
+from rocm.bindings.cyhip cimport hipGraphInstantiateError
+from rocm.bindings.cyhip cimport hipGraphInstantiateError as CUDA_GRAPH_INSTANTIATE_ERROR
+from rocm.bindings.cyhip cimport hipGraphInstantiateError as cudaGraphInstantiateError
+from rocm.bindings.cyhip cimport hipGraphInstantiateInvalidStructure
+from rocm.bindings.cyhip cimport hipGraphInstantiateInvalidStructure as CUDA_GRAPH_INSTANTIATE_INVALID_STRUCTURE
+from rocm.bindings.cyhip cimport hipGraphInstantiateInvalidStructure as cudaGraphInstantiateInvalidStructure
+from rocm.bindings.cyhip cimport hipGraphInstantiateNodeOperationNotSupported
+from rocm.bindings.cyhip cimport hipGraphInstantiateNodeOperationNotSupported as CUDA_GRAPH_INSTANTIATE_NODE_OPERATION_NOT_SUPPORTED
+from rocm.bindings.cyhip cimport hipGraphInstantiateNodeOperationNotSupported as cudaGraphInstantiateNodeOperationNotSupported
+from rocm.bindings.cyhip cimport hipGraphInstantiateMultipleDevicesNotSupported
+from rocm.bindings.cyhip cimport hipGraphInstantiateMultipleDevicesNotSupported as CUDA_GRAPH_INSTANTIATE_MULTIPLE_CTXS_NOT_SUPPORTED
+from rocm.bindings.cyhip cimport hipGraphInstantiateMultipleDevicesNotSupported as cudaGraphInstantiateMultipleDevicesNotSupported
+ctypedef CUgraphInstantiateResult CUgraphInstantiateResult_enum
+ctypedef CUgraphInstantiateResult cudaGraphInstantiateResult
+from rocm.bindings.cyhip cimport hipGraphInstantiateParams as CUDA_GRAPH_INSTANTIATE_PARAMS
+from rocm.bindings.cyhip cimport hipGraphInstantiateParams as CUDA_GRAPH_INSTANTIATE_PARAMS_st
+from rocm.bindings.cyhip cimport hipGraphInstantiateParams as cudaGraphInstantiateParams
+from rocm.bindings.cyhip cimport hipGraphInstantiateParams as cudaGraphInstantiateParams_st
+from rocm.bindings.cyhip cimport hipMemAllocationProp as CUmemAllocationProp
+from rocm.bindings.cyhip cimport hipMemAllocationProp as CUmemAllocationProp_st
+from rocm.bindings.cyhip cimport hipMemAllocationProp as CUmemAllocationProp_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as CUDA_EXT_SEM_SIGNAL_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v2
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v2_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as cudaExternalSemaphoreSignalNodeParams
+from rocm.bindings.cyhip cimport hipExternalSemaphoreSignalNodeParams as cudaExternalSemaphoreSignalNodeParamsV2
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as CUDA_EXT_SEM_WAIT_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as CUDA_EXT_SEM_WAIT_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as CUDA_EXT_SEM_WAIT_NODE_PARAMS_v1
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as CUDA_EXT_SEM_WAIT_NODE_PARAMS_v2
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as CUDA_EXT_SEM_WAIT_NODE_PARAMS_v2_st
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as cudaExternalSemaphoreWaitNodeParams
+from rocm.bindings.cyhip cimport hipExternalSemaphoreWaitNodeParams as cudaExternalSemaphoreWaitNodeParamsV2
+from rocm.bindings.cyhip cimport hipMemGenericAllocationHandle_t as CUmemGenericAllocationHandle
+from rocm.bindings.cyhip cimport hipMemGenericAllocationHandle_t as CUmemGenericAllocationHandle_v1
+from rocm.bindings.cyhip cimport hipMemAllocationGranularity_flags as CUmemAllocationGranularity_flags
+from rocm.bindings.cyhip cimport hipMemAllocationGranularityMinimum
+from rocm.bindings.cyhip cimport hipMemAllocationGranularityMinimum as CU_MEM_ALLOC_GRANULARITY_MINIMUM
+from rocm.bindings.cyhip cimport hipMemAllocationGranularityRecommended
+from rocm.bindings.cyhip cimport hipMemAllocationGranularityRecommended as CU_MEM_ALLOC_GRANULARITY_RECOMMENDED
+ctypedef CUmemAllocationGranularity_flags CUmemAllocationGranularity_flags_enum
+from rocm.bindings.cyhip cimport hipMemHandleType as CUmemHandleType
+from rocm.bindings.cyhip cimport hipMemHandleTypeGeneric
+from rocm.bindings.cyhip cimport hipMemHandleTypeGeneric as CU_MEM_HANDLE_TYPE_GENERIC
+ctypedef CUmemHandleType CUmemHandleType_enum
+from rocm.bindings.cyhip cimport hipMemOperationType as CUmemOperationType
+from rocm.bindings.cyhip cimport hipMemOperationTypeMap
+from rocm.bindings.cyhip cimport hipMemOperationTypeMap as CU_MEM_OPERATION_TYPE_MAP
+from rocm.bindings.cyhip cimport hipMemOperationTypeUnmap
+from rocm.bindings.cyhip cimport hipMemOperationTypeUnmap as CU_MEM_OPERATION_TYPE_UNMAP
+ctypedef CUmemOperationType CUmemOperationType_enum
+from rocm.bindings.cyhip cimport hipArraySparseSubresourceType as CUarraySparseSubresourceType
+from rocm.bindings.cyhip cimport hipArraySparseSubresourceTypeSparseLevel
+from rocm.bindings.cyhip cimport hipArraySparseSubresourceTypeSparseLevel as CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_SPARSE_LEVEL
+from rocm.bindings.cyhip cimport hipArraySparseSubresourceTypeMiptail
+from rocm.bindings.cyhip cimport hipArraySparseSubresourceTypeMiptail as CU_ARRAY_SPARSE_SUBRESOURCE_TYPE_MIPTAIL
+ctypedef CUarraySparseSubresourceType CUarraySparseSubresourceType_enum
+from rocm.bindings.cyhip cimport hipArrayMapInfo as CUarrayMapInfo
+from rocm.bindings.cyhip cimport hipArrayMapInfo as CUarrayMapInfo_st
+from rocm.bindings.cyhip cimport hipArrayMapInfo as CUarrayMapInfo_v1
+from rocm.bindings.cyhip cimport hipMemcpyNodeParams as CUDA_MEMCPY_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipMemcpyNodeParams as CUDA_MEMCPY_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipMemcpyNodeParams as cudaMemcpyNodeParams
+from rocm.bindings.cyhip cimport hipChildGraphNodeParams as CUDA_CHILD_GRAPH_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipChildGraphNodeParams as CUDA_CHILD_GRAPH_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipChildGraphNodeParams as cudaChildGraphNodeParams
+from rocm.bindings.cyhip cimport hipEventWaitNodeParams as CUDA_EVENT_WAIT_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipEventWaitNodeParams as CUDA_EVENT_WAIT_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipEventWaitNodeParams as cudaEventWaitNodeParams
+from rocm.bindings.cyhip cimport hipEventRecordNodeParams as CUDA_EVENT_RECORD_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipEventRecordNodeParams as CUDA_EVENT_RECORD_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipEventRecordNodeParams as cudaEventRecordNodeParams
+from rocm.bindings.cyhip cimport hipMemFreeNodeParams as CUDA_MEM_FREE_NODE_PARAMS
+from rocm.bindings.cyhip cimport hipMemFreeNodeParams as CUDA_MEM_FREE_NODE_PARAMS_st
+from rocm.bindings.cyhip cimport hipMemFreeNodeParams as cudaMemFreeNodeParams
+from rocm.bindings.cyhip cimport hipGraphNodeParams as CUgraphNodeParams
+from rocm.bindings.cyhip cimport hipGraphNodeParams as CUgraphNodeParams_st
+from rocm.bindings.cyhip cimport hipGraphNodeParams as cudaGraphNodeParams
+from rocm.bindings.cyhip cimport hipGraphDependencyType as CUgraphDependencyType
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeDefault
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeDefault as CU_GRAPH_DEPENDENCY_TYPE_DEFAULT
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeDefault as cudaGraphDependencyTypeDefault
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeProgrammatic
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeProgrammatic as CU_GRAPH_DEPENDENCY_TYPE_PROGRAMMATIC
+from rocm.bindings.cyhip cimport hipGraphDependencyTypeProgrammatic as cudaGraphDependencyTypeProgrammatic
+ctypedef CUgraphDependencyType CUgraphDependencyType_enum
+ctypedef CUgraphDependencyType cudaGraphDependencyType
+ctypedef CUgraphDependencyType cudaGraphDependencyType_enum
+from rocm.bindings.cyhip cimport hipGraphEdgeData as CUgraphEdgeData
+from rocm.bindings.cyhip cimport hipGraphEdgeData as CUgraphEdgeData_st
+from rocm.bindings.cyhip cimport hipGraphEdgeData as cudaGraphEdgeData
+from rocm.bindings.cyhip cimport hipGraphEdgeData as cudaGraphEdgeData_st
+from rocm.bindings.cyhip cimport hipLaunchAttribute_st as CUlaunchAttribute_st
+from rocm.bindings.cyhip cimport hipLaunchAttribute_st as cudaLaunchAttribute_st
+from rocm.bindings.cyhip cimport hipLaunchAttribute as CUlaunchAttribute
+from rocm.bindings.cyhip cimport hipLaunchAttribute as cudaLaunchAttribute
+from rocm.bindings.cyhip cimport hipLaunchConfig_st as cudaLaunchConfig_st
+from rocm.bindings.cyhip cimport hipLaunchConfig_t as cudaLaunchConfig_t
+from rocm.bindings.cyhip cimport HIP_LAUNCH_CONFIG_st as CUlaunchConfig_st
+from rocm.bindings.cyhip cimport HIP_LAUNCH_CONFIG as CUlaunchConfig
+from rocm.bindings.cyhip cimport hipMemRangeHandleType as CUmemRangeHandleType
+from rocm.bindings.cyhip cimport hipMemRangeHandleTypeDmaBufFd
+from rocm.bindings.cyhip cimport hipMemRangeHandleTypeDmaBufFd as CU_MEM_RANGE_HANDLE_TYPE_DMA_BUF_FD
+from rocm.bindings.cyhip cimport hipMemRangeHandleTypeMax
+from rocm.bindings.cyhip cimport hipMemRangeHandleTypeMax as CU_MEM_RANGE_HANDLE_TYPE_MAX
+ctypedef CUmemRangeHandleType CUmemRangeHandleType_enum
+from rocm.bindings.cyhip cimport hipMemRangeFlags as CUmemRangeFlags
+from rocm.bindings.cyhip cimport hipMemRangeFlagDmaBufMappingTypePcie
+from rocm.bindings.cyhip cimport hipMemRangeFlagDmaBufMappingTypePcie as CU_MEM_RANGE_FLAG_DMA_BUF_MAPPING_TYPE_PCIE
+from rocm.bindings.cyhip cimport hipMemRangeFlagsMax
+ctypedef CUmemRangeFlags CUmemRangeFlags_enum
+from rocm.bindings.cyhip cimport hipInit as cuInit
+from rocm.bindings.cyhip cimport hipDriverGetVersion as cuDriverGetVersion
+from rocm.bindings.cyhip cimport hipDriverGetVersion as cudaDriverGetVersion
+from rocm.bindings.cyhip cimport hipRuntimeGetVersion as cudaRuntimeGetVersion
+from rocm.bindings.cyhip cimport hipRuntimeGetVersion as getLocalRuntimeVersion
+from rocm.bindings.cyhip cimport hipDeviceGet as cuDeviceGet
+from rocm.bindings.cyhip cimport hipDeviceComputeCapability as cuDeviceComputeCapability
+from rocm.bindings.cyhip cimport hipDeviceGetName as cuDeviceGetName
+from rocm.bindings.cyhip cimport hipDeviceGetUuid as cuDeviceGetUuid
+from rocm.bindings.cyhip cimport hipDeviceGetUuid as cuDeviceGetUuid_v2
+from rocm.bindings.cyhip cimport hipDeviceGetP2PAttribute as cuDeviceGetP2PAttribute
+from rocm.bindings.cyhip cimport hipDeviceGetP2PAttribute as cudaDeviceGetP2PAttribute
+from rocm.bindings.cyhip cimport hipDeviceGetPCIBusId as cuDeviceGetPCIBusId
+from rocm.bindings.cyhip cimport hipDeviceGetPCIBusId as cudaDeviceGetPCIBusId
+from rocm.bindings.cyhip cimport hipDeviceGetByPCIBusId as cuDeviceGetByPCIBusId
+from rocm.bindings.cyhip cimport hipDeviceGetByPCIBusId as cudaDeviceGetByPCIBusId
+from rocm.bindings.cyhip cimport hipDeviceTotalMem as cuDeviceTotalMem
+from rocm.bindings.cyhip cimport hipDeviceTotalMem as cuDeviceTotalMem_v2
+from rocm.bindings.cyhip cimport hipDeviceSynchronize as cudaDeviceSynchronize
+from rocm.bindings.cyhip cimport hipDeviceSynchronize as cudaThreadSynchronize
+from rocm.bindings.cyhip cimport hipDeviceReset as cudaDeviceReset
+from rocm.bindings.cyhip cimport hipDeviceReset as cudaThreadExit
+from rocm.bindings.cyhip cimport hipSetDevice as cudaSetDevice
+from rocm.bindings.cyhip cimport hipSetValidDevices as cudaSetValidDevices
+from rocm.bindings.cyhip cimport hipGetDevice as cudaGetDevice
+from rocm.bindings.cyhip cimport hipGetDeviceCount as cuDeviceGetCount
+from rocm.bindings.cyhip cimport hipGetDeviceCount as cudaGetDeviceCount
+from rocm.bindings.cyhip cimport hipDeviceGetAttribute as cuDeviceGetAttribute
+from rocm.bindings.cyhip cimport hipDeviceGetAttribute as cudaDeviceGetAttribute
+from rocm.bindings.cyhip cimport hipDeviceGetDefaultMemPool as cuDeviceGetDefaultMemPool
+from rocm.bindings.cyhip cimport hipDeviceGetDefaultMemPool as cudaDeviceGetDefaultMemPool
+from rocm.bindings.cyhip cimport hipDeviceSetMemPool as cuDeviceSetMemPool
+from rocm.bindings.cyhip cimport hipDeviceSetMemPool as cudaDeviceSetMemPool
+from rocm.bindings.cyhip cimport hipDeviceGetMemPool as cuDeviceGetMemPool
+from rocm.bindings.cyhip cimport hipDeviceGetMemPool as cudaDeviceGetMemPool
+from rocm.bindings.cyhip cimport hipGetDeviceProperties as cudaGetDeviceProperties
+from rocm.bindings.cyhip cimport hipDeviceGetTexture1DLinearMaxWidth as cudaDeviceGetTexture1DLinearMaxWidth
+from rocm.bindings.cyhip cimport hipDeviceSetCacheConfig as cudaDeviceSetCacheConfig
+from rocm.bindings.cyhip cimport hipDeviceSetCacheConfig as cudaThreadSetCacheConfig
+from rocm.bindings.cyhip cimport hipDeviceGetCacheConfig as cudaDeviceGetCacheConfig
+from rocm.bindings.cyhip cimport hipDeviceGetCacheConfig as cudaThreadGetCacheConfig
+from rocm.bindings.cyhip cimport hipDeviceGetLimit as cuCtxGetLimit
+from rocm.bindings.cyhip cimport hipDeviceGetLimit as cudaDeviceGetLimit
+from rocm.bindings.cyhip cimport hipDeviceSetLimit as cuCtxSetLimit
+from rocm.bindings.cyhip cimport hipDeviceSetLimit as cudaDeviceSetLimit
+from rocm.bindings.cyhip cimport hipDeviceGetSharedMemConfig as cudaDeviceGetSharedMemConfig
+from rocm.bindings.cyhip cimport hipGetDeviceFlags as cudaGetDeviceFlags
+from rocm.bindings.cyhip cimport hipDeviceSetSharedMemConfig as cudaDeviceSetSharedMemConfig
+from rocm.bindings.cyhip cimport hipSetDeviceFlags as cudaSetDeviceFlags
+from rocm.bindings.cyhip cimport hipChooseDevice as cudaChooseDevice
+from rocm.bindings.cyhip cimport hipIpcGetMemHandle as cuIpcGetMemHandle
+from rocm.bindings.cyhip cimport hipIpcGetMemHandle as cudaIpcGetMemHandle
+from rocm.bindings.cyhip cimport hipIpcOpenMemHandle as cuIpcOpenMemHandle
+from rocm.bindings.cyhip cimport hipIpcOpenMemHandle as cudaIpcOpenMemHandle
+from rocm.bindings.cyhip cimport hipIpcCloseMemHandle as cuIpcCloseMemHandle
+from rocm.bindings.cyhip cimport hipIpcCloseMemHandle as cudaIpcCloseMemHandle
+from rocm.bindings.cyhip cimport hipIpcGetEventHandle as cuIpcGetEventHandle
+from rocm.bindings.cyhip cimport hipIpcGetEventHandle as cudaIpcGetEventHandle
+from rocm.bindings.cyhip cimport hipIpcOpenEventHandle as cuIpcOpenEventHandle
+from rocm.bindings.cyhip cimport hipIpcOpenEventHandle as cudaIpcOpenEventHandle
+from rocm.bindings.cyhip cimport hipFuncSetAttribute as cudaFuncSetAttribute
+from rocm.bindings.cyhip cimport hipFuncSetCacheConfig as cudaFuncSetCacheConfig
+from rocm.bindings.cyhip cimport hipFuncSetSharedMemConfig as cudaFuncSetSharedMemConfig
+from rocm.bindings.cyhip cimport hipGetLastError as cudaGetLastError
+from rocm.bindings.cyhip cimport hipPeekAtLastError as cudaPeekAtLastError
+from rocm.bindings.cyhip cimport hipGetErrorName as cudaGetErrorName
+from rocm.bindings.cyhip cimport hipGetErrorString as cudaGetErrorString
+from rocm.bindings.cyhip cimport hipDrvGetErrorName as cuGetErrorName
+from rocm.bindings.cyhip cimport hipDrvGetErrorString as cuGetErrorString
+from rocm.bindings.cyhip cimport hipStreamCreate as cudaStreamCreate
+from rocm.bindings.cyhip cimport hipStreamCreateWithFlags as cuStreamCreate
+from rocm.bindings.cyhip cimport hipStreamCreateWithFlags as cudaStreamCreateWithFlags
+from rocm.bindings.cyhip cimport hipStreamCreateWithPriority as cuStreamCreateWithPriority
+from rocm.bindings.cyhip cimport hipStreamCreateWithPriority as cudaStreamCreateWithPriority
+from rocm.bindings.cyhip cimport hipDeviceGetStreamPriorityRange as cuCtxGetStreamPriorityRange
+from rocm.bindings.cyhip cimport hipDeviceGetStreamPriorityRange as cudaDeviceGetStreamPriorityRange
+from rocm.bindings.cyhip cimport hipStreamDestroy as cuStreamDestroy
+from rocm.bindings.cyhip cimport hipStreamDestroy as cuStreamDestroy_v2
+from rocm.bindings.cyhip cimport hipStreamDestroy as cudaStreamDestroy
+from rocm.bindings.cyhip cimport hipStreamQuery as cuStreamQuery
+from rocm.bindings.cyhip cimport hipStreamQuery as cudaStreamQuery
+from rocm.bindings.cyhip cimport hipStreamSynchronize as cuStreamSynchronize
+from rocm.bindings.cyhip cimport hipStreamSynchronize as cudaStreamSynchronize
+from rocm.bindings.cyhip cimport hipStreamWaitEvent as cuStreamWaitEvent
+from rocm.bindings.cyhip cimport hipStreamWaitEvent as cudaStreamWaitEvent
+from rocm.bindings.cyhip cimport hipStreamGetFlags as cuStreamGetFlags
+from rocm.bindings.cyhip cimport hipStreamGetFlags as cudaStreamGetFlags
+from rocm.bindings.cyhip cimport hipStreamGetId as cuStreamGetId
+from rocm.bindings.cyhip cimport hipStreamGetId as cudaStreamGetId
+from rocm.bindings.cyhip cimport hipStreamGetPriority as cuStreamGetPriority
+from rocm.bindings.cyhip cimport hipStreamGetPriority as cudaStreamGetPriority
+from rocm.bindings.cyhip cimport hipStreamCallback_t as CUstreamCallback
+from rocm.bindings.cyhip cimport hipStreamCallback_t as cudaStreamCallback_t
+from rocm.bindings.cyhip cimport hipStreamAddCallback as cuStreamAddCallback
+from rocm.bindings.cyhip cimport hipStreamAddCallback as cudaStreamAddCallback
+from rocm.bindings.cyhip cimport hipStreamSetAttribute as cuStreamSetAttribute
+from rocm.bindings.cyhip cimport hipStreamSetAttribute as cudaStreamSetAttribute
+from rocm.bindings.cyhip cimport hipStreamGetAttribute as cuStreamGetAttribute
+from rocm.bindings.cyhip cimport hipStreamGetAttribute as cudaStreamGetAttribute
+from rocm.bindings.cyhip cimport hipStreamCopyAttributes as cuStreamCopyAttributes
+from rocm.bindings.cyhip cimport hipStreamCopyAttributes as cudaStreamCopyAttributes
+from rocm.bindings.cyhip cimport hipStreamWaitValue32 as cuStreamWaitValue32
+from rocm.bindings.cyhip cimport hipStreamWaitValue32 as cuStreamWaitValue32_v2
+from rocm.bindings.cyhip cimport hipStreamWaitValue64 as cuStreamWaitValue64
+from rocm.bindings.cyhip cimport hipStreamWaitValue64 as cuStreamWaitValue64_v2
+from rocm.bindings.cyhip cimport hipStreamWriteValue32 as cuStreamWriteValue32
+from rocm.bindings.cyhip cimport hipStreamWriteValue32 as cuStreamWriteValue32_v2
+from rocm.bindings.cyhip cimport hipStreamWriteValue64 as cuStreamWriteValue64
+from rocm.bindings.cyhip cimport hipStreamWriteValue64 as cuStreamWriteValue64_v2
+from rocm.bindings.cyhip cimport hipStreamBatchMemOp as cuStreamBatchMemOp
+from rocm.bindings.cyhip cimport hipStreamBatchMemOp as cuStreamBatchMemOp_v2
+from rocm.bindings.cyhip cimport hipGraphAddBatchMemOpNode as cuGraphAddBatchMemOpNode
+from rocm.bindings.cyhip cimport hipGraphBatchMemOpNodeGetParams as cuGraphBatchMemOpNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphBatchMemOpNodeSetParams as cuGraphBatchMemOpNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecBatchMemOpNodeSetParams as cuGraphExecBatchMemOpNodeSetParams
+from rocm.bindings.cyhip cimport hipEventCreateWithFlags as cuEventCreate
+from rocm.bindings.cyhip cimport hipEventCreateWithFlags as cudaEventCreateWithFlags
+from rocm.bindings.cyhip cimport hipEventCreate as cudaEventCreate
+from rocm.bindings.cyhip cimport hipEventRecordWithFlags as cuEventRecordWithFlags
+from rocm.bindings.cyhip cimport hipEventRecordWithFlags as cudaEventRecordWithFlags
+from rocm.bindings.cyhip cimport hipEventRecord as cuEventRecord
+from rocm.bindings.cyhip cimport hipEventRecord as cudaEventRecord
+from rocm.bindings.cyhip cimport hipEventDestroy as cuEventDestroy
+from rocm.bindings.cyhip cimport hipEventDestroy as cuEventDestroy_v2
+from rocm.bindings.cyhip cimport hipEventDestroy as cudaEventDestroy
+from rocm.bindings.cyhip cimport hipEventSynchronize as cuEventSynchronize
+from rocm.bindings.cyhip cimport hipEventSynchronize as cudaEventSynchronize
+from rocm.bindings.cyhip cimport hipEventElapsedTime as cuEventElapsedTime
+from rocm.bindings.cyhip cimport hipEventElapsedTime as cuEventElapsedTime_v2
+from rocm.bindings.cyhip cimport hipEventElapsedTime as cudaEventElapsedTime
+from rocm.bindings.cyhip cimport hipEventQuery as cuEventQuery
+from rocm.bindings.cyhip cimport hipEventQuery as cudaEventQuery
+from rocm.bindings.cyhip cimport hipPointerSetAttribute as cuPointerSetAttribute
+from rocm.bindings.cyhip cimport hipPointerGetAttributes as cudaPointerGetAttributes
+from rocm.bindings.cyhip cimport hipPointerGetAttribute as cuPointerGetAttribute
+from rocm.bindings.cyhip cimport hipDrvPointerGetAttributes as cuPointerGetAttributes
+from rocm.bindings.cyhip cimport hipImportExternalSemaphore as cuImportExternalSemaphore
+from rocm.bindings.cyhip cimport hipImportExternalSemaphore as cudaImportExternalSemaphore
+from rocm.bindings.cyhip cimport hipSignalExternalSemaphoresAsync as cuSignalExternalSemaphoresAsync
+from rocm.bindings.cyhip cimport hipSignalExternalSemaphoresAsync as cudaSignalExternalSemaphoresAsync
+from rocm.bindings.cyhip cimport hipWaitExternalSemaphoresAsync as cuWaitExternalSemaphoresAsync
+from rocm.bindings.cyhip cimport hipWaitExternalSemaphoresAsync as cudaWaitExternalSemaphoresAsync
+from rocm.bindings.cyhip cimport hipDestroyExternalSemaphore as cuDestroyExternalSemaphore
+from rocm.bindings.cyhip cimport hipDestroyExternalSemaphore as cudaDestroyExternalSemaphore
+from rocm.bindings.cyhip cimport hipImportExternalMemory as cuImportExternalMemory
+from rocm.bindings.cyhip cimport hipImportExternalMemory as cudaImportExternalMemory
+from rocm.bindings.cyhip cimport hipExternalMemoryGetMappedBuffer as cuExternalMemoryGetMappedBuffer
+from rocm.bindings.cyhip cimport hipExternalMemoryGetMappedBuffer as cudaExternalMemoryGetMappedBuffer
+from rocm.bindings.cyhip cimport hipDestroyExternalMemory as cuDestroyExternalMemory
+from rocm.bindings.cyhip cimport hipDestroyExternalMemory as cudaDestroyExternalMemory
+from rocm.bindings.cyhip cimport hipMalloc as cuMemAlloc
+from rocm.bindings.cyhip cimport hipMalloc as cuMemAlloc_v2
+from rocm.bindings.cyhip cimport hipMalloc as cudaMalloc
+from rocm.bindings.cyhip cimport hipMemAllocHost as cuMemAllocHost
+from rocm.bindings.cyhip cimport hipMemAllocHost as cuMemAllocHost_v2
+from rocm.bindings.cyhip cimport hipHostMalloc as cudaMallocHost
+from rocm.bindings.cyhip cimport hipMallocManaged as cuMemAllocManaged
+from rocm.bindings.cyhip cimport hipMallocManaged as cudaMallocManaged
+from rocm.bindings.cyhip cimport hipMemPrefetchAsync as cuMemPrefetchAsync
+from rocm.bindings.cyhip cimport hipMemPrefetchAsync as cudaMemPrefetchAsync
+from rocm.bindings.cyhip cimport hipMemAdvise as cuMemAdvise
+from rocm.bindings.cyhip cimport hipMemAdvise as cudaMemAdvise
+from rocm.bindings.cyhip cimport hipMemRangeGetAttribute as cuMemRangeGetAttribute
+from rocm.bindings.cyhip cimport hipMemRangeGetAttribute as cudaMemRangeGetAttribute
+from rocm.bindings.cyhip cimport hipMemRangeGetAttributes as cuMemRangeGetAttributes
+from rocm.bindings.cyhip cimport hipMemRangeGetAttributes as cudaMemRangeGetAttributes
+from rocm.bindings.cyhip cimport hipStreamAttachMemAsync as cuStreamAttachMemAsync
+from rocm.bindings.cyhip cimport hipStreamAttachMemAsync as cudaStreamAttachMemAsync
+from rocm.bindings.cyhip cimport hipMallocAsync as cuMemAllocAsync
+from rocm.bindings.cyhip cimport hipMallocAsync as cudaMallocAsync
+from rocm.bindings.cyhip cimport hipFreeAsync as cuMemFreeAsync
+from rocm.bindings.cyhip cimport hipFreeAsync as cudaFreeAsync
+from rocm.bindings.cyhip cimport hipMemPoolTrimTo as cuMemPoolTrimTo
+from rocm.bindings.cyhip cimport hipMemPoolTrimTo as cudaMemPoolTrimTo
+from rocm.bindings.cyhip cimport hipMemPoolSetAttribute as cuMemPoolSetAttribute
+from rocm.bindings.cyhip cimport hipMemPoolSetAttribute as cudaMemPoolSetAttribute
+from rocm.bindings.cyhip cimport hipMemPoolGetAttribute as cuMemPoolGetAttribute
+from rocm.bindings.cyhip cimport hipMemPoolGetAttribute as cudaMemPoolGetAttribute
+from rocm.bindings.cyhip cimport hipMemPoolSetAccess as cuMemPoolSetAccess
+from rocm.bindings.cyhip cimport hipMemPoolSetAccess as cudaMemPoolSetAccess
+from rocm.bindings.cyhip cimport hipMemPoolGetAccess as cuMemPoolGetAccess
+from rocm.bindings.cyhip cimport hipMemPoolGetAccess as cudaMemPoolGetAccess
+from rocm.bindings.cyhip cimport hipMemPoolCreate as cuMemPoolCreate
+from rocm.bindings.cyhip cimport hipMemPoolCreate as cudaMemPoolCreate
+from rocm.bindings.cyhip cimport hipMemPoolDestroy as cuMemPoolDestroy
+from rocm.bindings.cyhip cimport hipMemPoolDestroy as cudaMemPoolDestroy
+from rocm.bindings.cyhip cimport hipMallocFromPoolAsync as cuMemAllocFromPoolAsync
+from rocm.bindings.cyhip cimport hipMallocFromPoolAsync as cudaMallocFromPoolAsync
+from rocm.bindings.cyhip cimport hipMemPoolExportToShareableHandle as cuMemPoolExportToShareableHandle
+from rocm.bindings.cyhip cimport hipMemPoolExportToShareableHandle as cudaMemPoolExportToShareableHandle
+from rocm.bindings.cyhip cimport hipMemPoolImportFromShareableHandle as cuMemPoolImportFromShareableHandle
+from rocm.bindings.cyhip cimport hipMemPoolImportFromShareableHandle as cudaMemPoolImportFromShareableHandle
+from rocm.bindings.cyhip cimport hipMemPoolExportPointer as cuMemPoolExportPointer
+from rocm.bindings.cyhip cimport hipMemPoolExportPointer as cudaMemPoolExportPointer
+from rocm.bindings.cyhip cimport hipMemPoolImportPointer as cuMemPoolImportPointer
+from rocm.bindings.cyhip cimport hipMemPoolImportPointer as cudaMemPoolImportPointer
+from rocm.bindings.cyhip cimport hipHostAlloc as cuMemHostAlloc
+from rocm.bindings.cyhip cimport hipHostAlloc as cudaHostAlloc
+from rocm.bindings.cyhip cimport hipHostGetDevicePointer as cuMemHostGetDevicePointer
+from rocm.bindings.cyhip cimport hipHostGetDevicePointer as cuMemHostGetDevicePointer_v2
+from rocm.bindings.cyhip cimport hipHostGetDevicePointer as cudaHostGetDevicePointer
+from rocm.bindings.cyhip cimport hipHostGetFlags as cuMemHostGetFlags
+from rocm.bindings.cyhip cimport hipHostGetFlags as cudaHostGetFlags
+from rocm.bindings.cyhip cimport hipHostRegister as cuMemHostRegister
+from rocm.bindings.cyhip cimport hipHostRegister as cuMemHostRegister_v2
+from rocm.bindings.cyhip cimport hipHostRegister as cudaHostRegister
+from rocm.bindings.cyhip cimport hipHostUnregister as cuMemHostUnregister
+from rocm.bindings.cyhip cimport hipHostUnregister as cudaHostUnregister
+from rocm.bindings.cyhip cimport hipMallocPitch as cudaMallocPitch
+from rocm.bindings.cyhip cimport hipMemAllocPitch as cuMemAllocPitch
+from rocm.bindings.cyhip cimport hipMemAllocPitch as cuMemAllocPitch_v2
+from rocm.bindings.cyhip cimport hipFree as cuMemFree
+from rocm.bindings.cyhip cimport hipFree as cuMemFree_v2
+from rocm.bindings.cyhip cimport hipFree as cudaFree
+from rocm.bindings.cyhip cimport hipHostFree as cuMemFreeHost
+from rocm.bindings.cyhip cimport hipHostFree as cudaFreeHost
+from rocm.bindings.cyhip cimport hipMemcpy as cudaMemcpy
+from rocm.bindings.cyhip cimport hipMemcpyHtoD as cuMemcpyHtoD
+from rocm.bindings.cyhip cimport hipMemcpyHtoD as cuMemcpyHtoD_v2
+from rocm.bindings.cyhip cimport hipMemcpyDtoH as cuMemcpyDtoH
+from rocm.bindings.cyhip cimport hipMemcpyDtoH as cuMemcpyDtoH_v2
+from rocm.bindings.cyhip cimport hipMemcpyDtoD as cuMemcpyDtoD
+from rocm.bindings.cyhip cimport hipMemcpyDtoD as cuMemcpyDtoD_v2
+from rocm.bindings.cyhip cimport hipMemcpyAtoD as cuMemcpyAtoD
+from rocm.bindings.cyhip cimport hipMemcpyAtoD as cuMemcpyAtoD_v2
+from rocm.bindings.cyhip cimport hipMemcpyDtoA as cuMemcpyDtoA
+from rocm.bindings.cyhip cimport hipMemcpyDtoA as cuMemcpyDtoA_v2
+from rocm.bindings.cyhip cimport hipMemcpyAtoA as cuMemcpyAtoA
+from rocm.bindings.cyhip cimport hipMemcpyAtoA as cuMemcpyAtoA_v2
+from rocm.bindings.cyhip cimport hipMemcpyHtoDAsync as cuMemcpyHtoDAsync
+from rocm.bindings.cyhip cimport hipMemcpyHtoDAsync as cuMemcpyHtoDAsync_v2
+from rocm.bindings.cyhip cimport hipMemcpyDtoHAsync as cuMemcpyDtoHAsync
+from rocm.bindings.cyhip cimport hipMemcpyDtoHAsync as cuMemcpyDtoHAsync_v2
+from rocm.bindings.cyhip cimport hipMemcpyDtoDAsync as cuMemcpyDtoDAsync
+from rocm.bindings.cyhip cimport hipMemcpyDtoDAsync as cuMemcpyDtoDAsync_v2
+from rocm.bindings.cyhip cimport hipMemcpyAtoHAsync as cuMemcpyAtoHAsync
+from rocm.bindings.cyhip cimport hipMemcpyAtoHAsync as cuMemcpyAtoHAsync_v2
+from rocm.bindings.cyhip cimport hipMemcpyHtoAAsync as cuMemcpyHtoAAsync
+from rocm.bindings.cyhip cimport hipMemcpyHtoAAsync as cuMemcpyHtoAAsync_v2
+from rocm.bindings.cyhip cimport hipModuleGetGlobal as cuModuleGetGlobal
+from rocm.bindings.cyhip cimport hipModuleGetGlobal as cuModuleGetGlobal_v2
+from rocm.bindings.cyhip cimport hipGetSymbolAddress as cudaGetSymbolAddress
+from rocm.bindings.cyhip cimport hipGetSymbolSize as cudaGetSymbolSize
+from rocm.bindings.cyhip cimport hipGetProcAddress as cuGetProcAddress
+from rocm.bindings.cyhip cimport hipMemcpyToSymbol as cudaMemcpyToSymbol
+from rocm.bindings.cyhip cimport hipMemcpyToSymbolAsync as cudaMemcpyToSymbolAsync
+from rocm.bindings.cyhip cimport hipMemcpyFromSymbol as cudaMemcpyFromSymbol
+from rocm.bindings.cyhip cimport hipMemcpyFromSymbolAsync as cudaMemcpyFromSymbolAsync
+from rocm.bindings.cyhip cimport hipMemcpyAsync as cudaMemcpyAsync
+from rocm.bindings.cyhip cimport hipMemset as cudaMemset
+from rocm.bindings.cyhip cimport hipMemsetD8 as cuMemsetD8
+from rocm.bindings.cyhip cimport hipMemsetD8 as cuMemsetD8_v2
+from rocm.bindings.cyhip cimport hipMemsetD8Async as cuMemsetD8Async
+from rocm.bindings.cyhip cimport hipMemsetD16 as cuMemsetD16
+from rocm.bindings.cyhip cimport hipMemsetD16 as cuMemsetD16_v2
+from rocm.bindings.cyhip cimport hipMemsetD16Async as cuMemsetD16Async
+from rocm.bindings.cyhip cimport hipMemsetD32 as cuMemsetD32
+from rocm.bindings.cyhip cimport hipMemsetD32 as cuMemsetD32_v2
+from rocm.bindings.cyhip cimport hipMemsetAsync as cudaMemsetAsync
+from rocm.bindings.cyhip cimport hipMemsetD32Async as cuMemsetD32Async
+from rocm.bindings.cyhip cimport hipMemset2D as cudaMemset2D
+from rocm.bindings.cyhip cimport hipMemset2DAsync as cudaMemset2DAsync
+from rocm.bindings.cyhip cimport hipMemset3D as cudaMemset3D
+from rocm.bindings.cyhip cimport hipMemset3DAsync as cudaMemset3DAsync
+from rocm.bindings.cyhip cimport hipMemsetD2D8 as cuMemsetD2D8
+from rocm.bindings.cyhip cimport hipMemsetD2D8 as cuMemsetD2D8_v2
+from rocm.bindings.cyhip cimport hipMemsetD2D8Async as cuMemsetD2D8Async
+from rocm.bindings.cyhip cimport hipMemsetD2D16 as cuMemsetD2D16
+from rocm.bindings.cyhip cimport hipMemsetD2D16 as cuMemsetD2D16_v2
+from rocm.bindings.cyhip cimport hipMemsetD2D16Async as cuMemsetD2D16Async
+from rocm.bindings.cyhip cimport hipMemsetD2D32 as cuMemsetD2D32
+from rocm.bindings.cyhip cimport hipMemsetD2D32 as cuMemsetD2D32_v2
+from rocm.bindings.cyhip cimport hipMemsetD2D32Async as cuMemsetD2D32Async
+from rocm.bindings.cyhip cimport hipMemGetInfo as cuMemGetInfo
+from rocm.bindings.cyhip cimport hipMemGetInfo as cuMemGetInfo_v2
+from rocm.bindings.cyhip cimport hipMemGetInfo as cudaMemGetInfo
+from rocm.bindings.cyhip cimport hipMallocArray as cudaMallocArray
+from rocm.bindings.cyhip cimport hipArrayCreate as cuArrayCreate
+from rocm.bindings.cyhip cimport hipArrayCreate as cuArrayCreate_v2
+from rocm.bindings.cyhip cimport hipArrayDestroy as cuArrayDestroy
+from rocm.bindings.cyhip cimport hipArray3DCreate as cuArray3DCreate
+from rocm.bindings.cyhip cimport hipArray3DCreate as cuArray3DCreate_v2
+from rocm.bindings.cyhip cimport hipMalloc3D as cudaMalloc3D
+from rocm.bindings.cyhip cimport hipFreeArray as cudaFreeArray
+from rocm.bindings.cyhip cimport hipMalloc3DArray as cudaMalloc3DArray
+from rocm.bindings.cyhip cimport hipArrayGetInfo as cudaArrayGetInfo
+from rocm.bindings.cyhip cimport hipArrayGetDescriptor as cuArrayGetDescriptor
+from rocm.bindings.cyhip cimport hipArrayGetDescriptor as cuArrayGetDescriptor_v2
+from rocm.bindings.cyhip cimport hipArray3DGetDescriptor as cuArray3DGetDescriptor
+from rocm.bindings.cyhip cimport hipArray3DGetDescriptor as cuArray3DGetDescriptor_v2
+from rocm.bindings.cyhip cimport hipMemcpy2D as cudaMemcpy2D
+from rocm.bindings.cyhip cimport hipMemcpyParam2D as cuMemcpy2D
+from rocm.bindings.cyhip cimport hipMemcpyParam2D as cuMemcpy2D_v2
+from rocm.bindings.cyhip cimport hipMemcpyParam2DAsync as cuMemcpy2DAsync
+from rocm.bindings.cyhip cimport hipMemcpyParam2DAsync as cuMemcpy2DAsync_v2
+from rocm.bindings.cyhip cimport hipMemcpy2DAsync as cudaMemcpy2DAsync
+from rocm.bindings.cyhip cimport hipMemcpy2DToArray as cudaMemcpy2DToArray
+from rocm.bindings.cyhip cimport hipMemcpy2DToArrayAsync as cudaMemcpy2DToArrayAsync
+from rocm.bindings.cyhip cimport hipMemcpy2DArrayToArray as cudaMemcpy2DArrayToArray
+from rocm.bindings.cyhip cimport hipMemcpyToArray as cudaMemcpyToArray
+from rocm.bindings.cyhip cimport hipMemcpyFromArray as cudaMemcpyFromArray
+from rocm.bindings.cyhip cimport hipMemcpy2DFromArray as cudaMemcpy2DFromArray
+from rocm.bindings.cyhip cimport hipMemcpy2DFromArrayAsync as cudaMemcpy2DFromArrayAsync
+from rocm.bindings.cyhip cimport hipMemcpyAtoH as cuMemcpyAtoH
+from rocm.bindings.cyhip cimport hipMemcpyAtoH as cuMemcpyAtoH_v2
+from rocm.bindings.cyhip cimport hipMemcpyHtoA as cuMemcpyHtoA
+from rocm.bindings.cyhip cimport hipMemcpyHtoA as cuMemcpyHtoA_v2
+from rocm.bindings.cyhip cimport hipMemcpy3D as cudaMemcpy3D
+from rocm.bindings.cyhip cimport hipMemcpy3DAsync as cudaMemcpy3DAsync
+from rocm.bindings.cyhip cimport hipDrvMemcpy3D as cuMemcpy3D
+from rocm.bindings.cyhip cimport hipDrvMemcpy3D as cuMemcpy3D_v2
+from rocm.bindings.cyhip cimport hipDrvMemcpy3DAsync as cuMemcpy3DAsync
+from rocm.bindings.cyhip cimport hipDrvMemcpy3DAsync as cuMemcpy3DAsync_v2
+from rocm.bindings.cyhip cimport hipMemGetAddressRange as cuMemGetAddressRange
+from rocm.bindings.cyhip cimport hipMemGetAddressRange as cuMemGetAddressRange_v2
+from rocm.bindings.cyhip cimport hipMemcpyBatchAsync as cuMemcpyBatchAsync
+from rocm.bindings.cyhip cimport hipMemcpyBatchAsync as cudaMemcpyBatchAsync
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchAsync as cuMemcpy3DBatchAsync
+from rocm.bindings.cyhip cimport hipMemcpy3DBatchAsync as cudaMemcpy3DBatchAsync
+from rocm.bindings.cyhip cimport hipMemcpy3DPeer as cudaMemcpy3DPeer
+from rocm.bindings.cyhip cimport hipMemcpy3DPeerAsync as cudaMemcpy3DPeerAsync
+from rocm.bindings.cyhip cimport hipDeviceCanAccessPeer as cuDeviceCanAccessPeer
+from rocm.bindings.cyhip cimport hipDeviceCanAccessPeer as cudaDeviceCanAccessPeer
+from rocm.bindings.cyhip cimport hipDeviceEnablePeerAccess as cudaDeviceEnablePeerAccess
+from rocm.bindings.cyhip cimport hipDeviceDisablePeerAccess as cudaDeviceDisablePeerAccess
+from rocm.bindings.cyhip cimport hipMemcpyPeer as cudaMemcpyPeer
+from rocm.bindings.cyhip cimport hipMemcpyPeerAsync as cudaMemcpyPeerAsync
+from rocm.bindings.cyhip cimport hipCtxCreate as cuCtxCreate
+from rocm.bindings.cyhip cimport hipCtxCreate as cuCtxCreate_v2
+from rocm.bindings.cyhip cimport hipCtxDestroy as cuCtxDestroy
+from rocm.bindings.cyhip cimport hipCtxDestroy as cuCtxDestroy_v2
+from rocm.bindings.cyhip cimport hipCtxPopCurrent as cuCtxPopCurrent
+from rocm.bindings.cyhip cimport hipCtxPopCurrent as cuCtxPopCurrent_v2
+from rocm.bindings.cyhip cimport hipCtxPushCurrent as cuCtxPushCurrent
+from rocm.bindings.cyhip cimport hipCtxPushCurrent as cuCtxPushCurrent_v2
+from rocm.bindings.cyhip cimport hipCtxSetCurrent as cuCtxSetCurrent
+from rocm.bindings.cyhip cimport hipCtxGetCurrent as cuCtxGetCurrent
+from rocm.bindings.cyhip cimport hipCtxGetDevice as cuCtxGetDevice
+from rocm.bindings.cyhip cimport hipCtxGetApiVersion as cuCtxGetApiVersion
+from rocm.bindings.cyhip cimport hipCtxGetCacheConfig as cuCtxGetCacheConfig
+from rocm.bindings.cyhip cimport hipCtxSetCacheConfig as cuCtxSetCacheConfig
+from rocm.bindings.cyhip cimport hipCtxSetSharedMemConfig as cuCtxSetSharedMemConfig
+from rocm.bindings.cyhip cimport hipCtxGetSharedMemConfig as cuCtxGetSharedMemConfig
+from rocm.bindings.cyhip cimport hipCtxSynchronize as cuCtxSynchronize
+from rocm.bindings.cyhip cimport hipCtxGetFlags as cuCtxGetFlags
+from rocm.bindings.cyhip cimport hipCtxEnablePeerAccess as cuCtxEnablePeerAccess
+from rocm.bindings.cyhip cimport hipCtxDisablePeerAccess as cuCtxDisablePeerAccess
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxGetState as cuDevicePrimaryCtxGetState
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxRelease as cuDevicePrimaryCtxRelease
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxRelease as cuDevicePrimaryCtxRelease_v2
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxRetain as cuDevicePrimaryCtxRetain
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxReset as cuDevicePrimaryCtxReset
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxReset as cuDevicePrimaryCtxReset_v2
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxSetFlags as cuDevicePrimaryCtxSetFlags
+from rocm.bindings.cyhip cimport hipDevicePrimaryCtxSetFlags as cuDevicePrimaryCtxSetFlags_v2
+from rocm.bindings.cyhip cimport hipModuleLoadFatBinary as cuModuleLoadFatBinary
+from rocm.bindings.cyhip cimport hipModuleLoad as cuModuleLoad
+from rocm.bindings.cyhip cimport hipModuleUnload as cuModuleUnload
+from rocm.bindings.cyhip cimport hipModuleGetFunction as cuModuleGetFunction
+from rocm.bindings.cyhip cimport hipModuleGetFunctionCount as cuModuleGetFunctionCount
+from rocm.bindings.cyhip cimport hipLibraryLoadData as cuLibraryLoadData
+from rocm.bindings.cyhip cimport hipLibraryLoadData as cudaLibraryLoadData
+from rocm.bindings.cyhip cimport hipLibraryLoadFromFile as cuLibraryLoadFromFile
+from rocm.bindings.cyhip cimport hipLibraryLoadFromFile as cudaLibraryLoadFromFile
+from rocm.bindings.cyhip cimport hipLibraryUnload as cuLibraryUnload
+from rocm.bindings.cyhip cimport hipLibraryUnload as cudaLibraryUnload
+from rocm.bindings.cyhip cimport hipLibraryGetKernel as cuLibraryGetKernel
+from rocm.bindings.cyhip cimport hipLibraryGetKernel as cudaLibraryGetKernel
+from rocm.bindings.cyhip cimport hipLibraryGetKernelCount as cuLibraryGetKernelCount
+from rocm.bindings.cyhip cimport hipLibraryGetKernelCount as cudaLibraryGetKernelCount
+from rocm.bindings.cyhip cimport hipLibraryEnumerateKernels as cuLibraryEnumerateKernels
+from rocm.bindings.cyhip cimport hipLibraryEnumerateKernels as cudaLibraryEnumerateKernels
+from rocm.bindings.cyhip cimport hipKernelGetLibrary as cuKernelGetLibrary
+from rocm.bindings.cyhip cimport hipKernelGetName as cuKernelGetName
+from rocm.bindings.cyhip cimport hipFuncGetAttributes as cudaFuncGetAttributes
+from rocm.bindings.cyhip cimport hipFuncGetAttribute as cuFuncGetAttribute
+from rocm.bindings.cyhip cimport hipGetFuncBySymbol as cudaGetFuncBySymbol
+from rocm.bindings.cyhip cimport hipGetDriverEntryPoint as cudaGetDriverEntryPoint
+from rocm.bindings.cyhip cimport hipModuleGetTexRef as cuModuleGetTexRef
+from rocm.bindings.cyhip cimport hipModuleLoadData as cuModuleLoadData
+from rocm.bindings.cyhip cimport hipModuleLoadDataEx as cuModuleLoadDataEx
+from rocm.bindings.cyhip cimport hipModuleLaunchKernel as cuLaunchKernel
+from rocm.bindings.cyhip cimport hipModuleLaunchCooperativeKernel as cuLaunchCooperativeKernel
+from rocm.bindings.cyhip cimport hipModuleLaunchCooperativeKernelMultiDevice as cuLaunchCooperativeKernelMultiDevice
+from rocm.bindings.cyhip cimport hipLaunchCooperativeKernel as cudaLaunchCooperativeKernel
+from rocm.bindings.cyhip cimport hipLaunchCooperativeKernelMultiDevice as cudaLaunchCooperativeKernelMultiDevice
+from rocm.bindings.cyhip cimport hipLaunchKernelExC as cudaLaunchKernelExC
+from rocm.bindings.cyhip cimport hipDrvLaunchKernelEx as cuLaunchKernelEx
+from rocm.bindings.cyhip cimport hipMemGetHandleForAddressRange as cuMemGetHandleForAddressRange
+from rocm.bindings.cyhip cimport hipModuleOccupancyMaxPotentialBlockSize as cuOccupancyMaxPotentialBlockSize
+from rocm.bindings.cyhip cimport hipModuleOccupancyMaxPotentialBlockSizeWithFlags as cuOccupancyMaxPotentialBlockSizeWithFlags
+from rocm.bindings.cyhip cimport hipModuleOccupancyMaxActiveBlocksPerMultiprocessor as cuOccupancyMaxActiveBlocksPerMultiprocessor
+from rocm.bindings.cyhip cimport hipModuleOccupancyMaxActiveBlocksPerMultiprocessorWithFlags as cuOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+from rocm.bindings.cyhip cimport hipOccupancyMaxActiveBlocksPerMultiprocessor as cudaOccupancyMaxActiveBlocksPerMultiprocessor
+from rocm.bindings.cyhip cimport hipOccupancyMaxActiveBlocksPerMultiprocessorWithFlags as cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags
+from rocm.bindings.cyhip cimport hipOccupancyMaxPotentialBlockSize as cudaOccupancyMaxPotentialBlockSize
+from rocm.bindings.cyhip cimport hipOccupancyAvailableDynamicSMemPerBlock as cuOccupancyAvailableDynamicSMemPerBlock
+from rocm.bindings.cyhip cimport hipOccupancyAvailableDynamicSMemPerBlock as cudaOccupancyAvailableDynamicSMemPerBlock
+from rocm.bindings.cyhip cimport hipProfilerStart as cuProfilerStart
+from rocm.bindings.cyhip cimport hipProfilerStart as cudaProfilerStart
+from rocm.bindings.cyhip cimport hipProfilerStop as cuProfilerStop
+from rocm.bindings.cyhip cimport hipProfilerStop as cudaProfilerStop
+from rocm.bindings.cyhip cimport hipConfigureCall as cudaConfigureCall
+from rocm.bindings.cyhip cimport hipSetupArgument as cudaSetupArgument
+from rocm.bindings.cyhip cimport hipLaunchByPtr as cudaLaunch
+from rocm.bindings.cyhip cimport hipLaunchKernel as cudaLaunchKernel
+from rocm.bindings.cyhip cimport hipLaunchHostFunc as cuLaunchHostFunc
+from rocm.bindings.cyhip cimport hipLaunchHostFunc as cudaLaunchHostFunc
+from rocm.bindings.cyhip cimport hipDrvMemcpy2DUnaligned as cuMemcpy2DUnaligned
+from rocm.bindings.cyhip cimport hipDrvMemcpy2DUnaligned as cuMemcpy2DUnaligned_v2
+from rocm.bindings.cyhip cimport hipCreateTextureObject as cudaCreateTextureObject
+from rocm.bindings.cyhip cimport hipDestroyTextureObject as cudaDestroyTextureObject
+from rocm.bindings.cyhip cimport hipGetChannelDesc as cudaGetChannelDesc
+from rocm.bindings.cyhip cimport hipGetTextureObjectResourceDesc as cudaGetTextureObjectResourceDesc
+from rocm.bindings.cyhip cimport hipGetTextureObjectResourceViewDesc as cudaGetTextureObjectResourceViewDesc
+from rocm.bindings.cyhip cimport hipGetTextureObjectTextureDesc as cudaGetTextureObjectTextureDesc
+from rocm.bindings.cyhip cimport hipTexObjectCreate as cuTexObjectCreate
+from rocm.bindings.cyhip cimport hipTexObjectDestroy as cuTexObjectDestroy
+from rocm.bindings.cyhip cimport hipTexObjectGetResourceDesc as cuTexObjectGetResourceDesc
+from rocm.bindings.cyhip cimport hipTexObjectGetResourceViewDesc as cuTexObjectGetResourceViewDesc
+from rocm.bindings.cyhip cimport hipTexObjectGetTextureDesc as cuTexObjectGetTextureDesc
+from rocm.bindings.cyhip cimport hipMallocMipmappedArray as cudaMallocMipmappedArray
+from rocm.bindings.cyhip cimport hipFreeMipmappedArray as cudaFreeMipmappedArray
+from rocm.bindings.cyhip cimport hipGetMipmappedArrayLevel as cudaGetMipmappedArrayLevel
+from rocm.bindings.cyhip cimport hipMipmappedArrayCreate as cuMipmappedArrayCreate
+from rocm.bindings.cyhip cimport hipMipmappedArrayDestroy as cuMipmappedArrayDestroy
+from rocm.bindings.cyhip cimport hipMipmappedArrayGetLevel as cuMipmappedArrayGetLevel
+from rocm.bindings.cyhip cimport hipBindTextureToMipmappedArray as cudaBindTextureToMipmappedArray
+from rocm.bindings.cyhip cimport hipGetTextureReference as cudaGetTextureReference
+from rocm.bindings.cyhip cimport hipTexRefGetBorderColor as cuTexRefGetBorderColor
+from rocm.bindings.cyhip cimport hipTexRefGetArray as cuTexRefGetArray
+from rocm.bindings.cyhip cimport hipTexRefSetAddressMode as cuTexRefSetAddressMode
+from rocm.bindings.cyhip cimport hipTexRefSetArray as cuTexRefSetArray
+from rocm.bindings.cyhip cimport hipTexRefSetFilterMode as cuTexRefSetFilterMode
+from rocm.bindings.cyhip cimport hipTexRefSetFlags as cuTexRefSetFlags
+from rocm.bindings.cyhip cimport hipTexRefSetFormat as cuTexRefSetFormat
+from rocm.bindings.cyhip cimport hipBindTexture as cudaBindTexture
+from rocm.bindings.cyhip cimport hipBindTexture2D as cudaBindTexture2D
+from rocm.bindings.cyhip cimport hipBindTextureToArray as cudaBindTextureToArray
+from rocm.bindings.cyhip cimport hipGetTextureAlignmentOffset as cudaGetTextureAlignmentOffset
+from rocm.bindings.cyhip cimport hipUnbindTexture as cudaUnbindTexture
+from rocm.bindings.cyhip cimport hipTexRefGetAddress as cuTexRefGetAddress
+from rocm.bindings.cyhip cimport hipTexRefGetAddress as cuTexRefGetAddress_v2
+from rocm.bindings.cyhip cimport hipTexRefGetAddressMode as cuTexRefGetAddressMode
+from rocm.bindings.cyhip cimport hipTexRefGetFilterMode as cuTexRefGetFilterMode
+from rocm.bindings.cyhip cimport hipTexRefGetFlags as cuTexRefGetFlags
+from rocm.bindings.cyhip cimport hipTexRefGetFormat as cuTexRefGetFormat
+from rocm.bindings.cyhip cimport hipTexRefGetMaxAnisotropy as cuTexRefGetMaxAnisotropy
+from rocm.bindings.cyhip cimport hipTexRefGetMipmapFilterMode as cuTexRefGetMipmapFilterMode
+from rocm.bindings.cyhip cimport hipTexRefGetMipmapLevelBias as cuTexRefGetMipmapLevelBias
+from rocm.bindings.cyhip cimport hipTexRefGetMipmapLevelClamp as cuTexRefGetMipmapLevelClamp
+from rocm.bindings.cyhip cimport hipTexRefGetMipMappedArray as cuTexRefGetMipmappedArray
+from rocm.bindings.cyhip cimport hipTexRefSetAddress as cuTexRefSetAddress
+from rocm.bindings.cyhip cimport hipTexRefSetAddress as cuTexRefSetAddress_v2
+from rocm.bindings.cyhip cimport hipTexRefSetAddress2D as cuTexRefSetAddress2D
+from rocm.bindings.cyhip cimport hipTexRefSetAddress2D as cuTexRefSetAddress2D_v2
+from rocm.bindings.cyhip cimport hipTexRefSetAddress2D as cuTexRefSetAddress2D_v3
+from rocm.bindings.cyhip cimport hipTexRefSetMaxAnisotropy as cuTexRefSetMaxAnisotropy
+from rocm.bindings.cyhip cimport hipTexRefSetBorderColor as cuTexRefSetBorderColor
+from rocm.bindings.cyhip cimport hipTexRefSetMipmapFilterMode as cuTexRefSetMipmapFilterMode
+from rocm.bindings.cyhip cimport hipTexRefSetMipmapLevelBias as cuTexRefSetMipmapLevelBias
+from rocm.bindings.cyhip cimport hipTexRefSetMipmapLevelClamp as cuTexRefSetMipmapLevelClamp
+from rocm.bindings.cyhip cimport hipTexRefSetMipmappedArray as cuTexRefSetMipmappedArray
+from rocm.bindings.cyhip cimport hipStreamBeginCapture as cuStreamBeginCapture
+from rocm.bindings.cyhip cimport hipStreamBeginCapture as cuStreamBeginCapture_v2
+from rocm.bindings.cyhip cimport hipStreamBeginCapture as cudaStreamBeginCapture
+from rocm.bindings.cyhip cimport hipStreamBeginCaptureToGraph as cuStreamBeginCaptureToGraph
+from rocm.bindings.cyhip cimport hipStreamBeginCaptureToGraph as cudaStreamBeginCaptureToGraph
+from rocm.bindings.cyhip cimport hipStreamEndCapture as cuStreamEndCapture
+from rocm.bindings.cyhip cimport hipStreamEndCapture as cudaStreamEndCapture
+from rocm.bindings.cyhip cimport hipStreamGetCaptureInfo as cuStreamGetCaptureInfo
+from rocm.bindings.cyhip cimport hipStreamGetCaptureInfo as cudaStreamGetCaptureInfo
+from rocm.bindings.cyhip cimport hipStreamGetCaptureInfo_v2 as cuStreamGetCaptureInfo_v2
+from rocm.bindings.cyhip cimport hipStreamIsCapturing as cuStreamIsCapturing
+from rocm.bindings.cyhip cimport hipStreamIsCapturing as cudaStreamIsCapturing
+from rocm.bindings.cyhip cimport hipStreamUpdateCaptureDependencies as cuStreamUpdateCaptureDependencies
+from rocm.bindings.cyhip cimport hipStreamUpdateCaptureDependencies as cudaStreamUpdateCaptureDependencies
+from rocm.bindings.cyhip cimport hipThreadExchangeStreamCaptureMode as cuThreadExchangeStreamCaptureMode
+from rocm.bindings.cyhip cimport hipThreadExchangeStreamCaptureMode as cudaThreadExchangeStreamCaptureMode
+from rocm.bindings.cyhip cimport hipGraphCreate as cuGraphCreate
+from rocm.bindings.cyhip cimport hipGraphCreate as cudaGraphCreate
+from rocm.bindings.cyhip cimport hipGraphDestroy as cuGraphDestroy
+from rocm.bindings.cyhip cimport hipGraphDestroy as cudaGraphDestroy
+from rocm.bindings.cyhip cimport hipGraphAddDependencies as cuGraphAddDependencies
+from rocm.bindings.cyhip cimport hipGraphAddDependencies as cudaGraphAddDependencies
+from rocm.bindings.cyhip cimport hipGraphRemoveDependencies as cuGraphRemoveDependencies
+from rocm.bindings.cyhip cimport hipGraphRemoveDependencies as cudaGraphRemoveDependencies
+from rocm.bindings.cyhip cimport hipGraphGetEdges as cuGraphGetEdges
+from rocm.bindings.cyhip cimport hipGraphGetEdges as cudaGraphGetEdges
+from rocm.bindings.cyhip cimport hipGraphGetNodes as cuGraphGetNodes
+from rocm.bindings.cyhip cimport hipGraphGetNodes as cudaGraphGetNodes
+from rocm.bindings.cyhip cimport hipGraphGetRootNodes as cuGraphGetRootNodes
+from rocm.bindings.cyhip cimport hipGraphGetRootNodes as cudaGraphGetRootNodes
+from rocm.bindings.cyhip cimport hipGraphNodeGetDependencies as cuGraphNodeGetDependencies
+from rocm.bindings.cyhip cimport hipGraphNodeGetDependencies as cudaGraphNodeGetDependencies
+from rocm.bindings.cyhip cimport hipGraphNodeGetDependentNodes as cuGraphNodeGetDependentNodes
+from rocm.bindings.cyhip cimport hipGraphNodeGetDependentNodes as cudaGraphNodeGetDependentNodes
+from rocm.bindings.cyhip cimport hipGraphNodeGetType as cuGraphNodeGetType
+from rocm.bindings.cyhip cimport hipGraphNodeGetType as cudaGraphNodeGetType
+from rocm.bindings.cyhip cimport hipGraphDestroyNode as cuGraphDestroyNode
+from rocm.bindings.cyhip cimport hipGraphDestroyNode as cudaGraphDestroyNode
+from rocm.bindings.cyhip cimport hipGraphClone as cuGraphClone
+from rocm.bindings.cyhip cimport hipGraphClone as cudaGraphClone
+from rocm.bindings.cyhip cimport hipGraphNodeFindInClone as cuGraphNodeFindInClone
+from rocm.bindings.cyhip cimport hipGraphNodeFindInClone as cudaGraphNodeFindInClone
+from rocm.bindings.cyhip cimport hipGraphInstantiate as cuGraphInstantiate
+from rocm.bindings.cyhip cimport hipGraphInstantiate as cuGraphInstantiate_v2
+from rocm.bindings.cyhip cimport hipGraphInstantiate as cudaGraphInstantiate
+from rocm.bindings.cyhip cimport hipGraphInstantiateWithFlags as cuGraphInstantiateWithFlags
+from rocm.bindings.cyhip cimport hipGraphInstantiateWithFlags as cudaGraphInstantiateWithFlags
+from rocm.bindings.cyhip cimport hipGraphInstantiateWithParams as cuGraphInstantiateWithParams
+from rocm.bindings.cyhip cimport hipGraphInstantiateWithParams as cudaGraphInstantiateWithParams
+from rocm.bindings.cyhip cimport hipGraphLaunch as cuGraphLaunch
+from rocm.bindings.cyhip cimport hipGraphLaunch as cudaGraphLaunch
+from rocm.bindings.cyhip cimport hipGraphUpload as cuGraphUpload
+from rocm.bindings.cyhip cimport hipGraphUpload as cudaGraphUpload
+from rocm.bindings.cyhip cimport hipGraphAddNode as cuGraphAddNode
+from rocm.bindings.cyhip cimport hipGraphAddNode as cudaGraphAddNode
+from rocm.bindings.cyhip cimport hipGraphExecGetFlags as cuGraphExecGetFlags
+from rocm.bindings.cyhip cimport hipGraphExecGetFlags as cudaGraphExecGetFlags
+from rocm.bindings.cyhip cimport hipGraphNodeSetParams as cuGraphNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphNodeSetParams as cudaGraphNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecNodeSetParams as cuGraphExecNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecNodeSetParams as cudaGraphExecNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecDestroy as cuGraphExecDestroy
+from rocm.bindings.cyhip cimport hipGraphExecDestroy as cudaGraphExecDestroy
+from rocm.bindings.cyhip cimport hipGraphExecUpdate as cuGraphExecUpdate
+from rocm.bindings.cyhip cimport hipGraphExecUpdate as cudaGraphExecUpdate
+from rocm.bindings.cyhip cimport hipGraphAddKernelNode as cuGraphAddKernelNode
+from rocm.bindings.cyhip cimport hipGraphAddKernelNode as cudaGraphAddKernelNode
+from rocm.bindings.cyhip cimport hipGraphKernelNodeGetParams as cuGraphKernelNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphKernelNodeGetParams as cudaGraphKernelNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphKernelNodeSetParams as cuGraphKernelNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphKernelNodeSetParams as cudaGraphKernelNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecKernelNodeSetParams as cuGraphExecKernelNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecKernelNodeSetParams as cudaGraphExecKernelNodeSetParams
+from rocm.bindings.cyhip cimport hipDrvGraphAddMemcpyNode as cuGraphAddMemcpyNode
+from rocm.bindings.cyhip cimport hipGraphAddMemcpyNode as cudaGraphAddMemcpyNode
+from rocm.bindings.cyhip cimport hipGraphMemcpyNodeGetParams as cudaGraphMemcpyNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphMemcpyNodeSetParams as cudaGraphMemcpyNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphKernelNodeSetAttribute as cuGraphKernelNodeSetAttribute
+from rocm.bindings.cyhip cimport hipGraphKernelNodeSetAttribute as cudaGraphKernelNodeSetAttribute
+from rocm.bindings.cyhip cimport hipGraphKernelNodeGetAttribute as cuGraphKernelNodeGetAttribute
+from rocm.bindings.cyhip cimport hipGraphKernelNodeGetAttribute as cudaGraphKernelNodeGetAttribute
+from rocm.bindings.cyhip cimport hipGraphExecMemcpyNodeSetParams as cudaGraphExecMemcpyNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphAddMemcpyNode1D as cudaGraphAddMemcpyNode1D
+from rocm.bindings.cyhip cimport hipGraphMemcpyNodeSetParams1D as cudaGraphMemcpyNodeSetParams1D
+from rocm.bindings.cyhip cimport hipGraphExecMemcpyNodeSetParams1D as cudaGraphExecMemcpyNodeSetParams1D
+from rocm.bindings.cyhip cimport hipGraphAddMemcpyNodeFromSymbol as cudaGraphAddMemcpyNodeFromSymbol
+from rocm.bindings.cyhip cimport hipGraphMemcpyNodeSetParamsFromSymbol as cudaGraphMemcpyNodeSetParamsFromSymbol
+from rocm.bindings.cyhip cimport hipGraphExecMemcpyNodeSetParamsFromSymbol as cudaGraphExecMemcpyNodeSetParamsFromSymbol
+from rocm.bindings.cyhip cimport hipGraphAddMemcpyNodeToSymbol as cudaGraphAddMemcpyNodeToSymbol
+from rocm.bindings.cyhip cimport hipGraphMemcpyNodeSetParamsToSymbol as cudaGraphMemcpyNodeSetParamsToSymbol
+from rocm.bindings.cyhip cimport hipGraphExecMemcpyNodeSetParamsToSymbol as cudaGraphExecMemcpyNodeSetParamsToSymbol
+from rocm.bindings.cyhip cimport hipGraphAddMemsetNode as cudaGraphAddMemsetNode
+from rocm.bindings.cyhip cimport hipGraphMemsetNodeGetParams as cuGraphMemsetNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphMemsetNodeGetParams as cudaGraphMemsetNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphMemsetNodeSetParams as cuGraphMemsetNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphMemsetNodeSetParams as cudaGraphMemsetNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecMemsetNodeSetParams as cudaGraphExecMemsetNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphAddHostNode as cuGraphAddHostNode
+from rocm.bindings.cyhip cimport hipGraphAddHostNode as cudaGraphAddHostNode
+from rocm.bindings.cyhip cimport hipGraphHostNodeGetParams as cuGraphHostNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphHostNodeGetParams as cudaGraphHostNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphHostNodeSetParams as cuGraphHostNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphHostNodeSetParams as cudaGraphHostNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecHostNodeSetParams as cuGraphExecHostNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecHostNodeSetParams as cudaGraphExecHostNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphAddChildGraphNode as cuGraphAddChildGraphNode
+from rocm.bindings.cyhip cimport hipGraphAddChildGraphNode as cudaGraphAddChildGraphNode
+from rocm.bindings.cyhip cimport hipGraphChildGraphNodeGetGraph as cuGraphChildGraphNodeGetGraph
+from rocm.bindings.cyhip cimport hipGraphChildGraphNodeGetGraph as cudaGraphChildGraphNodeGetGraph
+from rocm.bindings.cyhip cimport hipGraphExecChildGraphNodeSetParams as cuGraphExecChildGraphNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecChildGraphNodeSetParams as cudaGraphExecChildGraphNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphAddEmptyNode as cuGraphAddEmptyNode
+from rocm.bindings.cyhip cimport hipGraphAddEmptyNode as cudaGraphAddEmptyNode
+from rocm.bindings.cyhip cimport hipGraphAddEventRecordNode as cuGraphAddEventRecordNode
+from rocm.bindings.cyhip cimport hipGraphAddEventRecordNode as cudaGraphAddEventRecordNode
+from rocm.bindings.cyhip cimport hipGraphEventRecordNodeGetEvent as cuGraphEventRecordNodeGetEvent
+from rocm.bindings.cyhip cimport hipGraphEventRecordNodeGetEvent as cudaGraphEventRecordNodeGetEvent
+from rocm.bindings.cyhip cimport hipGraphEventRecordNodeSetEvent as cuGraphEventRecordNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphEventRecordNodeSetEvent as cudaGraphEventRecordNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphExecEventRecordNodeSetEvent as cuGraphExecEventRecordNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphExecEventRecordNodeSetEvent as cudaGraphExecEventRecordNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphAddEventWaitNode as cuGraphAddEventWaitNode
+from rocm.bindings.cyhip cimport hipGraphAddEventWaitNode as cudaGraphAddEventWaitNode
+from rocm.bindings.cyhip cimport hipGraphEventWaitNodeGetEvent as cuGraphEventWaitNodeGetEvent
+from rocm.bindings.cyhip cimport hipGraphEventWaitNodeGetEvent as cudaGraphEventWaitNodeGetEvent
+from rocm.bindings.cyhip cimport hipGraphEventWaitNodeSetEvent as cuGraphEventWaitNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphEventWaitNodeSetEvent as cudaGraphEventWaitNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphExecEventWaitNodeSetEvent as cuGraphExecEventWaitNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphExecEventWaitNodeSetEvent as cudaGraphExecEventWaitNodeSetEvent
+from rocm.bindings.cyhip cimport hipGraphAddMemAllocNode as cuGraphAddMemAllocNode
+from rocm.bindings.cyhip cimport hipGraphAddMemAllocNode as cudaGraphAddMemAllocNode
+from rocm.bindings.cyhip cimport hipGraphMemAllocNodeGetParams as cuGraphMemAllocNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphMemAllocNodeGetParams as cudaGraphMemAllocNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphAddMemFreeNode as cudaGraphAddMemFreeNode
+from rocm.bindings.cyhip cimport hipGraphMemFreeNodeGetParams as cuGraphMemFreeNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphMemFreeNodeGetParams as cudaGraphMemFreeNodeGetParams
+from rocm.bindings.cyhip cimport hipDeviceGetGraphMemAttribute as cuDeviceGetGraphMemAttribute
+from rocm.bindings.cyhip cimport hipDeviceGetGraphMemAttribute as cudaDeviceGetGraphMemAttribute
+from rocm.bindings.cyhip cimport hipDeviceSetGraphMemAttribute as cuDeviceSetGraphMemAttribute
+from rocm.bindings.cyhip cimport hipDeviceSetGraphMemAttribute as cudaDeviceSetGraphMemAttribute
+from rocm.bindings.cyhip cimport hipDeviceGraphMemTrim as cuDeviceGraphMemTrim
+from rocm.bindings.cyhip cimport hipDeviceGraphMemTrim as cudaDeviceGraphMemTrim
+from rocm.bindings.cyhip cimport hipUserObjectCreate as cuUserObjectCreate
+from rocm.bindings.cyhip cimport hipUserObjectCreate as cudaUserObjectCreate
+from rocm.bindings.cyhip cimport hipUserObjectRelease as cuUserObjectRelease
+from rocm.bindings.cyhip cimport hipUserObjectRelease as cudaUserObjectRelease
+from rocm.bindings.cyhip cimport hipUserObjectRetain as cuUserObjectRetain
+from rocm.bindings.cyhip cimport hipUserObjectRetain as cudaUserObjectRetain
+from rocm.bindings.cyhip cimport hipGraphRetainUserObject as cuGraphRetainUserObject
+from rocm.bindings.cyhip cimport hipGraphRetainUserObject as cudaGraphRetainUserObject
+from rocm.bindings.cyhip cimport hipGraphReleaseUserObject as cuGraphReleaseUserObject
+from rocm.bindings.cyhip cimport hipGraphReleaseUserObject as cudaGraphReleaseUserObject
+from rocm.bindings.cyhip cimport hipGraphDebugDotPrint as cuGraphDebugDotPrint
+from rocm.bindings.cyhip cimport hipGraphDebugDotPrint as cudaGraphDebugDotPrint
+from rocm.bindings.cyhip cimport hipGraphKernelNodeCopyAttributes as cuGraphKernelNodeCopyAttributes
+from rocm.bindings.cyhip cimport hipGraphKernelNodeCopyAttributes as cudaGraphKernelNodeCopyAttributes
+from rocm.bindings.cyhip cimport hipGraphNodeSetEnabled as cuGraphNodeSetEnabled
+from rocm.bindings.cyhip cimport hipGraphNodeSetEnabled as cudaGraphNodeSetEnabled
+from rocm.bindings.cyhip cimport hipGraphNodeGetEnabled as cuGraphNodeGetEnabled
+from rocm.bindings.cyhip cimport hipGraphNodeGetEnabled as cudaGraphNodeGetEnabled
+from rocm.bindings.cyhip cimport hipGraphAddExternalSemaphoresWaitNode as cuGraphAddExternalSemaphoresWaitNode
+from rocm.bindings.cyhip cimport hipGraphAddExternalSemaphoresWaitNode as cudaGraphAddExternalSemaphoresWaitNode
+from rocm.bindings.cyhip cimport hipGraphAddExternalSemaphoresSignalNode as cuGraphAddExternalSemaphoresSignalNode
+from rocm.bindings.cyhip cimport hipGraphAddExternalSemaphoresSignalNode as cudaGraphAddExternalSemaphoresSignalNode
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresSignalNodeSetParams as cuGraphExternalSemaphoresSignalNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresSignalNodeSetParams as cudaGraphExternalSemaphoresSignalNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresWaitNodeSetParams as cuGraphExternalSemaphoresWaitNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresWaitNodeSetParams as cudaGraphExternalSemaphoresWaitNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresSignalNodeGetParams as cuGraphExternalSemaphoresSignalNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresSignalNodeGetParams as cudaGraphExternalSemaphoresSignalNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresWaitNodeGetParams as cuGraphExternalSemaphoresWaitNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphExternalSemaphoresWaitNodeGetParams as cudaGraphExternalSemaphoresWaitNodeGetParams
+from rocm.bindings.cyhip cimport hipGraphExecExternalSemaphoresSignalNodeSetParams as cuGraphExecExternalSemaphoresSignalNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecExternalSemaphoresSignalNodeSetParams as cudaGraphExecExternalSemaphoresSignalNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecExternalSemaphoresWaitNodeSetParams as cuGraphExecExternalSemaphoresWaitNodeSetParams
+from rocm.bindings.cyhip cimport hipGraphExecExternalSemaphoresWaitNodeSetParams as cudaGraphExecExternalSemaphoresWaitNodeSetParams
+from rocm.bindings.cyhip cimport hipDrvGraphMemcpyNodeGetParams as cuGraphMemcpyNodeGetParams
+from rocm.bindings.cyhip cimport hipDrvGraphMemcpyNodeSetParams as cuGraphMemcpyNodeSetParams
+from rocm.bindings.cyhip cimport hipDrvGraphAddMemsetNode as cuGraphAddMemsetNode
+from rocm.bindings.cyhip cimport hipDrvGraphAddMemFreeNode as cuGraphAddMemFreeNode
+from rocm.bindings.cyhip cimport hipDrvGraphExecMemcpyNodeSetParams as cuGraphExecMemcpyNodeSetParams
+from rocm.bindings.cyhip cimport hipDrvGraphExecMemsetNodeSetParams as cuGraphExecMemsetNodeSetParams
+from rocm.bindings.cyhip cimport hipMemAddressFree as cuMemAddressFree
+from rocm.bindings.cyhip cimport hipMemAddressReserve as cuMemAddressReserve
+from rocm.bindings.cyhip cimport hipMemCreate as cuMemCreate
+from rocm.bindings.cyhip cimport hipMemExportToShareableHandle as cuMemExportToShareableHandle
+from rocm.bindings.cyhip cimport hipMemGetAccess as cuMemGetAccess
+from rocm.bindings.cyhip cimport hipMemGetAllocationGranularity as cuMemGetAllocationGranularity
+from rocm.bindings.cyhip cimport hipMemGetAllocationPropertiesFromHandle as cuMemGetAllocationPropertiesFromHandle
+from rocm.bindings.cyhip cimport hipMemImportFromShareableHandle as cuMemImportFromShareableHandle
+from rocm.bindings.cyhip cimport hipMemMap as cuMemMap
+from rocm.bindings.cyhip cimport hipMemMapArrayAsync as cuMemMapArrayAsync
+from rocm.bindings.cyhip cimport hipMemRelease as cuMemRelease
+from rocm.bindings.cyhip cimport hipMemRetainAllocationHandle as cuMemRetainAllocationHandle
+from rocm.bindings.cyhip cimport hipMemSetAccess as cuMemSetAccess
+from rocm.bindings.cyhip cimport hipMemUnmap as cuMemUnmap
+from rocm.bindings.cyhip cimport hipGraphicsMapResources as cuGraphicsMapResources
+from rocm.bindings.cyhip cimport hipGraphicsMapResources as cudaGraphicsMapResources
+from rocm.bindings.cyhip cimport hipGraphicsSubResourceGetMappedArray as cuGraphicsSubResourceGetMappedArray
+from rocm.bindings.cyhip cimport hipGraphicsSubResourceGetMappedArray as cudaGraphicsSubResourceGetMappedArray
+from rocm.bindings.cyhip cimport hipGraphicsResourceGetMappedPointer as cuGraphicsResourceGetMappedPointer
+from rocm.bindings.cyhip cimport hipGraphicsResourceGetMappedPointer as cuGraphicsResourceGetMappedPointer_v2
+from rocm.bindings.cyhip cimport hipGraphicsResourceGetMappedPointer as cudaGraphicsResourceGetMappedPointer
+from rocm.bindings.cyhip cimport hipGraphicsUnmapResources as cuGraphicsUnmapResources
+from rocm.bindings.cyhip cimport hipGraphicsUnmapResources as cudaGraphicsUnmapResources
+from rocm.bindings.cyhip cimport hipGraphicsUnregisterResource as cuGraphicsUnregisterResource
+from rocm.bindings.cyhip cimport hipGraphicsUnregisterResource as cudaGraphicsUnregisterResource
+from rocm.bindings.cyhip cimport hipCreateSurfaceObject as cudaCreateSurfaceObject
+from rocm.bindings.cyhip cimport hipDestroySurfaceObject as cudaDestroySurfaceObject
+from rocm.bindings.cyhip cimport hipDataType as cublasDataType_t
+from rocm.bindings.cyhip cimport HIP_R_32F
+from rocm.bindings.cyhip cimport HIP_R_32F as CUDA_R_32F
+from rocm.bindings.cyhip cimport HIP_R_64F
+from rocm.bindings.cyhip cimport HIP_R_64F as CUDA_R_64F
+from rocm.bindings.cyhip cimport HIP_R_16F
+from rocm.bindings.cyhip cimport HIP_R_16F as CUDA_R_16F
+from rocm.bindings.cyhip cimport HIP_R_8I
+from rocm.bindings.cyhip cimport HIP_R_8I as CUDA_R_8I
+from rocm.bindings.cyhip cimport HIP_C_32F
+from rocm.bindings.cyhip cimport HIP_C_32F as CUDA_C_32F
+from rocm.bindings.cyhip cimport HIP_C_64F
+from rocm.bindings.cyhip cimport HIP_C_64F as CUDA_C_64F
+from rocm.bindings.cyhip cimport HIP_C_16F
+from rocm.bindings.cyhip cimport HIP_C_16F as CUDA_C_16F
+from rocm.bindings.cyhip cimport HIP_C_8I
+from rocm.bindings.cyhip cimport HIP_C_8I as CUDA_C_8I
+from rocm.bindings.cyhip cimport HIP_R_8U
+from rocm.bindings.cyhip cimport HIP_R_8U as CUDA_R_8U
+from rocm.bindings.cyhip cimport HIP_C_8U
+from rocm.bindings.cyhip cimport HIP_C_8U as CUDA_C_8U
+from rocm.bindings.cyhip cimport HIP_R_32I
+from rocm.bindings.cyhip cimport HIP_R_32I as CUDA_R_32I
+from rocm.bindings.cyhip cimport HIP_C_32I
+from rocm.bindings.cyhip cimport HIP_C_32I as CUDA_C_32I
+from rocm.bindings.cyhip cimport HIP_R_32U
+from rocm.bindings.cyhip cimport HIP_R_32U as CUDA_R_32U
+from rocm.bindings.cyhip cimport HIP_C_32U
+from rocm.bindings.cyhip cimport HIP_C_32U as CUDA_C_32U
+from rocm.bindings.cyhip cimport HIP_R_16BF
+from rocm.bindings.cyhip cimport HIP_R_16BF as CUDA_R_16BF
+from rocm.bindings.cyhip cimport HIP_C_16BF
+from rocm.bindings.cyhip cimport HIP_C_16BF as CUDA_C_16BF
+from rocm.bindings.cyhip cimport HIP_R_4I
+from rocm.bindings.cyhip cimport HIP_R_4I as CUDA_R_4I
+from rocm.bindings.cyhip cimport HIP_C_4I
+from rocm.bindings.cyhip cimport HIP_C_4I as CUDA_C_4I
+from rocm.bindings.cyhip cimport HIP_R_4U
+from rocm.bindings.cyhip cimport HIP_R_4U as CUDA_R_4U
+from rocm.bindings.cyhip cimport HIP_C_4U
+from rocm.bindings.cyhip cimport HIP_C_4U as CUDA_C_4U
+from rocm.bindings.cyhip cimport HIP_R_16I
+from rocm.bindings.cyhip cimport HIP_R_16I as CUDA_R_16I
+from rocm.bindings.cyhip cimport HIP_C_16I
+from rocm.bindings.cyhip cimport HIP_C_16I as CUDA_C_16I
+from rocm.bindings.cyhip cimport HIP_R_16U
+from rocm.bindings.cyhip cimport HIP_R_16U as CUDA_R_16U
+from rocm.bindings.cyhip cimport HIP_C_16U
+from rocm.bindings.cyhip cimport HIP_C_16U as CUDA_C_16U
+from rocm.bindings.cyhip cimport HIP_R_64I
+from rocm.bindings.cyhip cimport HIP_R_64I as CUDA_R_64I
+from rocm.bindings.cyhip cimport HIP_C_64I
+from rocm.bindings.cyhip cimport HIP_C_64I as CUDA_C_64I
+from rocm.bindings.cyhip cimport HIP_R_64U
+from rocm.bindings.cyhip cimport HIP_R_64U as CUDA_R_64U
+from rocm.bindings.cyhip cimport HIP_C_64U
+from rocm.bindings.cyhip cimport HIP_C_64U as CUDA_C_64U
+from rocm.bindings.cyhip cimport HIP_R_8F_E4M3
+from rocm.bindings.cyhip cimport HIP_R_8F_E4M3 as CUDA_R_8F_E4M3
+from rocm.bindings.cyhip cimport HIP_R_8F_E4M3 as CUDA_R_8F_UE4M3
+from rocm.bindings.cyhip cimport HIP_R_8F_E5M2
+from rocm.bindings.cyhip cimport HIP_R_8F_E5M2 as CUDA_R_8F_E5M2
+from rocm.bindings.cyhip cimport HIP_R_8F_UE8M0
+from rocm.bindings.cyhip cimport HIP_R_8F_UE8M0 as CUDA_R_8F_UE8M0
+from rocm.bindings.cyhip cimport HIP_R_6F_E2M3
+from rocm.bindings.cyhip cimport HIP_R_6F_E2M3 as CUDA_R_6F_E2M3
+from rocm.bindings.cyhip cimport HIP_R_6F_E3M2
+from rocm.bindings.cyhip cimport HIP_R_6F_E3M2 as CUDA_R_6F_E3M2
+from rocm.bindings.cyhip cimport HIP_R_4F_E2M1
+from rocm.bindings.cyhip cimport HIP_R_4F_E2M1 as CUDA_R_4F_E2M1
+from rocm.bindings.cyhip cimport HIP_R_8F_E4M3_FNUZ
+from rocm.bindings.cyhip cimport HIP_R_8F_E5M2_FNUZ
+ctypedef cublasDataType_t cudaDataType
+ctypedef cublasDataType_t cudaDataType_t

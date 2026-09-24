@@ -1,0 +1,129 @@
+# MIT License
+#
+# Copyright (c) 2023-2026 Advanced Micro Devices, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR IN CONNECTION WITH THE
+# SOFTWARE.
+
+# !!! AUTO-GENERATED FILE — DO NOT EDIT !!!
+#
+# This module is rendered from ``version.py.in`` by the hip-python code
+# generator (``hip-python-generate``). The committed source of truth is the
+# template; the rendered ``version.py`` is git-ignored on the codegen base
+# branch and committed only on release branches.
+
+"""Version information for ROCm bindings.
+
+The ROCm/HIP versions and code-generation provenance are baked in as plain
+constants at codegen time. This module performs no package-metadata or TOML
+parsing to discover the ROCm/HIP version.
+
+Usage:
+    from rocm import version
+
+    print(version.ROCM_VERSION_TUPLE)  # (7, 13, 0)
+    print(version.ROCM_VERSION_NAME)   # "7.13.0"
+    print(version.ROCM_VERSION)        # 71300000
+    print(version.HIP_VERSION_TUPLE)   # (7, 13, 26154, "92b7431876")
+
+    # Or import specific attributes:
+    from rocm.version import ROCM_VERSION_TUPLE, HIP_VERSION_TUPLE
+"""
+
+__author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
+
+from typing import Tuple
+
+# ---------------------------------------------------------------------------
+# Authoritative version metadata (substituted at codegen time)
+# ---------------------------------------------------------------------------
+ROCM_VERSION_NAME = rocm_version_name = "10.0.0"
+HIP_VERSION_NAME = hip_version_name = "7.15.26333-0000000"
+HIP_COMMIT = "0000000"
+HIP_FULL_VERSION = "7.15.26333-0000000"
+
+# ---------------------------------------------------------------------------
+# Code-generation provenance (substituted at codegen time)
+# ---------------------------------------------------------------------------
+BASE_BRANCH = "amd-integration"
+BASE_REV = "183b6a80"
+BASE_VERSION = "0.1.2"
+INTERFACEGEN_VERSION = "0.5"
+
+
+def _version_to_int(version_tuple: Tuple[int, ...]) -> int:
+    """Convert a version tuple to an integer (e.g. (7, 13, 0) -> 71300000)."""
+    major = version_tuple[0] if len(version_tuple) > 0 else 0
+    minor = version_tuple[1] if len(version_tuple) > 1 else 0
+    patch = version_tuple[2] if len(version_tuple) > 2 else 0
+    return major * 10000000 + minor * 100000 + patch
+
+
+# Derive the ROCm version forms from ROCM_VERSION_NAME ("MAJOR.MINOR.PATCH").
+ROCM_VERSION_TUPLE = rocm_version_tuple = tuple(
+    int(x) for x in ROCM_VERSION_NAME.split(".")
+)
+ROCM_VERSION = _version_to_int(ROCM_VERSION_TUPLE)
+
+# Derive the HIP version forms from HIP_VERSION_NAME, which may carry a commit
+# suffix ("MAJOR.MINOR.PATCH-COMMIT" -> (MAJOR, MINOR, PATCH, "COMMIT")).
+if "-" in HIP_VERSION_NAME:
+    _hip_numeric_part, _hip_commit = HIP_VERSION_NAME.split("-", 1)
+    _hip_nums = [int(x) for x in _hip_numeric_part.split(".")]
+    HIP_VERSION_TUPLE = hip_version_tuple = tuple(_hip_nums + [_hip_commit])
+else:
+    _hip_nums = [
+        int(x) if x.isdigit() else x
+        for x in HIP_VERSION_NAME.replace("-", ".").split(".")
+    ]
+    HIP_VERSION_TUPLE = hip_version_tuple = tuple(_hip_nums)
+
+HIP_VERSION = _version_to_int(
+    tuple(x for x in HIP_VERSION_TUPLE if isinstance(x, int))[:3]
+)
+
+# The wheel identity (``__version__``) is the installed package version, which
+# scikit-build derives from the rendered ``VERSION`` file. Fall back to the
+# codegen-recorded base version for editable/uninstalled trees.
+from importlib.metadata import version as _get_version, PackageNotFoundError
+
+try:
+    __version__ = _get_version("rocm-bindings-core")
+except PackageNotFoundError:
+    __version__ = BASE_VERSION or ROCM_VERSION_NAME
+
+
+__all__ = [
+    "__version__",
+    "ROCM_VERSION",
+    "ROCM_VERSION_NAME",
+    "rocm_version_name",
+    "ROCM_VERSION_TUPLE",
+    "rocm_version_tuple",
+    "HIP_VERSION",
+    "HIP_VERSION_NAME",
+    "hip_version_name",
+    "HIP_VERSION_TUPLE",
+    "hip_version_tuple",
+    "HIP_COMMIT",
+    "HIP_FULL_VERSION",
+    "BASE_BRANCH",
+    "BASE_REV",
+    "BASE_VERSION",
+    "INTERFACEGEN_VERSION",
+]
