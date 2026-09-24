@@ -282,7 +282,9 @@ def assemble(
     tag_override: str | None,
     abi3_floor: str | None,
 ) -> Path:
-    pyproject = tomllib.loads((package_dir / "pyproject.toml").read_text("utf-8"))
+    pyproject = tomllib.loads(
+        (package_dir / "pyproject.toml").read_text("utf-8")
+    )
     project_name = pyproject["project"]["name"]
     dist_name = canonicalize_name(project_name).replace("-", "_")
     version = read_version(package_dir, version_override)
@@ -300,7 +302,13 @@ def assemble(
         metadata_text = build_metadata(package_dir, pyproject, version)
         licenses = license_file_paths(package_dir, pyproject)
         dist_info = write_dist_info(
-            staging, dist_name, version, metadata_text, tag, licenses, package_dir
+            staging,
+            dist_name,
+            version,
+            metadata_text,
+            tag,
+            licenses,
+            package_dir,
         )
 
         output = output_dir / f"{dist_name}-{version}-{tag}.whl"
@@ -318,14 +326,20 @@ def main(argv: list[str] | None = None) -> int:
         "--component", required=True, help="CMake install component to collect"
     )
     parser.add_argument(
-        "--package-dir", required=True, help="package source dir (has pyproject.toml)"
+        "--package-dir",
+        required=True,
+        help="package source dir (has pyproject.toml)",
     )
     parser.add_argument(
         "--output-dir", required=True, help="directory to write the wheel into"
     )
-    parser.add_argument("--config", default="Release", help="CMake install config")
     parser.add_argument(
-        "--version", default=None, help="override version (default: read VERSION)"
+        "--config", default="Release", help="CMake install config"
+    )
+    parser.add_argument(
+        "--version",
+        default=None,
+        help="override version (default: read VERSION)",
     )
     parser.add_argument(
         "--tag", default=None, help="override wheel tag (default: computed)"
