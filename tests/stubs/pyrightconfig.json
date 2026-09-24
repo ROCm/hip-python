@@ -1,0 +1,7 @@
+{
+    "typeCheckingMode": "basic",
+    "useLibraryCodeForTypes": false,
+    "reportMissingImports": "error",
+    "reportMissingTypeStubs": "error",
+    "reportUnnecessaryTypeIgnoreComment": "error"
+}

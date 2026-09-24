@@ -217,7 +217,9 @@ Two things are easy to forget:
   `cuda.bindings.cufile`'s, which stubgen cannot produce usefully, and
   `hip/__init__.pyi`, whose module is pure Python re-exports. The
   `tests/stubs` and `tests/hip-python` suites check that each still
-  covers its module's public surface. See
+  covers its module's public surface, and `tests/stubs` additionally
+  runs `pyright` over the annotated sample scripts in
+  `tests/stubs/samples/`, which is what the PEP 561 markers buy. See
   [share/design/BUILDING.md](share/design/BUILDING.md), section
   "Regenerating stubs for handcoded Cython modules".
 - **Platform guards.** An example or test that needs a library ROCm does

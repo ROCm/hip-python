@@ -167,7 +167,10 @@ Invoke-Native $Python -m venv $TestVenv
 $TestVenv = (Resolve-Path -LiteralPath $TestVenv).Path
 $venvPython = Join-Path $TestVenv "Scripts\python.exe"
 
-Invoke-Native $venvPython -m pip install --upgrade pip pytest cffi
+# pyright drives suite 4's sample scripts. Its wheel is a launcher that
+# fetches a node runtime on first use; where that is unavailable the suite
+# skips rather than fails.
+Invoke-Native $venvPython -m pip install --upgrade pip pytest cffi pyright
 Invoke-Native $venvPython -m pip install -r (Join-Path $examplesDir "requirements.txt")
 
 $wheels = @(
@@ -299,8 +302,8 @@ $env:HIP_PYTHON_cudaError_t_HALLUCINATE = "1"
 # Suite 1 - hip-python examples.
 # Suite 2 - hip-python-interop pynvml/NVML shim unit tests (mocked, no GPU).
 # Suite 3 - rocm-bindings unit tests (core + compiler), GPU-free.
-# Suite 4 - handcoded-Cython stubs: checks that the hand-maintained
-#           cuda.bindings.cufile stub still covers the installed module.
+# Suite 4 - type information: the hand-maintained cuda.bindings.cufile stub
+#           against the installed module, and pyright over sample scripts.
 # Suite 5 - hip backward-compatibility package: what `from hip import hip,
 #           hiprtc` resolves to, plus its hand-maintained stub.
 # Suite 6 - numba-hip, which compiles and launches real kernels through the

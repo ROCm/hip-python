@@ -34,9 +34,9 @@ set -xeu
 #
 #   3. The rocm-bindings-core and rocm-bindings-compiler unit tests.
 #
-#   4. The handcoded-Cython stub suite (tests/stubs), which checks that
-#      the hand-maintained `cuda.bindings.cufile` stub still declares
-#      every public name the installed module exposes.
+#   4. The type-information suite (tests/stubs): the hand-maintained
+#      `cuda.bindings.cufile` stub against the installed module, and
+#      pyright over annotated sample scripts.
 #
 #   5. The hip compat package suite (tests/hip-python): what
 #      `from hip import hip, hiprtc` resolves to, and its stub.
@@ -73,7 +73,10 @@ test_venv=${TEST_VENV:-$(mktemp -d)}
 
 python3 -m venv ${test_venv}
 . ${test_venv}/bin/activate
-pip install --upgrade pip pytest cffi
+# pyright drives suite 4's sample scripts. Its wheel is a launcher that
+# fetches a node runtime on first use; where that is unavailable the suite
+# skips rather than fails.
+pip install --upgrade pip pytest cffi pyright
 
 cp -av ${src_dir}/examples ${examples_build_dir}/examples
 pip install -r ${examples_build_dir}/examples/requirements.txt
@@ -166,13 +169,17 @@ pytest -v -rs ${src_dir}/tests/rocm-bindings-core
 pytest -v -rs ${src_dir}/tests/rocm-bindings-compiler
 
 ### -------------------------------------------------------------------
-### Suite 4 — handcoded-Cython stubs
+### Suite 4 — type information
 ### -------------------------------------------------------------------
 #
 # `cuda.bindings.cufile` is the one handcoded module whose `.pyi` is
 # written by hand instead of generated, so a `.pyx` change can ship
 # without the matching stub edit. This suite checks the stub against the
 # *installed* extension, which is the artifact users consume.
+#
+# It then runs pyright over annotated sample scripts, which is what the
+# PEP 561 markers and the shipped stubs are for. Without pyright the
+# sample cases skip.
 
 pytest -v -rs ${src_dir}/tests/stubs
 
