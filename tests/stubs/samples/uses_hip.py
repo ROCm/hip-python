@@ -31,14 +31,20 @@ from hip import HIP_VERSION_NAME, hip, hiprtc
 def device_arch(index: int = 0) -> str:
     """Architecture name of one device, ``gfx90a`` and the like."""
     err, props = hip.hipGetDeviceProperties(index)
-    # The generated stubs declare the enum classes but not their members.
-    # Drop the suppression once they do: pyright then reports it as
-    # unnecessary, which is an error under this suite's config. Keep the
-    # access short enough that black leaves the comment on its line.
-    status = hip.hipError_t
-    if err != status.hipSuccess:  # pyright: ignore[reportAttributeAccessIssue]
+    if err != hip.hipError_t.hipSuccess:
         raise RuntimeError(f"hipGetDeviceProperties({index}): {err}")
     return str(props.gcnArchName)
+
+
+def empty_properties() -> int:
+    """Read a field off a record the annotation names, not an `Any`.
+
+    `hipGetDeviceProperties` above returns `Any`, which type-checks
+    whatever is asked of it; a constructed record is the case where the
+    stub has to carry the field.
+    """
+    props = hip.hipDeviceProp_t()
+    return int(props.multiProcessorCount)
 
 
 def versions() -> tuple[int, str]:
