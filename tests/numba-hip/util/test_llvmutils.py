@@ -155,12 +155,17 @@ def test_01_link_modules():
 
     # verify(main_llvm_ir) # TODO get error 'Attribute does not match Module context!'
     # verify(dep_llvm_ir) # TODO get error 'Attribute does not match Module context!'
-    link_result_llvm_ir = link_modules([main_llvm_ir, dep_llvm_ir], to_bc=False).decode("utf-8")
+    link_result_llvm_ir = link_modules(
+        [main_llvm_ir, dep_llvm_ir], to_bc=False
+    ).decode("utf-8")
     # verify(link_result_llvm_ir) # TODO get error 'Attribute does not match Module context'
     print(link_result_llvm_ir)
     assert "declare hidden void @_Z5scalePff" not in link_result_llvm_ir
     assert "define hidden void @_Z5scalePff" in link_result_llvm_ir
-    assert "define protected amdgpu_kernel void @_Z8mykernelPff" in link_result_llvm_ir
+    assert (
+        "define protected amdgpu_kernel void @_Z8mykernelPff"
+        in link_result_llvm_ir
+    )
 
 
 def test_02_is_human_readable_clang_offload_bundle():

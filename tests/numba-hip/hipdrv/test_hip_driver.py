@@ -280,7 +280,6 @@ class TestCudaDriver(HIPTestCase):
         self.assertTrue(grid > 0)
         self.assertTrue(block > 0)
 
-
     def test_context_synchronize(self):
         # Test that context synchronization completes without error
         # Must not call the deprecated hipCtxSynchronize,

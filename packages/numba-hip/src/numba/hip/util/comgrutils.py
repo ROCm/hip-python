@@ -33,7 +33,9 @@ from rocm import comgr
 from . import llvmutils
 
 disassemble_code_obj_function = comgr.disassemble_code_obj_function
-disassemble_amdhsa_code_obj_v6_kernel = comgr.disassemble_amdhsa_code_obj_v6_kernel
+disassemble_amdhsa_code_obj_v6_kernel = (
+    comgr.disassemble_amdhsa_code_obj_v6_kernel
+)
 
 compile_bc = comgr.compile_bc
 compile_bc_to_hsa = comgr.compile_bc_to_hsa

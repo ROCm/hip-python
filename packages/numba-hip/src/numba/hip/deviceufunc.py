@@ -560,7 +560,7 @@ def expand_gufunc_template(template, indims, outdims, funcname, argtypes):
     outputs = [
         _gen_src_for_indexing(aref, adims, atype)
         for aref, adims, atype in zip(
-            argnames[len(indims):], outdims, argtypes[len(indims):]
+            argnames[len(indims) :], outdims, argtypes[len(indims) :]
         )
     ]
     argitems = inputs + outputs
