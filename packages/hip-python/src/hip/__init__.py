@@ -27,65 +27,130 @@ It re-exports modules from the new rocm.bindings namespace.
 
 New code should use: from rocm.bindings import hip, hiprtc, hipblas, etc.
 Old code continues to work: from hip import hip, hiprtc, hipblas, etc.
+
+`hip`, `hiprtc` and `hip._util` come with this wheel's hard dependencies.
+Every other binding is imported below if its wheel is installed, and its name
+stays unbound otherwise.
 """
 
 __author__ = "Advanced Micro Devices, Inc. <hip-python.maintainer@amd.com>"
 
 import importlib.metadata
+import importlib.util
 
-# VERSION/__version__ are sourced lazily from the installed distribution
-# metadata (scikit-build derives the version from the rendered VERSION file).
-_dynamic_version_attrs = {
-    "VERSION",
-    "__version__",
-}
-
-# Re-export the ROCm/HIP version metadata from the canonical, generated
-# source of truth (rocm-bindings-core renders rocm/version.py at codegen
-# time). rocm-bindings-core is a hard dependency, so a failed import here
-# is a real, loud error rather than something to paper over.
+# Importing `util.types` binds it on its parent, which is what makes the
+# pre-7.14 spelling `hip._util.types.Pointer` resolve.
+from rocm.bindings import hip, hiprtc, hiprtc_pyext
+from rocm.bindings import util as _util
+from rocm.bindings.util import types as _util_types
 from rocm.version import (
-    ROCM_VERSION,
-    ROCM_VERSION_NAME,
-    rocm_version_name,
-    ROCM_VERSION_TUPLE,
-    rocm_version_tuple,
     HIP_VERSION,
     HIP_VERSION_NAME,
-    hip_version_name,
     HIP_VERSION_TUPLE,
+    ROCM_VERSION,
+    ROCM_VERSION_NAME,
+    ROCM_VERSION_TUPLE,
+    hip_version_name,
     hip_version_tuple,
+    rocm_version_name,
+    rocm_version_tuple,
 )
 
+# hip-python 3.x carried the HIPRTC extensions as `hip.hiprtc.ext`.
+hiprtc.ext = hiprtc_pyext
 
-def __getattr__(name):
-    """Lazy-load version attributes and re-export modules from rocm.bindings."""
-    # Check if it's a version attribute
-    if name in _dynamic_version_attrs:
-        value = None
-        for _dist in ("hip-python", "rocm-bindings-hip"):
-            try:
-                value = importlib.metadata.version(_dist)
-                break
-            except importlib.metadata.PackageNotFoundError:
-                continue
-        if value is None:
-            raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
-        globals()["VERSION"] = value
-        globals()["__version__"] = value
-        return value
+# scikit-build derives the version from the rendered VERSION file, so the
+# installed distribution metadata is the only place to read it back from.
+for _dist in ("hip-python", "rocm-bindings-hip"):
+    try:
+        VERSION = __version__ = importlib.metadata.version(_dist)
+        break
+    except importlib.metadata.PackageNotFoundError:
+        continue
+else:
+    VERSION = __version__ = "0+unknown"  # never installed, a source tree
 
-    # Try to import from rocm.bindings namespace
-    # First try rocm.bindings.{name} (for hip, hiprtc)
-    module = __import__(f"rocm.bindings.{name}", fromlist=[name])
-    globals()[name] = module
 
-    # Special case: attach hiprtc_pyext as hiprtc.ext
-    if name == "hiprtc":
-        try:
-            from rocm.bindings.hip import hiprtc_pyext
-            setattr(module, "ext", hiprtc_pyext)
-        except ImportError:
-            pass
+def _reraise_unless_missing(err, name):
+    """Ignore an uninstalled binding, keep every other import failure loud.
 
-    return module
+    The two are told apart by asking the finder: `from rocm.bindings import x`
+    reports an absent submodule as a plain ImportError naming the package, so
+    the exception itself does not carry the distinction.
+    """
+    if importlib.util.find_spec(f"rocm.bindings.{name}") is not None:
+        raise err
+
+
+# `pip install hip-python[libraries]`
+try:
+    from rocm.bindings import hipblas
+except ImportError as err:
+    _reraise_unless_missing(err, "hipblas")
+
+try:
+    from rocm.bindings import hipblaslt
+except ImportError as err:
+    _reraise_unless_missing(err, "hipblaslt")
+
+try:
+    from rocm.bindings import hipdnn_backend
+except ImportError as err:
+    _reraise_unless_missing(err, "hipdnn_backend")
+
+try:
+    from rocm.bindings import hipfft
+except ImportError as err:
+    _reraise_unless_missing(err, "hipfft")
+
+try:
+    from rocm.bindings import hiprand
+except ImportError as err:
+    _reraise_unless_missing(err, "hiprand")
+
+try:
+    from rocm.bindings import hipsolver
+except ImportError as err:
+    _reraise_unless_missing(err, "hipsolver")
+
+try:
+    from rocm.bindings import hipsparse
+except ImportError as err:
+    _reraise_unless_missing(err, "hipsparse")
+
+try:
+    from rocm.bindings import hipsparselt
+except ImportError as err:
+    _reraise_unless_missing(err, "hipsparselt")
+
+try:
+    from rocm.bindings import hiptensor
+except ImportError as err:
+    _reraise_unless_missing(err, "hiptensor")
+
+# `pip install hip-python[systems]`
+try:
+    from rocm.bindings import amdsmi
+except ImportError as err:
+    _reraise_unless_missing(err, "amdsmi")
+
+try:
+    from rocm.bindings import hipfile
+except ImportError as err:
+    _reraise_unless_missing(err, "hipfile")
+
+try:
+    from rocm.bindings import rccl
+except ImportError as err:
+    _reraise_unless_missing(err, "rccl")
+
+try:
+    from rocm.bindings import roctx
+except ImportError as err:
+    _reraise_unless_missing(err, "roctx")
+
+# `pip install hip-python[compiler]`
+try:
+    from rocm.bindings import amd_comgr
+except ImportError as err:
+    _reraise_unless_missing(err, "amd_comgr")

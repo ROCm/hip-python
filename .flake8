@@ -7,3 +7,8 @@ ignore = E501, W503, E203
 max-line-length = 79
 max-complexity = 18
 select = B,C,E,F,W,T4,B9
+per-file-ignores =
+  # The `hip` backward-compatibility package is nothing but re-exports, and
+  # the optional bindings can only be imported below the guard that decides
+  # whether their wheel is installed.
+  packages/hip-python/src/hip/__init__.py: F401, E402
