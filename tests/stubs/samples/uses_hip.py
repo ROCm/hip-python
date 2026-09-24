@@ -47,6 +47,30 @@ def empty_properties() -> int:
     return int(props.multiProcessorCount)
 
 
+def compile_empty_program() -> str:
+    """The spellings a caller reaches for around HIPRTC.
+
+    `_hiprtcProgram` is the name the module binds, underscore and all,
+    and `createRef` comes from the util base class every wrapper
+    inherits -- neither is visible unless the stub says so.
+    """
+    _, program = hiprtc.hiprtcCreateProgram(b"", b"empty", 0, [], [])
+    handle: hiprtc._hiprtcProgram = program
+    _, log_size = hiprtc.hiprtcGetProgramLogSize(handle)
+    log = bytearray(int(log_size))
+    hiprtc.hiprtcGetProgramLog(handle, log)
+    hiprtc.hiprtcDestroyProgram(handle.createRef())
+    return log.decode()
+
+
+def null_stream() -> "hip.hipStream_t | None":
+    """A handle typedef, the name callers annotate with."""
+    if not hip.has_symbol("hipStreamCreate"):
+        return None
+    _, stream = hip.hipStreamCreate()
+    return stream
+
+
 def versions() -> tuple[int, str]:
     """The HIP runtime version, and the ROCm version the wheel was cut for."""
     _, runtime_version = hip.hipRuntimeGetVersion()
