@@ -32,11 +32,16 @@ set -xeu
 #
 #   2. The hip-python-interop pynvml/NVML shim unit tests.
 #
-#   3. The handcoded-Cython stub suite (tests/stubs), which checks that
+#   3. The rocm-bindings-core and rocm-bindings-compiler unit tests.
+#
+#   4. The handcoded-Cython stub suite (tests/stubs), which checks that
 #      the hand-maintained `cuda.bindings.cufile` stub still declares
 #      every public name the installed module exposes.
 #
-#   4. The numba-hip test suite (tests/numba-hip), run against those same
+#   5. The hip compat package suite (tests/hip-python): what
+#      `from hip import hip, hiprtc` resolves to, and its stub.
+#
+#   6. The numba-hip test suite (tests/numba-hip), run against those same
 #      wheels plus the numba_hip wheel. numba-hip's tests and CI were
 #      folded in here when its standalone packages/numba-hip/ci/ scripts
 #      were retired; the unified `all_wheels` target now also builds the
@@ -172,7 +177,19 @@ pytest -v -rs ${src_dir}/tests/rocm-bindings-compiler
 pytest -v -rs ${src_dir}/tests/stubs
 
 ### -------------------------------------------------------------------
-### Suite 5 — numba-hip
+### Suite 5 — hip backward-compatibility package
+### -------------------------------------------------------------------
+#
+# The hip_python wheel re-exports rocm.bindings under the old
+# `from hip import hip, hiprtc` spelling. The tests live OUTSIDE the
+# importable package (tests/hip-python, not under src/) and cover the shim,
+# its hand-maintained stub and the usage pattern applications drive it with.
+# The device-touching cases skip themselves where no HIP device is present.
+
+pytest -v -rs ${src_dir}/tests/hip-python
+
+### -------------------------------------------------------------------
+### Suite 6 — numba-hip
 ### -------------------------------------------------------------------
 #
 # The tests live OUTSIDE the importable package (tests/numba-hip, not

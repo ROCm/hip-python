@@ -301,10 +301,12 @@ $env:HIP_PYTHON_cudaError_t_HALLUCINATE = "1"
 # Suite 3 - rocm-bindings unit tests (core + compiler), GPU-free.
 # Suite 4 - handcoded-Cython stubs: checks that the hand-maintained
 #           cuda.bindings.cufile stub still covers the installed module.
-# Suite 5 - numba-hip, which compiles and launches real kernels through the
+# Suite 5 - hip backward-compatibility package: what `from hip import hip,
+#           hiprtc` resolves to, plus its hand-maintained stub.
+# Suite 6 - numba-hip, which compiles and launches real kernels through the
 #           bundled LLVM. Present only when its wheel was built.
 #
-# Suites 2 to 5 live outside the importable packages (tests/, not under src/) so
+# Suites 2 to 6 live outside the importable packages (tests/, not under src/) so
 # they exercise the *installed* wheels.
 $suites = [ordered] @{
     "examples"                = $examplesDir
@@ -312,6 +314,7 @@ $suites = [ordered] @{
     "rocm-bindings-core"      = Join-Path $repoRoot "tests\rocm-bindings-core"
     "rocm-bindings-compiler"  = Join-Path $repoRoot "tests\rocm-bindings-compiler"
     "stubs"                   = Join-Path $repoRoot "tests\stubs"
+    "hip-python"              = Join-Path $repoRoot "tests\hip-python"
 }
 if ($numbaHipWheel) {
     $suites["numba-hip"] = Join-Path $repoRoot "tests\numba-hip"

@@ -197,10 +197,11 @@ ci/internal/test.sh                  # or test.ps1
 
 `test.sh` runs the suites in one venv against the built wheels: the
 `examples/` suite, the interop shim unit tests, the GPU-free
-`tests/rocm-bindings-{core,compiler}` suites, and `tests/numba-hip`. All
-test suites live outside the importable packages, so they exercise the
-*installed* wheels. During development a single suite can be run
-directly with `pytest`.
+`tests/rocm-bindings-{core,compiler}` suites, `tests/hip-python` for the
+backward-compatibility shim, and `tests/numba-hip`. All test suites live
+outside the importable packages, so they exercise the *installed*
+wheels. During development a single suite can be run directly with
+`pytest`.
 
 Two things are easy to forget:
 
