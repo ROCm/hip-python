@@ -62,9 +62,7 @@ def test_leading_colon_and_whitespace_stripped():
 def test_period_in_identifier_does_not_split_prematurely():
     # Period followed by a non-space character should not terminate
     # the sentence — covers things like "rocm.bindings.foo".
-    src = (
-        "Use rocm.bindings.foo to access the API.\nAdditional details."
-    )
+    src = "Use rocm.bindings.foo to access the API.\nAdditional details."
     out = infer(src)
     assert out == "Use rocm.bindings.foo to access the API."
 

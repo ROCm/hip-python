@@ -205,7 +205,9 @@ def from_libclang_translation_unit(
             node = cls(
                 cursor,
                 root,
-                from_typedef_with_anon_child=_is_anonymous_typedef_inner(cursor),
+                from_typedef_with_anon_child=_is_anonymous_typedef_inner(
+                    cursor
+                ),
             )
             # Register the record in the type registry BEFORE descending into
             # its fields so a self-referential pointer field (e.g.

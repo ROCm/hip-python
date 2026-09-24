@@ -173,29 +173,43 @@ def test_double_indirection_out(root, fname, expected_intent, expected_rank):
 # pointer_as_value / pointer_as_reference (mutually exclusive)
 # ---------------------------------------------------------------------------
 def test_pointer_as_value_intent(root):
-    assert generic.pointer_as_value.ptr_parm_intent(
-        _parm(root, "f_ptr_unknown")
-    ) == ParmIntent.IN
+    assert (
+        generic.pointer_as_value.ptr_parm_intent(_parm(root, "f_ptr_unknown"))
+        == ParmIntent.IN
+    )
     # const *T => deferred (conservative handles it)
-    assert generic.pointer_as_value.ptr_parm_intent(
-        _parm(root, "f_const_ptr_in")
-    ) is None
+    assert (
+        generic.pointer_as_value.ptr_parm_intent(_parm(root, "f_const_ptr_in"))
+        is None
+    )
     # T** => deferred
-    assert generic.pointer_as_value.ptr_parm_intent(
-        _parm(root, "f_double_ptr_unknown")
-    ) is None
+    assert (
+        generic.pointer_as_value.ptr_parm_intent(
+            _parm(root, "f_double_ptr_unknown")
+        )
+        is None
+    )
 
 
 def test_pointer_as_reference_intent(root):
-    assert generic.pointer_as_reference.ptr_parm_intent(
-        _parm(root, "f_ptr_unknown")
-    ) == ParmIntent.INOUT
-    assert generic.pointer_as_reference.ptr_parm_intent(
-        _parm(root, "f_const_ptr_in")
-    ) is None
-    assert generic.pointer_as_reference.ptr_parm_intent(
-        _parm(root, "f_double_ptr_unknown")
-    ) is None
+    assert (
+        generic.pointer_as_reference.ptr_parm_intent(
+            _parm(root, "f_ptr_unknown")
+        )
+        == ParmIntent.INOUT
+    )
+    assert (
+        generic.pointer_as_reference.ptr_parm_intent(
+            _parm(root, "f_const_ptr_in")
+        )
+        is None
+    )
+    assert (
+        generic.pointer_as_reference.ptr_parm_intent(
+            _parm(root, "f_double_ptr_unknown")
+        )
+        is None
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -233,7 +247,7 @@ def test_default_ptr_handler_char_pointers(root):
 
     # char* (degree 1) is the string buffer itself => CStr, independent of
     # intent (IN/INOUT params, return values, and fields all share this).
-    assert handler(_parm(root, "f_str_in")) == "CStr"       # const char *
+    assert handler(_parm(root, "f_str_in")) == "CStr"  # const char *
     assert handler(_parm(root, "f_str_unknown")) == "CStr"  # char *
 
     # char** (degree 2): an OUT slot returns a single string => CStr; an IN
@@ -260,25 +274,27 @@ def test_opaque_typedef_is_handle(root):
     # No intent contribution
     assert generic.opaque_typedef_is_handle.ptr_parm_intent(p) is None
     # Untyped'ed `int *` is not a handle
-    assert generic.opaque_typedef_is_handle.ptr_rank(
-        _parm(root, "f_ptr_unknown")
-    ) is None
+    assert (
+        generic.opaque_typedef_is_handle.ptr_rank(_parm(root, "f_ptr_unknown"))
+        is None
+    )
 
 
 # ---------------------------------------------------------------------------
 # fallback decorator precedence
 # ---------------------------------------------------------------------------
 def test_fallback_precedence():
-    @fallback(lambda x: ParmIntent.OUT if x == 2 else None,
-              lambda x: ParmIntent.IN)  # final default
+    @fallback(
+        lambda x: ParmIntent.OUT if x == 2 else None, lambda x: ParmIntent.IN
+    )  # final default
     def rule(x):
         if x == 1:
             return ParmIntent.INOUT
         return None
 
     assert rule(1) == ParmIntent.INOUT  # primary
-    assert rule(2) == ParmIntent.OUT    # 1st fallback
-    assert rule(3) == ParmIntent.IN     # 2nd fallback (default)
+    assert rule(2) == ParmIntent.OUT  # 1st fallback
+    assert rule(3) == ParmIntent.IN  # 2nd fallback (default)
 
 
 def test_fallback_with_conservative_chain(root):
@@ -358,11 +374,13 @@ void f_no_dir(int *missing_dir);
 @pytest.fixture(scope="module")
 def doxy_root():
     parser = CParser(
-        "input.h", unsaved_files=[("input.h", DOXY_HEADER)],
+        "input.h",
+        unsaved_files=[("input.h", DOXY_HEADER)],
     )
     parser.parse()
     return treefactory.from_libclang_translation_unit(
-        backend=cython, translation_unit=parser.translation_unit,
+        backend=cython,
+        translation_unit=parser.translation_unit,
     )
 
 
@@ -374,8 +392,8 @@ def doxy_root():
         ("f_at_param", 2, ParmIntent.INOUT),
         ("f_bs_param", 0, ParmIntent.IN),
         ("f_bs_param", 1, ParmIntent.OUT),
-        ("f_bs_param", 2, ParmIntent.INOUT),     # `\param[inout]` shorthand
-        ("f_bodies", 0, ParmIntent.OUT),         # `alpha` matches by name
+        ("f_bs_param", 2, ParmIntent.INOUT),  # `\param[inout]` shorthand
+        ("f_bodies", 0, ParmIntent.OUT),  # `alpha` matches by name
         ("f_bodies", 1, ParmIntent.IN),
     ],
 )
@@ -457,11 +475,11 @@ def test_iter_doxygen_param_tags_directly():
     """
     tags = list(generic._iter_doxygen_param_tags(raw))
     # Every tag yields (direction, name); direction is None when no bracket.
-    assert ("in",     "x") in tags
-    assert ("out",    "y") in tags
+    assert ("in", "x") in tags
+    assert ("out", "y") in tags
     assert ("in,out", "z") in tags
-    assert ("inout",  "w") in tags
-    assert (None,     "u") in tags
+    assert ("inout", "w") in tags
+    assert (None, "u") in tags
 
 
 def test_iter_doxygen_param_tags_empty():

@@ -87,7 +87,9 @@ class conservative:
     def ptr_parm_intent(parm):
         if not _is_pointer_or_array_param(parm):
             return None
-        if getattr(parm, "is_any_pointer", False) and parm.is_pointer_to_function_proto(
+        if getattr(
+            parm, "is_any_pointer", False
+        ) and parm.is_pointer_to_function_proto(
             degree=parm.get_pointer_degree(incomplete_array=True)
         ):
             return None
@@ -442,7 +444,9 @@ def _is_callee_allocated_out_shape(parm):
         return False
     if double_indirection_out._matches(parm):
         return True
-    if hasattr(parm, "is_pointer_to_char") and parm.is_pointer_to_char(degree=2):
+    if hasattr(parm, "is_pointer_to_char") and parm.is_pointer_to_char(
+        degree=2
+    ):
         return True
     return False
 
@@ -519,7 +523,10 @@ class documented_param_intent:
                 # caller-sized buffer (single `T*` the callee fills) stays
                 # plain OUT — the doxygen standard cannot express callee-
                 # allocation of such a buffer.
-                if intent is ParmIntent.OUT and _is_callee_allocated_out_shape(parm):
+                if (
+                    intent is ParmIntent.OUT
+                    and _is_callee_allocated_out_shape(parm)
+                ):
                     return ParmIntent.OUT_CALLEE_ALLOCATED
                 return intent
         return None

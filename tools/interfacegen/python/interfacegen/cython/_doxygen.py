@@ -50,25 +50,29 @@ from . import _defaults
 from ._defaults import *  # noqa: F401,F403
 
 __all__ = [
-    'DOXYGEN_CONV',
-    '_INHERITABLE_CURSOR_KINDS',
-    '_comment_opens_group',
-    '_comment_closes_group',
-    '_raw_comment_is_only_group_bracket',
-    '_strip_group_brackets',
-    '_build_inherited_comment_index',
-    '_COPYDOC_RE',
-    '_build_copydoc_target_index',
-    '_resolve_copydoc_in_text',
+    "DOXYGEN_CONV",
+    "_INHERITABLE_CURSOR_KINDS",
+    "_comment_opens_group",
+    "_comment_closes_group",
+    "_raw_comment_is_only_group_bracket",
+    "_strip_group_brackets",
+    "_build_inherited_comment_index",
+    "_COPYDOC_RE",
+    "_build_copydoc_target_index",
+    "_resolve_copydoc_in_text",
 ]
 
 # doxygen parser
 DOXYGEN_CONV = doxyparser.DoxygenGrammar()
-DOXYGEN_CONV.escaped.set_parse_action(doxyparser.format.PythonDocstrings.escaped)
+DOXYGEN_CONV.escaped.set_parse_action(
+    doxyparser.format.PythonDocstrings.escaped
+)
 DOXYGEN_CONV.with_word.set_parse_action(
     doxyparser.format.PythonDocstrings.with_word
 )
-DOXYGEN_CONV.fdollar.set_parse_action(doxyparser.format.PythonDocstrings.fdollar)
+DOXYGEN_CONV.fdollar.set_parse_action(
+    doxyparser.format.PythonDocstrings.fdollar
+)
 DOXYGEN_CONV.frnd.set_parse_action(doxyparser.format.PythonDocstrings.frnd)
 
 
@@ -82,7 +86,10 @@ def reference_(tokens):
     global python_interface_pyobj_role_template
     global python_interface_convert_cxx_namespace_references
     reference: str = re.sub(r"\(\s*\)$", "", tokens[0])
-    if "::" in reference and not python_interface_convert_cxx_namespace_references:
+    if (
+        "::" in reference
+        and not python_interface_convert_cxx_namespace_references
+    ):
         # C++ namespace reference — leave untouched (matched text unchanged).
         return tokens[0]
     reference = reference.replace("#", ".").replace("::", ".")
@@ -124,10 +131,12 @@ DOXYGEN_CONV.other.set_parse_action(other_parse_action)
 #
 # Memoized per-Root so the walk runs once per codegen invocation.
 
-_INHERITABLE_CURSOR_KINDS = frozenset({
-    clang.cindex.CursorKind.FUNCTION_DECL,
-    clang.cindex.CursorKind.CXX_METHOD,
-})
+_INHERITABLE_CURSOR_KINDS = frozenset(
+    {
+        clang.cindex.CursorKind.FUNCTION_DECL,
+        clang.cindex.CursorKind.CXX_METHOD,
+    }
+)
 
 
 def _comment_opens_group(spelling: str) -> bool:
@@ -221,8 +230,10 @@ def _build_inherited_comment_index(root):
     # max-extent of any cursor in that file — libclang rejects
     # `SourceLocation.from_offset` past the file's actual size with
     # silent zero-token returns, so an over-shoot here is fatal.
-    files_to_walk = {}    # filename -> (cxfile, max_extent_end_offset)
-    for child in cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []:
+    files_to_walk = {}  # filename -> (cxfile, max_extent_end_offset)
+    for child in (
+        cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []
+    ):
         loc_file = getattr(child.location, "file", None)
         if loc_file is None:
             continue
@@ -260,7 +271,7 @@ def _build_inherited_comment_index(root):
     # Track the active group-opener stack PER FILE — `@{` in one
     # header should not silently extend across an `#include` boundary
     # into another header. We segment by `tok.location.file.name`.
-    per_file_stack = {}      # filename -> list of opener comment strings
+    per_file_stack = {}  # filename -> list of opener comment strings
     # Track the most-recent non-marker doc comment seen in each file.
     # Used to fold a "doc BEFORE @{" pair (Pattern A) into a single
     # opener content when the @{ comment is itself a bare marker —
@@ -364,7 +375,10 @@ def _build_inherited_comment_index(root):
         if tok.kind != TokenKind.IDENTIFIER:
             continue
         tok_cursor = clang.cindex.Cursor.from_location(tu, loc)
-        if tok_cursor is None or tok_cursor.kind not in _INHERITABLE_CURSOR_KINDS:
+        if (
+            tok_cursor is None
+            or tok_cursor.kind not in _INHERITABLE_CURSOR_KINDS
+        ):
             continue
         # Duplicate-cursor trap: only the cursor's name token matches
         # `cursor.spelling`. Return-type and parameter tokens all map
@@ -448,7 +462,9 @@ def _build_copydoc_target_index(root):
     cursor = root.cursor
     tu = cursor.translation_unit
     if tu is not None:
-        for c in cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []:
+        for c in (
+            cursor.walk_preorder() if hasattr(cursor, "walk_preorder") else []
+        ):
             if c.kind != clang.cindex.CursorKind.FUNCTION_DECL:
                 continue
             if not c.spelling or not c.raw_comment:
@@ -503,7 +519,9 @@ def _resolve_copydoc_in_text(text, root, _seen=None):
         if target_cleaned is None:
             return match.group(0)  # unknown — leave verbatim
         return _resolve_copydoc_in_text(
-            target_cleaned, root, _seen | {name},
+            target_cleaned,
+            root,
+            _seen | {name},
         )
 
     return _COPYDOC_RE.sub(_sub, text)

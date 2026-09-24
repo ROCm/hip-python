@@ -45,7 +45,9 @@ def _tolerant_typekind_from_id(id):
         return clang.cindex.TypeKind.UNEXPOSED
 
 
-clang.cindex.TypeKind.from_id = classmethod(lambda cls, id: _tolerant_typekind_from_id(id))
+clang.cindex.TypeKind.from_id = classmethod(
+    lambda cls, id: _tolerant_typekind_from_id(id)
+)
 
 
 class TypeHandler:

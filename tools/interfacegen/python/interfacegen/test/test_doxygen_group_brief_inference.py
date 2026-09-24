@@ -37,7 +37,9 @@ def test_ingroup_names_multiple_in_source_order():
 
 
 def test_ingroup_names_empty_when_absent():
-    assert DoxygenMixin._ingroup_names_from_raw("/** \\brief no group */") == []
+    assert (
+        DoxygenMixin._ingroup_names_from_raw("/** \\brief no group */") == []
+    )
 
 
 def test_ingroup_names_empty_when_raw_is_none():
@@ -252,9 +254,9 @@ def test_render_brief_uses_display_title_in_attribution_prefix():
     # group fallback.
     out = _render_brief("@ingroup memory\n", defgroup)
     assert "[group: Memory Management]" in out
-    assert "[group: memory]" not in out, (
-        "attribution must use the display title, not the ID"
-    )
+    assert (
+        "[group: memory]" not in out
+    ), "attribution must use the display title, not the ID"
 
 
 def test_render_brief_picks_first_resolving_group_for_multi_ingroup():

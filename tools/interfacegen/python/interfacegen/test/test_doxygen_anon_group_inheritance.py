@@ -72,6 +72,7 @@ def _function_cursors_by_name(tu):
     """Return {name: cursor} for every FUNCTION_DECL in the TU (top-
     level only)."""
     import clang.cindex as cci
+
     out = {}
     for c in tu.cursor.get_children():
         if c.kind == cci.CursorKind.FUNCTION_DECL:
@@ -239,6 +240,7 @@ def test_inheritance_index_only_includes_functions():
     )
     idx, tu = _index_for(src)
     import clang.cindex as cci
+
     # Build a {name: hash} for every top-level cursor so we can
     # assert non-function cursors aren't in the index.
     name_to_hash = {}
@@ -340,13 +342,13 @@ def test_inheritance_index_pattern_a_doc_before_bare_opener_hipsparse_shape():
     assert cursors["hipsparseSaxpyi"].hash not in idx
     # D/C/Z inherit the prior doc comment via the pattern-A fold.
     for name in ("hipsparseDaxpyi", "hipsparseCaxpyi", "hipsparseZaxpyi"):
-        assert cursors[name].hash in idx, (
-            f"{name} not in inheritance index (pattern-A fold failed)"
-        )
+        assert (
+            cursors[name].hash in idx
+        ), f"{name} not in inheritance index (pattern-A fold failed)"
         inherited = idx[cursors[name].hash]
-        assert "Scale a sparse vector" in inherited, (
-            f"{name} got: {inherited!r}"
-        )
+        assert (
+            "Scale a sparse vector" in inherited
+        ), f"{name} got: {inherited!r}"
         assert "level1_module" in inherited
 
 
@@ -390,9 +392,9 @@ def test_inheritance_index_pattern_b_doc_inside_at_brace_block():
     # inside-block doc comment.
     assert cursors["func2InGroup1"].hash in idx
     inherited = idx[cursors["func2InGroup1"].hash]
-    assert "Same documentation for both members" in inherited, (
-        f"Pattern-B inheritance failed: func2InGroup1 got {inherited!r}"
-    )
+    assert (
+        "Same documentation for both members" in inherited
+    ), f"Pattern-B inheritance failed: func2InGroup1 got {inherited!r}"
 
 
 def test_inheritance_index_pattern_b_most_recent_doc_wins():
@@ -441,13 +443,18 @@ def test_raw_comment_cleaned_strips_group_brackets_from_own_comment(tmp_path):
     # Attach the default raw_comment_cleaner so _raw_comment_cleaned can
     # complete (treefactory leaves it unset on a bare parse).
     from interfacegen.cython import DEFAULT_RAW_COMMENT_CLEANER
-    funcs = [n for n in root.walk(postorder=False) if hasattr(n, "_raw_comment_cleaned") and n.raw_comment]
+
+    funcs = [
+        n
+        for n in root.walk(postorder=False)
+        if hasattr(n, "_raw_comment_cleaned") and n.raw_comment
+    ]
     assert funcs, "expected at least one node with a raw_comment"
     funcs[0].raw_comment_cleaner = DEFAULT_RAW_COMMENT_CLEANER
     cleaned = funcs[0]._raw_comment_cleaned()
-    assert "@{" not in cleaned, (
-        f"@{{ should be stripped from own raw_comment; got: {cleaned!r}"
-    )
+    assert (
+        "@{" not in cleaned
+    ), f"@{{ should be stripped from own raw_comment; got: {cleaned!r}"
     assert "@}" not in cleaned
 
 
@@ -477,9 +484,9 @@ def test_pattern_c_if_guard_recovers_brief():
     cursors = _function_cursors_by_name(tu)
     fn = cursors["hipsparseCreateSpVec"]
     # Sanity: libclang really did fail to attach (reproduces the bug).
-    assert not fn.raw_comment, (
-        f"libclang unexpectedly attached: {fn.raw_comment!r}"
-    )
+    assert (
+        not fn.raw_comment
+    ), f"libclang unexpectedly attached: {fn.raw_comment!r}"
     assert fn.hash in idx, "Pattern C recovery did not fire"
     inherited = idx[fn.hash]
     assert "Create a sparse vector" in inherited
@@ -588,9 +595,11 @@ def test_pattern_c_chain_of_guarded_decls():
     cursors = _function_cursors_by_name(tu)
     # libclang may or may not attach to fa (depends on whether the
     # leading `#if` is treated as breaking attachment).
-    for name, expected in (("fa", "brief A"),
-                           ("fb", "brief B"),
-                           ("fc", "brief C")):
+    for name, expected in (
+        ("fa", "brief A"),
+        ("fb", "brief B"),
+        ("fc", "brief C"),
+    ):
         c = cursors[name]
         if c.raw_comment:
             assert expected in c.raw_comment

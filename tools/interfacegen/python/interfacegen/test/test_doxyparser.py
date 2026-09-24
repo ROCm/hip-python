@@ -120,11 +120,15 @@ def test_grammar():
     for mtch in grammar.all.scan_string(doxygen_input):
         print(mtch)
 
-    grammar.escaped.set_parse_action(doxyparser.format.PythonDocstrings.escaped)
+    grammar.escaped.set_parse_action(
+        doxyparser.format.PythonDocstrings.escaped
+    )
     grammar.with_word.set_parse_action(
         doxyparser.format.PythonDocstrings.with_word
     )
-    grammar.fdollar.set_parse_action(doxyparser.format.PythonDocstrings.fdollar)
+    grammar.fdollar.set_parse_action(
+        doxyparser.format.PythonDocstrings.fdollar
+    )
 
     for node in grammar.parse_structure(doxygen_input).walk():
         indent = " " * node.level
@@ -251,10 +255,13 @@ def test_plain_block_comment_stripped():
 def test_single_line_doc_comment_strips_closer():
     """A single-line ``/*! .. */`` (or ``/** .. */``) must have its trailing
     ``*/`` stripped, otherwise the residue leaks into the docstring."""
-    assert "*/" not in doxyparser.remove_doxygen_comment_chars("/*! @endcond */")
+    assert "*/" not in doxyparser.remove_doxygen_comment_chars(
+        "/*! @endcond */"
+    )
     assert "*/" not in doxyparser.remove_doxygen_comment_chars("/** brief */")
     assert (
-        doxyparser.remove_doxygen_comment_chars("/** brief */").strip() == "brief"
+        doxyparser.remove_doxygen_comment_chars("/** brief */").strip()
+        == "brief"
     )
 
 
@@ -263,7 +270,9 @@ def test_group_and_cond_only_comment_is_not_documentation():
     no documentation and must be classified as bare so they are dropped."""
     from interfacegen.cython import _doxygen
 
-    assert _doxygen._raw_comment_is_only_group_bracket("/*! @endcond */\n/*! @} */")
+    assert _doxygen._raw_comment_is_only_group_bracket(
+        "/*! @endcond */\n/*! @} */"
+    )
     assert _doxygen._raw_comment_is_only_group_bracket("///@{")
     # a real doc comment must NOT be treated as bare
     assert not _doxygen._raw_comment_is_only_group_bracket(
@@ -325,9 +334,7 @@ def test_retval_accepts_bare_and_quoted_names():
     """``\\retval`` must parse for a bare identifier as well as a
     markdown-quoted (`` `FOO` ``) return value name, exposing the name as the
     section's second token so it can be aggregated into the return value."""
-    bare = _retval_sections(
-        "\\retval MY_STATUS_OK When everything is fine.\n"
-    )
+    bare = _retval_sections("\\retval MY_STATUS_OK When everything is fine.\n")
     assert len(bare) == 1
     assert str(bare[0].tokens[1]).strip("`") == "MY_STATUS_OK"
 

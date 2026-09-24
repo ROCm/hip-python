@@ -51,9 +51,9 @@ from ._defaults import *  # noqa: F401,F403
 from ._doxygen import *  # noqa: F401,F403
 
 __all__ = [
-    'DoxygenMixin',
-    'CythonMixin',
-    'Node',
+    "DoxygenMixin",
+    "CythonMixin",
+    "Node",
 ]
 
 
@@ -87,9 +87,7 @@ class DoxygenMixin:
         r"[ \t]*(?P<desc>[^\n]*(?:\n(?P=indent)[ \t]+[^\n]*)*)",
         re.MULTILINE,
     )
-    _LEAK_SEE_RE = re.compile(
-        r"@see\s+(?P<ref>`[^`\n]+`|[A-Za-z_][\w:#]*)"
-    )
+    _LEAK_SEE_RE = re.compile(r"@see\s+(?P<ref>`[^`\n]+`|[A-Za-z_][\w:#]*)")
     _LEAK_BRIEF_RE = re.compile(r"^([ \t]*)@brief[ \t]*", re.MULTILINE)
     _LEAK_WORD_TAG_RE = re.compile(
         r"@(?P<tag>p|a|b|c|e|em)\b[ \t\n]+(?P<word>`[^`\n]+`|[A-Za-z_][\w]*)"
@@ -445,18 +443,22 @@ class DoxygenMixin:
                 # \note texttext
                 # \note texttext
                 #    texttext
-                text = block.get_text(
-                    transform_formatting=True,
-                    transform_other=True,
-                    transform_references=transform_references,
-                ).lstrip(":\n\t ").rstrip()
+                text = (
+                    block.get_text(
+                        transform_formatting=True,
+                        transform_other=True,
+                        transform_references=transform_references,
+                    )
+                    .lstrip(":\n\t ")
+                    .rstrip()
+                )
                 # Part 11 elision — when this block's leading text was
                 # promoted as the inferred brief (no explicit `\brief`),
                 # strip it here to avoid duplicating the same paragraph
                 # in both the brief slot and the details body.
                 promoted = getattr(block, "_promoted_to_brief", None)
                 if promoted and text.startswith(promoted):
-                    text = text[len(promoted):].lstrip(":\n\t ")
+                    text = text[len(promoted) :].lstrip(":\n\t ")
                 lines = text.splitlines()
                 if len(lines):
                     firstline = lines[0]
@@ -560,14 +562,34 @@ class CythonMixin(DoxygenMixin):
     # context — the cy* module doesn't redefine them, and prepending
     # the prefix would produce broken declarations like
     # ``cyhip.char *``.
-    _PRIMITIVE_C_TYPES_FOR_CPREFIX = frozenset({
-        "void", "char", "short", "int", "long", "float", "double",
-        "signed", "unsigned", "_Bool", "bint",
-        "size_t", "ssize_t", "ptrdiff_t",
-        "uint8_t", "uint16_t", "uint32_t", "uint64_t",
-        "int8_t", "int16_t", "int32_t", "int64_t",
-        "intptr_t", "uintptr_t",
-    })
+    _PRIMITIVE_C_TYPES_FOR_CPREFIX = frozenset(
+        {
+            "void",
+            "char",
+            "short",
+            "int",
+            "long",
+            "float",
+            "double",
+            "signed",
+            "unsigned",
+            "_Bool",
+            "bint",
+            "size_t",
+            "ssize_t",
+            "ptrdiff_t",
+            "uint8_t",
+            "uint16_t",
+            "uint32_t",
+            "uint64_t",
+            "int8_t",
+            "int16_t",
+            "int32_t",
+            "int64_t",
+            "intptr_t",
+            "uintptr_t",
+        }
+    )
 
     @staticmethod
     def _add_module_cprefix(c_type: str, cprefix: str) -> str:
@@ -592,7 +614,7 @@ class CythonMixin(DoxygenMixin):
         for qual in ("const ", "volatile "):
             if rest.startswith(qual):
                 qualifiers = qual
-                rest = rest[len(qual):]
+                rest = rest[len(qual) :]
                 break
         # Inspect the leading identifier (everything before the first
         # space, ``*``, or ``(``).
@@ -629,7 +651,9 @@ class CythonMixin(DoxygenMixin):
             # declaration in a block.
             raw = _strip_group_brackets(raw)
             cleaned_raw_comment = self.raw_comment_cleaner(raw)
-            cleaned = doxyparser.remove_doxygen_comment_chars(cleaned_raw_comment)
+            cleaned = doxyparser.remove_doxygen_comment_chars(
+                cleaned_raw_comment
+            )
             # Resolve transitively any \copydoc / @copydoc directives.
             # Runs LAST (on already-delimiter-stripped text) so the
             # target index — also stored as cleaned text — drops
@@ -730,8 +754,12 @@ class CythonMixin(DoxygenMixin):
         return python_interface_pyobj_role_template.format(name=expr)
 
     def render_pyi_stub(
-        self, cprefix: str, *, override_name: str = None,
-        base: str = None, module_opts: dict = None,
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
     ):
         """Render this node as a `.pyi` type-stub fragment.
 
@@ -794,4 +822,3 @@ class CythonMixin(DoxygenMixin):
 
 
 Node = CythonMixin  # alias so that it can be used in treefactory
-
