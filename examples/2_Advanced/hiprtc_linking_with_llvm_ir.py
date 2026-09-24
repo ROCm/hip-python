@@ -29,7 +29,7 @@ LLVM IR snippet that contains the definition of that device function ``scale_op`
 
 To make this work, the HIP C++ snippet needs to be compiled with
 the ``-fgpu-rdc`` option and all compilation results need to
-be added as ``HIPRTC_JIT_INPUT_LLVM_BITCODE`` type input to the HIPRTC link object.
+be added as ``hipJitInputLLVMBitcode`` type input to the HIPRTC link object.
 
 Note that the LLVM IR in this example is target dependent.
 Therefore, this example can currently only be run with ``gfx90a`` (MI200 series).
@@ -360,7 +360,7 @@ if __name__ in ("__test__", "__main__"):
     )
     hip_check(
         hip.hipMemcpy(
-            xh, xd, f32 * size, hip.hipMemcpyKind.hipMemcpyHostToDevice
+            xh, xd, f32 * size, hip.hipMemcpyKind.hipMemcpyDeviceToHost
         )
     )
     hip_check(hip.hipFree(xd))

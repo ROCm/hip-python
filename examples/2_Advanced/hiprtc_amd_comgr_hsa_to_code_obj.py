@@ -327,7 +327,7 @@ amdhsa.version:
                     h_output,
                     d_inout,
                     itemsize * num_elements,
-                    hip.hipMemcpyKind.hipMemcpyHostToDevice,
+                    hip.hipMemcpyKind.hipMemcpyDeviceToHost,
                 )
             )
             hip_check(hip.hipFree(d_inout))
