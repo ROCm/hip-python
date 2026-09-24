@@ -150,6 +150,21 @@ if(_interop_pyi)
   )
 endif()
 
+# PEP 561 markers for the `cuda` and `cuda.bindings` namespace packages.
+# Without them type checkers ignore the .pyi files installed above, so a
+# port from cuda-bindings, which does ship types, would lose them. nvtx and
+# pynvml stay unmarked: those shims emulate their originals only in part.
+install(
+  FILES src/cuda/py.typed
+  DESTINATION cuda
+  COMPONENT hip-python-interop
+)
+install(
+  FILES src/cuda/bindings/py.typed
+  DESTINATION cuda/bindings
+  COMPONENT hip-python-interop
+)
+
 # NOTE: cuda/ and cuda/bindings/ are PEP 420 implicit namespace packages
 # They intentionally have NO __init__.py files to allow multiple packages
 # to contribute modules to the same namespace.
