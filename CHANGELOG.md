@@ -8,6 +8,62 @@ pipeline. The generator itself keeps its own log in
 `numba-hip`, which carries its own version, in
 [packages/numba-hip/CHANGELOG.md](packages/numba-hip/CHANGELOG.md).
 
+## 0.1.1
+
+### Added
+
+#### Bindings
+
+- **Type information.** Every package now carries a PEP 561 marker, so
+  the generated `.pyi` files the wheels have always installed become
+  visible to mypy and pyright. This covers `rocm.*`, `cuda.bindings.*`
+  and the `hip` compatibility namespace, the last through a
+  hand-maintained `hip/__init__.pyi`. `nvtx` and `pynvml` stay unmarked
+  on purpose: those shims emulate their originals only in part.
+
+### Changed
+
+#### Bindings
+
+- **The `hip` compatibility package imports its bindings** instead of
+  resolving them through `__getattr__`. `hip`, `hiprtc` and `hip._util`
+  come with the hard dependencies; the rest are imported where their
+  wheel is installed, which puts them in `dir()`. A binding that is
+  installed but cannot load now reports its own error rather than
+  passing as absent.
+
+### Fixed
+
+#### Bindings
+
+- **`hip.hiprtc.ext` exists again.** It was imported from
+  `rocm.bindings.hip`, which never carried it, and the failure was
+  swallowed.
+- **`hip._util.types.Pointer`** resolves again under its pre-7.14
+  spelling.
+
+#### Building
+
+- **Four gfx90a HIPRTC examples run again**: `hiprtc.ext` on a shim that
+  did not provide it, the pre-7.14 `HIPRTC_JIT_INPUT_LLVM_BITCODE`
+  member name, and a device-to-host copy issued as
+  `hipMemcpyHostToDevice`.
+- **The `hip` package has a test suite**, `tests/hip-python`, run by
+  `ci/internal/test.sh` and `test.ps1`.
+- **`tests/stubs` type-checks sample scripts with pyright**, so the
+  markers and the shipped `.pyi` files are checked the way a consumer
+  meets them. A suppression the stubs outgrow fails the suite rather
+  than lingering.
+
+#### Codegen
+
+- **Generated stubs declare enum constants and record fields**, so
+  `hip.hipError_t.hipSuccess` and `hipDeviceProp_t().gcnArchName` type-
+  check. Hoisted anonymous records are stubbed under the name the module
+  exports, not the `struct_0` several of them shared, and a cuda enum
+  alias no longer derives from a base no stub declares. `interfacegen`
+  moves to `0.4` in step.
+
 ## 0.1.0
 
 The first version under the real version scheme, so it carries

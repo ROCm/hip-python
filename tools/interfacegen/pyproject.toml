@@ -21,7 +21,7 @@
 # SOFTWARE.
 [project]
 name = "interfacegen"
-version = "0.3"
+version = "0.4"
 description = "InterfaceGen: Generate bindings and whole packages from C header files."
 readme = { file = "README.md", content-type = "text/markdown" }
 authors = [{ name = "Advanced Micro Devices, Inc." }]

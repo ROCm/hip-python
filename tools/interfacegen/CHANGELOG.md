@@ -6,6 +6,37 @@ is the generator itself, its recipes and its tooling. The build, runtime
 and docs machinery that consumes these artifacts lives in **hip-python**
 — see that repository's `CHANGELOG.md`.
 
+## 0.4
+
+The minor bump is a signal to consumers: stubs generated before and
+after this version differ in what they declare, and the older ones are
+what make a type checker reject working code.
+
+### Fixed
+
+#### Bindings
+
+- **Enum constants and record fields are declared in the `.pyi`.** Every
+  enum, record and function pointer used to render as a bare class with
+  a placeholder `__init__`, so `hipError_t.hipSuccess` and
+  `hipDeviceProp_t().gcnArchName` read as errors. Named enums now render
+  as `enum.IntEnum` subclasses carrying their constants, and records
+  declare the properties the `.pyx` renders — decided by the one
+  generator `PROPERTIES()` is built from — plus the method set every
+  record gets from the templates.
+- **An anonymous enum stubs as its constants** rather than as a class
+  the `.pyx` never binds. Its constants were missing from the stub
+  entirely; `HIP_SUCCESS` is one of them.
+- **Hoisted anonymous records carry the name the module exports.** The
+  stub used the node's local name, which restarts at `struct_0` inside
+  every parent, so unrelated types collided under one name and the 39
+  real `<parent>_struct_0` names were absent.
+- **A cuda enum alias no longer derives from the hip enum's private
+  base.** No stub declares that base, so a checker resolved the class to
+  Unknown and accepted any attribute on it. The alias renders as
+  `enum.IntEnum` with the constants it binds, hip spellings and cuda
+  aliases alike.
+
 ## 0.3
 
 The first version under the real version scheme, so it carries
