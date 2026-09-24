@@ -548,7 +548,39 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         base: str = None,
         module_opts: dict = None,
     ):
-        return self._render_pyi_class_stub(cprefix, override_name, base)
+        """Render the record with its properties and its fixed method set.
+
+        An incomplete type exposes no property and keeps the bare class:
+        declaring members it does not have would be worse than declaring
+        none.
+        """
+        global python_interface_record_properties_name
+
+        body = [
+            f"    {name}: Any"
+            for name, _ in self._render_python_properties(cprefix)
+        ]
+        if body:
+            body += [
+                "    @staticmethod",
+                f"    def {python_interface_record_properties_name}()"
+                " -> list[str]: ...",
+                "    @staticmethod",
+                "    def fromObj(pyobj) -> Any: ...",
+                "    @staticmethod",
+                "    def allocate(count: int = 1) -> Any: ...",
+                "    def c_sizeof(self) -> int: ...",
+                "    def as_c_void_p(self) -> Any: ...",
+                "    def __int__(self) -> int: ...",
+            ]
+            if self.c_record_kind == "struct":
+                body += [
+                    "    def __contains__(self, item) -> bool: ...",
+                    "    def __getitem__(self, item: int) -> Any: ...",
+                ]
+        return self._render_pyi_class_stub(
+            cprefix, override_name, base, body=body
+        )
 
     @property
     def c_record_kind(self) -> str:
@@ -648,6 +680,19 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
             setattr(self, "_python_body_epilog", [])
         self._python_body_epilog.append(code)
 
+    def _render_python_properties(self, cprefix: str):
+        """Yields ``(name, code)`` per field the Python class exposes.
+
+        Not every field can be wrapped; the ones that cannot render no
+        property. The stub declares what this yields, so that it and
+        ``PROPERTIES()`` cannot come to disagree.
+        """
+
+        for field in self.fields:
+            prop = field.render_python_property(self.cname(cprefix), cprefix)
+            if len(prop.strip()):
+                yield field.cython_name, prop
+
     def render_python_interface_impl(
         self, cprefix: str, *, module_opts: dict
     ) -> str:
@@ -661,14 +706,12 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
         global indent
 
         rendered_property_names = []
-        all_properties_rendered = True
-        for field in self.fields:
-            prop = field.render_python_property(self.cname(cprefix), cprefix)
-            if len(prop.strip()):
-                rendered_property_names.append(field.cython_name)
-                self.append_to_python_body(prop)
-            else:
-                all_properties_rendered = False
+        for name, prop in self._render_python_properties(cprefix):
+            rendered_property_names.append(name)
+            self.append_to_python_body(prop)
+        all_properties_rendered = len(rendered_property_names) == len(
+            list(self.fields)
+        )
         self.append_to_python_body(
             textwrap.dedent(
                 f"""\
@@ -740,8 +783,29 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
         override_name: str = None,
         base: str = None,
         module_opts: dict = None,
+        members=None,
     ):
-        return self._render_pyi_class_stub(cprefix, override_name, base)
+        """Render the enum as an `enum.IntEnum` subclass with its constants.
+
+        An anonymous enum gets no class, in the .pyi no more than in the
+        .pyx: its constants are module-level names.
+
+        `members` overrides the constant names. The cuda interop passes
+        its own spellings, which are the hip ones plus the cuda aliases.
+        """
+        global python_interface_int_enum_base_class
+
+        if members is None:
+            members = self.python_enum_constant_names
+        if self.is_anonymous:
+            return [f"{name}: int" for name in members]
+        return self._render_pyi_class_stub(
+            cprefix,
+            override_name,
+            base or python_interface_int_enum_base_class,
+            body=[f"    {name}: int" for name in members],
+            include_init=False,
+        )
 
     def _render_cython_enums(self):
         """Yields the enum constants' names."""
@@ -768,12 +832,18 @@ class Enum(tree.Enum, CythonMixin, ParentIsRecordMixin):
             "\n".join(self._render_cython_enums()), indent
         )
 
+    @property
+    def python_enum_constant_names(self):
+        """Yields the enum constants' names, in header order."""
+
+        for child_cursor in self.cursor.get_children():
+            yield self.renamer(child_cursor.spelling)
+
     def _render_python_enums(self, cprefix: str):
-        """Yields the enum constants' names."""
+        """Yields the enum constants' assignments."""
 
         #
-        for child_cursor in self.cursor.get_children():
-            name = self.renamer(child_cursor.spelling)
+        for name in self.python_enum_constant_names:
             yield (f"{name} = {cprefix}{name}")
 
     @property

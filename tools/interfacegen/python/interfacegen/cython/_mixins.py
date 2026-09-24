@@ -758,13 +758,23 @@ class CythonMixin(DoxygenMixin):
         return None
 
     def _render_pyi_class_stub(
-        self, cprefix: str, override_name: str = None,
+        self,
+        cprefix: str,
+        override_name: str = None,
         base: str = None,
+        *,
+        body: list = None,
+        include_init: bool = True,
     ):
         """Shared implementation used by `Record`, `Enum`, `AnonymousEnum`,
         and `FunctionPointer`. Renders ``class Name[(base)]:`` followed
-        by the docstring (`render_python_docstring`) and a placeholder
-        ``__init__``."""
+        by the docstring (`render_python_docstring`), a placeholder
+        ``__init__`` and the caller's `body` lines, which arrive
+        indented.
+
+        `include_init` is off for enums: a type checker models enum
+        construction from the base class, and a ``(*args, **kwargs)``
+        placeholder only overrides that with something less precise."""
         name = override_name or getattr(self, "cython_name", None) or self.name
         if not name or not name.isidentifier():
             return None
@@ -777,7 +787,9 @@ class CythonMixin(DoxygenMixin):
         if docstring:
             for dl in docstring.splitlines():
                 lines.append(f"    {dl}" if dl else "")
-        lines.append("    def __init__(self, *args, **kwargs): ...")
+        if include_init:
+            lines.append("    def __init__(self, *args, **kwargs): ...")
+        lines.extend(body or [])
         return lines
 
 
