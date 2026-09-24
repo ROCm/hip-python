@@ -998,13 +998,27 @@ class CythonModuleGenerator:
             f"# Type stubs for {self.global_module_name}. Edits will be overwritten.",
             "",
             "import enum",
-            "from typing import Any",
-            "",
         ]
+        if self.util_pkg:
+            # The wrapper classes inherit `<util_pkg>.types.Pointer`.
+            lines.append(f"import {self.util_pkg}.types")
+        lines.extend(["from typing import Any", ""])
         names = []
+        if self.runtime_linking:
+            lines.append(
+                "def has_symbol(name: str | bytes | bytearray) -> bool: ..."
+            )
+            lines.append("")
+            names.append("has_symbol")
         for node in self.backend.walk_filtered_nodes():
             name = getattr(node, "name", None)
-            if not name or name.startswith("_"):
+            # A leading underscore hides a compiler predefine (`__llvm__`,
+            # `__GNUC__`), never a class: records such as `_hiprtcProgram`
+            # are part of the public surface and the .pyx binds them.
+            if not name or (
+                name.startswith("_")
+                and isinstance(node, _entities.MacroDefinition)
+            ):
                 continue
             # A hoisted anonymous record is `struct_0` to itself and
             # `<parent>_struct_0` to the module, and the number restarts

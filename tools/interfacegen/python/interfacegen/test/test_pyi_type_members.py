@@ -48,6 +48,12 @@ typedef struct myFirst_t { struct { int a; } nested; } myFirst_t;
 typedef struct mySecond_t { struct { int b; } nested; } mySecond_t;
 
 struct myOpaque_t;
+
+struct _myPrivate_t;
+
+typedef struct _myPrivate_t* myPrivateHandle_t;
+
+typedef myRecord_t* myRecordHandle_t;
 """
 
 
@@ -129,13 +135,59 @@ def test_an_incomplete_record_stays_opaque(tmp_path):
     assert "PROPERTIES" not in body
 
 
+def test_a_handle_typedef_aliases_the_record_it_points_to(tmp_path):
+    """`hipStream_t` and its kin are the names callers actually write."""
+    emitted = _emitted(tmp_path)
+    assert "myRecordHandle_t = myRecord_t" in emitted["mod.pyi"]
+    assert "myRecordHandle_t = myRecord_t" in emitted["mod.pyx"]
+    assert "'myRecordHandle_t'," in emitted["mod.pyi"]
+
+
+def test_a_private_record_is_declared_like_any_other(tmp_path):
+    """A leading underscore is no reason to leave it out: the .pyx binds
+    `_hiprtcProgram`, and a handle typedef names it.
+    """
+    stub = _emitted(tmp_path)["mod.pyi"]
+    assert "class _myPrivate_t(" in stub
+    assert "myPrivateHandle_t = _myPrivate_t" in stub
+
+
+def test_a_wrapper_inherits_the_util_pointer(tmp_path):
+    """`createRef` and its siblings come from the base the .pyx names."""
+    stub = _emitted(tmp_path)["mod.pyi"]
+    assert "import rocm.bindings.util.types" in stub
+    assert "class myRecord_t(rocm.bindings.util.types.Pointer):" in stub
+    # An incomplete type has no members of its own, and all the more
+    # reason to inherit the ones it does have.
+    assert "class myOpaque_t(rocm.bindings.util.types.Pointer):" in stub
+
+
+def test_every_alias_names_something_the_stub_declares(tmp_path):
+    stub = _emitted(tmp_path)["mod.pyi"]
+    declared = set(re.findall(r"^class (\w+)", stub, re.M))
+    for alias, target in re.findall(r"^(\w+) = (\w+)$", stub, re.M):
+        assert target in declared, f"{alias} aliases undeclared {target}"
+
+
+def test_runtime_linking_declares_has_symbol(tmp_path):
+    """The wrapper comes from the module prolog, not from a node."""
+    generator = make_generator(HEADER, runtime_linking=True, dll="libmy.so")
+    emitted = write_module(generator, tmp_path)
+    assert "def has_symbol(" in emitted["mod.pyi"]
+    assert "'has_symbol'," in emitted["mod.pyi"]
+
+
+def test_without_runtime_linking_there_is_no_has_symbol(tmp_path):
+    assert "has_symbol" not in _emitted(tmp_path)["mod.pyi"]
+
+
 def test_hoisted_records_keep_their_parents_apart(tmp_path):
     """Both nested structs are `struct_0` locally; the module has one name
     for each, and the stub must use it or one silently obscures the other.
     """
     stub = _emitted(tmp_path)["mod.pyi"]
-    assert "class myFirst_t_struct_0:" in stub
-    assert "class mySecond_t_struct_0:" in stub
-    assert "class struct_0:" not in stub
+    assert "class myFirst_t_struct_0(" in stub
+    assert "class mySecond_t_struct_0(" in stub
+    assert "class struct_0(" not in stub
     assert "    a: Any" in _class_body(stub, "myFirst_t_struct_0")
     assert "    b: Any" in _class_body(stub, "mySecond_t_struct_0")

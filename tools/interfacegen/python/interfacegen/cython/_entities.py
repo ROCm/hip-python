@@ -579,7 +579,7 @@ class Record(tree.Record, CythonMixin, ParentIsRecordMixin):
                     "    def __getitem__(self, item: int) -> Any: ...",
                 ]
         return self._render_pyi_class_stub(
-            cprefix, override_name, base, body=body
+            cprefix, override_name, self._pyi_pointer_base(base), body=body
         )
 
     @property
@@ -1014,6 +1014,28 @@ class Typedef(tree.Typedef, CythonMixin, Typed):
             degree=(0, -1)
         ) or self.is_pointer_to_enum(degree=(0, -1))
 
+    def render_pyi_stub(
+        self,
+        cprefix: str,
+        *,
+        override_name: str = None,
+        base: str = None,
+        module_opts: dict = None,
+    ):
+        """An alias typedef restates the assignment the .pyx binds.
+
+        The aliased entity is a class stub in the same module, so the
+        alias carries its members; a stub file may name it before it is
+        declared.
+        """
+        if not self.emits_python_alias():
+            return None
+        name = override_name or self.cython_global_name
+        aliased = self.renamer(self.typeref.global_name(self.sep))
+        if not name.isidentifier() or not aliased.isidentifier():
+            return None
+        return [f"{name} = {aliased}"]
+
     def render_python_interface_impl(
         self, cprefix: str, *, module_opts: dict
     ) -> str:
@@ -1106,7 +1128,9 @@ class FunctionPointer(CythonMixin):
         base: str = None,
         module_opts: dict = None,
     ):
-        return self._render_pyi_class_stub(cprefix, override_name, base)
+        return self._render_pyi_class_stub(
+            cprefix, override_name, self._pyi_pointer_base(base)
+        )
 
     def render_c_interface_decl(self):
         """Returns a Cython binding for this Typedef."""

@@ -785,6 +785,19 @@ class CythonMixin(DoxygenMixin):
         """
         return None
 
+    def _pyi_pointer_base(self, base: str = None):
+        """The base a wrapper class stub inherits from.
+
+        Every wrapper the .pyx emits derives from the util package's
+        `Pointer` (see `wrapper_class_impl_base_template`), which is
+        where `createRef` and the other handle methods live. A stub that
+        omits the base drops all of them.
+        """
+        if base:
+            return base
+        prefix = getattr(self, "util_types_prefix", "")
+        return f"{prefix}Pointer" if prefix else None
+
     def _render_pyi_class_stub(
         self,
         cprefix: str,
