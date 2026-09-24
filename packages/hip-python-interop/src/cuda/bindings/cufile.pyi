@@ -16,6 +16,7 @@ __test__: dict
 
 class OpError(enum.IntEnum):
     """See ``hipFileOpError``."""
+
     SUCCESS: ClassVar[int]
     DRIVER_NOT_INITIALIZED: ClassVar[int]
     DRIVER_INVALID_PROPS: ClassVar[int]
@@ -57,6 +58,7 @@ class OpError(enum.IntEnum):
 
 class DriverStatusFlags(enum.IntEnum):
     """See ``hipFileDriverStatusFlags_t``."""
+
     LUSTRE_SUPPORTED: ClassVar[int]
     WEKAFS_SUPPORTED: ClassVar[int]
     NFS_SUPPORTED: ClassVar[int]
@@ -72,11 +74,13 @@ class DriverStatusFlags(enum.IntEnum):
 
 class DriverControlFlags(enum.IntEnum):
     """See ``hipFileDriverControlFlags_t``."""
+
     USE_POLL_MODE: ClassVar[int]
     ALLOW_COMPAT_MODE: ClassVar[int]
 
 class FeatureFlags(enum.IntEnum):
     """See ``hipFileFeatureFlags_t``."""
+
     DYN_ROUTING_SUPPORTED: ClassVar[int]
     BATCH_IO_SUPPORTED: ClassVar[int]
     STREAMS_SUPPORTED: ClassVar[int]
@@ -84,17 +88,20 @@ class FeatureFlags(enum.IntEnum):
 
 class FileHandleType(enum.IntEnum):
     """See ``hipFileFileHandleType``."""
+
     OPAQUE_FD: ClassVar[int]
     OPAQUE_WIN32: ClassVar[int]
     USERSPACE_FS: ClassVar[int]
 
 class Opcode(enum.IntEnum):
     """See ``hipFileOpcode_t``."""
+
     READ: ClassVar[int]
     WRITE: ClassVar[int]
 
 class Status(enum.IntEnum):
     """See ``hipFileStatus_t``."""
+
     WAITING: ClassVar[int]
     PENDING: ClassVar[int]
     INVALID: ClassVar[int]
@@ -105,10 +112,12 @@ class Status(enum.IntEnum):
 
 class BatchMode(enum.IntEnum):
     """See ``hipFileBatchMode_t``."""
+
     BATCH: ClassVar[int]
 
 class SizeTConfigParameter(enum.IntEnum):
     """See ``hipFileSizeTConfigParameter_t``."""
+
     PROFILE_STATS: ClassVar[int]
     EXECUTION_MAX_IO_QUEUE_DEPTH: ClassVar[int]
     EXECUTION_MAX_IO_THREADS: ClassVar[int]
@@ -124,6 +133,7 @@ class SizeTConfigParameter(enum.IntEnum):
 
 class BoolConfigParameter(enum.IntEnum):
     """See ``hipFileBoolConfigParameter_t``."""
+
     PROPERTIES_USE_POLL_MODE: ClassVar[int]
     PROPERTIES_ALLOW_COMPAT_MODE: ClassVar[int]
     FORCE_COMPAT_MODE: ClassVar[int]
@@ -139,6 +149,7 @@ class BoolConfigParameter(enum.IntEnum):
 
 class StringConfigParameter(enum.IntEnum):
     """See ``hipFileStringConfigParameter_t``."""
+
     LOGGING_LEVEL: ClassVar[int]
     ENV_LOGFILE_PATH: ClassVar[int]
     LOG_DIR: ClassVar[int]
@@ -155,6 +166,7 @@ class cuFileError(Exception):
             underlying HIP driver error code (``hipError_t``); ``None``
             otherwise.
     """
+
     status: int
     cu_err: int | None
     def __init__(self, status: int, cu_err: int | None = ...) -> None: ...
@@ -173,6 +185,7 @@ class Descr:
         size (``int``):
             the number of contiguous elements to allocate (default 1).
     """
+
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
     def __getitem__(self, idx: int) -> Descr: ...
@@ -203,6 +216,7 @@ class IOParams:
         size (``int``):
             the number of contiguous elements to allocate (default 1).
     """
+
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
     def __getitem__(self, idx: int) -> IOParams: ...
@@ -241,6 +255,7 @@ class IOEvents:
         size (``int``):
             the number of contiguous elements to allocate (default 1).
     """
+
     def __init__(self, size: int = ...) -> None: ...
     def __len__(self) -> int: ...
     def __getitem__(self, idx: int) -> IOEvents: ...
@@ -274,6 +289,7 @@ def driver_open() -> None:
             ``OpError.DRIVER_VERSION_MISMATCH``, or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
     """
+
 def driver_close() -> None:
     """Reset the cuFile library and release the driver.
 
@@ -287,6 +303,7 @@ def driver_close() -> None:
             if the driver was not initialized
             (``OpError.DRIVER_NOT_INITIALIZED``).
     """
+
 def use_count() -> int:
     """Return the process-wide cuFile driver use count.
 
@@ -295,6 +312,7 @@ def use_count() -> int:
             the number of times the cuFile driver is currently in use by
             this process at the moment of the call.
     """
+
 def driver_get_properties(props: int) -> None:
     """Get the driver session properties.
 
@@ -314,6 +332,7 @@ def driver_get_properties(props: int) -> None:
             ``OpError.DRIVER_VERSION_MISMATCH``, or ``OpError.INVALID_VALUE``
             if ``props`` is invalid.
     """
+
 def driver_set_poll_mode(poll: bool, poll_threshold_size: int) -> None:
     """Set whether the Read/Write APIs use polling to do IO operations.
 
@@ -334,6 +353,7 @@ def driver_set_poll_mode(poll: bool, poll_threshold_size: int) -> None:
             e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid threshold.
     """
+
 def driver_set_max_direct_io_size(max_direct_io_size: int) -> None:
     """Set the max direct IO size used to talk to the driver.
 
@@ -351,6 +371,7 @@ def driver_set_max_direct_io_size(max_direct_io_size: int) -> None:
             e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
+
 def driver_set_max_cache_size(max_cache_size: int) -> None:
     """Set the max GPU memory reserved per device for internal buffering.
 
@@ -369,6 +390,7 @@ def driver_set_max_cache_size(max_cache_size: int) -> None:
             e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
+
 def driver_set_max_pinned_mem_size(max_pinned_size: int) -> None:
     """Set the max buffer space that is pinned for ``buf_register``.
 
@@ -386,6 +408,7 @@ def driver_set_max_pinned_mem_size(max_pinned_size: int) -> None:
             e.g. ``OpError.DRIVER_NOT_INITIALIZED`` or
             ``OpError.DRIVER_UNSUPPORTED_LIMIT`` for an invalid size.
     """
+
 def handle_register(descr: int) -> int:
     """Register an open file for GPU IO.
 
@@ -413,6 +436,7 @@ def handle_register(descr: int) -> int:
             ``OpError.INVALID_FILE_TYPE``, or
             ``OpError.HANDLE_ALREADY_REGISTERED``.
     """
+
 def handle_deregister(fh: int) -> None:
     """Release a registered file handle from cuFile.
 
@@ -426,6 +450,7 @@ def handle_deregister(fh: int) -> None:
             the file handle (as a Python integer) returned by
             `~.handle_register`.
     """
+
 def buf_register(buf_ptr_base: int, length: int, flags: int) -> None:
     """Register a device/host memory region with cuFile for GPU IO.
 
@@ -454,6 +479,7 @@ def buf_register(buf_ptr_base: int, length: int, flags: int) -> None:
             ``OpError.INVALID_MAPPING_SIZE``, or
             ``OpError.GPU_MEMORY_PINNING_FAILED``.
     """
+
 def buf_deregister(buf_ptr_base: int) -> None:
     """Deregister a device/host memory region from cuFile.
 
@@ -469,7 +495,14 @@ def buf_deregister(buf_ptr_base: int) -> None:
             e.g. ``OpError.MEMORY_NOT_REGISTERED`` if ``buf_ptr_base``
             was not registered.
     """
-def read(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset: int) -> int:
+
+def read(
+    fh: int,
+    buf_ptr_base: int,
+    size: int,
+    file_offset: int,
+    buf_ptr_offset: int,
+) -> int:
     """Read from a registered file handle into device/host memory.
 
     Synchronously reads ``size`` bytes from the file at ``file_offset`` into the
@@ -508,7 +541,14 @@ def read(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset
         `~.cuFileError`:
             on any other (cuFile-specific) error.
     """
-def write(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offset: int) -> int:
+
+def write(
+    fh: int,
+    buf_ptr_base: int,
+    size: int,
+    file_offset: int,
+    buf_ptr_offset: int,
+) -> int:
     """Write device/host memory to a registered file handle.
 
     Synchronously writes ``size`` bytes from the buffer to the file at
@@ -549,6 +589,7 @@ def write(fh: int, buf_ptr_base: int, size: int, file_offset: int, buf_ptr_offse
         `~.cuFileError`:
             on any other (cuFile-specific) error.
     """
+
 def batch_io_set_up(nr: int) -> int:
     """Prepare a batch IO operation.
 
@@ -569,6 +610,7 @@ def batch_io_set_up(nr: int) -> int:
         `~.cuFileError`:
             e.g. ``OpError.INTERNAL_ERROR`` on failure.
     """
+
 def batch_io_submit(batch_idp: int, nr: int, iocbp: int, flags: int) -> None:
     """Enqueue a batch of IO requests.
 
@@ -596,7 +638,10 @@ def batch_io_submit(batch_idp: int, nr: int, iocbp: int, flags: int) -> None:
         `~.cuFileError`:
             e.g. ``OpError.INTERNAL_ERROR`` on failure.
     """
-def batch_io_get_status(batch_idp: int, min_nr: int, nr: int, iocbp: int, timeout: int) -> None:
+
+def batch_io_get_status(
+    batch_idp: int, min_nr: int, nr: int, iocbp: int, timeout: int
+) -> None:
     """Poll for the status of completed batch IO operations.
 
     Waits for at least ``min_nr`` completions (or until ``timeout`` elapses),
@@ -632,6 +677,7 @@ def batch_io_get_status(batch_idp: int, min_nr: int, nr: int, iocbp: int, timeou
             Note that success here refers to the API call itself; inspect the
             per-IO ``iocbp`` entries for the individual IO status.
     """
+
 def batch_io_cancel(batch_idp: int) -> None:
     """Cancel all pending batch IO operations.
 
@@ -647,6 +693,7 @@ def batch_io_cancel(batch_idp: int) -> None:
         `~.cuFileError`:
             e.g. ``OpError.INVALID_VALUE`` on failure.
     """
+
 def batch_io_destroy(batch_idp: int) -> None:
     """Destroy the batch IO handle and free the associated resources.
 
@@ -657,7 +704,16 @@ def batch_io_destroy(batch_idp: int) -> None:
         batch_idp (``int``):
             the batch handle from `~.batch_io_set_up`.
     """
-def read_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf_ptr_offset_p: int, bytes_read_p: int, stream: int) -> None:
+
+def read_async(
+    fh: int,
+    buf_ptr_base: int,
+    size_p: int,
+    file_offset_p: int,
+    buf_ptr_offset_p: int,
+    bytes_read_p: int,
+    stream: int,
+) -> None:
     """Enqueue an asynchronous read on ``stream``.
 
     Enqueues a read into device/host memory, FIFO-ordered within the CUDA/HIP
@@ -701,7 +757,16 @@ def read_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf_
         `~.cuFileError`:
             on a submission error.
     """
-def write_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf_ptr_offset_p: int, bytes_written_p: int, stream: int) -> None:
+
+def write_async(
+    fh: int,
+    buf_ptr_base: int,
+    size_p: int,
+    file_offset_p: int,
+    buf_ptr_offset_p: int,
+    bytes_written_p: int,
+    stream: int,
+) -> None:
     """Enqueue an asynchronous write on ``stream``.
 
     Enqueues a write from device/host memory, FIFO-ordered within the CUDA/HIP
@@ -746,6 +811,7 @@ def write_async(fh: int, buf_ptr_base: int, size_p: int, file_offset_p: int, buf
         `~.cuFileError`:
             on a submission error.
     """
+
 def stream_register(stream: int, flags: int) -> None:
     """Register a stream for asynchronous GPU IO.
 
@@ -770,6 +836,7 @@ def stream_register(stream: int, flags: int) -> None:
             e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
     """
+
 def stream_deregister(stream: int) -> None:
     """Deregister a stream and free the associated resources.
 
@@ -787,6 +854,7 @@ def stream_deregister(stream: int) -> None:
             e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.PLATFORM_NOT_SUPPORTED``.
     """
+
 def get_version() -> int:
     """Return the cuFile library version as a packed integer.
 
@@ -804,6 +872,7 @@ def get_version() -> int:
             e.g. ``OpError.DRIVER_VERSION_READ_ERROR`` if the version
             is unavailable.
     """
+
 def get_parameter_size_t(param: int) -> int:
     """Get the value of a ``size_t`` configuration parameter.
 
@@ -824,6 +893,7 @@ def get_parameter_size_t(param: int) -> int:
         `~.cuFileError`:
             e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
+
 def get_parameter_bool(param: int) -> bool:
     """Get the value of a Boolean configuration parameter.
 
@@ -844,6 +914,7 @@ def get_parameter_bool(param: int) -> bool:
         `~.cuFileError`:
             e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
+
 def get_parameter_string(param: int, len: int) -> str:
     """Get the value of a string configuration parameter.
 
@@ -868,6 +939,7 @@ def get_parameter_string(param: int, len: int) -> str:
         `~.cuFileError`:
             e.g. ``OpError.INVALID_VALUE`` for an invalid parameter.
     """
+
 def set_parameter_size_t(param: int, value: int) -> None:
     """Set the value of a ``size_t`` configuration parameter.
 
@@ -889,6 +961,7 @@ def set_parameter_size_t(param: int, value: int) -> None:
             e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
+
 def set_parameter_bool(param: int, value: bool) -> None:
     """Set the value of a Boolean configuration parameter.
 
@@ -910,6 +983,7 @@ def set_parameter_bool(param: int, value: bool) -> None:
             e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
+
 def set_parameter_string(param: int, desc_str: int) -> None:
     """Set the value of a string configuration parameter.
 
@@ -930,6 +1004,7 @@ def set_parameter_string(param: int, desc_str: int) -> None:
             e.g. ``OpError.INVALID_VALUE`` or
             ``OpError.DRIVER_ALREADY_OPEN``.
     """
+
 def op_status_error(status: int) -> str:
     """Return the cuFile status string for ``status``.
 

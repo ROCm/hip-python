@@ -163,7 +163,9 @@ def _roctx_runtime_available():
 
 # Mirror upstream ``nvtx``: any value of ``NVTX_DISABLE`` disables annotations.
 # We additionally require the ROCTX runtime to be reachable.
-_ENABLED = (not os.getenv("NVTX_DISABLE", False)) and _roctx_runtime_available()
+_ENABLED = (
+    not os.getenv("NVTX_DISABLE", False)
+) and _roctx_runtime_available()
 
 
 class _Unset:
@@ -217,7 +219,9 @@ def _parse_compat_mode(value):
     return normalized if normalized in _COMPAT_MODES else "silent"
 
 
-_COMPAT_MODE = _parse_compat_mode(os.getenv("HIP_PYTHON_NVTX_COMPAT", "silent"))
+_COMPAT_MODE = _parse_compat_mode(
+    os.getenv("HIP_PYTHON_NVTX_COMPAT", "silent")
+)
 
 
 def get_compat_mode():
@@ -264,8 +268,9 @@ def _compat(feature, stacklevel=3):
     warnings.warn(msg, NvtxCompatWarning, stacklevel=stacklevel)
 
 
-def _check_dropped_kwargs(color=_UNSET, domain=_UNSET, category=_UNSET,
-                          payload=_UNSET, _stacklevel=4):
+def _check_dropped_kwargs(
+    color=_UNSET, domain=_UNSET, category=_UNSET, payload=_UNSET, _stacklevel=4
+):
     """Run compat checks for the droppable event kwargs that were supplied.
 
     A value counts as "supplied" only when it is neither the ``_UNSET``
@@ -299,7 +304,10 @@ def _check_dropped_attributes(attributes, kwargs, _stacklevel=5):
         if payload is _UNSET:
             payload = getattr(attributes, "payload", _UNSET)
     _check_dropped_kwargs(
-        color=color, category=category, payload=payload, _stacklevel=_stacklevel
+        color=color,
+        category=category,
+        payload=payload,
+        _stacklevel=_stacklevel,
     )
 
 
@@ -637,7 +645,12 @@ class EventAttributes:
     """
 
     def __init__(
-        self, domain=None, message=None, color=None, category=None, payload=None
+        self,
+        domain=None,
+        message=None,
+        color=None,
+        category=None,
+        payload=None,
     ):
         self.domain = domain
         self.message = message
