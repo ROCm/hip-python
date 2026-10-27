@@ -36,3 +36,6 @@ scan:
     - dist
     - node_modules
     - __pycache__
+  skip-files:
+    # Optional docs environment. Not installed with the wheels.
+    - docs_src/sphinx/requirements.txt
