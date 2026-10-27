@@ -24,6 +24,8 @@ jobs:
     permissions:
       contents: read
       security-events: write
+    # ROCm org policy. Other owners that carry this file do not run it.
+    if: github.repository_owner == 'ROCm'
     # Trust Security-managed v1 updates to minimize developer update noise.
     uses: ROCm/rocm-security-gh/.github/workflows/security-baseline.yml@v1
     with:
