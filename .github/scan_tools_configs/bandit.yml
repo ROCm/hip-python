@@ -30,3 +30,7 @@ exclude_dirs:
   - dist
   - node_modules
   - __pycache__
+  # examples/ and tests/ are not part of a hip-python install.
+  # Bare names still match under the CI .scan-target/ prefix.
+  - examples
+  - tests
