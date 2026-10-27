@@ -60,7 +60,7 @@ class LinkerCache:
         Note:
             All key constituents must be hashable. Strings must be encoded in "utf-8" format.
         """
-        m = hashlib.md5()
+        m = hashlib.md5(usedforsecurity=False)
         for key_component in (buffer, arch, opts):
             if isinstance(key_component, str):
                 if clean_str_key_components:
