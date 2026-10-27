@@ -31,3 +31,30 @@ rules:
       policies:
         # Security owns this workflow and moves the v1 tag.
         ROCm/rocm-security-gh/.github/workflows/security-baseline.yml: ref-pin
+    # AMD-AIOSS-only. ROCm has no runners, and hash-pinning the
+    # private action would churn on every update.
+    # Ignore entries are base filenames; zizmor does not glob them.
+    ignore: &internal-workflows
+      - internal-alola-probe.yml
+      - internal-full-test-alola-manual.yml
+      - internal-full-test-alola-run.yml
+      - internal-full-test-alola.yml
+      - internal-full-test-hpe-manual.yml
+      - internal-full-test-hpe-run.yml
+      - internal-full-test-hpe.yml
+      - internal-full-test-report.yml
+      - internal-full-test.yml
+      - internal-generate-bindings-manual.yml
+      - internal-generate-bindings-run.yml
+      - internal-generate-bindings.yml
+      - internal-publish-docs.yml
+      - internal-publish-wheels-manual.yml
+      - internal-publish-wheels-run.yml
+      - internal-publish-wheels.yml
+      - internal-tooling-tests.yml
+  unpinned-images:
+    # Same workflows. Digest-pinning the manylinux image churns the same way.
+    ignore: *internal-workflows
+  dangerous-triggers:
+    # issue_comment on those workflows. The owner check stops them on ROCm.
+    ignore: *internal-workflows
