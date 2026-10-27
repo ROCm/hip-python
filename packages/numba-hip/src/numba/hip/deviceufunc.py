@@ -425,7 +425,7 @@ class DeviceVectorize(_BaseUFuncBuilder):
         corefn, return_type = self._compile_core(devfnsig)
         glbl = self._get_globals(corefn)
         sig = signature(types.void, *([a[:] for a in args] + [return_type[:]]))
-        exec(kernelsource, glbl)
+        exec(kernelsource, glbl)  # nosec B102 - internally generated template
 
         stager = glbl["__vectorized_%s" % funcname]
         kernel = self._compile_kernel(stager, sig)
@@ -514,7 +514,7 @@ class DeviceGUFuncVectorize(_BaseUFuncBuilder):
 
         glbls = self._get_globals(sig)
 
-        exec(src, glbls)
+        exec(src, glbls)  # nosec B102 - internally generated template
         fnobj = glbls["__gufunc_{name}".format(name=funcname)]
 
         outertys = list(_determine_gufunc_outer_types(args, indims + outdims))
