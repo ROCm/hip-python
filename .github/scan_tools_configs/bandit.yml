@@ -34,3 +34,7 @@ exclude_dirs:
   # Bare names still match under the CI .scan-target/ prefix.
   - examples
   - tests
+  # Tool test trees are not part of a hip-python install.
+  # Full paths still match under the CI .scan-target/ prefix.
+  - tools/interfacegen/python/interfacegen/test
+  - tools/hip-python-generate/test
