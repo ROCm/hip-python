@@ -27,10 +27,6 @@
 
 rules:
   unpinned-uses:
-    config:
-      policies:
-        # Security owns this workflow and moves the v1 tag.
-        ROCm/rocm-security-gh/.github/workflows/security-baseline.yml: ref-pin
     # AMD-AIOSS-only. ROCm has no runners, and hash-pinning the
     # private action would churn on every update.
     # Ignore entries are base filenames; zizmor does not glob them.
