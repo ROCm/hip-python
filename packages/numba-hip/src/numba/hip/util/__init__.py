@@ -20,6 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from . import comgrutils, fscache, llvmutils, modulerepl
+from . import comgrutils, fscache, llvmutils
 
-__all__ = ["comgrutils", "fscache", "llvmutils", "modulerepl"]
+__all__ = ["comgrutils", "fscache", "llvmutils"]
