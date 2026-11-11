@@ -258,7 +258,7 @@ jobs:
       PLAT: manylinux_2_28_x86_64
 
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: wheels
           path: wheels
